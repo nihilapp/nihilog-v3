@@ -11,10 +11,18 @@ function resolveDatabaseUrl(): string {
 }
 
 export default defineConfig({
-  schema: './src/endpoints/drizzle/tables/**/*.ts',
-  out: './drizzle',
+  schema: [
+    './src/endpoints/drizzle/tables/**/*.ts',
+    './src/endpoints/drizzle/enums/**/*.ts',
+  ],
+  out: './drizzle/nihilog',
   dialect: 'postgresql',
+  schemaFilter: ['nihilog'],
   dbCredentials: {
     url: resolveDatabaseUrl(),
+  },
+  migrations: {
+    schema: 'drizzle_nihilog',
+    table: 'drizzle_nihilog_migrations',
   },
 });
