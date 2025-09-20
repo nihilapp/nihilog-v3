@@ -1,0 +1,10 @@
+{
+  "name": "nihilog",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {},
+  "keywords": [],
+  "license": "MIT",
+  "packageManager": "pnpm@10.17.0"
+}

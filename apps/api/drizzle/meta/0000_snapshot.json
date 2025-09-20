@@ -1,0 +1,189 @@
+{
+  "id": "cf8fac65-1f48-47c6-89f9-f5f4eec87f13",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.user_info": {
+      "name": "user_info",
+      "schema": "",
+      "columns": {
+        "user_no": {
+          "name": "user_no",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "nextval('user_info_seq')"
+        },
+        "eml_addr": {
+          "name": "eml_addr",
+          "type": "varchar(254)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_nm": {
+          "name": "user_nm",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_role": {
+          "name": "user_role",
+          "type": "user_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'USER'"
+        },
+        "profl_img": {
+          "name": "profl_img",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_biogp": {
+          "name": "user_biogp",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "encpt_pswd": {
+          "name": "encpt_pswd",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resh_token": {
+          "name": "resh_token",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "use_yn": {
+          "name": "use_yn",
+          "type": "yn_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Y'"
+        },
+        "del_yn": {
+          "name": "del_yn",
+          "type": "yn_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'N'"
+        },
+        "last_lgn_dt": {
+          "name": "last_lgn_dt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crt_no": {
+          "name": "crt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crt_dt": {
+          "name": "crt_dt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updt_no": {
+          "name": "updt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updt_dt": {
+          "name": "updt_dt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "del_no": {
+          "name": "del_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "del_dt": {
+          "name": "del_dt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "user_info_eml_addr_idx": {
+          "name": "user_info_eml_addr_idx",
+          "columns": [
+            {
+              "expression": "eml_addr",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_info_user_nm_idx": {
+          "name": "user_info_user_nm_idx",
+          "columns": [
+            {
+              "expression": "user_nm",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_info_eml_addr_unique": {
+          "name": "user_info_eml_addr_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "eml_addr"
+          ]
+        },
+        "user_info_user_nm_unique": {
+          "name": "user_info_user_nm_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_nm"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

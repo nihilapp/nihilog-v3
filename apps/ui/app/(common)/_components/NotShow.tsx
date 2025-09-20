@@ -1,0 +1,36 @@
+'use client';
+
+import { cva, type VariantProps } from 'class-variance-authority';
+
+import { cn } from '@/_libs';
+
+interface Props
+  extends React.HTMLAttributes<HTMLDivElement>,
+  VariantProps<typeof cssVariants> {
+  className?: string;
+}
+
+const cssVariants = cva(
+  [
+    ``,
+  ],
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: [],
+  }
+);
+
+export function NotShow({ className, children, ...props }: Props) {
+  return (
+    <div
+      className={cn(
+        cssVariants({}),
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}

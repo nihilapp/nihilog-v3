@@ -1,0 +1,12 @@
+{
+  "lang": "ko",
+  "useSrc": false,
+  "componentInRoute": true,
+  "componentCategory": false,
+  "useSetMeta": true,
+  "aliases": {
+    "app": "app",
+    "entities": "app/_entities",
+    "libs": "app/_libs"
+  }
+}
