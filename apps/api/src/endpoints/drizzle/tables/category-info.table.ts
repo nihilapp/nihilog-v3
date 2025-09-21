@@ -1,9 +1,11 @@
-import { ynForNihillog } from '@/endpoints/drizzle/enums';
+import { yn } from '@/endpoints/drizzle/enums';
 import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
 import { sql } from 'drizzle-orm';
 import { timestamp } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
+import { index } from 'drizzle-orm/pg-core';
+import { foreignKey } from 'drizzle-orm/pg-core';
 
 export const categoryInfo = nihilogSchema.table('category_info', {
   ctgryNo: integer('ctgry_no')
@@ -20,10 +22,10 @@ export const categoryInfo = nihilogSchema.table('category_info', {
     .default(0),
   upCtgryNo: integer('up_ctgry_no'),
 
-  useYn: ynForNihillog('use_yn')
+  useYn: yn('use_yn')
     .notNull()
     .default('Y'),
-  delYn: ynForNihillog('del_yn')
+  delYn: yn('del_yn')
     .notNull()
     .default('N'),
 
@@ -37,4 +39,20 @@ export const categoryInfo = nihilogSchema.table('category_info', {
     .defaultNow(),
   delNo: integer('del_no'),
   delDt: timestamp('del_dt', { withTimezone: true, }),
-});
+}, (table) => [
+  foreignKey({
+    columns: [ table.upCtgryNo, ],
+    foreignColumns: [ table.ctgryNo, ],
+    name: 'category_info_up_ctgry_no_fk',
+  })
+    .onDelete('set null')
+    .onUpdate('cascade'),
+  index('category_info_up_ctgry_no_idx')
+    .on(table.upCtgryNo),
+  index('category_info_parent_level_idx')
+    .on(table.upCtgryNo, table.ctgryStp),
+  index('category_info_active_idx')
+    .on(table.upCtgryNo, table.delYn, table.useYn),
+  index('category_info_crt_dt_idx')
+    .on(table.crtDt),
+]);

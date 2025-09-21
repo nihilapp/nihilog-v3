@@ -1,4 +1,4 @@
-import { ynForNihillog } from '@/endpoints/drizzle/enums';
+import { yn } from '@/endpoints/drizzle/enums';
 import { postStatus } from '@/endpoints/drizzle/enums/post-status.enum';
 import { categoryInfo } from '@/endpoints/drizzle/tables/category-info.table';
 import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
@@ -13,7 +13,7 @@ import { index } from 'drizzle-orm/pg-core';
 // 게시글 기본 정보 테이블
 // - 기본키, 관계, 본문, 상태, 메타데이터로 구분
 
-export const postInfo = nihilogSchema.table('nihilog.post_info', {
+export const postInfo = nihilogSchema.table('post_info', {
   // [PK]
   pstNo: integer('pst_no')
     .primaryKey()
@@ -38,20 +38,20 @@ export const postInfo = nihilogSchema.table('nihilog.post_info', {
     .notNull()
     .default('EMPTY'),
   publDt: timestamp('publ_dt', { withTimezone: true, }), // 발행 일시(옵션)
-  rlsYn: ynForNihillog('rls_yn') // 공개 여부
+  rlsYn: yn('rls_yn') // 공개 여부
     .notNull()
     .default('Y'),
-  archYn: ynForNihillog('arch_yn') // 보관 여부
+  archYn: yn('arch_yn') // 보관 여부
     .notNull()
     .default('N'),
-  scrtyYn: ynForNihillog('scrty_yn'), // 비밀글 여부(옵션)
+  secrYn: yn('secr_yn'), // 비밀글 여부(옵션)
   pstPswd: varchar('pst_pswd', { length: 255, }), // 게시물 비밀번호(옵션)
 
   // [상태]
-  useYn: ynForNihillog('use_yn') // 사용 여부
+  useYn: yn('use_yn') // 사용 여부
     .notNull()
     .default('Y'),
-  delYn: ynForNihillog('del_yn') // 삭제 여부
+  delYn: yn('del_yn') // 삭제 여부
     .notNull()
     .default('N'),
 
@@ -76,4 +76,15 @@ export const postInfo = nihilogSchema.table('nihilog.post_info', {
     .on(table.publDt),
   index('post_info_pst_ttl_idx')
     .on(table.pstTtl),
+  // 대소문자 무시 검색 최적화
+  index('post_info_pst_ttl_lower_idx')
+    .on(sql`lower(${table.pstTtl})`),
+  index('post_info_ctgry_no_idx')
+    .on(table.ctgryNo),
+  index('post_info_active_idx')
+    .on(table.delYn, table.useYn),
+  index('post_info_active_rls_idx')
+    .on(table.delYn, table.useYn, table.rlsYn),
+  index('post_info_crt_dt_idx')
+    .on(table.crtDt),
 ]);

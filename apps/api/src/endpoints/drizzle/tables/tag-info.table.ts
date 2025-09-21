@@ -1,4 +1,4 @@
-import { ynForNihillog } from '@/endpoints/drizzle/enums';
+import { yn } from '@/endpoints/drizzle/enums';
 import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
 import { postInfo } from '@/endpoints/drizzle/tables/post-info.table';
 import { sql } from 'drizzle-orm';
@@ -8,7 +8,7 @@ import { integer } from 'drizzle-orm/pg-core';
 import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
 // 태그 정보 테이블
-export const tagInfo = nihilogSchema.table('nihilog.tag_info', {
+export const tagInfo = nihilogSchema.table('tag_info', {
   tagNo: integer('tag_no')
     .primaryKey()
     .default(sql`nextval('tag_info_seq')`),
@@ -19,10 +19,10 @@ export const tagInfo = nihilogSchema.table('nihilog.tag_info', {
   tagExpln: varchar('tag_expln', { length: 500, }),
   tagColr: varchar('tag_colr', { length: 30, }),
 
-  useYn: ynForNihillog('use_yn')
+  useYn: yn('use_yn')
     .notNull()
     .default('Y'),
-  delYn: ynForNihillog('del_yn')
+  delYn: yn('del_yn')
     .notNull()
     .default('N'),
 
@@ -38,10 +38,14 @@ export const tagInfo = nihilogSchema.table('nihilog.tag_info', {
   delDt: timestamp('del_dt', { withTimezone: true, }),
 }, (table) => [
   index('tag_info_nm_idx').on(table.tagNm),
+  index('tag_info_active_idx').on(table.delYn, table.useYn),
+  index('tag_info_crt_dt_idx').on(table.crtDt),
+  // 대소문자 무시 검색 최적화
+  index('tag_info_nm_lower_idx').on(sql`lower(${table.tagNm})`),
 ]);
 
 // 게시글-태그 매핑 테이블 (다대다)
-export const postTagMap = nihilogSchema.table('nihilog.post_tag_map', {
+export const postTagMap = nihilogSchema.table('post_tag_map', {
   // [PK]
   tagMapNo: integer('tag_map_no')
     .primaryKey()

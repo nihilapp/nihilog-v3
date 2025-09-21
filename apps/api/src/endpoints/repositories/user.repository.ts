@@ -14,6 +14,8 @@ export class UserRepository {
     private readonly db: NodePgDatabase<typeof schemas>
   ) {}
 
+  // search_path를 사용하므로 스키마 접두는 제거합니다.
+
   /**
    * 사용자 번호로 사용자 정보 조회 (findById와 동일)
    * @param userNo 사용자 번호
@@ -460,7 +462,7 @@ export class UserRepository {
           , DEL_NO AS "delNo"
           , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
         FROM
-          USER_INFO
+          "USER_INFO"
         WHERE
           USER_NM = ${userNm}
         AND

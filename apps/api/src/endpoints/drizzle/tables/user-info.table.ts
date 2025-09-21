@@ -1,4 +1,4 @@
-import { userRoleForNihillog, ynForNihillog } from '@/endpoints/drizzle/enums';
+import { userRole, yn } from '@/endpoints/drizzle/enums';
 import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
 import { sql } from 'drizzle-orm';
 import { integer, varchar, timestamp } from 'drizzle-orm/pg-core';
@@ -8,7 +8,7 @@ import { index } from 'drizzle-orm/pg-core';
 // - 기본키, 계정 정보, 권한, 상태, 메타데이터로 구분
 
 // 테이블 정의
-export const userInfo = nihilogSchema.table('nihilog.user_info', {
+export const userInfo = nihilogSchema.table('user_info', {
   // [PK]
   userNo: integer('user_no')
     .primaryKey()
@@ -21,7 +21,7 @@ export const userInfo = nihilogSchema.table('nihilog.user_info', {
   userNm: varchar('user_nm', { length: 30, }) // 표시 이름(닉네임)
     .notNull()
     .unique(),
-  userRole: userRoleForNihillog('user_role') // 권한(ADMIN/USER)
+  userRole: userRole('user_role') // 권한(ADMIN/USER)
     .notNull()
     .default('USER'),
 
@@ -35,10 +35,10 @@ export const userInfo = nihilogSchema.table('nihilog.user_info', {
   reshToken: varchar('resh_token', { length: 500, }), // 리프레시 토큰(옵션)
 
   // [상태]
-  useYn: ynForNihillog('use_yn') // 사용 여부
+  useYn: yn('use_yn') // 사용 여부
     .notNull()
     .default('Y'),
-  delYn: ynForNihillog('del_yn') // 삭제 여부
+  delYn: yn('del_yn') // 삭제 여부
     .notNull()
     .default('N'),
   lastLgnDt: timestamp('last_lgn_dt', { withTimezone: true, }), // 마지막 로그인 일시
@@ -60,4 +60,12 @@ export const userInfo = nihilogSchema.table('nihilog.user_info', {
     .on(table.emlAddr),
   index('user_info_user_nm_idx')
     .on(table.userNm),
+  index('user_info_role_idx')
+    .on(table.userRole),
+  index('user_info_active_idx')
+    .on(table.delYn, table.useYn),
+  index('user_info_last_lgn_dt_idx')
+    .on(table.lastLgnDt),
+  index('user_info_crt_dt_idx')
+    .on(table.crtDt),
 ]);
