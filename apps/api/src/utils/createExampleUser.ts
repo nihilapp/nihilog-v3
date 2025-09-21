@@ -28,6 +28,7 @@ export function createExampleUser() {
     useYn: 'Y',
     delYn: 'N',
     lastLgnDt: formatDate(now),
+    lastPswdChgDt: formatDate(now),
     crtNo: 1,
     crtDt: formatDate(now),
     updtNo: 1,

@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from '@/endpoints/users/users.module';
+import { UsersModule } from '@/endpoints/admin/users/admin-users.module';
 import { JwtStrategy } from './jwt.strategy';
 import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
 import { UserRepository } from '@/endpoints/repositories/user.repository';

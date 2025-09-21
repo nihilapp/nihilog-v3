@@ -1,0 +1,1 @@
+ALTER TABLE "nihilog"."user_info" ADD COLUMN "last_pswd_chg_dt" timestamp with time zone;

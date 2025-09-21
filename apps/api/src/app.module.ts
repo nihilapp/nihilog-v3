@@ -7,7 +7,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AdminModule } from '@/endpoints/admin/admin.module';
 import { AuthModule } from '@/endpoints/auth/auth.module';
 import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
-import { UsersModule } from '@/endpoints/users/users.module';
+import { PostsModule } from '@/endpoints/posts/posts.module';
 import config from './conf/conf';
 
 @Module({
@@ -21,8 +21,8 @@ import config from './conf/conf';
       ttl: 60000, // 1분
       limit: 60, // 60회
     }, ]),
-    UsersModule,
     AuthModule,
+    PostsModule,
     AdminModule,
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({

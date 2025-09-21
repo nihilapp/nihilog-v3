@@ -18,9 +18,8 @@ export class UserRepository {
   // search_path를 사용하므로 스키마 접두는 제거합니다.
 
   /**
-   * 사용자 정보 통합 조회 (조건별 단건 조회)
+   * @description 사용자 정보 조회
    * @param conditions 조회 조건
-   * @returns 사용자 정보 또는 null
    */
   async findUser(conditions: {
     userNo?: number;
@@ -81,10 +80,9 @@ export class UserRepository {
   }
 
   /**
-   * 사용자 계정 생성 (역할 지정 가능)
-   * @param signUpData 회원가입 데이터 (userRole 포함)
+   * @description 사용자 계정 생성
+   * @param signUpData 회원가입 정보
    * @param hashedPassword 해시된 비밀번호
-   * @returns 생성된 사용자 정보
    */
   async createUserWithRole(
     signUpData: CreateUserDto | CreateAdminDto,
@@ -151,10 +149,9 @@ export class UserRepository {
   }
 
   /**
-   * 사용자 정보 통합 업데이트 (모든 필드 선택적 업데이트 가능)
-   * @param userNo 사용자 번호 (필수)
-   * @param updateData 업데이트할 데이터 (모든 필드 선택사항)
-   * @returns 업데이트된 사용자 정보
+   * @description 사용자 정보 업데이트
+   * @param userNo 사용자 번호
+   * @param updateData 업데이트 데이터
    */
   async updateUser(userNo: number, updateData: UpdateUserDto): Promise<UserInfoType> {
     // 업데이트할 필드만 동적으로 구성
@@ -234,18 +231,19 @@ export class UserRepository {
   }
 
   /**
-   * @description 사용자 목록 조회 (페이지네이션 포함)
-   * @param strtRow 시작 행 (선택사항)
-   * @param endRow 종료 행 (선택사항)
-   * @param srchType 검색 타입 (선택사항)
-   * @param srchKywd 검색 키워드 (선택사항)
-   * @returns 사용자 목록과 총 개수
+   * @description 사용자 목록 조회
+   * @param strtRow 시작 행
+   * @param endRow 종료 행
+   * @param srchType 검색 타입
+   * @param srchKywd 검색 키워드
+   * @param delYn 삭제 여부
    */
   async getUsers(
     strtRow?: number,
     endRow?: number,
     srchType?: 'userNm' | 'emlAddr' | 'userRole',
-    srchKywd?: string
+    srchKywd?: string,
+    delYn?: 'Y' | 'N'
   ): Promise<UserInfoType[]> {
     const keyword = srchKywd?.trim() || '';
 
@@ -253,18 +251,26 @@ export class UserRepository {
       ? `%${keyword}%`
       : null;
 
-    let where = sql``;
+    const whereClauses: SQLChunk[] = [];
 
-    if (keyword) {
+    if (keyword && like) {
       if (srchType === 'userNm') {
-        where = sql`AND USER_NM ILIKE ${like}`;
+        whereClauses.push(sql`USER_NM ILIKE ${like}`);
       }
       else if (srchType === 'emlAddr') {
-        where = sql`AND EML_ADDR ILIKE ${like}`;
+        whereClauses.push(sql`EML_ADDR ILIKE ${like}`);
       }
       else if (srchType === 'userRole') {
-        where = sql`AND USER_ROLE ILIKE ${like}`;
+        whereClauses.push(sql`USER_ROLE ILIKE ${like}`);
       }
+    }
+
+    // delYn 기본값은 'N'
+    if (delYn !== undefined) {
+      whereClauses.push(sql`DEL_YN = ${delYn}`);
+    }
+    else {
+      whereClauses.push(sql`DEL_YN = 'N'`);
     }
 
     const limit = strtRow
@@ -272,6 +278,10 @@ export class UserRepository {
       : sql``;
     const offset = endRow
       ? sql`OFFSET ${endRow}`
+      : sql``;
+
+    const whereSql = whereClauses.length
+      ? sql`AND ${sql.join(whereClauses, sql` AND `)}`
       : sql``;
 
     const result = await this.db.execute<UserInfoType>(
@@ -300,7 +310,7 @@ export class UserRepository {
           USER_INFO
         WHERE
           1 = 1
-          ${where}
+          ${whereSql}
         ORDER BY
           CRT_DT DESC
         ${limit}
@@ -312,10 +322,9 @@ export class UserRepository {
   }
 
   /**
-   * 사용자명 중복 확인
+   * @description 사용자명 중복 확인
    * @param userNm 사용자명
-   * @param excludeUserNo 제외할 사용자 번호 (자기 자신)
-   * @returns 중복 여부
+   * @param excludeUserNo 제외할 사용자 번호
    */
   async isUserNameExists(userNm: string, excludeUserNo?: number): Promise<boolean> {
     const excludeCondition = excludeUserNo

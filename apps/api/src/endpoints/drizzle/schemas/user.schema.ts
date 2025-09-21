@@ -48,6 +48,10 @@ export const userInfoSchema = z.object({
     .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
     .nullable()
     .optional(),
+  lastPswdChgDt: z.string('마지막 비밀번호 변경일시는 올바른 날짜 형식이어야 합니다.')
+    .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
+    .nullable()
+    .optional(),
   crtNo: z.number()
     .int('생성자 번호는 정수여야 합니다.')
     .nullable()
@@ -103,6 +107,7 @@ export const updateUserSchema = userInfoSchema.pick({
   encptPswd: true,
   reshToken: true,
   lastLgnDt: true,
+  lastPswdChgDt: true,
   crtNo: true,
   updtNo: true,
   delNo: true,
@@ -151,9 +156,10 @@ export const withdrawSchema = z.object({
 // 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
 export const searchUserSchema = addPaginationValidation(
   baseSearchSchema.extend({
-    srchType: z.enum([ 'userNm', 'emlAddr', ], {
-      error: '검색 타입은 userNm 또는 emlAddr만 허용됩니다.',
+    srchType: z.enum([ 'userNm', 'emlAddr', 'userRole', ], {
+      error: '검색 타입은 userNm, emlAddr, userRole 중 하나여야 합니다.',
     }).optional(),
+    delYn: ynEnumSchema.optional(),
   })
 );
 

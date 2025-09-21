@@ -42,6 +42,7 @@ export const userInfo = nihilogSchema.table('user_info', {
     .notNull()
     .default('N'),
   lastLgnDt: timestamp('last_lgn_dt', { withTimezone: true, }), // 마지막 로그인 일시
+  lastPswdChgDt: timestamp('last_pswd_chg_dt', { withTimezone: true, }), // 마지막 비밀번호 변경 일시
 
   // [메타데이터]
   crtNo: integer('crt_no'), // 생성자 번호

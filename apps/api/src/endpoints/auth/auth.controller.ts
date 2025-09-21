@@ -1,6 +1,6 @@
 import { MESSAGE_CODE } from '@/code/message.code';
 import { RESPONSE_CODE } from '@/code/response.code';
-import { ChangePasswordDto, CreateUserDto, ForgotPasswordDto, ResetPasswordDto, SignInDto, WithdrawDto } from '@/dto/auth.dto';
+import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import { createError, createResponse } from '@/utils';
@@ -10,7 +10,6 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -22,6 +21,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiResponse,
@@ -39,13 +39,16 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   /**
-   * 회원가입
-   * @param signUpData 회원가입 데이터
-   * @returns 회원가입 결과
+   * @description 일반 사용자 회원가입
+   * @param createUserData 회원가입 정보
    */
   @ApiOperation({
     summary: '회원가입',
-    description: '새로운 사용자 계정을 생성합니다.',
+    description: '일반 사용자 계정을 생성합니다.',
+  })
+  @ApiBody({
+    type: CreateUserDto,
+    description: '회원가입 DTO',
   })
   @ApiResponse({
     status: 200,
@@ -53,7 +56,7 @@ export class AuthController {
     schema: {
       example: {
         error: false,
-        code: RESPONSE_CODE.CREATED,
+        code: RESPONSE_CODE.SUCCESS,
         message: MESSAGE_CODE.SIGN_UP_SUCCESS,
         data: createExampleUser(),
       },
@@ -61,33 +64,39 @@ export class AuthController {
   })
   @ApiResponse({
     status: 200,
-    description: '이미 존재하는 이메일',
+    description: '이메일 중복',
     schema: {
       example: {
         error: true,
         code: RESPONSE_CODE.CONFLICT,
-        message: MESSAGE_CODE.CONFLICT_EMAIL,
+        message: MESSAGE_CODE.EMAIL_IN_USE,
         data: null,
       },
     },
   })
+  @Throttle({ default: { limit: 3, ttl: 60000, }, })
+  @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   @Post('signup')
   async signUp(
-    @Body() signUpData: CreateUserDto
+    @Body() createUserData: CreateUserDto
   ): Promise<ResponseDto<UserInfoDto>> {
-    return this.authService.signUp(signUpData);
+    return this.authService.signUp(createUserData);
   }
 
   /**
-   * 로그인
-   * @param signInData 로그인 데이터
+   * @description 사용자 로그인
+   * @param signInData 로그인 정보
    * @param res 응답 객체
-   * @returns 로그인 결과
+   * @param req 요청 객체
    */
   @ApiOperation({
     summary: '로그인',
     description: '사용자 인증을 처리하고 JWT 토큰을 발급합니다.',
+  })
+  @ApiBody({
+    type: SignInDto,
+    description: '로그인 DTO',
   })
   @ApiResponse({
     status: 200,
@@ -177,10 +186,9 @@ export class AuthController {
   }
 
   /**
-   * 토큰 재발급
+   * @description 액세스 토큰 재발급
    * @param req 요청 객체
    * @param res 응답 객체
-   * @returns 재발급 결과
    */
   @ApiOperation({
     summary: '토큰 재발급',
@@ -268,10 +276,9 @@ export class AuthController {
   }
 
   /**
-   * 로그아웃
+   * @description 사용자 로그아웃
    * @param req 요청 객체
    * @param res 응답 객체
-   * @returns 로그아웃 결과
    */
   @ApiOperation({
     summary: '로그아웃',
@@ -321,9 +328,8 @@ export class AuthController {
   }
 
   /**
-   * 세션 조회
+   * @description 현재 세션 조회
    * @param req 요청 객체
-   * @returns 현재 사용자 정보
    */
   @ApiOperation({
     summary: '세션 조회',
@@ -352,8 +358,8 @@ export class AuthController {
       },
     },
   })
-  @HttpCode(HttpStatus.OK)
   @ApiBearerAuth('JWT-auth')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get('session')
@@ -368,66 +374,9 @@ export class AuthController {
   }
 
   /**
-   * 회원탈퇴
+   * @description 비밀번호 변경
    * @param req 요청 객체
-   * @param res 응답 객체
-   * @returns 회원탈퇴 결과
-   */
-  @ApiOperation({
-    summary: '회원탈퇴',
-    description: '현재 로그인된 사용자의 계정을 영구적으로 삭제합니다.',
-  })
-  @ApiOkResponse({
-    description: '회원탈퇴 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.SIGN_OUT_SUCCESS,
-        data: null,
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: '회원탈퇴 실패',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.UNAUTHORIZED,
-        message: MESSAGE_CODE.INVALID_CREDENTIALS,
-        data: null,
-      },
-    },
-  })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
-  @Delete('withdraw')
-  async withdraw(
-    @Req() req: FastifyRequest & { user: JwtPayload | null },
-    @Body() withdrawData: WithdrawDto,
-    @Res({ passthrough: true, }) res: FastifyReply
-  ) {
-    const authUser = req.user;
-
-    if (!authUser) {
-      return createError('UNAUTHORIZED', 'UNAUTHORIZED');
-    }
-
-    const result = await this.authService.withdraw(authUser.userNo, withdrawData);
-
-    clearCookie(res, 'accessToken');
-    clearCookie(res, 'refreshToken');
-    clearCookie(res, 'accessTokenExpiresAt');
-
-    return result;
-  }
-
-  /**
-   * 비밀번호 변경
-   * @param req 요청 객체
-   * @param changePasswordData 비밀번호 변경 데이터
-   * @returns 비밀번호 변경 결과
+   * @param changePasswordData 비밀번호 변경 정보
    */
   @ApiOperation({
     summary: '비밀번호 변경',
@@ -470,73 +419,5 @@ export class AuthController {
       return createError('UNAUTHORIZED', 'UNAUTHORIZED');
     }
     return this.authService.changePassword(authUser.userNo, changePasswordData);
-  }
-
-  /**
-   * 비밀번호 찾기
-   * @param forgotPasswordData 비밀번호 찾기 데이터
-   * @returns 비밀번호 찾기 결과
-   */
-  @ApiOperation({
-    summary: '비밀번호 찾기',
-    description: '이메일로 비밀번호 재설정 링크를 발송합니다.',
-  })
-  @ApiOkResponse({
-    description: '비밀번호 찾기 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.FORGOT_PASSWORD_SUCCESS,
-        data: null,
-      },
-    },
-  })
-  @HttpCode(HttpStatus.OK)
-  @Post('forgot-password')
-  async forgotPassword(
-    @Body() forgotPasswordData: ForgotPasswordDto
-  ): Promise<ResponseDto<null>> {
-    return this.authService.forgotPassword(forgotPasswordData);
-  }
-
-  /**
-   * 새 비밀번호 설정
-   * @param newPasswordData 새 비밀번호 데이터
-   * @returns 새 비밀번호 설정 결과
-   */
-  @ApiOperation({
-    summary: '새 비밀번호 설정',
-    description: '비밀번호 재설정 토큰을 사용하여 새 비밀번호를 설정합니다.',
-  })
-  @ApiOkResponse({
-    description: '새 비밀번호 설정 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.PASSWORD_CHANGE_SUCCESS,
-        data: null,
-      },
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: '새 비밀번호 설정 실패',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.UNAUTHORIZED,
-        message: MESSAGE_CODE.INVALID_OR_EXPIRED_RESET_TOKEN,
-        data: null,
-      },
-    },
-  })
-  @HttpCode(HttpStatus.OK)
-  @Post('reset-password')
-  async newPassword(
-    @Body() newPasswordData: ResetPasswordDto
-  ): Promise<ResponseDto<UserInfoDto>> {
-    return this.authService.newPassword(newPasswordData);
   }
 }

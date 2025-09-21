@@ -89,6 +89,13 @@ export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
   declare lastLgnDt?: string | null;
 
   @ApiProperty({
+    description: '마지막 비밀번호 변경 날짜',
+    example: '2024-01-01T00:00:00.000Z',
+    required: false,
+  })
+  declare lastPswdChgDt?: string | null;
+
+  @ApiProperty({
     description: '생성자 번호',
     example: 1,
     required: false,
@@ -156,7 +163,7 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
 
   @ApiProperty({
     description: '사용자 역할',
-    enum: ['USER', 'ADMIN'],
+    enum: [ 'USER', 'ADMIN', ],
     example: 'USER',
     required: false,
   })
@@ -164,7 +171,7 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
 
   @ApiProperty({
     description: '사용 여부',
-    enum: ['Y', 'N'],
+    enum: [ 'Y', 'N', ],
     example: 'Y',
     required: false,
   })
@@ -172,13 +179,13 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
 
   @ApiProperty({
     description: '삭제 여부',
-    enum: ['Y', 'N'],
+    enum: [ 'Y', 'N', ],
     example: 'N',
     required: false,
   })
   declare delYn?: YnType;
 
-  @Exclude({ toPlainOnly: true })
+  @Exclude({ toPlainOnly: true, })
   @ApiProperty({
     description: '암호화된 비밀번호',
     example: 'hashedPassword123!',
@@ -186,7 +193,7 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
   })
   declare encptPswd?: string;
 
-  @Exclude({ toPlainOnly: true })
+  @Exclude({ toPlainOnly: true, })
   @ApiProperty({
     description: '리프레시 토큰',
     example: 'refresh_token_here',
@@ -200,6 +207,13 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
     required: false,
   })
   declare lastLgnDt?: string | null;
+
+  @ApiProperty({
+    description: '마지막 비밀번호 변경 날짜',
+    example: '2024-01-01T00:00:00.000Z',
+    required: false,
+  })
+  declare lastPswdChgDt?: string | null;
 
   @ApiProperty({
     description: '생성자 번호',
@@ -240,11 +254,11 @@ export class SearchUserDto extends createZodDto(searchUserSchema) {
   declare endRow?: number;
 
   @ApiProperty({
-    description: '검색 타입 (emlAddr, userNm 중 하나)',
+    description: '검색 타입 (emlAddr, userNm, userRole 중 하나)',
     example: 'userNm',
     required: false,
   })
-  declare srchType?: 'emlAddr' | 'userNm';
+  declare srchType?: 'emlAddr' | 'userNm' | 'userRole';
 
   @ApiProperty({
     description: '검색 키워드 (2-100자)',
@@ -252,4 +266,12 @@ export class SearchUserDto extends createZodDto(searchUserSchema) {
     required: false,
   })
   declare srchKywd?: string;
+
+  @ApiProperty({
+    description: '삭제 여부 (미지정 시 기본값 N)',
+    enum: [ 'Y', 'N', ],
+    example: 'N',
+    required: false,
+  })
+  declare delYn?: YnType;
 }
