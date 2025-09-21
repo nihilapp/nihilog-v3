@@ -1,4 +1,5 @@
 import { userRole, yn } from '@/endpoints/drizzle/enums';
+import { baseSearchSchema } from './search.schema';
 import { z } from 'zod';
 
 // Drizzle enum을 Zod 스키마로 변환
@@ -79,10 +80,11 @@ export const userInfoSchema = z.object({
 });
 
 // 커스텀 스키마 정의
-export const createUserSchema = z.object({
-  emlAddr: userInfoSchema.shape.emlAddr,
-  userNm: userInfoSchema.shape.userNm,
-  userRole: userRoleSchema,
+export const createUserSchema = userInfoSchema.pick({
+  emlAddr: true,
+  userNm: true,
+  userRole: true,
+}).extend({
   password: passwordSchema,
   passwordConfirm: passwordSchema,
 })
@@ -91,19 +93,29 @@ export const createUserSchema = z.object({
     path: [ 'passwordConfirm', ],
   });
 
-export const updateUserSchema = z.object({
-  userNm: userInfoSchema.shape.userNm,
-  proflImg: userInfoSchema.shape.proflImg,
-  userBiogp: userInfoSchema.shape.userBiogp,
+export const updateUserSchema = userInfoSchema.pick({
+  userNm: true,
+  proflImg: true,
+  userBiogp: true,
+  userRole: true,
+  useYn: true,
+  delYn: true,
+  encptPswd: true,
+  reshToken: true,
+  lastLgnDt: true,
+  crtNo: true,
+  updtNo: true,
+  delNo: true,
 }).partial();
 
-export const signInSchema = z.object({
-  emlAddr: userInfoSchema.shape.emlAddr,
+export const signInSchema = userInfoSchema.pick({
+  emlAddr: true,
+}).extend({
   password: z.string().min(1, '비밀번호를 입력해주세요.'),
 });
 
-export const forgotPasswordSchema = z.object({
-  emlAddr: userInfoSchema.shape.emlAddr,
+export const forgotPasswordSchema = userInfoSchema.pick({
+  emlAddr: true,
 });
 
 export const changePasswordSchema = z.object({
@@ -136,31 +148,11 @@ export const withdrawSchema = z.object({
     path: [ 'passwordConfirm', ],
   });
 
-// 검색 전용 스키마
-export const searchUserSchema = z.object({
-  strtRow: z.number()
-    .int('시작행은 정수여야 합니다.')
-    .min(0, '시작행은 0 이상이어야 합니다.')
-    .optional(),
-  endRow: z.number()
-    .int('끝행은 정수여야 합니다.')
-    .min(1, '끝행은 1 이상이어야 합니다.')
-    .optional(),
+// 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
+export const searchUserSchema = baseSearchSchema.extend({
   srchType: z.enum([ 'userNm', 'emlAddr', ], {
     error: '검색 타입은 userNm 또는 emlAddr만 허용됩니다.',
   }).optional(),
-  srchKywd: z.string()
-    .max(100, '검색 키워드는 100자 이하여야 합니다.')
-    .optional(),
-}).refine((data) => {
-  // 페이지네이션 관련 유효성 검사 (둘 다 있을 때만)
-  if (data.strtRow !== undefined && data.endRow !== undefined) {
-    return data.endRow > data.strtRow;
-  }
-  return true;
-}, {
-  error: '끝행은 시작행보다 커야 합니다.',
-  path: [ 'endRow', ],
 });
 
 // 모든 항목이 선택값인 스키마
