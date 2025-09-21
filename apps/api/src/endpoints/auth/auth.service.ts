@@ -95,9 +95,6 @@ export class AuthService {
       return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
     }
 
-    console.log(password);
-    console.log(user.encptPswd);
-
     // 비밀번호 검증
     const isPasswordMatching = await bcrypt.compare(password, user.encptPswd);
 

@@ -71,11 +71,8 @@ export function SignUpForm({ className, ...props }: Props) {
   ]);
 
   const onSubmit: SubmitHandler<CreateUserType> = (data) => {
-    console.log(data);
     signUp(data);
   };
-
-  console.log(form.formState.errors);
 
   return (
     <>
