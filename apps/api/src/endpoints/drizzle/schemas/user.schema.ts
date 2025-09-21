@@ -1,5 +1,5 @@
 import { userRole, yn } from '@/endpoints/drizzle/enums';
-import { baseSearchSchema } from './search.schema';
+import { baseSearchSchema, addPaginationValidation } from './search.schema';
 import { z } from 'zod';
 
 // Drizzle enum을 Zod 스키마로 변환
@@ -149,11 +149,13 @@ export const withdrawSchema = z.object({
   });
 
 // 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
-export const searchUserSchema = baseSearchSchema.extend({
-  srchType: z.enum([ 'userNm', 'emlAddr', ], {
-    error: '검색 타입은 userNm 또는 emlAddr만 허용됩니다.',
-  }).optional(),
-});
+export const searchUserSchema = addPaginationValidation(
+  baseSearchSchema.extend({
+    srchType: z.enum([ 'userNm', 'emlAddr', ], {
+      error: '검색 타입은 userNm 또는 emlAddr만 허용됩니다.',
+    }).optional(),
+  })
+);
 
 // 모든 항목이 선택값인 스키마
 export const partialUserInfoSchema = userInfoSchema.partial();

@@ -94,6 +94,7 @@ export const databaseConfig = registerAs('database', () => ({
   user: config.database?.user || 'postgres',
   password: config.database?.password || 'postgres',
   name: config.database?.name || 'postgres',
+  schema: config.database?.schema || 'public',
 }));
 
 // 외부 사용을 위한 DB URL 헬퍼 (YAML만 사용)
