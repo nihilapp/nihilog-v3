@@ -36,6 +36,20 @@
       "when": 1758461854926,
       "tag": "0004_short_stardust",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1758563762022,
+      "tag": "0005_kind_hammerhead",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1758564007007,
+      "tag": "0006_amusing_bug",
+      "breakpoints": true
     }
   ]
 }

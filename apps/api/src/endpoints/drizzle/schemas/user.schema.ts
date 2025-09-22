@@ -1,4 +1,4 @@
-import { userRole, yn } from '@/endpoints/drizzle/enums';
+import { userRole, yn } from '@drizzle/enums';
 import { baseSearchSchema, addPaginationValidation } from './search.schema';
 import { z } from 'zod';
 
@@ -44,33 +44,33 @@ export const userInfoSchema = z.object({
     .default('Y'),
   delYn: ynEnumSchema
     .default('N'),
-  lastLgnDt: z.string('올바른 날짜 형식이어야 합니다.')
-    .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
+  lastLgnDt: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .nullable()
     .optional(),
-  lastPswdChgDt: z.string('마지막 비밀번호 변경일시는 올바른 날짜 형식이어야 합니다.')
-    .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
+  lastPswdChgDt: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .nullable()
     .optional(),
   crtNo: z.number()
     .int('생성자 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
-  crtDt: z.string('생성일시는 올바른 날짜 형식이어야 합니다.')
-    .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
+  crtDt: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .optional(),
   updtNo: z.number().int('수정자 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
-  updtDt: z.string('수정일시는 올바른 날짜 형식이어야 합니다.')
-    .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
+  updtDt: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .optional(),
   delNo: z.number()
     .int('삭제자 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
-  delDt: z.string('삭제일시는 올바른 날짜 형식이어야 합니다.')
-    .pipe(z.iso.datetime('올바른 ISO 8601 날짜 형식이어야 합니다.'))
+  delDt: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .nullable()
     .optional(),
   rowNo: z.number()

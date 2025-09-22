@@ -4,7 +4,7 @@ import { createZodDto } from 'nestjs-zod';
 import {
   listResponseSchema,
   responseSchema
-} from '@/endpoints/drizzle/schemas/response.schema';
+} from '@drizzle/schemas/response.schema';
 
 // 기본 응답 DTO
 export class ResponseDto<TData = any> extends createZodDto(responseSchema()) {

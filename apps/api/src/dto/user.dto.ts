@@ -6,7 +6,7 @@ import {
   searchUserSchema,
   type UserRoleType,
   type YnType
-} from '@/endpoints/drizzle/schemas/user.schema';
+} from '@drizzle/schemas/user.schema';
 import { Exclude } from 'class-transformer';
 import { createZodDto } from 'nestjs-zod';
 
@@ -82,15 +82,15 @@ export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
   declare reshToken?: string | null;
 
   @ApiProperty({
-    description: '마지막 로그인 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '마지막 로그인 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare lastLgnDt?: string | null;
 
   @ApiProperty({
-    description: '마지막 비밀번호 변경 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '마지막 비밀번호 변경 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare lastPswdChgDt?: string | null;
@@ -103,8 +103,8 @@ export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
   declare crtNo?: number | null;
 
   @ApiProperty({
-    description: '생성 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '생성 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare crtDt?: string;
@@ -117,8 +117,8 @@ export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
   declare updtNo?: number | null;
 
   @ApiProperty({
-    description: '수정 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '수정 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare updtDt?: string;
@@ -131,8 +131,8 @@ export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
   declare delNo?: number | null;
 
   @ApiProperty({
-    description: '삭제 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '삭제 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare delDt?: string | null;
@@ -202,15 +202,15 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
   declare reshToken?: string | null;
 
   @ApiProperty({
-    description: '마지막 로그인 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '마지막 로그인 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare lastLgnDt?: string | null;
 
   @ApiProperty({
-    description: '마지막 비밀번호 변경 날짜',
-    example: '2024-01-01T00:00:00.000Z',
+    description: '마지막 비밀번호 변경 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
     required: false,
   })
   declare lastPswdChgDt?: string | null;

@@ -1,8 +1,8 @@
 import { ListDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
-import { searchUserSchema } from '@/endpoints/drizzle/schemas/user.schema';
-import { UserRepository } from '@/endpoints/repositories/user.repository';
+import { searchUserSchema } from '@drizzle/schemas/user.schema';
+import { UserRepository } from '@repositories/user.repository';
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 

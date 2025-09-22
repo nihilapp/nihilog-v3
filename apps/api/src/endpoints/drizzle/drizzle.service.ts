@@ -1,5 +1,5 @@
 import { MESSAGE_CODE } from '@/code/message.code';
-import { schemas } from '@/endpoints/drizzle/schemas';
+import { schemas } from '@drizzle/schemas';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';

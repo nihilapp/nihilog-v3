@@ -1,4 +1,4 @@
-import { changePasswordSchema, createUserSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, userRoleSchema, withdrawSchema, type UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
+import { changePasswordSchema, createUserSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, userRoleSchema, withdrawSchema, type UserRoleType } from '@drizzle/schemas/user.schema';
 import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 

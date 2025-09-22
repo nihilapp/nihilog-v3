@@ -1,4 +1,4 @@
-import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 
 export const commentStatus = nihilogSchema.enum('comment_status', [
   'PENDING', // 승인 대기

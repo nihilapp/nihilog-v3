@@ -1,7 +1,7 @@
-import { userRole, yn } from '@/endpoints/drizzle/enums';
-import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { userRole, yn } from '@drizzle/enums';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 import { sql } from 'drizzle-orm';
-import { integer, varchar, timestamp } from 'drizzle-orm/pg-core';
+import { integer, varchar } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
 
 // 사용자 기본 정보 테이블
@@ -41,20 +41,18 @@ export const userInfo = nihilogSchema.table('user_info', {
   delYn: yn('del_yn') // 삭제 여부
     .notNull()
     .default('N'),
-  lastLgnDt: timestamp('last_lgn_dt', { withTimezone: true, }), // 마지막 로그인 일시
-  lastPswdChgDt: timestamp('last_pswd_chg_dt', { withTimezone: true, }), // 마지막 비밀번호 변경 일시
+  lastLgnDt: varchar('last_lgn_dt', { length: 50, }), // 마지막 로그인 일시 (YYYY-MM-DD HH:MM:SS)
+  lastPswdChgDt: varchar('last_pswd_chg_dt', { length: 50, }), // 마지막 비밀번호 변경 일시 (YYYY-MM-DD HH:MM:SS)
 
   // [메타데이터]
   crtNo: integer('crt_no'), // 생성자 번호
-  crtDt: timestamp('crt_dt', { withTimezone: true, })
-    .notNull()
-    .defaultNow(),
+  crtDt: varchar('crt_dt', { length: 50, })
+    .notNull(), // 생성 일시 (YYYY-MM-DD HH:MM:SS)
   updtNo: integer('updt_no'), // 수정자 번호
-  updtDt: timestamp('updt_dt', { withTimezone: true, })
-    .notNull()
-    .defaultNow(),
+  updtDt: varchar('updt_dt', { length: 50, })
+    .notNull(), // 수정 일시 (YYYY-MM-DD HH:MM:SS)
   delNo: integer('del_no'), // 삭제자 번호
-  delDt: timestamp('del_dt', { withTimezone: true, }), // 삭제 일시
+  delDt: varchar('del_dt', { length: 50, }), // 삭제 일시 (YYYY-MM-DD HH:MM:SS)
 }, (table) => [
   // [인덱스]
   index('user_info_eml_addr_idx')

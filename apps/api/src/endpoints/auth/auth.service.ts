@@ -1,4 +1,4 @@
-import { UsersService } from '@/endpoints/admin/users/admin-users.service';
+import { UsersService } from '@admin/users/admin-users.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
   Inject,
@@ -7,14 +7,15 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
-import { schemas } from '@/endpoints/drizzle/schemas';
-import { UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
-import { UserRepository } from '@/endpoints/repositories/user.repository';
+import { DRIZZLE } from '@drizzle/drizzle.module';
+import { schemas } from '@drizzle/schemas';
+import { UserRoleType } from '@drizzle/schemas/user.schema';
+import { UserRepository } from '@repositories/user.repository';
 import { createError, createResponse } from '@/utils';
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
+import { timeToString } from '@/utils/timeHelper';
 import bcrypt from 'bcrypt';
 import { cloneDeep } from 'lodash';
 
@@ -34,7 +35,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
     private readonly userRepository: UserRepository,
-    private readonly configService: ConfigService
+    private readonly env: ConfigService
   ) { }
 
   users = schemas.userInfo;
@@ -115,19 +116,19 @@ export class AuthService {
     // 토큰 생성
     const [ acsToken, reshToken, ] = await Promise.all([
       this.jwtService.signAsync(payload, {
-        secret: this.configService.get('jwt.access.secret'),
-        expiresIn: this.configService.get('jwt.access.expiresIn'),
+        secret: this.env.get('jwt.access.secret'),
+        expiresIn: this.env.get('jwt.access.expiresIn'),
       }),
       this.jwtService.signAsync(payload, {
-        secret: this.configService.get('jwt.refresh.secret'),
-        expiresIn: this.configService.get('jwt.refresh.expiresIn'),
+        secret: this.env.get('jwt.refresh.secret'),
+        expiresIn: this.env.get('jwt.refresh.expiresIn'),
       }),
     ]);
 
     // 리프레시 토큰과 마지막 로그인 시간 업데이트
     await this.userRepository.updateUser(user.userNo, {
       reshToken,
-      lastLgnDt: new Date().toISOString(),
+      lastLgnDt: timeToString(),
     });
 
     // AccessToken 만료시간 계산
@@ -167,7 +168,7 @@ export class AuthService {
 
     try {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: this.configService.get('jwt.refresh.secret'),
+        secret: this.env.get('jwt.refresh.secret'),
       });
 
       const user = await this.usersService.getUserByNo(payload.userNo);
@@ -184,12 +185,12 @@ export class AuthService {
       };
       const [ newAcsToken, newReshToken, ] = await Promise.all([
         this.jwtService.signAsync(newPayload, {
-          secret: this.configService.get('jwt.access.secret'),
-          expiresIn: this.configService.get('jwt.access.expiresIn'),
+          secret: this.env.get('jwt.access.secret'),
+          expiresIn: this.env.get('jwt.access.expiresIn'),
         }),
         this.jwtService.signAsync(newPayload, {
-          secret: this.configService.get('jwt.refresh.secret'),
-          expiresIn: this.configService.get('jwt.refresh.expiresIn'),
+          secret: this.env.get('jwt.refresh.secret'),
+          expiresIn: this.env.get('jwt.refresh.expiresIn'),
         }),
       ]);
 
@@ -201,7 +202,13 @@ export class AuthService {
       const userToReturn = cloneDeep(user);
       userToReturn.encptPswd = null;
       userToReturn.reshToken = null;
-      return { user: userToReturn, acsToken: newAcsToken, reshToken: newReshToken, accessTokenExpiresAt, };
+
+      return {
+        user: userToReturn,
+        acsToken: newAcsToken,
+        reshToken: newReshToken,
+        accessTokenExpiresAt,
+      };
     }
     catch {
       return createError('UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
@@ -303,7 +310,7 @@ export class AuthService {
     try {
       const payload = await this.jwtService
         .verifyAsync<JwtPayload>(token, {
-          secret: this.configService.get('jwt.access.secret'),
+          secret: this.env.get('jwt.access.secret'),
         });
       return payload;
     }

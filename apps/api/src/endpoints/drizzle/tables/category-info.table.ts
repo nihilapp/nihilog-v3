@@ -1,7 +1,6 @@
-import { yn } from '@/endpoints/drizzle/enums';
-import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { yn } from '@drizzle/enums';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 import { sql } from 'drizzle-orm';
-import { timestamp } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
@@ -30,15 +29,13 @@ export const categoryInfo = nihilogSchema.table('category_info', {
     .default('N'),
 
   crtNo: integer('crt_no'),
-  crtDt: timestamp('crt_dt', { withTimezone: true, })
-    .notNull()
-    .defaultNow(),
+  crtDt: varchar('crt_dt', { length: 50, })
+    .notNull(),
   updtNo: integer('updt_no'),
-  updtDt: timestamp('updt_dt', { withTimezone: true, })
-    .notNull()
-    .defaultNow(),
+  updtDt: varchar('updt_dt', { length: 50, })
+    .notNull(),
   delNo: integer('del_no'),
-  delDt: timestamp('del_dt', { withTimezone: true, }),
+  delDt: varchar('del_dt', { length: 50, }),
 }, (table) => [
   foreignKey({
     columns: [ table.upCtgryNo, ],

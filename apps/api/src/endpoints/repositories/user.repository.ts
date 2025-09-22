@@ -1,11 +1,39 @@
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
-import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
-import { schemas } from '@/endpoints/drizzle/schemas';
-import { UserInfoType } from '@/endpoints/drizzle/schemas/user.schema';
+import { userInfo } from '@/endpoints/drizzle/tables';
+import { isEmptyString } from '@/utils/stringHelper';
+import { getLimitOffset } from '@/utils/pagination';
+import { updateColumns } from '@/utils/updateColumns';
+import { timeToString } from '@/utils/timeHelper';
+
+// 공용 사용자 select 매핑: 중복 제거
+const userInfoSelect = {
+  userNo: userInfo.userNo,
+  emlAddr: userInfo.emlAddr,
+  userNm: userInfo.userNm,
+  userRole: userInfo.userRole,
+  proflImg: userInfo.proflImg,
+  userBiogp: userInfo.userBiogp,
+  encptPswd: userInfo.encptPswd,
+  reshToken: userInfo.reshToken,
+  useYn: userInfo.useYn,
+  delYn: userInfo.delYn,
+  lastLgnDt: userInfo.lastLgnDt,
+  crtNo: userInfo.crtNo,
+  crtDt: userInfo.crtDt,
+  updtNo: userInfo.updtNo,
+  updtDt: userInfo.updtDt,
+  delNo: userInfo.delNo,
+  delDt: userInfo.delDt,
+} as const;
+
+// 페이지네이션은 유틸로 분리하여 사용합니다.
+import { DRIZZLE } from '@drizzle/drizzle.module';
+import { schemas } from '@drizzle/schemas';
+import { UserInfoType } from '@drizzle/schemas/user.schema';
 import { Inject, Injectable } from '@nestjs/common';
-import { sql, type SQLChunk } from 'drizzle-orm';
+import { and, asc, eq, like, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 @Injectable()
@@ -27,56 +55,28 @@ export class UserRepository {
     userNm?: string;
     includeDeleted?: boolean;
   }): Promise<UserInfoType | null> {
-    const whereClauses: SQLChunk[] = [];
+    const [ result, ] = await this.db
+      .select(userInfoSelect)
+      .from(userInfo)
+      .where(
+        and(
+          conditions.userNo !== undefined
+            ? eq(userInfo.userNo, conditions.userNo)
+            : undefined,
+          conditions.emlAddr !== undefined
+            ? eq(userInfo.emlAddr, conditions.emlAddr)
+            : undefined,
+          conditions.userNm !== undefined
+            ? eq(userInfo.userNm, conditions.userNm)
+            : undefined,
+          // includeDeleted가 true면 delYn 조건 제거, 아니면 'N'만 조회
+          conditions.includeDeleted
+            ? undefined
+            : eq(userInfo.delYn, 'N')
+        )
+      );
 
-    if (conditions.userNo !== undefined) {
-      whereClauses.push(sql`USER_NO = ${conditions.userNo}`);
-    }
-    if (conditions.emlAddr !== undefined) {
-      whereClauses.push(sql`EML_ADDR = ${conditions.emlAddr}`);
-    }
-    if (conditions.userNm !== undefined) {
-      whereClauses.push(sql`USER_NM = ${conditions.userNm}`);
-    }
-
-    // 기본적으로 삭제되지 않은 사용자만 조회
-    if (!conditions.includeDeleted) {
-      whereClauses.push(sql`DEL_YN = 'N'`);
-    }
-
-    if (whereClauses.length === 0) {
-      throw new Error('조회 조건이 필요합니다.');
-    }
-
-    const result = await this.db.execute<UserInfoType>(
-      sql`
-        SELECT
-            USER_NO AS "userNo"
-          , EML_ADDR AS "emlAddr"
-          , USER_NM AS "userNm"
-          , USER_ROLE AS "userRole"
-          , PROFL_IMG AS "proflImg"
-          , USER_BIOGP AS "userBiogp"
-          , ENCPT_PSWD AS "encptPswd"
-          , RESH_TOKEN AS "reshToken"
-          , USE_YN AS "useYn"
-          , DEL_YN AS "delYn"
-          , TO_CHAR(LAST_LGN_DT, 'YYYY-MM-DD HH24:MI:SS') AS "lastLgnDt"
-          , CRT_NO AS "crtNo"
-          , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "crtDt"
-          , UPDT_NO AS "updtNo"
-          , TO_CHAR(UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "updtDt"
-          , DEL_NO AS "delNo"
-          , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
-        FROM
-          USER_INFO
-        WHERE
-          ${sql.join(whereClauses, sql` AND `)}
-        LIMIT 1
-      `
-    );
-
-    return result.rows[0] || null;
+    return result;
   }
 
   /**
@@ -88,64 +88,21 @@ export class UserRepository {
     signUpData: CreateUserDto | CreateAdminDto,
     hashedPassword: string
   ): Promise<UserInfoType> {
-    const result = await this.db.execute<UserInfoType>(
-      sql`
-        INSERT INTO USER_INFO (
-            EML_ADDR
-          , USER_NM
-          , USER_ROLE
-          , PROFL_IMG
-          , USER_BIOGP
-          , ENCPT_PSWD
-          , RESH_TOKEN
-          , USE_YN
-          , DEL_YN
-          , LAST_LGN_DT
-          , CRT_NO
-          , CRT_DT
-          , UPDT_NO
-          , UPDT_DT
-          , DEL_NO
-          , DEL_DT
-        ) VALUES (
-          ${signUpData.emlAddr}
-        , ${signUpData.userNm}
-        , ${signUpData.userRole}
-        , NULL
-        , NULL
-        , ${hashedPassword}
-        , NULL
-        , 'Y'
-        , 'N'
-        , NULL
-        , NULL
-        , NOW()
-        , NULL
-        , NOW()
-        , NULL
-        , NULL
-        ) RETURNING
-            USER_NO AS "userNo"
-          , EML_ADDR AS "emlAddr"
-          , USER_NM AS "userNm"
-          , USER_ROLE AS "userRole"
-          , PROFL_IMG AS "proflImg"
-          , USER_BIOGP AS "userBiogp"
-          , ENCPT_PSWD AS "encptPswd"
-          , RESH_TOKEN AS "reshToken"
-          , USE_YN AS "useYn"
-          , DEL_YN AS "delYn"
-          , TO_CHAR(LAST_LGN_DT, 'YYYY-MM-DD HH24:MI:SS') AS "lastLgnDt"
-          , CRT_NO AS "crtNo"
-          , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "crtDt"
-          , UPDT_NO AS "updtNo"
-          , TO_CHAR(UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "updtDt"
-          , DEL_NO AS "delNo"
-          , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
-      `
-    );
+    const currentTime = timeToString();
 
-    return result.rows[0];
+    const [ result, ] = await this.db
+      .insert(userInfo)
+      .values({
+        emlAddr: signUpData.emlAddr,
+        userNm: signUpData.userNm,
+        userRole: signUpData.userRole,
+        encptPswd: hashedPassword,
+        crtDt: currentTime,
+        updtDt: currentTime,
+      })
+      .returning(userInfoSelect);
+
+    return result;
   }
 
   /**
@@ -154,80 +111,19 @@ export class UserRepository {
    * @param updateData 업데이트 데이터
    */
   async updateUser(userNo: number, updateData: UpdateUserDto): Promise<UserInfoType> {
-    // 업데이트할 필드만 동적으로 구성
-    const setClauses: SQLChunk[] = [];
+    const updateValues = updateColumns(updateData);
 
-    if (updateData.userNm !== undefined) {
-      setClauses.push(sql`USER_NM = ${updateData.userNm}`);
-    }
-    if (updateData.proflImg !== undefined) {
-      setClauses.push(sql`PROFL_IMG = ${updateData.proflImg}`);
-    }
-    if (updateData.userBiogp !== undefined) {
-      setClauses.push(sql`USER_BIOGP = ${updateData.userBiogp}`);
-    }
-    if (updateData.userRole !== undefined) {
-      setClauses.push(sql`USER_ROLE = ${updateData.userRole}`);
-    }
-    if (updateData.useYn !== undefined) {
-      setClauses.push(sql`USE_YN = ${updateData.useYn}`);
-    }
-    if (updateData.delYn !== undefined) {
-      setClauses.push(sql`DEL_YN = ${updateData.delYn}`);
-    }
-    if (updateData.encptPswd !== undefined) {
-      setClauses.push(sql`ENCPT_PSWD = ${updateData.encptPswd}`);
-    }
-    if (updateData.reshToken !== undefined) {
-      setClauses.push(sql`RESH_TOKEN = ${updateData.reshToken}`);
-    }
-    if (updateData.lastLgnDt !== undefined) {
-      setClauses.push(sql`LAST_LGN_DT = ${updateData.lastLgnDt}`);
-    }
-    if (updateData.crtNo !== undefined) {
-      setClauses.push(sql`CRT_NO = ${updateData.crtNo}`);
-    }
-    if (updateData.updtNo !== undefined) {
-      setClauses.push(sql`UPDT_NO = ${updateData.updtNo}`);
-    }
-    if (updateData.delNo !== undefined) {
-      setClauses.push(sql`DEL_NO = ${updateData.delNo}`);
-    }
-
-    // 항상 UPDT_DT는 현재 시간으로 업데이트
-    setClauses.push(sql`UPDT_DT = NOW()`);
-
-    if (setClauses.length === 1) { // UPDT_DT만 있는 경우 (업데이트할 데이터가 없음)
+    if (Object.keys(updateValues).length === 0) {
       throw new Error('업데이트할 데이터가 없습니다.');
     }
 
-    const result = await this.db.execute<UserInfoType>(
-      sql`
-        UPDATE USER_INFO
-        SET ${sql.join(setClauses, sql`, `)}
-        WHERE USER_NO = ${userNo}
-        RETURNING
-            USER_NO AS "userNo"
-          , EML_ADDR AS "emlAddr"
-          , USER_NM AS "userNm"
-          , USER_ROLE AS "userRole"
-          , PROFL_IMG AS "proflImg"
-          , USER_BIOGP AS "userBiogp"
-          , ENCPT_PSWD AS "encptPswd"
-          , RESH_TOKEN AS "reshToken"
-          , USE_YN AS "useYn"
-          , DEL_YN AS "delYn"
-          , TO_CHAR(LAST_LGN_DT, 'YYYY-MM-DD HH24:MI:SS') AS "lastLgnDt"
-          , CRT_NO AS "crtNo"
-          , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "crtDt"
-          , UPDT_NO AS "updtNo"
-          , TO_CHAR(UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "updtDt"
-          , DEL_NO AS "delNo"
-          , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
-      `
-    );
+    const [ result, ] = await this.db
+      .update(userInfo)
+      .set({ ...updateValues, updtDt: timeToString(), })
+      .where(eq(userInfo.userNo, userNo))
+      .returning(userInfoSelect);
 
-    return result.rows[0];
+    return result;
   }
 
   /**
@@ -245,80 +141,31 @@ export class UserRepository {
     srchKywd?: string,
     delYn?: 'Y' | 'N'
   ): Promise<UserInfoType[]> {
-    const keyword = srchKywd?.trim() || '';
+    const whereConditions = [
+      !isEmptyString(srchKywd) && srchType === 'userNm'
+        ? like(userInfo.userNm, `%${srchKywd}%`)
+        : undefined,
+      !isEmptyString(srchKywd) && srchType === 'emlAddr'
+        ? like(userInfo.emlAddr, `%${srchKywd}%`)
+        : undefined,
+      !isEmptyString(srchKywd) && srchType === 'userRole'
+        ? like(userInfo.userRole, `%${srchKywd}%`)
+        : undefined,
+    ];
 
-    const like = keyword
-      ? `%${keyword}%`
-      : null;
-
-    const whereClauses: SQLChunk[] = [];
-
-    if (keyword && like) {
-      if (srchType === 'userNm') {
-        whereClauses.push(sql`USER_NM ILIKE ${like}`);
-      }
-      else if (srchType === 'emlAddr') {
-        whereClauses.push(sql`EML_ADDR ILIKE ${like}`);
-      }
-      else if (srchType === 'userRole') {
-        whereClauses.push(sql`USER_ROLE ILIKE ${like}`);
-      }
-    }
-
-    // delYn 기본값은 'N'
     if (delYn !== undefined) {
-      whereClauses.push(sql`DEL_YN = ${delYn}`);
-    }
-    else {
-      whereClauses.push(sql`DEL_YN = 'N'`);
+      whereConditions.push(eq(userInfo.delYn, delYn));
     }
 
-    const limit = strtRow
-      ? sql`LIMIT ${strtRow}`
-      : sql``;
-    const offset = endRow
-      ? sql`OFFSET ${endRow}`
-      : sql``;
+    const result = await this.db
+      .select(userInfoSelect)
+      .from(userInfo)
+      .where(and(...whereConditions))
+      .orderBy(asc(userInfo.userNo))
+      .limit(getLimitOffset(strtRow, endRow).limit ?? undefined)
+      .offset(getLimitOffset(strtRow, endRow).offset ?? undefined);
 
-    const whereSql = whereClauses.length
-      ? sql`AND ${sql.join(whereClauses, sql` AND `)}`
-      : sql``;
-
-    const result = await this.db.execute<UserInfoType>(
-      sql`
-        SELECT
-            ROW_NUMBER() OVER (ORDER BY CRT_DT DESC) AS "rowNo"
-          , COUNT(1) OVER () AS "totalCnt"
-          , USER_NO AS "userNo"
-          , EML_ADDR AS "emlAddr"
-          , USER_NM AS "userNm"
-          , USER_ROLE AS "userRole"
-          , PROFL_IMG AS "proflImg"
-          , USER_BIOGP AS "userBiogp"
-          , ENCPT_PSWD AS "encptPswd"
-          , RESH_TOKEN AS "reshToken"
-          , USE_YN AS "useYn"
-          , DEL_YN AS "delYn"
-          , TO_CHAR(LAST_LGN_DT, 'YYYY-MM-DD HH24:MI:SS') AS "lastLgnDt"
-          , CRT_NO AS "crtNo"
-          , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "crtDt"
-          , UPDT_NO AS "updtNo"
-          , TO_CHAR(UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "updtDt"
-          , DEL_NO AS "delNo"
-          , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
-        FROM
-          USER_INFO
-        WHERE
-          1 = 1
-          ${whereSql}
-        ORDER BY
-          CRT_DT DESC
-        ${limit}
-        ${offset}
-      `
-    );
-
-    return result.rows;
+    return result;
   }
 
   /**
@@ -327,22 +174,20 @@ export class UserRepository {
    * @param excludeUserNo 제외할 사용자 번호
    */
   async isUserNameExists(userNm: string, excludeUserNo?: number): Promise<boolean> {
-    const excludeCondition = excludeUserNo
-      ? sql`AND USER_NO != ${excludeUserNo}`
-      : sql``;
+    const whereConditions = [
+      eq(userInfo.userNm, userNm),
+      eq(userInfo.delYn, 'N'),
+    ];
 
-    const result = await this.db.execute<{ count: number }>(
-      sql`
-        SELECT COUNT(1) AS "count"
-        FROM USER_INFO
-        WHERE
-          USER_NM = ${userNm}
-        AND
-          DEL_YN = 'N'
-        ${excludeCondition}
-      `
-    );
+    if (excludeUserNo) {
+      whereConditions.push(sql`${userInfo.userNo} != ${excludeUserNo}`);
+    }
 
-    return result.rows[0].count > 0;
+    const [ result, ] = await this.db
+      .select({ count: sql<number>`COUNT(1)`, })
+      .from(userInfo)
+      .where(and(...whereConditions));
+
+    return result.count > 0;
   }
 }
