@@ -1,5 +1,3 @@
-import { userRoleSchema } from '@drizzle/schemas/user.schema';
-import { createError } from '@/utils';
 import {
   ExecutionContext,
   Injectable
@@ -7,6 +5,9 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 
 import { ResponseDto } from '@/dto/response.dto';
+import { createError } from '@/utils';
+import { userRoleSchema } from '@drizzle/schemas/user.schema';
+
 import { JwtPayload } from './jwt.strategy';
 
 interface RequestWithUser {

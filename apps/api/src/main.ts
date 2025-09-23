@@ -1,16 +1,17 @@
+import fastifyCookie from '@fastify/cookie';
+import fastifyCors from '@fastify/cors';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { SwaggerModule } from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
+
+import { UnifiedResponseInterceptor } from '@/interceptors/unified-response.interceptor';
+
 import { AppModule } from './app.module';
 import { HttpLoggingInterceptor } from './http-logging.interceptor';
 import { createSwaggerConfig, swaggerUiOptions } from './swagger.config';
-
-import { UnifiedResponseInterceptor } from '@/interceptors/unified-response.interceptor';
-import fastifyCookie from '@fastify/cookie';
-import fastifyCors from '@fastify/cors';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(

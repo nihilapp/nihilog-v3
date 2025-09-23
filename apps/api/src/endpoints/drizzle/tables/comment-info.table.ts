@@ -1,13 +1,14 @@
-import { commentStatus, yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { postInfo } from '@drizzle/tables/post-info.table';
-import { userInfo } from '@drizzle/tables/user-info.table';
 import { sql } from 'drizzle-orm';
 import { foreignKey } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { text } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
+
+import { commentStatus, yn } from '@drizzle/enums';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
+import { postInfo } from '@drizzle/tables/post-info.table';
+import { userInfo } from '@drizzle/tables/user-info.table';
 
 export const commentInfoSeq = sql`
   CREATE SEQUENCE comment_info_seq

@@ -3,6 +3,7 @@ import stylistic from '@stylistic/eslint-plugin';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import tseslint from 'typescript-eslint';
+import importXPlugin from 'eslint-plugin-import-x';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,6 +36,7 @@ const baseConfig = [
     plugins: {
       '@typescript-eslint': tseslint.plugin,
       '@stylistic': stylistic,
+      'import-x': importXPlugin,
     },
   },
 
@@ -100,6 +102,24 @@ const baseConfig = [
       'no-underscore-dangle': 'off',
       'function-call-argument-newline': 'off',
       'function-paren-newline': 'off',
+
+      // import-x 규칙 (전역)
+      'import-x/extensions': 'off',
+      'import-x/no-extraneous-dependencies': 'off',
+      'import-x/no-unresolved': 'off',
+      'import-x/no-dynamic-require': 'off',
+      'import-x/prefer-default-export': 'off',
+      'import-x/order': [
+        'warn',
+        {
+          'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'newlines-between': 'always',
+          'alphabetize': { order: 'asc', caseInsensitive: true },
+        },
+      ],
+      'import-x/no-cycle': 'off',
+      'import-x/no-self-import': 'error',
+      'import-x/no-useless-path-segments': 'warn',
 
       // stylistic 규칙
       '@stylistic/multiline-ternary': ['warn', 'always'],
@@ -193,6 +213,27 @@ const baseConfig = [
     files: ['**/*.ts'],
     languageOptions: {
       parser: tseslint.parser,
+    },
+  },
+  // TS 파일 전용 import-x 설정 및 규칙
+  {
+    files: ['**/*.ts'],
+    settings: {
+      'import-x/resolver': {
+        typescript: {
+          alwaysTryTypes: true,
+          project: './tsconfig.json',
+        },
+        node: true,
+      },
+      'import-x/parsers': {
+        '@typescript-eslint/parser': ['.ts'],
+      },
+    },
+    rules: {
+      'import-x/named': 'error',
+      'import-x/default': 'error',
+      'import-x/namespace': 'error',
     },
   },
 ];

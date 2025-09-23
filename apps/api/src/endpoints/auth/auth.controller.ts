@@ -1,11 +1,3 @@
-import { MESSAGE_CODE } from '@/code/message.code';
-import { RESPONSE_CODE } from '@/code/response.code';
-import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
-import { ResponseDto } from '@/dto/response.dto';
-import { UserInfoDto } from '@/dto/user.dto';
-import { createError, createResponse } from '@/utils';
-import { createExampleUser } from '@/utils/createExampleUser';
-import { clearCookie, setCookie } from '@/utils/setCookie';
 import {
   Body,
   ClassSerializerInterceptor,
@@ -29,6 +21,16 @@ import {
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { FastifyReply, FastifyRequest } from 'fastify';
+
+import { MESSAGE_CODE } from '@/code/message.code';
+import { RESPONSE_CODE } from '@/code/response.code';
+import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
+import { ResponseDto } from '@/dto/response.dto';
+import { UserInfoDto } from '@/dto/user.dto';
+import { createError, createResponse } from '@/utils';
+import { createExampleUser } from '@/utils/createExampleUser';
+import { clearCookie, setCookie } from '@/utils/setCookie';
+
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayload } from './jwt.strategy';

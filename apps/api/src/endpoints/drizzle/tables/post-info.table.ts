@@ -1,13 +1,14 @@
-import { yn } from '@drizzle/enums';
-import { postStatus } from '@drizzle/enums/post-status.enum';
-import { categoryInfo } from '@drizzle/tables/category-info.table';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { userInfo } from '@drizzle/tables/user-info.table';
 import { sql } from 'drizzle-orm';
 import { jsonb } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
+
+import { yn } from '@drizzle/enums';
+import { postStatus } from '@drizzle/enums/post-status.enum';
+import { categoryInfo } from '@drizzle/tables/category-info.table';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
+import { userInfo } from '@drizzle/tables/user-info.table';
 
 // 게시글 기본 정보 테이블
 // - 기본키, 관계, 본문, 상태, 메타데이터로 구분

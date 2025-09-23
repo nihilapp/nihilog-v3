@@ -1,6 +1,7 @@
-import { createUserSchema, userRoleSchema, type UserRoleType } from '@drizzle/schemas/user.schema';
 import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
+
+import { createUserSchema, userRoleSchema, type UserRoleType } from '@drizzle/schemas/user.schema';
 
 // 관리자 회원가입 DTO
 export class CreateAdminDto extends createZodDto(createUserSchema.omit({ passwordConfirm: true, })) {

@@ -1,10 +1,11 @@
-import { yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { postInfo } from '@drizzle/tables/post-info.table';
 import { sql } from 'drizzle-orm';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { index, uniqueIndex } from 'drizzle-orm/pg-core';
+
+import { yn } from '@drizzle/enums';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
+import { postInfo } from '@drizzle/tables/post-info.table';
 
 // 태그 정보 테이블
 export const tagInfo = nihilogSchema.table('tag_info', {

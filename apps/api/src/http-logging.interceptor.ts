@@ -6,7 +6,7 @@ import {
   Logger,
   HttpException
 } from '@nestjs/common';
-import { FastifyRequest, FastifyReply } from 'fastify';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 

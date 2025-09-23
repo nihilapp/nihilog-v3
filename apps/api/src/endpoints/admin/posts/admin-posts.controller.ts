@@ -1,8 +1,8 @@
 import { Controller, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { AdminAuthGuard } from '@auth/admin-auth.guard';
 import { PostsService } from '@admin/posts/admin-posts.service';
+import { AdminAuthGuard } from '@auth/admin-auth.guard';
 
 @ApiTags('admin/posts')
 @Controller('admin/posts')

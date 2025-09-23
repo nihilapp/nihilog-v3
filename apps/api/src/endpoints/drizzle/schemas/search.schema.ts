@@ -16,6 +16,10 @@ export const baseSearchSchema = z.object({
   srchKywd: z.string()
     .max(100, '검색 키워드는 100자 이하여야 합니다.')
     .optional(),
+  page: z.number()
+    .int('페이지는 정수여야 합니다.')
+    .min(1, '페이지는 1 이상이어야 합니다.')
+    .optional(),
 });
 
 // 페이지네이션 검증 함수 (재사용용)

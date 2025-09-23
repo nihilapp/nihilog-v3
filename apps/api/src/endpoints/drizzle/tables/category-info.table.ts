@@ -1,10 +1,11 @@
-import { yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 import { sql } from 'drizzle-orm';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
 import { foreignKey } from 'drizzle-orm/pg-core';
+
+import { yn } from '@drizzle/enums';
+import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 
 export const categoryInfo = nihilogSchema.table('category_info', {
   ctgryNo: integer('ctgry_no')

@@ -15,18 +15,19 @@ import {
   ApiTags,
   ApiBody
 } from '@nestjs/swagger';
-import { FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
+import cloneDeep from 'lodash/cloneDeep';
 
 import { MESSAGE_CODE } from '@/code/message.code';
 import { RESPONSE_CODE } from '@/code/response.code';
 import { ResponseDto } from '@/dto/response.dto';
 import { UpdateUserDto, UserInfoDto } from '@/dto/user.dto';
+import { createError, createResponse } from '@/utils';
+import { createExampleUser } from '@/utils/createExampleUser';
 import { AdminAuthGuard } from '@auth/admin-auth.guard';
 import { JwtPayload } from '@auth/jwt.strategy';
 import { UserRepository } from '@repositories/user.repository';
-import { createError, createResponse } from '@/utils';
-import { createExampleUser } from '@/utils/createExampleUser';
-import { cloneDeep } from 'lodash';
+
 import { AdminService } from './admin.service';
 
 @ApiTags('admin')

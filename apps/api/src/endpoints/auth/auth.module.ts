@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { MailerModule } from '@nestjs-modules/mailer';
+
+import { UsersModule } from '@admin/users/admin-users.module';
+import { DrizzleModule } from '@drizzle/drizzle.module';
+import { UserRepository } from '@repositories/user.repository';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from '@admin/users/admin-users.module';
 import { JwtStrategy } from './jwt.strategy';
-import { DrizzleModule } from '@drizzle/drizzle.module';
-import { UserRepository } from '@repositories/user.repository';
 
 @Module({
   imports: [

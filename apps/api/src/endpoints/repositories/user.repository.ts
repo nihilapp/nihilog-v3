@@ -1,11 +1,19 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { and, asc, eq, sql } from 'drizzle-orm';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
 import { userInfo } from '@/endpoints/drizzle/tables';
+import { updateColumns } from '@/utils/ormHelper';
+import { equals, likes } from '@/utils/ormHelper';
+import { pageHelper } from '@/utils/pageHelper';
 import { isEmptyString } from '@/utils/stringHelper';
-import { getLimitOffset } from '@/utils/pagination';
-import { updateColumns } from '@/utils/updateColumns';
 import { timeToString } from '@/utils/timeHelper';
+import { DRIZZLE } from '@drizzle/drizzle.module';
+import { schemas } from '@drizzle/schemas';
+import { UserInfoType } from '@drizzle/schemas/user.schema';
 
 // 공용 사용자 select 매핑: 중복 제거
 const userInfoSelect = {
@@ -28,14 +36,6 @@ const userInfoSelect = {
   delDt: userInfo.delDt,
 } as const;
 
-// 페이지네이션은 유틸로 분리하여 사용합니다.
-import { DRIZZLE } from '@drizzle/drizzle.module';
-import { schemas } from '@drizzle/schemas';
-import { UserInfoType } from '@drizzle/schemas/user.schema';
-import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, eq, like, sql } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-
 @Injectable()
 export class UserRepository {
   constructor(
@@ -55,26 +55,20 @@ export class UserRepository {
     userNm?: string;
     includeDeleted?: boolean;
   }): Promise<UserInfoType | null> {
+    const { includeDeleted, ...searchConditions } = conditions;
+
+    const whereConditions = [
+      ...equals(userInfo, searchConditions),
+      // includeDeleted가 true면 delYn 조건 제거, 아니면 'N'만 조회
+      !includeDeleted
+        ? eq(userInfo.delYn, 'N')
+        : undefined,
+    ].filter(Boolean);
+
     const [ result, ] = await this.db
       .select(userInfoSelect)
       .from(userInfo)
-      .where(
-        and(
-          conditions.userNo !== undefined
-            ? eq(userInfo.userNo, conditions.userNo)
-            : undefined,
-          conditions.emlAddr !== undefined
-            ? eq(userInfo.emlAddr, conditions.emlAddr)
-            : undefined,
-          conditions.userNm !== undefined
-            ? eq(userInfo.userNm, conditions.userNm)
-            : undefined,
-          // includeDeleted가 true면 delYn 조건 제거, 아니면 'N'만 조회
-          conditions.includeDeleted
-            ? undefined
-            : eq(userInfo.delYn, 'N')
-        )
-      );
+      .where(and(...whereConditions));
 
     return result;
   }
@@ -141,29 +135,25 @@ export class UserRepository {
     srchKywd?: string,
     delYn?: 'Y' | 'N'
   ): Promise<UserInfoType[]> {
-    const whereConditions = [
-      !isEmptyString(srchKywd) && srchType === 'userNm'
-        ? like(userInfo.userNm, `%${srchKywd}%`)
-        : undefined,
-      !isEmptyString(srchKywd) && srchType === 'emlAddr'
-        ? like(userInfo.emlAddr, `%${srchKywd}%`)
-        : undefined,
-      !isEmptyString(srchKywd) && srchType === 'userRole'
-        ? like(userInfo.userRole, `%${srchKywd}%`)
-        : undefined,
-    ];
-
-    if (delYn !== undefined) {
-      whereConditions.push(eq(userInfo.delYn, delYn));
+    const searchConditions: Record<string, string> = {};
+    if (!isEmptyString(srchKywd) && srchType) {
+      searchConditions[srchType] = srchKywd;
     }
+
+    const whereConditions = [
+      ...likes(userInfo, searchConditions),
+      delYn !== undefined
+        ? eq(userInfo.delYn, delYn)
+        : undefined,
+    ].filter(Boolean);
 
     const result = await this.db
       .select(userInfoSelect)
       .from(userInfo)
       .where(and(...whereConditions))
       .orderBy(asc(userInfo.userNo))
-      .limit(getLimitOffset(strtRow, endRow).limit ?? undefined)
-      .offset(getLimitOffset(strtRow, endRow).offset ?? undefined);
+      .limit(pageHelper(strtRow, endRow).limit ?? undefined)
+      .offset(pageHelper(strtRow, endRow).offset ?? undefined);
 
     return result;
   }

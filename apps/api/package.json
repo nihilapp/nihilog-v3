@@ -75,6 +75,7 @@
     "drizzle-kit": "^0.31.4",
     "eslint": "^9.36.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import-x": "^4.16.1",
     "globals": "^16.4.0",
     "source-map-support": "^0.5.21",
     "ts-loader": "^9.5.4",

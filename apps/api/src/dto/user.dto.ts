@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
+import { createZodDto } from 'nestjs-zod';
 
 import {
   updateUserSchema,
@@ -7,8 +9,6 @@ import {
   type UserRoleType,
   type YnType
 } from '@drizzle/schemas/user.schema';
-import { Exclude } from 'class-transformer';
-import { createZodDto } from 'nestjs-zod';
 
 // 사용자 조회 DTO
 export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
@@ -266,6 +266,13 @@ export class SearchUserDto extends createZodDto(searchUserSchema) {
     required: false,
   })
   declare srchKywd?: string;
+
+  @ApiProperty({
+    description: '페이지 번호',
+    example: 1,
+    required: false,
+  })
+  declare page?: number;
 
   @ApiProperty({
     description: '삭제 여부 (미지정 시 기본값 N)',
