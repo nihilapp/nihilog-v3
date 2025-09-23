@@ -31,13 +31,13 @@ import { createExampleUser } from '@/utils/createExampleUser';
 import { AdminAuthGuard } from '@auth/admin-auth.guard';
 import { JwtPayload } from '@auth/jwt.strategy';
 
-import { UsersService } from './admin-users.service';
+import { AdminUserService } from './admin-users.service';
 
 @ApiTags('admin/users')
 @Controller('admin/users')
 @UseGuards(AdminAuthGuard)
-export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+export class AdminUserController {
+  constructor(private readonly usersService: AdminUserService) { }
 
   /**
    * @description 새 사용자 생성
@@ -175,6 +175,7 @@ export class UsersController {
     }
 
     const result = await this.usersService.getUsers(
+      body.page,
       body.strtRow,
       body.endRow,
       body.srchType,

@@ -4,3 +4,4 @@ export { postInfo } from './post-info.table';
 export { categoryInfo } from './category-info.table';
 export { tagInfo, postTagMap } from './tag-info.table';
 export { commentInfo } from './comment-info.table';
+export { userSubscribeInfo } from './user-subscribe-info.table';

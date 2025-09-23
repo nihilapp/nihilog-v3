@@ -163,6 +163,20 @@ export const MESSAGE_CODE = {
   ADMIN_PASSWORD_MISMATCH: '새 비밀번호와 확인 비밀번호가 일치하지 않습니다.',
   ADMIN_CURRENT_PASSWORD_INCORRECT: '현재 비밀번호가 올바르지 않습니다.',
 
+  // ===== 구독 관련 메시지 =====
+  // 성공 메시지
+  SUBSCRIPTION_FETCH_SUCCESS: '구독 설정을 조회했습니다.',
+  SUBSCRIPTION_UPDATE_SUCCESS: '구독 설정이 수정되었습니다.',
+  SUBSCRIPTION_CREATE_SUCCESS: '구독 설정이 생성되었습니다.',
+  SUBSCRIPTION_DELETE_SUCCESS: '구독 설정이 삭제되었습니다.',
+
+  // 에러 메시지
+  SUBSCRIPTION_FETCH_ERROR: '구독 설정 조회에 실패했습니다.',
+  SUBSCRIPTION_UPDATE_ERROR: '구독 설정 수정에 실패했습니다.',
+  SUBSCRIPTION_CREATE_ERROR: '구독 설정 생성에 실패했습니다.',
+  SUBSCRIPTION_DELETE_ERROR: '구독 설정 삭제에 실패했습니다.',
+  SUBSCRIPTION_NOT_FOUND: '구독 설정을 찾을 수 없습니다.',
+
   // ===== 데이터베이스 관련 메시지 =====
   // 성공/정보 메시지
   DB_CONNECTED: '데이터베이스에 연결되었습니다.',

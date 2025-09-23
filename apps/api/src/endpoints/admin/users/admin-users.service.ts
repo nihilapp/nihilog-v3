@@ -8,7 +8,7 @@ import { searchUserSchema } from '@drizzle/schemas/user.schema';
 import { UserRepository } from '@repositories/user.repository';
 
 @Injectable()
-export class UsersService {
+export class AdminUserService {
   constructor(
     private readonly userRepository: UserRepository
   ) { }
@@ -45,6 +45,7 @@ export class UsersService {
 
   /**
    * @description 사용자 목록 검색
+   * @param page 페이지 번호
    * @param strtRow 시작 행
    * @param endRow 끝 행
    * @param srchType 검색 타입
@@ -52,6 +53,7 @@ export class UsersService {
    * @param delYn 삭제 여부
    */
   async getUsers(
+    page?: number,
     strtRow?: number,
     endRow?: number,
     srchType?: 'userNm' | 'emlAddr' | 'userRole',
@@ -59,6 +61,7 @@ export class UsersService {
     delYn?: 'Y' | 'N'
   ): Promise<ListDto<UserInfoDto> | null> {
     const searchData = {
+      page,
       strtRow,
       endRow,
       srchType,
@@ -78,6 +81,7 @@ export class UsersService {
 
     try {
       const result = await this.userRepository.getUsers(
+        safeData.data.page,
         safeData.data.strtRow,
         safeData.data.endRow,
         finalSrchType,

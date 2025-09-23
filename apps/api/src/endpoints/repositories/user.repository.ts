@@ -122,6 +122,7 @@ export class UserRepository {
 
   /**
    * @description 사용자 목록 조회
+   * @param page 페이지 번호
    * @param strtRow 시작 행
    * @param endRow 종료 행
    * @param srchType 검색 타입
@@ -129,6 +130,7 @@ export class UserRepository {
    * @param delYn 삭제 여부
    */
   async getUsers(
+    page?: number,
     strtRow?: number,
     endRow?: number,
     srchType?: 'userNm' | 'emlAddr' | 'userRole',
@@ -152,10 +154,33 @@ export class UserRepository {
       .from(userInfo)
       .where(and(...whereConditions))
       .orderBy(asc(userInfo.userNo))
-      .limit(pageHelper(strtRow, endRow).limit ?? undefined)
-      .offset(pageHelper(strtRow, endRow).offset ?? undefined);
+      .limit(pageHelper(page, strtRow, endRow).limit)
+      .offset(pageHelper(page, strtRow, endRow).offset);
 
     return result;
+  }
+
+  /**
+   * @description 사용자 소프트 삭제
+   * @param userNo 사용자 번호
+   */
+  async deleteUser(userNo: number): Promise<UserInfoType | null> {
+    const currentTime = timeToString();
+
+    const [ result, ] = await this.db
+      .update(userInfo)
+      .set({
+        useYn: 'N',
+        delYn: 'Y',
+        delDt: currentTime,
+        delNo: userNo, // 자기 자신이 삭제
+        updtDt: currentTime,
+        updtNo: userNo, // 자기 자신이 수정
+      })
+      .where(eq(userInfo.userNo, userNo))
+      .returning(userInfoSelect);
+
+    return result || null;
   }
 
   /**

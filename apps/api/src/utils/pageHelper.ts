@@ -1,17 +1,24 @@
 export function pageHelper(
   page?: number,
+  strtRow?: number,
   endRow?: number
 ): { limit: number | undefined; offset: number | undefined } {
   if (page == null || endRow == null) {
     return { limit: undefined, offset: undefined, };
   }
 
-  const calculatedStrtRow = page * endRow;
-  const start = Math.max(0, Math.trunc(calculatedStrtRow));
-  const end = Math.max(endRow, Math.trunc(endRow));
+  const pagination = {
+    startRow: 0,
+    endRow: 0,
+  };
+
+  pagination.startRow = page > 0
+    ? strtRow
+    : page * endRow;
+  pagination.endRow = endRow;
 
   return {
-    limit: end,
-    offset: start,
+    limit: pagination.endRow,
+    offset: pagination.startRow,
   };
 }

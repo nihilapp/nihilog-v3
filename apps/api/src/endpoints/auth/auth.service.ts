@@ -13,7 +13,7 @@ import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import { createError, createResponse } from '@/utils';
 import { timeToString } from '@/utils/timeHelper';
-import { UsersService } from '@admin/users/admin-users.service';
+import { AdminUserService } from '@admin/users/admin-users.service';
 import { DRIZZLE } from '@drizzle/drizzle.module';
 import { schemas } from '@drizzle/schemas';
 import { UserRoleType } from '@drizzle/schemas/user.schema';
@@ -31,7 +31,7 @@ interface JwtPayload {
 export class AuthService {
   constructor(
     @Inject(DRIZZLE)
-    private readonly usersService: UsersService,
+    private readonly usersService: AdminUserService,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
     private readonly userRepository: UserRepository,
