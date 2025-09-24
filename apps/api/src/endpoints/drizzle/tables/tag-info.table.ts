@@ -5,7 +5,7 @@ import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import { yn } from '@drizzle/enums';
 import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { postInfo } from '@drizzle/tables/post-info.table';
+import { pstInfo } from '@drizzle/tables/pst-info.table';
 
 // 태그 정보 테이블
 export const tagInfo = nihilogSchema.table('tag_info', {
@@ -20,10 +20,8 @@ export const tagInfo = nihilogSchema.table('tag_info', {
   tagColr: varchar('tag_colr', { length: 30, }),
 
   useYn: yn('use_yn')
-    .notNull()
     .default('Y'),
   delYn: yn('del_yn')
-    .notNull()
     .default('N'),
 
   crtNo: integer('crt_no'),
@@ -43,16 +41,16 @@ export const tagInfo = nihilogSchema.table('tag_info', {
 ]);
 
 // 게시글-태그 매핑 테이블 (다대다)
-export const postTagMap = nihilogSchema.table('post_tag_map', {
+export const pstTagMpng = nihilogSchema.table('pst_tag_mpng', {
   // [PK]
   tagMapNo: integer('tag_map_no')
     .primaryKey()
-    .default(sql`nextval('post_tag_map_seq')`),
+    .default(sql`nextval('pst_tag_mpng_seq')`),
 
   // [관계]
   pstNo: integer('pst_no')
     .notNull()
-    .references(() => postInfo.pstNo),
+    .references(() => pstInfo.pstNo),
   tagNo: integer('tag_no')
     .notNull()
     .references(() => tagInfo.tagNo),

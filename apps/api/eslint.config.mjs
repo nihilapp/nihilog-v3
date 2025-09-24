@@ -187,6 +187,10 @@ const baseConfig = [
         },
       ],
 
+      // 함수 정의/호출 줄바꿈 규칙
+      '@stylistic/function-paren-newline': ['error', 'multiline'],
+      '@stylistic/function-call-argument-newline': ['error', 'consistent'],
+
       // typescript-eslint 규칙
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/interface-name-prefix': 'off',

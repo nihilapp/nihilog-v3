@@ -6,25 +6,25 @@ import { index } from 'drizzle-orm/pg-core';
 
 import { yn } from '@drizzle/enums';
 import { postStatus } from '@drizzle/enums/post-status.enum';
-import { categoryInfo } from '@drizzle/tables/category-info.table';
+import { ctgryInfo } from '@drizzle/tables/ctgry-info.table';
 import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 import { userInfo } from '@drizzle/tables/user-info.table';
 
 // 게시글 기본 정보 테이블
 // - 기본키, 관계, 본문, 상태, 메타데이터로 구분
 
-export const postInfo = nihilogSchema.table('post_info', {
+export const pstInfo = nihilogSchema.table('pst_info', {
   // [PK]
   pstNo: integer('pst_no')
     .primaryKey()
-    .default(sql`nextval('post_info_seq')`),
+    .default(sql`nextval('pst_info_seq')`),
 
   // [관계]
   userNo: integer('user_no')
     .notNull()
     .references(() => userInfo.userNo), // 작성자 FK
   ctgryNo: integer('ctgry_no')
-    .references(() => categoryInfo.ctgryNo), // 카테고리 FK
+    .references(() => ctgryInfo.ctgryNo), // 카테고리 FK
 
   // [본문]
   pstTtl: varchar('pst_ttl', { length: 255, }) // 포스트 제목
@@ -35,24 +35,19 @@ export const postInfo = nihilogSchema.table('post_info', {
 
   // [게시]
   pstStts: postStatus('pst_stts') // 게시물 상태 (empty | writing | finished)
-    .notNull()
     .default('EMPTY'),
   publDt: varchar('publ_dt', { length: 50, }), // 발행 일시(옵션)
   rlsYn: yn('rls_yn') // 공개 여부
-    .notNull()
     .default('Y'),
   archYn: yn('arch_yn') // 보관 여부
-    .notNull()
     .default('N'),
   secrYn: yn('secr_yn'), // 비밀글 여부(옵션)
   pstPswd: varchar('pst_pswd', { length: 255, }), // 게시물 비밀번호(옵션)
 
   // [상태]
   useYn: yn('use_yn') // 사용 여부
-    .notNull()
     .default('Y'),
   delYn: yn('del_yn') // 삭제 여부
-    .notNull()
     .default('N'),
 
   // [메타데이터]

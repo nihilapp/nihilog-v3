@@ -7,11 +7,11 @@ import { integer } from 'drizzle-orm/pg-core';
 
 import { commentStatus, yn } from '@drizzle/enums';
 import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { postInfo } from '@drizzle/tables/post-info.table';
+import { pstInfo } from '@drizzle/tables/pst-info.table';
 import { userInfo } from '@drizzle/tables/user-info.table';
 
-export const commentInfoSeq = sql`
-  CREATE SEQUENCE comment_info_seq
+export const cmntInfoSeq = sql`
+  CREATE SEQUENCE cmnt_info_seq
     INCREMENT 1
     START 1
     MINVALUE 1
@@ -19,14 +19,14 @@ export const commentInfoSeq = sql`
     CACHE 1;
 `;
 
-export const commentInfo = nihilogSchema.table('comment_info', {
+export const cmntInfo = nihilogSchema.table('cmnt_info', {
   // [PK]
   cmntNo: integer('cmnt_no')
     .primaryKey()
-    .default(sql`nextval('comment_info_seq')`),
+    .default(sql`nextval('cmnt_info_seq')`),
   // [FK]
   pstNo: integer('pst_no')
-    .references(() => postInfo.pstNo)
+    .references(() => pstInfo.pstNo)
     .notNull(),
   // 단, 선택. 게스트가 댓글 달 때 사용자 정보가 없음.
   userNo: integer('user_no')
@@ -41,21 +41,16 @@ export const commentInfo = nihilogSchema.table('comment_info', {
   cmntMtxt: text('cmnt_mtxt')
     .notNull(),
   cmntStts: commentStatus('cmnt_stts')
-    .notNull()
     .default('PENDING'),
   cmntStp: integer('cmnt_stp')
-    .notNull()
     .default(0),
   upCmntNo: integer('up_cmnt_no'),
   secrYn: yn('secr_yn')
-    .notNull()
     .default('N'),
 
   useYn: yn('use_yn')
-    .notNull()
     .default('Y'),
   delYn: yn('del_yn')
-    .notNull()
     .default('N'),
 
   crtNo: integer('crt_no'),

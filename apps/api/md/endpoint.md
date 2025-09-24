@@ -84,6 +84,50 @@ interface UpdateSubscriptionDto {
 }
 ```
 
+### 구독 관리 API (Users/Subscriptions)
+
+- [⏳] GET /users/subscriptions/categories - 내 카테고리 구독 목록 조회 (JWT 필요)
+- [⏳] POST /users/subscriptions/categories/:ctgryNo - 카테고리 구독 추가 (JWT 필요)
+- [⏳] DELETE /users/subscriptions/categories/:ctgryNo - 카테고리 구독 삭제 (JWT 필요)
+
+```ts
+interface CategorySubscriptionDto {
+  ctgrySbcrNo: number;
+  sbcrNo: number;
+  ctgryNo: number;
+  ctgryNm: string;          // 조인해서 카테고리명 포함
+  useYn: "Y" | "N";
+  crtDt: string;
+}
+```
+
+- [⏳] GET /users/subscriptions/tags - 내 태그 구독 목록 조회 (JWT 필요)
+- [⏳] POST /users/subscriptions/tags/:tagNo - 태그 구독 추가 (JWT 필요)
+- [⏳] DELETE /users/subscriptions/tags/:tagNo - 태그 구독 삭제 (JWT 필요)
+
+```ts
+interface TagSubscriptionDto {
+  tagSbcrNo: number;
+  sbcrNo: number;
+  tagNo: number;
+  tagNm: string;            // 조인해서 태그명 포함
+  useYn: "Y" | "N";
+  crtDt: string;
+}
+```
+
+- [⏳] POST /users/subscriptions/bulk - 구독 일괄 설정 (JWT 필요)
+
+```ts
+interface BulkSubscriptionDto {
+  categories: number[];     // 구독할 카테고리 번호 목록
+  tags: number[];          // 구독할 태그 번호 목록
+  replaceMode: boolean;    // true: 기존 구독 모두 삭제 후 새로 설정, false: 추가만
+}
+```
+
+### 기존 댓글 API
+
 - [ ] GET /users/comments?page=&size= - 내가 작성한 댓글 목록 (JWT 필요) **[댓글 시스템 구현 후]**
 - [ ] PUT /users/comments/:cmntNo - 내 댓글 수정 (JWT 필요) **[댓글 시스템 구현 후]**
 - [ ] DELETE /users/comments/:cmntNo - 내 댓글 삭제 (JWT 필요) **[댓글 시스템 구현 후]**

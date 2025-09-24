@@ -10,11 +10,11 @@ import { userInfo } from '@drizzle/tables/user-info.table';
 // - 이메일 알림 설정, 구독 카테고리/태그 관리
 
 // 테이블 정의
-export const userSubscribeInfo = nihilogSchema.table('user_subscribe_info', {
+export const userSbcrInfo = nihilogSchema.table('user_sbcr_info', {
   // [PK]
   sbcrNo: integer('sbcr_no')
     .primaryKey()
-    .default(sql`nextval('user_subscribe_info_seq')`),
+    .default(sql`nextval('user_sbcr_info_seq')`),
 
   // [FK]
   userNo: integer('user_no')
@@ -24,13 +24,10 @@ export const userSubscribeInfo = nihilogSchema.table('user_subscribe_info', {
 
   // [이메일 알림 설정]
   emlNtfyYn: yn('eml_ntfy_yn') // 이메일 알림 전체 on/off
-    .notNull()
     .default('Y'),
   newPstNtfyYn: yn('new_pst_ntfy_yn') // 새 글 알림
-    .notNull()
     .default('Y'),
   cmntRplNtfyYn: yn('cmnt_rpl_ntfy_yn') // 내 댓글 답글 알림
-    .notNull()
     .default('Y'),
 
   // [구독 카테고리/태그]
@@ -39,10 +36,8 @@ export const userSubscribeInfo = nihilogSchema.table('user_subscribe_info', {
 
   // [상태]
   useYn: yn('use_yn') // 사용 여부
-    .notNull()
     .default('Y'),
   delYn: yn('del_yn') // 삭제 여부
-    .notNull()
     .default('N'),
 
   // [메타데이터]

@@ -38,9 +38,7 @@ import type { UserService } from '@users/users.service';
 @ApiBearerAuth('JWT-auth')
 @ApiCookieAuth('accessToken')
 export class UserController {
-  constructor(
-    private readonly userService: UserService
-  ) { }
+  constructor(private readonly userService: UserService) { }
 
   @Get('profile')
   @ApiOperation({
@@ -71,9 +69,7 @@ export class UserController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  async getProfile(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> }
-  ): Promise<ResponseDto<UserInfoDto>> {
+  async getProfile(@Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> }): Promise<ResponseDto<UserInfoDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -154,9 +150,7 @@ export class UserController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  async deleteProfile(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> }
-  ): Promise<ResponseDto<null>> {
+  async deleteProfile(@Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> }): Promise<ResponseDto<null>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -193,9 +187,7 @@ export class UserController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  async getSubscription(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> }
-  ): Promise<ResponseDto<UserSubscriptionDto>> {
+  async getSubscription(@Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> }): Promise<ResponseDto<UserSubscriptionDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }

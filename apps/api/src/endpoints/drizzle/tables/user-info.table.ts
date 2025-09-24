@@ -23,7 +23,6 @@ export const userInfo = nihilogSchema.table('user_info', {
     .notNull()
     .unique(),
   userRole: userRole('user_role') // 권한(ADMIN/USER)
-    .notNull()
     .default('USER'),
 
   // [프로필]
@@ -37,10 +36,8 @@ export const userInfo = nihilogSchema.table('user_info', {
 
   // [상태]
   useYn: yn('use_yn') // 사용 여부
-    .notNull()
     .default('Y'),
   delYn: yn('del_yn') // 삭제 여부
-    .notNull()
     .default('N'),
   lastLgnDt: varchar('last_lgn_dt', { length: 50, }), // 마지막 로그인 일시 (YYYY-MM-DD HH:MM:SS)
   lastPswdChgDt: varchar('last_pswd_chg_dt', { length: 50, }), // 마지막 비밀번호 변경 일시 (YYYY-MM-DD HH:MM:SS)

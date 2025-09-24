@@ -7,10 +7,10 @@ import { foreignKey } from 'drizzle-orm/pg-core';
 import { yn } from '@drizzle/enums';
 import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 
-export const categoryInfo = nihilogSchema.table('category_info', {
+export const ctgryInfo = nihilogSchema.table('ctgry_info', {
   ctgryNo: integer('ctgry_no')
     .primaryKey()
-    .default(sql`nextval('category_info_seq')`),
+    .default(sql`nextval('ctgry_info_seq')`),
 
   ctgryNm: varchar('ctgry_nm', { length: 255, })
     .notNull()
@@ -18,15 +18,12 @@ export const categoryInfo = nihilogSchema.table('category_info', {
   ctgryExpln: varchar('ctgry_expln', { length: 500, }),
   ctgryColr: varchar('ctgry_colr', { length: 30, }), // 카테고리 색상(문자열)
   ctgryStp: integer('ctgry_stp')
-    .notNull()
     .default(0),
   upCtgryNo: integer('up_ctgry_no'),
 
   useYn: yn('use_yn')
-    .notNull()
     .default('Y'),
   delYn: yn('del_yn')
-    .notNull()
     .default('N'),
 
   crtNo: integer('crt_no'),

@@ -1,11 +1,273 @@
 {
-  "id": "97da819e-2e47-454b-bd11-446d760233c3",
-  "prevId": "b50c70a2-5687-4e24-a7ac-242b026faa98",
+  "id": "72966ef2-8a86-438a-94d3-4501894ead6e",
+  "prevId": "91e6d406-14e0-4647-99f1-598ed7627ad6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "nihilog.category_info": {
-      "name": "category_info",
+    "nihilog.cmnt_info": {
+      "name": "cmnt_info",
+      "schema": "nihilog",
+      "columns": {
+        "cmnt_no": {
+          "name": "cmnt_no",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "nextval('cmnt_info_seq')"
+        },
+        "pst_no": {
+          "name": "pst_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_no": {
+          "name": "user_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vstr_nm": {
+          "name": "vstr_nm",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vstr_eml": {
+          "name": "vstr_eml",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vstr_pswd": {
+          "name": "vstr_pswd",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cmnt_mtxt": {
+          "name": "cmnt_mtxt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cmnt_stts": {
+          "name": "cmnt_stts",
+          "type": "comment_status",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'PENDING'"
+        },
+        "cmnt_stp": {
+          "name": "cmnt_stp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "up_cmnt_no": {
+          "name": "up_cmnt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "secr_yn": {
+          "name": "secr_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'N'"
+        },
+        "use_yn": {
+          "name": "use_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "del_yn": {
+          "name": "del_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'N'"
+        },
+        "crt_no": {
+          "name": "crt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crt_dt": {
+          "name": "crt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updt_no": {
+          "name": "updt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updt_dt": {
+          "name": "updt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "del_no": {
+          "name": "del_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "del_dt": {
+          "name": "del_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "comment_info_up_cmnt_no_idx": {
+          "name": "comment_info_up_cmnt_no_idx",
+          "columns": [
+            {
+              "expression": "up_cmnt_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comment_info_user_no_idx": {
+          "name": "comment_info_user_no_idx",
+          "columns": [
+            {
+              "expression": "user_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comment_info_pst_no_idx": {
+          "name": "comment_info_pst_no_idx",
+          "columns": [
+            {
+              "expression": "pst_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comment_info_active_idx": {
+          "name": "comment_info_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "comment_info_crt_dt_idx": {
+          "name": "comment_info_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cmnt_info_pst_no_pst_info_pst_no_fk": {
+          "name": "cmnt_info_pst_no_pst_info_pst_no_fk",
+          "tableFrom": "cmnt_info",
+          "tableTo": "pst_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "pst_no"
+          ],
+          "columnsTo": [
+            "pst_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cmnt_info_user_no_user_info_user_no_fk": {
+          "name": "cmnt_info_user_no_user_info_user_no_fk",
+          "tableFrom": "cmnt_info",
+          "tableTo": "user_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "user_no"
+          ],
+          "columnsTo": [
+            "user_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "comment_info_up_cmnt_no_fk": {
+          "name": "comment_info_up_cmnt_no_fk",
+          "tableFrom": "cmnt_info",
+          "tableTo": "cmnt_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "up_cmnt_no"
+          ],
+          "columnsTo": [
+            "cmnt_no"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "nihilog.ctgry_info": {
+      "name": "ctgry_info",
       "schema": "nihilog",
       "columns": {
         "ctgry_no": {
@@ -13,7 +275,7 @@
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "default": "nextval('category_info_seq')"
+          "default": "nextval('ctgry_info_seq')"
         },
         "ctgry_nm": {
           "name": "ctgry_nm",
@@ -37,7 +299,7 @@
           "name": "ctgry_stp",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": 0
         },
         "up_ctgry_no": {
@@ -51,7 +313,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'Y'"
         },
         "del_yn": {
@@ -59,7 +321,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'N'"
         },
         "crt_no": {
@@ -70,10 +332,9 @@
         },
         "crt_dt": {
           "name": "crt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "updt_no": {
           "name": "updt_no",
@@ -83,10 +344,9 @@
         },
         "updt_dt": {
           "name": "updt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "del_no": {
           "name": "del_no",
@@ -96,17 +356,111 @@
         },
         "del_dt": {
           "name": "del_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "category_info_up_ctgry_no_idx": {
+          "name": "category_info_up_ctgry_no_idx",
+          "columns": [
+            {
+              "expression": "up_ctgry_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "category_info_parent_level_idx": {
+          "name": "category_info_parent_level_idx",
+          "columns": [
+            {
+              "expression": "up_ctgry_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ctgry_stp",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "category_info_active_idx": {
+          "name": "category_info_active_idx",
+          "columns": [
+            {
+              "expression": "up_ctgry_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "category_info_crt_dt_idx": {
+          "name": "category_info_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "category_info_up_ctgry_no_fk": {
+          "name": "category_info_up_ctgry_no_fk",
+          "tableFrom": "ctgry_info",
+          "tableTo": "ctgry_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "up_ctgry_no"
+          ],
+          "columnsTo": [
+            "ctgry_no"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "cascade"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "category_info_ctgry_nm_unique": {
-          "name": "category_info_ctgry_nm_unique",
+        "ctgry_info_ctgry_nm_unique": {
+          "name": "ctgry_info_ctgry_nm_unique",
           "nullsNotDistinct": false,
           "columns": [
             "ctgry_nm"
@@ -117,8 +471,209 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "nihilog.post_info": {
-      "name": "post_info",
+    "nihilog.ctgry_sbcr_mpng": {
+      "name": "ctgry_sbcr_mpng",
+      "schema": "nihilog",
+      "columns": {
+        "ctgry_sbcr_no": {
+          "name": "ctgry_sbcr_no",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "nextval('ctgry_sbcr_mpng_seq')"
+        },
+        "sbcr_no": {
+          "name": "sbcr_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ctgry_no": {
+          "name": "ctgry_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "use_yn": {
+          "name": "use_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "del_yn": {
+          "name": "del_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'N'"
+        },
+        "crt_no": {
+          "name": "crt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crt_dt": {
+          "name": "crt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updt_no": {
+          "name": "updt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updt_dt": {
+          "name": "updt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "del_no": {
+          "name": "del_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "del_dt": {
+          "name": "del_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "ctgry_sbcr_mpng_sbcr_no_idx": {
+          "name": "ctgry_sbcr_mpng_sbcr_no_idx",
+          "columns": [
+            {
+              "expression": "sbcr_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ctgry_sbcr_mpng_ctgry_no_idx": {
+          "name": "ctgry_sbcr_mpng_ctgry_no_idx",
+          "columns": [
+            {
+              "expression": "ctgry_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ctgry_sbcr_mpng_active_idx": {
+          "name": "ctgry_sbcr_mpng_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ctgry_sbcr_mpng_crt_dt_idx": {
+          "name": "ctgry_sbcr_mpng_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ctgry_sbcr_mpng_uq": {
+          "name": "ctgry_sbcr_mpng_uq",
+          "columns": [
+            {
+              "expression": "sbcr_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ctgry_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "ctgry_sbcr_mpng_sbcr_no_user_sbcr_info_sbcr_no_fk": {
+          "name": "ctgry_sbcr_mpng_sbcr_no_user_sbcr_info_sbcr_no_fk",
+          "tableFrom": "ctgry_sbcr_mpng",
+          "tableTo": "user_sbcr_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "sbcr_no"
+          ],
+          "columnsTo": [
+            "sbcr_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ctgry_sbcr_mpng_ctgry_no_ctgry_info_ctgry_no_fk": {
+          "name": "ctgry_sbcr_mpng_ctgry_no_ctgry_info_ctgry_no_fk",
+          "tableFrom": "ctgry_sbcr_mpng",
+          "tableTo": "ctgry_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "ctgry_no"
+          ],
+          "columnsTo": [
+            "ctgry_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "nihilog.pst_info": {
+      "name": "pst_info",
       "schema": "nihilog",
       "columns": {
         "pst_no": {
@@ -126,7 +681,7 @@
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "default": "nextval('post_info_seq')"
+          "default": "nextval('pst_info_seq')"
         },
         "user_no": {
           "name": "user_no",
@@ -163,12 +718,12 @@
           "type": "post_status",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'EMPTY'"
         },
         "publ_dt": {
           "name": "publ_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         },
@@ -177,7 +732,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'Y'"
         },
         "arch_yn": {
@@ -185,11 +740,11 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'N'"
         },
-        "scrty_yn": {
-          "name": "scrty_yn",
+        "secr_yn": {
+          "name": "secr_yn",
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
@@ -206,7 +761,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'Y'"
         },
         "del_yn": {
@@ -214,7 +769,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'N'"
         },
         "crt_no": {
@@ -225,10 +780,9 @@
         },
         "crt_dt": {
           "name": "crt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "updt_no": {
           "name": "updt_no",
@@ -238,10 +792,9 @@
         },
         "updt_dt": {
           "name": "updt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "del_no": {
           "name": "del_no",
@@ -251,7 +804,7 @@
         },
         "del_dt": {
           "name": "del_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         }
@@ -316,12 +869,105 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "post_info_pst_ttl_lower_idx": {
+          "name": "post_info_pst_ttl_lower_idx",
+          "columns": [
+            {
+              "expression": "lower(\"pst_ttl\")",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "post_info_ctgry_no_idx": {
+          "name": "post_info_ctgry_no_idx",
+          "columns": [
+            {
+              "expression": "ctgry_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "post_info_active_idx": {
+          "name": "post_info_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "post_info_active_rls_idx": {
+          "name": "post_info_active_rls_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "rls_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "post_info_crt_dt_idx": {
+          "name": "post_info_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "post_info_user_no_user_info_user_no_fk": {
-          "name": "post_info_user_no_user_info_user_no_fk",
-          "tableFrom": "post_info",
+        "pst_info_user_no_user_info_user_no_fk": {
+          "name": "pst_info_user_no_user_info_user_no_fk",
+          "tableFrom": "pst_info",
           "tableTo": "user_info",
           "schemaTo": "nihilog",
           "columnsFrom": [
@@ -333,10 +979,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "post_info_ctgry_no_category_info_ctgry_no_fk": {
-          "name": "post_info_ctgry_no_category_info_ctgry_no_fk",
-          "tableFrom": "post_info",
-          "tableTo": "category_info",
+        "pst_info_ctgry_no_ctgry_info_ctgry_no_fk": {
+          "name": "pst_info_ctgry_no_ctgry_info_ctgry_no_fk",
+          "tableFrom": "pst_info",
+          "tableTo": "ctgry_info",
           "schemaTo": "nihilog",
           "columnsFrom": [
             "ctgry_no"
@@ -354,8 +1000,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "nihilog.post_tag_map": {
-      "name": "post_tag_map",
+    "nihilog.pst_tag_mpng": {
+      "name": "pst_tag_mpng",
       "schema": "nihilog",
       "columns": {
         "tag_map_no": {
@@ -363,7 +1009,7 @@
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "default": "nextval('post_tag_map_seq')"
+          "default": "nextval('pst_tag_mpng_seq')"
         },
         "pst_no": {
           "name": "pst_no",
@@ -432,10 +1078,10 @@
         }
       },
       "foreignKeys": {
-        "post_tag_map_pst_no_post_info_pst_no_fk": {
-          "name": "post_tag_map_pst_no_post_info_pst_no_fk",
-          "tableFrom": "post_tag_map",
-          "tableTo": "post_info",
+        "pst_tag_mpng_pst_no_pst_info_pst_no_fk": {
+          "name": "pst_tag_mpng_pst_no_pst_info_pst_no_fk",
+          "tableFrom": "pst_tag_mpng",
+          "tableTo": "pst_info",
           "schemaTo": "nihilog",
           "columnsFrom": [
             "pst_no"
@@ -446,9 +1092,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "post_tag_map_tag_no_tag_info_tag_no_fk": {
-          "name": "post_tag_map_tag_no_tag_info_tag_no_fk",
-          "tableFrom": "post_tag_map",
+        "pst_tag_mpng_tag_no_tag_info_tag_no_fk": {
+          "name": "pst_tag_mpng_tag_no_tag_info_tag_no_fk",
+          "tableFrom": "pst_tag_mpng",
           "tableTo": "tag_info",
           "schemaTo": "nihilog",
           "columnsFrom": [
@@ -501,7 +1147,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'Y'"
         },
         "del_yn": {
@@ -509,7 +1155,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'N'"
         },
         "crt_no": {
@@ -520,10 +1166,9 @@
         },
         "crt_dt": {
           "name": "crt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "updt_no": {
           "name": "updt_no",
@@ -533,10 +1178,9 @@
         },
         "updt_dt": {
           "name": "updt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "del_no": {
           "name": "del_no",
@@ -546,7 +1190,7 @@
         },
         "del_dt": {
           "name": "del_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         }
@@ -559,6 +1203,57 @@
               "expression": "tag_nm",
               "isExpression": false,
               "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_info_active_idx": {
+          "name": "tag_info_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_info_crt_dt_idx": {
+          "name": "tag_info_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_info_nm_lower_idx": {
+          "name": "tag_info_nm_lower_idx",
+          "columns": [
+            {
+              "expression": "lower(\"tag_nm\")",
+              "asc": true,
+              "isExpression": true,
               "nulls": "last"
             }
           ],
@@ -579,6 +1274,207 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "nihilog.tag_sbcr_mpng": {
+      "name": "tag_sbcr_mpng",
+      "schema": "nihilog",
+      "columns": {
+        "tag_sbcr_no": {
+          "name": "tag_sbcr_no",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "nextval('tag_sbcr_mpng_seq')"
+        },
+        "sbcr_no": {
+          "name": "sbcr_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_no": {
+          "name": "tag_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "use_yn": {
+          "name": "use_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "del_yn": {
+          "name": "del_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'N'"
+        },
+        "crt_no": {
+          "name": "crt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crt_dt": {
+          "name": "crt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updt_no": {
+          "name": "updt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updt_dt": {
+          "name": "updt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "del_no": {
+          "name": "del_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "del_dt": {
+          "name": "del_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "tag_sbcr_mpng_sbcr_no_idx": {
+          "name": "tag_sbcr_mpng_sbcr_no_idx",
+          "columns": [
+            {
+              "expression": "sbcr_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_sbcr_mpng_tag_no_idx": {
+          "name": "tag_sbcr_mpng_tag_no_idx",
+          "columns": [
+            {
+              "expression": "tag_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_sbcr_mpng_active_idx": {
+          "name": "tag_sbcr_mpng_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_sbcr_mpng_crt_dt_idx": {
+          "name": "tag_sbcr_mpng_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "tag_sbcr_mpng_uq": {
+          "name": "tag_sbcr_mpng_uq",
+          "columns": [
+            {
+              "expression": "sbcr_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tag_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "tag_sbcr_mpng_sbcr_no_user_sbcr_info_sbcr_no_fk": {
+          "name": "tag_sbcr_mpng_sbcr_no_user_sbcr_info_sbcr_no_fk",
+          "tableFrom": "tag_sbcr_mpng",
+          "tableTo": "user_sbcr_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "sbcr_no"
+          ],
+          "columnsTo": [
+            "sbcr_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tag_sbcr_mpng_tag_no_tag_info_tag_no_fk": {
+          "name": "tag_sbcr_mpng_tag_no_tag_info_tag_no_fk",
+          "tableFrom": "tag_sbcr_mpng",
+          "tableTo": "tag_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "tag_no"
+          ],
+          "columnsTo": [
+            "tag_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -611,7 +1507,7 @@
           "type": "user_role",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'USER'"
         },
         "profl_img": {
@@ -643,7 +1539,7 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'Y'"
         },
         "del_yn": {
@@ -651,12 +1547,18 @@
           "type": "yn_enum",
           "typeSchema": "nihilog",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "'N'"
         },
         "last_lgn_dt": {
           "name": "last_lgn_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_pswd_chg_dt": {
+          "name": "last_pswd_chg_dt",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         },
@@ -668,10 +1570,9 @@
         },
         "crt_dt": {
           "name": "crt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "updt_no": {
           "name": "updt_no",
@@ -681,10 +1582,9 @@
         },
         "updt_dt": {
           "name": "updt_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
         "del_no": {
           "name": "del_no",
@@ -694,7 +1594,7 @@
         },
         "del_dt": {
           "name": "del_dt",
-          "type": "timestamp with time zone",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         }
@@ -729,6 +1629,72 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "user_info_role_idx": {
+          "name": "user_info_role_idx",
+          "columns": [
+            {
+              "expression": "user_role",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_info_active_idx": {
+          "name": "user_info_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_info_last_lgn_dt_idx": {
+          "name": "user_info_last_lgn_dt_idx",
+          "columns": [
+            {
+              "expression": "last_lgn_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_info_crt_dt_idx": {
+          "name": "user_info_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -752,9 +1718,208 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "nihilog.user_sbcr_info": {
+      "name": "user_sbcr_info",
+      "schema": "nihilog",
+      "columns": {
+        "sbcr_no": {
+          "name": "sbcr_no",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "nextval('user_sbcr_info_seq')"
+        },
+        "user_no": {
+          "name": "user_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "eml_ntfy_yn": {
+          "name": "eml_ntfy_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "new_pst_ntfy_yn": {
+          "name": "new_pst_ntfy_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "cmnt_rpl_ntfy_yn": {
+          "name": "cmnt_rpl_ntfy_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "sbcr_ctgry_list": {
+          "name": "sbcr_ctgry_list",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sbcr_tag_list": {
+          "name": "sbcr_tag_list",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "use_yn": {
+          "name": "use_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Y'"
+        },
+        "del_yn": {
+          "name": "del_yn",
+          "type": "yn_enum",
+          "typeSchema": "nihilog",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'N'"
+        },
+        "crt_no": {
+          "name": "crt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crt_dt": {
+          "name": "crt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updt_no": {
+          "name": "updt_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updt_dt": {
+          "name": "updt_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "del_no": {
+          "name": "del_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "del_dt": {
+          "name": "del_dt",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "user_subscription_active_idx": {
+          "name": "user_subscription_active_idx",
+          "columns": [
+            {
+              "expression": "del_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "use_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_subscription_eml_ntfy_idx": {
+          "name": "user_subscription_eml_ntfy_idx",
+          "columns": [
+            {
+              "expression": "eml_ntfy_yn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "user_subscription_crt_dt_idx": {
+          "name": "user_subscription_crt_dt_idx",
+          "columns": [
+            {
+              "expression": "crt_dt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "user_sbcr_info_user_no_user_info_user_no_fk": {
+          "name": "user_sbcr_info_user_no_user_info_user_no_fk",
+          "tableFrom": "user_sbcr_info",
+          "tableTo": "user_info",
+          "schemaTo": "nihilog",
+          "columnsFrom": [
+            "user_no"
+          ],
+          "columnsTo": [
+            "user_no"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "user_sbcr_info_user_no_unique": {
+          "name": "user_sbcr_info_user_no_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_no"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
+    "nihilog.comment_status": {
+      "name": "comment_status",
+      "schema": "nihilog",
+      "values": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED",
+        "SPAM"
+      ]
+    },
     "nihilog.post_status": {
       "name": "post_status",
       "schema": "nihilog",
@@ -764,28 +1929,12 @@
         "FINISHED"
       ]
     },
-    "public.user_role": {
-      "name": "user_role",
-      "schema": "public",
-      "values": [
-        "USER",
-        "ADMIN"
-      ]
-    },
     "nihilog.user_role": {
       "name": "user_role",
       "schema": "nihilog",
       "values": [
         "USER",
         "ADMIN"
-      ]
-    },
-    "public.yn_enum": {
-      "name": "yn_enum",
-      "schema": "public",
-      "values": [
-        "Y",
-        "N"
       ]
     },
     "nihilog.yn_enum": {

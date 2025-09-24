@@ -38,12 +38,8 @@ const userInfoSelect = {
 
 @Injectable()
 export class UserRepository {
-  constructor(
-    @Inject(DRIZZLE)
-    private readonly db: NodePgDatabase<typeof schemas>
-  ) {}
-
-  // search_path를 사용하므로 스키마 접두는 제거합니다.
+  constructor(@Inject(DRIZZLE)
+  private readonly db: NodePgDatabase<typeof schemas>) { }
 
   /**
    * @description 사용자 정보 조회
