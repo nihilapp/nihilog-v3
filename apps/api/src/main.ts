@@ -38,9 +38,7 @@ async function bootstrap() {
   await app.register(fastifyCookie);
 
   // 글로벌 파이프 설정
-  app.useGlobalPipes(
-    new ZodValidationPipe()
-  );
+  app.useGlobalPipes(new ZodValidationPipe());
 
   // 글로벌 인터셉터 설정
   app.useGlobalInterceptors(

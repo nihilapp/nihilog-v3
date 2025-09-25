@@ -44,11 +44,11 @@ export const userInfo = nihilogSchema.table('user_info', {
 
   // [메타데이터]
   crtNo: integer('crt_no'), // 생성자 번호
-  crtDt: varchar('crt_dt', { length: 50, })
-    .notNull(), // 생성 일시 (YYYY-MM-DD HH:MM:SS)
+  crtDt: varchar('crt_dt', { length: 50, }) // 생성 일시 (YYYY-MM-DD HH:MM:SS)
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   updtNo: integer('updt_no'), // 수정자 번호
-  updtDt: varchar('updt_dt', { length: 50, })
-    .notNull(), // 수정 일시 (YYYY-MM-DD HH:MM:SS)
+  updtDt: varchar('updt_dt', { length: 50, }) // 수정 일시 (YYYY-MM-DD HH:MM:SS)
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   delNo: integer('del_no'), // 삭제자 번호
   delDt: varchar('del_dt', { length: 50, }), // 삭제 일시 (YYYY-MM-DD HH:MM:SS)
 }, (table) => [

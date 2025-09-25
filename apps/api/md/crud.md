@@ -18,11 +18,11 @@
 ### 1.1. Auth 관련
 
 - [ ] POST /auth/signin **[USER]**
-  - `signin`
-  - body: SigninDto
+  - `signIn`
+  - body: SignInDto
   - 기능: 이메일/패스워드 검증, JWT 토큰 생성, HttpOnly 쿠키 설정, 로그인 이력 저장
 - [ ] POST /auth/signout **[USER]**
-  - `signout`
+  - `signOut`
   - headers: Authorization
   - 기능: JWT 토큰 무효화, 쿠키 삭제, 로그아웃 이력 저장
 - [ ] GET /auth/session **[USER]**
@@ -33,65 +33,86 @@
   - `refreshToken`
   - body: RefreshTokenDto
   - 기능: Refresh Token 검증, 새로운 Access Token 발급
+- [ ] POST /auth/change-password **[USER]**
+  - `changePassword`
+  - headers: Authorization
+  - body: ChangePasswordDto
+  - 기능: 현재 로그인 사용자의 비밀번호 변경
 
 ### 1.2. User CRUD
 
-- [ ] POST /admin/users **[ADMIN]**
-  - `createUser`
-  - body: CreateUserDto
-  - 기능: 신규 사용자 계정 생성, 패스워드 해싱, 이메일 중복 검증, 기본 권한 설정
-- [ ] POST /admin/users/multiple **[ADMIN]**
-  - `multipleCreateUser`
-  - body: CreateUserDto[]
-  - 기능: 다수 사용자 일괄 생성, 중복 이메일 검증, 트랜잭션 처리
-- [ ] POST /admin/users/search **[ADMIN]**
-  - `getUserList`
-  - body: SearchUserDto
-  - 기능: 사용자 목록 조회, 이름/이메일/역할별 필터링, 페이징, 정렬
+## 일반 사용자 기능
+
 - [ ] GET /users/profile **[USER]**
   - `getUserProfile`
   - headers: Authorization
   - 기능: 본인 프로필 조회, 구독 정보 포함
-- [ ] GET /admin/users/:userNo **[ADMIN]**
-  - `getUserByUserNo`
-  - params: userNo: number
-  - 기능: 특정 사용자 상세 정보 조회, 구독 정보 포함
-- [ ] GET /admin/users/name/:name **[ADMIN]**
-  - `getUserByUserNm`
-  - params: name: string
-  - 기능: 사용자명으로 사용자 조회, 유사 이름 검색 지원
-- [ ] GET /admin/users/email/:email **[ADMIN]**
-  - `getUserByEmlAddr`
-  - params: email: string
-  - 기능: 이메일로 사용자 조회, 로그인 시 사용자 검증
+- [ ] GET /users/subscription **[USER]**
+  - `getUserSubscriptionByUserNo`
+  - headers: Authorization
+  - 기능: 현재 사용자의 구독 설정 조회, 이메일/푸시 알림 설정 상태 확인
+- [ ] POST /users **[USER]**
+  - `createUser`
+  - body: CreateUserDto
+  - 기능: 일반 사용자 계정 생성, 이메일 중복 검증, 패스워드 해싱
 - [ ] PUT /users/profile **[USER]**
   - `updateUserProfile`
   - headers: Authorization
   - body: UpdateUserProfileDto
   - 기능: 본인 정보 수정, 패스워드 변경, 프로필 이미지 업데이트
-- [ ] PUT /admin/users/:userNo **[ADMIN]**
-  - `updateUser`
-  - params: userNo: number
-  - body: UpdateUserDto
-  - 기능: 사용자 정보 수정, 권한 변경, 상태 변경(활성화/비활성화)
-- [ ] PUT /admin/users/multiple **[ADMIN]**
-  - `multipleUpdateUser`
-  - body: UpdateUserDto[]
-  - 기능: 다수 사용자 일괄 수정, 권한 일괄 변경, 상태 일괄 변경
+- [ ] PUT /users/subscription **[USER]**
+  - `updateUserSubscription`
+  - headers: Authorization
+  - body: UpdateSubscriptionDto
+  - 기능: 사용자 구독 설정 변경, 이메일 알림 on/off, 푸시 알림 설정
 - [ ] DELETE /users/profile **[USER]**
   - `deleteUserProfile`
   - headers: Authorization
   - 기능: 본인 계정 탈퇴, 관련 구독 정보 삭제, 댓글 익명화 처리
+
+## 관리자 기능
+
+- [x] GET /admin/users **[ADMIN]**
+  - `adminGetUserList`
+  - body: SearchUserDto
+  - 기능: 사용자 목록 조회, 이름/이메일/역할별 필터링, 페이징, 정렬
+- [x] GET /admin/users/:userNo **[ADMIN]**
+  - `adminGetUserByUserNo`
+  - params: userNo: number
+  - 기능: 특정 사용자 상세 정보 조회, 구독 정보 포함
+- [x] GET /admin/users/name/:name **[ADMIN]**
+  - `adminGetUserByUserNm`
+  - params: name: string
+  - 기능: 사용자명으로 사용자 조회, 유사 이름 검색 지원
+- [x] GET /admin/users/email/:email **[ADMIN]**
+  - `adminGetUserByEmlAddr`
+  - params: email: string
+  - 기능: 이메일로 사용자 조회, 로그인 시 사용자 검증
+- [x] POST /admin/users **[ADMIN]**
+  - `adminCreateUser`
+  - body: CreateUserDto
+  - 기능: 신규 사용자 계정 생성, 패스워드 해싱, 이메일 중복 검증, 기본 권한 설정
+- [x] PUT /admin/users/:userNo **[ADMIN]**
+  - `adminUpdateUser`
+  - params: userNo: number
+  - body: UpdateUserDto
+  - 기능: 사용자 정보 수정, 권한 변경, 상태 변경(활성화/비활성화)
+- [ ] PUT /admin/users/multiple **[ADMIN]**
+  - `adminMultipleUpdateUser`
+  - body: UpdateUserDto[]
+  - 기능: 다수 사용자 일괄 수정, 권한 일괄 변경, 상태 일괄 변경
 - [ ] DELETE /admin/users/:userNo **[ADMIN]**
-  - `deleteUser`
+  - `adminDeleteUser`
   - params: userNo: number
   - 기능: 사용자 계정 삭제, 관련 구독 정보 삭제, 댓글 익명화 처리
 - [ ] DELETE /admin/users/multiple **[ADMIN]**
-  - `multipleDeleteUser`
+  - `adminMultipleDeleteUser`
   - body: { userNos: number[] }
   - 기능: 다수 사용자 일괄 삭제, 관련 데이터 정리
 
 ## 2. UserSubscription 엔티티
+
+### 일반 사용자 기능
 
 - [ ] GET /users/subscription **[USER]**
   - `getUserSubscriptionByUserNo`
@@ -102,31 +123,36 @@
   - headers: Authorization
   - body: UpdateSubscriptionDto
   - 기능: 사용자 구독 설정 변경, 이메일 알림 on/off, 푸시 알림 설정
+
+### 관리자 기능
+
+- [ ] GET /admin/subscriptions **[ADMIN]**
+  - `adminGetUserSubscriptionList`
+  - 기능: 전체 사용자 구독 설정 목록 조회, 구독률 통계, 필터링
 - [ ] POST /admin/subscriptions **[ADMIN]**
-  - `createUserSubscription`
+  - `adminCreateUserSubscription`
   - body: CreateSubscriptionDto
   - 기능: 관리자가 특정 사용자 구독 설정 생성, 기본 구독 설정 적용
 - [ ] POST /admin/subscriptions/multiple **[ADMIN]**
-  - `multipleCreateUserSubscription`
+  - `adminMultipleCreateUserSubscription`
   - body: CreateSubscriptionDto[]
   - 기능: 다수 사용자 구독 설정 일괄 생성, 신규 가입자 기본 설정 적용
-- [ ] GET /admin/subscriptions **[ADMIN]**
-  - `getUserSubscriptionList`
-  - 기능: 전체 사용자 구독 설정 목록 조회, 구독률 통계, 필터링
 - [ ] PUT /admin/subscriptions/multiple **[ADMIN]**
-  - `multipleUpdateUserSubscription`
+  - `adminMultipleUpdateUserSubscription`
   - body: UpdateSubscriptionDto[]
   - 기능: 다수 사용자 구독 설정 일괄 변경, 정책 변경 시 일괄 적용
 - [ ] DELETE /admin/subscriptions/:userNo **[ADMIN]**
-  - `deleteUserSubscription`
+  - `adminDeleteUserSubscription`
   - params: userNo: number
   - 기능: 특정 사용자 구독 설정 삭제, 모든 알림 비활성화
 - [ ] DELETE /admin/subscriptions/multiple **[ADMIN]**
-  - `multipleDeleteUserSubscription`
+  - `adminMultipleDeleteUserSubscription`
   - body: { userNos: number[] }
   - 기능: 다수 사용자 구독 설정 일괄 삭제
 
 ## 3. CategorySubscription 엔티티
+
+### 일반 사용자 기능
 
 - [ ] GET /users/subscriptions/categories **[USER]**
   - `getCategorySubscriptionList`
@@ -165,6 +191,8 @@
 
 ## 4. TagSubscription 엔티티
 
+### 일반 사용자 기능
+
 - [ ] GET /users/subscriptions/tags **[USER]**
   - `getTagSubscriptionList`
   - headers: Authorization
@@ -202,6 +230,8 @@
 
 ## 5. Post 엔티티
 
+### 일반 사용자 기능
+
 - [ ] GET /posts **[USER]**
   - `getPostList`
   - query: query?, category?, tag?, page?, size?
@@ -214,33 +244,38 @@
   - `getPostBySlug`
   - params: slug: string
   - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함
+
+### 관리자 기능
+
 - [ ] POST /admin/posts **[ADMIN]**
-  - `createPost`
+  - `adminCreatePost`
   - body: CreatePostDto
   - 기능: 새 게시글 작성, 마크다운 처리, 태그 연결, 썸네일 생성, 발행 상태 설정
 - [ ] POST /admin/posts/multiple **[ADMIN]**
-  - `multipleCreatePost`
+  - `adminMultipleCreatePost`
   - body: CreatePostDto[]
   - 기능: 다수 게시글 일괄 작성, 마이그레이션용, 일괄 발행 처리
 - [ ] PATCH /admin/posts/:pstNo **[ADMIN]**
-  - `updatePost`
+  - `adminUpdatePost`
   - params: pstNo: number
   - body: UpdatePostDto
   - 기능: 게시글 수정, 발행/비공개 상태 변경, 태그 수정, 썸네일 업데이트
 - [ ] PATCH /admin/posts/multiple **[ADMIN]**
-  - `multipleUpdatePost`
+  - `adminMultipleUpdatePost`
   - body: UpdatePostDto[]
   - 기능: 다수 게시글 일괄 수정, 카테고리 일괄 변경, 상태 일괄 변경
 - [ ] DELETE /admin/posts/:pstNo **[ADMIN]**
-  - `deletePost`
+  - `adminDeletePost`
   - params: pstNo: number
   - 기능: 게시글 삭제, 관련 댓글 처리, 태그 연결 해제, 이미지 파일 정리
 - [ ] DELETE /admin/posts/multiple **[ADMIN]**
-  - `multipleDeletePost`
+  - `adminMultipleDeletePost`
   - body: { pstNos: number[] }
   - 기능: 다수 게시글 일괄 삭제, 관련 데이터 정리
 
 ## 6. Category 엔티티
+
+### 일반 사용자 기능
 
 - [ ] GET /categories **[USER]**
   - `getCategoryList`
@@ -253,33 +288,38 @@
   - `getCategoryByCtgryNm`
   - params: name: string
   - 기능: 카테고리명으로 검색, 유사 이름 카테고리 제안
+
+### 관리자 기능
+
 - [ ] POST /admin/categories **[ADMIN]**
-  - `createCategory`
+  - `adminCreateCategory`
   - body: CreateCategoryDto
   - 기능: 새 카테고리 생성, 부모 카테고리 설정, 정렬 순서 지정, URL 슬러그 생성
 - [ ] POST /admin/categories/multiple **[ADMIN]**
-  - `multipleCreateCategory`
+  - `adminMultipleCreateCategory`
   - body: CreateCategoryDto[]
   - 기능: 다수 카테고리 일괄 생성, 계층 구조 일괄 설정
 - [ ] PATCH /admin/categories/:ctgryNo **[ADMIN]**
-  - `updateCategory`
+  - `adminUpdateCategory`
   - params: ctgryNo: number
   - body: UpdateCategoryDto
   - 기능: 카테고리 정보 수정, 부모 변경, 정렬 순서 변경, 활성/비활성 상태 변경
 - [ ] PATCH /admin/categories/multiple **[ADMIN]**
-  - `multipleUpdateCategory`
+  - `adminMultipleUpdateCategory`
   - body: UpdateCategoryDto[]
   - 기능: 다수 카테고리 일괄 수정, 정렬 순서 일괄 변경, 상태 일괄 변경
 - [ ] DELETE /admin/categories/:ctgryNo **[ADMIN]**
-  - `deleteCategory`
+  - `adminDeleteCategory`
   - params: ctgryNo: number
   - 기능: 카테고리 삭제, 하위 카테고리 처리, 관련 게시글 미분류 처리
 - [ ] DELETE /admin/categories/multiple **[ADMIN]**
-  - `multipleDeleteCategory`
+  - `adminMultipleDeleteCategory`
   - body: { ctgryNos: number[] }
   - 기능: 다수 카테고리 일괄 삭제, 관련 데이터 정리
 
 ## 7. Tag 엔티티
+
+### 일반 사용자 기능
 
 - [ ] GET /tags **[USER]**
   - `getTagList`
@@ -292,33 +332,38 @@
   - `getTagByTagNm`
   - params: name: string
   - 기능: 태그명으로 검색, 자동완성 기능, 유사 태그 제안
+
+### 관리자 기능
+
 - [ ] POST /admin/tags **[ADMIN]**
-  - `createTag`
+  - `adminCreateTag`
   - body: CreateTagDto
   - 기능: 새 태그 생성, 태그명 중복 검증, URL 슬러그 생성, 색상 설정
 - [ ] POST /admin/tags/multiple **[ADMIN]**
-  - `multipleCreateTag`
+  - `adminMultipleCreateTag`
   - body: CreateTagDto[]
   - 기능: 다수 태그 일괄 생성, 게시글에서 태그 추출 시 사용
 - [ ] PATCH /admin/tags/:tagNo **[ADMIN]**
-  - `updateTag`
+  - `adminUpdateTag`
   - params: tagNo: number
   - body: UpdateTagDto
   - 기능: 태그 정보 수정, 태그명 변경, 색상 변경, 활성/비활성 상태 변경
 - [ ] PATCH /admin/tags/multiple **[ADMIN]**
-  - `multipleUpdateTag`
+  - `adminMultipleUpdateTag`
   - body: UpdateTagDto[]
   - 기능: 다수 태그 일괄 수정, 태그 분류 일괄 변경, 상태 일괄 변경
 - [ ] DELETE /admin/tags/:tagNo **[ADMIN]**
-  - `deleteTag`
+  - `adminDeleteTag`
   - params: tagNo: number
   - 기능: 태그 삭제, 게시글에서 태그 연결 해제, 구독 정보 정리
 - [ ] DELETE /admin/tags/multiple **[ADMIN]**
-  - `multipleDeleteTag`
+  - `adminMultipleDeleteTag`
   - body: { tagNos: number[] }
   - 기능: 다수 태그 일괄 삭제, 관련 연결 정보 정리
 
 ## 8. Comment 엔티티
+
+### 일반 사용자 기능
 
 - [ ] GET /comments **[USER]**
   - `getCommentList`
@@ -332,24 +377,36 @@
   - `createComment`
   - body: CreateCommentDto
   - 기능: 새 댓글 작성, 대댓글 작성, 스팸 필터링, 승인 대기 상태 설정
-- [ ] POST /admin/comments/multiple **[ADMIN]**
-  - `multipleCreateComment`
-  - body: CreateCommentDto[]
-  - 기능: 다수 댓글 일괄 작성, 마이그레이션용
-- [ ] PATCH /comments/:cmntNo **[ADMIN/USER]**
+- [ ] PATCH /comments/:cmntNo **[USER]**
   - `updateComment`
   - params: cmntNo: number
   - body: UpdateCommentDto
-  - 기능: 댓글 수정(본인), 승인/거부 상태 변경(관리자), 신고 처리
-- [ ] PATCH /admin/comments/multiple **[ADMIN]**
-  - `multipleUpdateComment`
-  - body: UpdateCommentDto[]
-  - 기능: 다수 댓글 일괄 수정, 상태 일괄 변경, 스팸 일괄 처리
-- [ ] DELETE /comments/:cmntNo **[ADMIN/USER]**
+  - 기능: 댓글 수정(본인), 신고 처리
+- [ ] DELETE /comments/:cmntNo **[USER]**
   - `deleteComment`
   - params: cmntNo: number
-  - 기능: 댓글 삭제(본인/관리자), 대댓글 처리, 삭제 표시 또는 완전 삭제
+  - 기능: 댓글 삭제(본인), 대댓글 처리, 삭제 표시 또는 완전 삭제
+
+### 관리자 기능
+
+- [ ] POST /admin/comments/multiple **[ADMIN]**
+  - `adminMultipleCreateComment`
+  - body: CreateCommentDto[]
+  - 기능: 다수 댓글 일괄 작성, 마이그레이션용
+- [ ] PATCH /admin/comments/:cmntNo **[ADMIN]**
+  - `adminUpdateComment`
+  - params: cmntNo: number
+  - body: UpdateCommentDto
+  - 기능: 댓글 승인/거부 상태 변경(관리자), 신고 처리
+- [ ] PATCH /admin/comments/multiple **[ADMIN]**
+  - `adminMultipleUpdateComment`
+  - body: UpdateCommentDto[]
+  - 기능: 다수 댓글 일괄 수정, 상태 일괄 변경, 스팸 일괄 처리
+- [ ] DELETE /admin/comments/:cmntNo **[ADMIN]**
+  - `adminDeleteComment`
+  - params: cmntNo: number
+  - 기능: 댓글 삭제(관리자), 대댓글 처리, 삭제 표시 또는 완전 삭제
 - [ ] DELETE /admin/comments/multiple **[ADMIN]**
-  - `multipleDeleteComment`
+  - `adminMultipleDeleteComment`
   - body: { cmntNos: number[] }
   - 기능: 다수 댓글 일괄 삭제, 스팸 댓글 일괄 정리

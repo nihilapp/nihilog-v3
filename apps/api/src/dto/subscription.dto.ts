@@ -86,7 +86,7 @@ export class UserSubscriptionDto extends createZodDto(userSubscriptionSchema.par
     example: '2024-01-01 00:00:00',
     required: false,
   })
-  declare crtDt?: string;
+  declare crtDt?: string | null;
 
   @ApiProperty({
     description: '수정자 번호',
@@ -100,7 +100,7 @@ export class UserSubscriptionDto extends createZodDto(userSubscriptionSchema.par
     example: '2024-01-01 00:00:00',
     required: false,
   })
-  declare updtDt?: string;
+  declare updtDt?: string | null;
 
   @ApiProperty({
     description: '삭제자 번호',

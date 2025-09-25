@@ -4,8 +4,8 @@ import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import { yn } from '@drizzle/enums';
 import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { userSbcrInfo } from '@drizzle/tables/user-sbcr-info.table';
 import { tagInfo } from '@drizzle/tables/tag-info.table';
+import { userSbcrInfo } from '@drizzle/tables/user-sbcr-info.table';
 
 // 태그 구독 매핑 테이블
 export const tagSbcrMpng = nihilogSchema.table('tag_sbcr_mpng', {
@@ -31,10 +31,10 @@ export const tagSbcrMpng = nihilogSchema.table('tag_sbcr_mpng', {
   // [메타데이터]
   crtNo: integer('crt_no'),
   crtDt: varchar('crt_dt', { length: 50, })
-    .notNull(),
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   updtNo: integer('updt_no'),
   updtDt: varchar('updt_dt', { length: 50, })
-    .notNull(),
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   delNo: integer('del_no'),
   delDt: varchar('del_dt', { length: 50, }),
 }, (table) => [

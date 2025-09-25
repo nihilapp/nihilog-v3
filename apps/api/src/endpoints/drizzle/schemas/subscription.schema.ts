@@ -43,6 +43,7 @@ export const userSubscriptionRawSchema = z.object({
     .optional(),
   crtDt: z.string()
     .regex(dateTimeRegex, dateTimeMessage)
+    .nullable()
     .optional(),
   updtNo: z.number()
     .int('수정자 번호는 정수여야 합니다.')
@@ -50,6 +51,7 @@ export const userSubscriptionRawSchema = z.object({
     .optional(),
   updtDt: z.string()
     .regex(dateTimeRegex, dateTimeMessage)
+    .nullable()
     .optional(),
   delNo: z.number()
     .int('삭제자 번호는 정수여야 합니다.')

@@ -132,7 +132,7 @@ export class AdminController {
       const { userNm, proflImg, userBiogp, } = updateProfileData;
 
       // 현재 사용자 정보 조회
-      const currentUser = await this.userRepository.findUser({ userNo: authUser.userNo, });
+      const currentUser = await this.userRepository.getUserByNo(authUser.userNo);
 
       if (!currentUser) {
         return createError('NOT_FOUND', 'USER_NOT_FOUND');
@@ -140,7 +140,7 @@ export class AdminController {
 
       // 사용자명 변경 시 중복 확인
       if (userNm) {
-        const existingUser = await this.userRepository.findUser({ userNm, });
+        const existingUser = await this.userRepository.getUserByName(userNm);
 
         if (existingUser && existingUser.userNo !== authUser.userNo) {
           return createError('CONFLICT', 'USER_NAME_EXISTS');

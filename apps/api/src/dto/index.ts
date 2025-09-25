@@ -24,3 +24,8 @@ export {
   ListDto,
   ListResponseDto
 } from './response.dto';
+
+// Common DTOs
+export {
+  AuthRequest
+} from './common.dto';

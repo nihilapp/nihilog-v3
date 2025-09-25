@@ -5,12 +5,10 @@ import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { UpdateSubscriptionDto, type CreateSubscriptionDto } from '@/dto/subscription.dto';
 import { userInfo, userSbcrInfo } from '@/endpoints/drizzle/tables';
 import { likes, updateColumns } from '@/utils/ormHelper';
-import { equals } from '@/utils/ormHelper';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
 import { DRIZZLE } from '@drizzle/drizzle.module';
 import { schemas } from '@drizzle/schemas';
-import { UserSubscriptionType } from '@drizzle/schemas/subscription.schema';
 
 // 공용 구독 정보 select 매핑
 const userSubscriptionSelect = {
@@ -37,7 +35,7 @@ export class SubscriptionRepository {
   private readonly db: NodePgDatabase<typeof schemas>) { }
 
   /**
-   * @description 구독 정보 다건 조회
+   * @description 구독 목록 조회
    * @param page 페이지 번호
    * @param strtRow 시작 행
    * @param endRow 종료 행
@@ -85,6 +83,30 @@ export class SubscriptionRepository {
   }
 
   /**
+   * @description 카테고리 번호로 구독 목록 조회
+   * @param _ctgryNo 카테고리 번호
+   */
+  async getSubscriptionListByCategoryNo(_ctgryNo: number) {
+    const result = await this.db
+      .select({
+        ...userSubscriptionSelect,
+        emlAddr: userInfo.emlAddr,
+        userNm: userInfo.userNm,
+      })
+      .from(userSbcrInfo)
+      .innerJoin(
+        userInfo,
+        eq(userSbcrInfo.userNo, userInfo.userNo)
+      )
+      .where(and(
+        eq(userSbcrInfo.delYn, 'N'),
+        eq(userSbcrInfo.useYn, 'Y')
+      ));
+
+    return result;
+  }
+
+  /**
    * @description 사용자 번호로 구독 정보 조회
    * @param userNo 사용자 번호
    */
@@ -116,6 +138,8 @@ export class SubscriptionRepository {
    * @param createSubscriptionDto 생성 정보
    */
   async createSubscription(createSubscriptionDto: CreateSubscriptionDto) {
+    const currentTime = timeToString();
+
     const newSubscribe = await this.db
       .insert(userSbcrInfo)
       .values({
@@ -123,8 +147,10 @@ export class SubscriptionRepository {
         emlNtfyYn: createSubscriptionDto.emlNtfyYn,
         newPstNtfyYn: createSubscriptionDto.newPstNtfyYn,
         cmntRplNtfyYn: createSubscriptionDto.cmntRplNtfyYn,
-        sbcrCtgryList: createSubscriptionDto.sbcrCtgryList,
-        sbcrTagList: createSubscriptionDto.sbcrTagList,
+        sbcrCtgryList: JSON.stringify(createSubscriptionDto.sbcrCtgryList),
+        sbcrTagList: JSON.stringify(createSubscriptionDto.sbcrTagList),
+        crtDt: currentTime,
+        updtDt: currentTime,
       })
       .returning(userSubscriptionSelect);
 
@@ -132,11 +158,50 @@ export class SubscriptionRepository {
   }
 
   /**
+   * @description 다수 구독 정보 일괄 생성
+   * @param createSubscriptionDtoList 구독 생성 정보 목록
+   */
+  async multipleCreateSubscription(createSubscriptionDtoList: CreateSubscriptionDto[]) {
+    // TODO: 다수 구독 정보 일괄 생성 로직 구현
+    return [];
+  }
+
+  /**
    * @description 구독 정보 수정
    * @param updateSubscriptionDto 수정 정보
    */
-  async updateSubscription(updateSubscriptionDto: UpdateSubscriptionDto) {
+  async updateSubscription(userNo: number, updateSubscriptionDto: UpdateSubscriptionDto) {
+    const updateValues = updateColumns(updateSubscriptionDto);
 
+    if (Object.keys(updateValues).length === 0) {
+      throw new Error('업데이트할 데이터가 없습니다.');
+    }
+
+    const [ result, ] = await this.db
+      .update(userSbcrInfo)
+      .set({
+        ...updateValues,
+        updtDt: timeToString(),
+        sbcrCtgryList: updateValues.sbcrCtgryList
+          ? JSON.stringify(updateValues.sbcrCtgryList)
+          : undefined,
+        sbcrTagList: updateValues.sbcrTagList
+          ? JSON.stringify(updateValues.sbcrTagList)
+          : undefined,
+      })
+      .where(eq(userSbcrInfo.userNo, userNo))
+      .returning(userSubscriptionSelect);
+
+    return result;
+  }
+
+  /**
+   * @description 다수 구독 정보 일괄 수정
+   * @param updateSubscriptionDtoList 구독 수정 정보 목록
+   */
+  async multipleUpdateSubscription(updateSubscriptionDtoList: UpdateSubscriptionDto[]) {
+    // TODO: 다수 구독 정보 일괄 수정 로직 구현
+    return [];
   }
 
   /**
@@ -144,20 +209,30 @@ export class SubscriptionRepository {
    * @param userNo 사용자 번호
    */
   async deleteSubscription(userNo: number) {
+    const currentTime = timeToString();
 
+    const [ result, ] = await this.db
+      .update(userSbcrInfo)
+      .set({
+        useYn: 'N',
+        delYn: 'Y',
+        delDt: currentTime,
+        delNo: userNo,
+        updtDt: currentTime,
+        updtNo: userNo,
+      })
+      .where(eq(userSbcrInfo.userNo, userNo))
+      .returning(userSubscriptionSelect);
+
+    return result || null;
   }
 
   /**
-   * @description 카테고리 번호로 구독 정보 조회
-   * @param ctgryNo 카테고리 번호
+   * @description 다수 구독 정보 일괄 삭제
+   * @param userNos 사용자 번호 목록
    */
-  async getSubscribersByCategoryNo(ctgryNo: number) {
-
+  async multipleDeleteSubscription(userNos: number[]) {
+    // TODO: 다수 구독 정보 일괄 삭제 로직 구현
+    return [];
   }
-
-  // TODO: 구독 관련 메서드들 구현 예정
-  // - findSubscription: 구독 정보 조회
-  // - createSubscription: 구독 정보 생성
-  // - updateSubscription: 구독 정보 수정
-  // - deleteSubscription: 구독 정보 삭제
 }

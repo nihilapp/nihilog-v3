@@ -26,10 +26,10 @@ export const tagInfo = nihilogSchema.table('tag_info', {
 
   crtNo: integer('crt_no'),
   crtDt: varchar('crt_dt', { length: 50, })
-    .notNull(),
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   updtNo: integer('updt_no'),
   updtDt: varchar('updt_dt', { length: 50, })
-    .notNull(),
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   delNo: integer('del_no'),
   delDt: varchar('del_dt', { length: 50, }),
 }, (table) => [

@@ -12,13 +12,15 @@ export const ynEnumSchema = z.enum(yn.enumValues, '올바른 값을 입력해주
 export const passwordSchema = z.string()
   .min(10, '비밀번호는 10자 이상이어야 합니다.')
   .max(30, '비밀번호는 30자 이하여야 합니다.')
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-    '비밀번호는 영문 대소문자, 숫자, 특수문자(@$!%*?&)를 각각 1개 이상 포함해야 합니다.');
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+    '비밀번호는 영문 대소문자, 숫자, 특수문자(@$!%*?&)를 각각 1개 이상 포함해야 합니다.'
+  );
 
 // Zod 스키마 정의
 
 export const userInfoSchema = z.object({
-  userNo: z.number()
+  userNo: z.coerce.number()
     .int('사용자 번호는 정수여야 합니다.')
     .positive('사용자 번호는 양수여야 합니다.')
     .optional(),
@@ -27,8 +29,7 @@ export const userInfoSchema = z.object({
     .min(2, '사용자명은 2자 이상이어야 합니다.')
     .max(30, '사용자명은 30자 이하여야 합니다.'),
   userRole: userRoleSchema,
-  proflImg: z
-    .url('올바른 URL 형식을 입력해주세요.')
+  proflImg: z.url('올바른 URL 형식을 입력해주세요.')
     .max(1024, '프로필 이미지 URL은 1024자 이하여야 합니다.')
     .nullable().optional(),
   userBiogp: z.string()
@@ -54,20 +55,23 @@ export const userInfoSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .nullable()
     .optional(),
-  crtNo: z.number()
+  crtNo: z.coerce.number()
     .int('생성자 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
   crtDt: z.string()
     .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .nullable()
     .optional(),
-  updtNo: z.number().int('수정자 번호는 정수여야 합니다.')
+  updtNo: z.coerce.number()
+    .int('수정자 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
   updtDt: z.string()
     .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .nullable()
     .optional(),
-  delNo: z.number()
+  delNo: z.coerce.number()
     .int('삭제자 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
@@ -75,12 +79,15 @@ export const userInfoSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .nullable()
     .optional(),
-  rowNo: z.number()
+  rowNo: z.coerce.number()
     .int('행 번호는 정수여야 합니다.')
     .nullable()
     .optional(),
-  totalCnt: z.number()
+  totalCnt: z.coerce.number()
     .int('총 행 수는 정수여야 합니다.')
+    .nullable()
+    .optional(),
+  userNoList: z.array(z.coerce.number())
     .nullable()
     .optional(),
 });
@@ -113,6 +120,7 @@ export const updateUserSchema = userInfoSchema.pick({
   crtNo: true,
   updtNo: true,
   delNo: true,
+  userNoList: true,
 }).partial();
 
 export const signInSchema = userInfoSchema.pick({
@@ -156,14 +164,12 @@ export const withdrawSchema = z.object({
   });
 
 // 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
-export const searchUserSchema = addPaginationValidation(
-  baseSearchSchema.extend({
-    srchType: z.enum([ 'userNm', 'emlAddr', 'userRole', ], {
-      error: '검색 타입은 userNm, emlAddr, userRole 중 하나여야 합니다.',
-    }).optional(),
-    delYn: ynEnumSchema.optional(),
-  })
-);
+export const searchUserSchema = addPaginationValidation(baseSearchSchema.extend({
+  srchType: z.enum([ 'userNm', 'emlAddr', 'userRole', ], {
+    error: '검색 타입은 userNm, emlAddr, userRole 중 하나여야 합니다.',
+  }).optional(),
+  delYn: ynEnumSchema.optional(),
+}));
 
 // 모든 항목이 선택값인 스키마
 export const partialUserInfoSchema = userInfoSchema.partial();

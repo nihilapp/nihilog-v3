@@ -9,12 +9,10 @@ import type { UserRepository } from '@repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly userRepository: UserRepository
-  ) { }
+  constructor(private readonly userRepository: UserRepository) { }
 
   async getProfile(user: JwtPayload) {
-    const findUser = await this.userRepository.findUser({ userNo: user.userNo, });
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
 
     if (!findUser) {
       return createError('NOT_FOUND', 'USER_NOT_FOUND');
@@ -27,8 +25,24 @@ export class UserService {
     );
   }
 
+  async getSubscription(user: JwtPayload): Promise<ResponseDto<UserSubscriptionDto>> {
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
+
+    // 사용자가 존재하지 않으면 에러
+    if (!findUser) {
+      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    }
+
+    // TODO: 구독 정보 조회 로직 구현 예정
+    return createResponse(
+      'SUCCESS',
+      'SUBSCRIPTION_FETCH_SUCCESS',
+      null as any // 임시로 null 반환
+    );
+  }
+
   async updateProfile(user: JwtPayload, updateData: UpdateUserDto) {
-    const findUser = await this.userRepository.findUser({ userNo: user.userNo, });
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
 
     if (!findUser) {
       return createError('NOT_FOUND', 'USER_NOT_FOUND');
@@ -47,8 +61,24 @@ export class UserService {
     );
   }
 
+  async updateSubscription(user: JwtPayload, updateData: UpdateSubscriptionDto): Promise<ResponseDto<UserSubscriptionDto>> {
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
+
+    // 사용자가 존재하지 않으면 에러
+    if (!findUser) {
+      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    }
+
+    // TODO: 구독 정보 수정 로직 구현 예정
+    return createResponse(
+      'SUCCESS',
+      'SUBSCRIPTION_UPDATE_SUCCESS',
+      null as any // 임시로 null 반환
+    );
+  }
+
   async deleteProfile(user: JwtPayload) {
-    const findUser = await this.userRepository.findUser({ userNo: user.userNo, });
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
 
     if (!findUser) {
       return createError('NOT_FOUND', 'USER_NOT_FOUND');
@@ -64,38 +94,6 @@ export class UserService {
       'SUCCESS',
       'USER_DELETE_SUCCESS',
       null
-    );
-  }
-
-  async getSubscription(user: JwtPayload): Promise<ResponseDto<UserSubscriptionDto>> {
-    const findUser = await this.userRepository.findUser({ userNo: user.userNo, });
-
-    // 사용자가 존재하지 않으면 에러
-    if (!findUser) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
-    }
-
-    // TODO: 구독 정보 조회 로직 구현 예정
-    return createResponse(
-      'SUCCESS',
-      'SUBSCRIPTION_FETCH_SUCCESS',
-      null as any // 임시로 null 반환
-    );
-  }
-
-  async updateSubscription(user: JwtPayload, updateData: UpdateSubscriptionDto): Promise<ResponseDto<UserSubscriptionDto>> {
-    const findUser = await this.userRepository.findUser({ userNo: user.userNo, });
-
-    // 사용자가 존재하지 않으면 에러
-    if (!findUser) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
-    }
-
-    // TODO: 구독 정보 수정 로직 구현 예정
-    return createResponse(
-      'SUCCESS',
-      'SUBSCRIPTION_UPDATE_SUCCESS',
-      null as any // 임시로 null 반환
     );
   }
 }

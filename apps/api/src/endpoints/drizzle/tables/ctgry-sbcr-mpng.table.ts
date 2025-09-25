@@ -3,9 +3,9 @@ import { integer, varchar } from 'drizzle-orm/pg-core';
 import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import { yn } from '@drizzle/enums';
+import { ctgryInfo } from '@drizzle/tables/ctgry-info.table';
 import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
 import { userSbcrInfo } from '@drizzle/tables/user-sbcr-info.table';
-import { ctgryInfo } from '@drizzle/tables/ctgry-info.table';
 
 // 카테고리 구독 매핑 테이블
 export const ctgrySbcrMpng = nihilogSchema.table('ctgry_sbcr_mpng', {
@@ -31,10 +31,10 @@ export const ctgrySbcrMpng = nihilogSchema.table('ctgry_sbcr_mpng', {
   // [메타데이터]
   crtNo: integer('crt_no'),
   crtDt: varchar('crt_dt', { length: 50, })
-    .notNull(),
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   updtNo: integer('updt_no'),
   updtDt: varchar('updt_dt', { length: 50, })
-    .notNull(),
+    .default(sql`to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')`),
   delNo: integer('del_no'),
   delDt: varchar('del_dt', { length: 50, }),
 }, (table) => [

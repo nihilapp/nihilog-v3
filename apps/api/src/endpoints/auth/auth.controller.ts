@@ -80,9 +80,7 @@ export class AuthController {
   @UseInterceptors(ClassSerializerInterceptor)
   @HttpCode(HttpStatus.OK)
   @Post('signup')
-  async signUp(
-    @Body() createUserData: CreateUserDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  async signUp(@Body() createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
     return this.authService.signUp(createUserData);
   }
 

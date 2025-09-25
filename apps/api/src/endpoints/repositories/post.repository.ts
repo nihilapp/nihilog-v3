@@ -6,8 +6,6 @@ import { schemas } from '@drizzle/schemas';
 
 @Injectable()
 export class PostRepository {
-  constructor(
-    @Inject(DRIZZLE)
-    private readonly db: NodePgDatabase<typeof schemas>
-  ) {}
+  constructor(@Inject(DRIZZLE)
+  private readonly db: NodePgDatabase<typeof schemas>) {}
 }
