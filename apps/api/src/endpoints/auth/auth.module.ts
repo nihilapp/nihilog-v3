@@ -4,9 +4,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MailerModule } from '@nestjs-modules/mailer';
 
+import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { AdminUserModule } from '@admin/users/admin-users.module';
 import { DrizzleModule } from '@drizzle/drizzle.module';
-import { UserRepository } from '@repositories/user.repository';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';

@@ -1,39 +1,23 @@
 import {
   Body,
   Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
   Req,
   UseGuards,
-  Get,
-  Param,
-  Delete,
-  Put
+  Param
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-  ApiBody,
-  ApiParam
+  ApiTags
 } from '@nestjs/swagger';
-import type { FastifyRequest } from 'fastify';
 import cloneDeep from 'lodash/cloneDeep';
 
-import { MESSAGE_CODE } from '@/code/message.code';
-import { RESPONSE_CODE } from '@/code/response.code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
-import { ListDto, ResponseDto } from '@/dto/response.dto';
-import { UserInfoDto, SearchUserDto } from '@/dto/user.dto';
+import { ListDto, ResponseDto, type MultipleResultDto } from '@/dto/response.dto';
+import { UserInfoDto, SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
 import { createError, createResponse } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
 import { AdminAuthGuard } from '@auth/admin-auth.guard';
-import { JwtPayload } from '@auth/jwt.strategy';
 
 import { AdminUserService } from './admin-users.service';
 
@@ -49,7 +33,7 @@ export class AdminUserController {
    * @param body 검색 조건
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/search',
     method: 'POST',
     summary: '🔎 사용자 목록 검색',
     description: '부분 일치(ILIKE) 기반으로 사용자 목록을 검색합니다. delYn이 제공되지 않으면 기본값 N으로 조회합니다.',
@@ -281,7 +265,7 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    return await this.usersService.createUser(createUserData);
+    return await this.usersService.createUser(req.user, createUserData);
   }
 
   /**
@@ -332,87 +316,52 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    return await this.usersService.updateUser(userNo, updateUserData);
+    return await this.usersService.updateUser(req.user, userNo, updateUserData);
   }
 
   // TODO: 여기서부터 다시 진행할 것
 
   /**
-   * @description 다수 사용자 일괄 생성
-   * @param req 요청 객체
-   * @param createUserDataList 사용자 생성 정보 목록
-   */
-  @ApiOperation({
-    summary: '👥 다수 사용자 일괄 생성',
-    description: 'ADMIN 권한으로 다수 사용자 계정을 일괄 생성합니다.',
-  })
-  @ApiBody({
-    type: [ CreateUserDto, ],
-    description: '사용자 생성 DTO 배열',
-  })
-  @ApiOkResponse({
-    description: '다수 사용자 생성 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.CREATED,
-        message: MESSAGE_CODE.USER_CREATE_SUCCESS,
-        data: [ createExampleUser(), ],
-      },
-    },
-  })
-  @ApiBearerAuth('JWT-auth')
-  @HttpCode(HttpStatus.OK)
-  @Post('multiple')
-  async multipleCreateUser(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> },
-    @Body() createUserDataList: CreateUserDto[]
-  ): Promise<ResponseDto<UserInfoDto[]>> {
-    if (req.errorResponse) {
-      return req.errorResponse;
-    }
-
-    // TODO: 다수 사용자 일괄 생성 로직 구현
-    return createResponse('CREATED', 'USER_CREATE_SUCCESS', []);
-  }
-
-  /**
    * @description 다수 사용자 일괄 수정
    * @param req 요청 객체
-   * @param updateUserDataList 사용자 수정 정보 목록
+   * @param adminMultipleUpdateUser 사용자 수정 정보 목록
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/multiple',
+    method: 'PUT',
     summary: '✏️ 다수 사용자 일괄 수정',
     description: 'ADMIN 권한으로 다수 사용자 정보를 일괄 수정합니다.',
-  })
-  @ApiBody({
-    type: [ UpdateUserDto, ],
-    description: '사용자 수정 DTO 배열',
-  })
-  @ApiOkResponse({
-    description: '다수 사용자 수정 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.USER_UPDATE_SUCCESS,
-        data: [ createExampleUser(), ],
-      },
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+      body: [ '사용자 수정 DTO', UpdateUserDto, ],
+      responses: [
+        [
+          '다수 사용자 수정 성공',
+          [ false, 'SUCCESS', 'USER_UPDATE_SUCCESS', {
+            successCnt: 1,
+            failCnt: 0,
+            failNoList: [],
+          }, ],
+        ],
+        [
+          '사용자 수정 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
+        ],
+      ],
     },
   })
-  @ApiBearerAuth('JWT-auth')
-  @HttpCode(HttpStatus.OK)
-  @Put('multiple')
-  async multipleUpdateUser(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> },
-    @Body() updateUserDataList: UpdateUserDto[]
-  ): Promise<ResponseDto<UserInfoDto[]>> {
+  async adminMultipleUpdateUser(
+    @Req() req: AuthRequest,
+    @Body() updateUserDto: UpdateUserDto
+  ): Promise<ResponseDto<MultipleResultDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 다수 사용자 일괄 수정 로직 구현
-    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', []);
+    const result = await this.usersService.multipleUpdateUser(req.user as UserInfoDto, updateUserDto);
+
+    return result;
   }
 
   /**
@@ -420,35 +369,51 @@ export class AdminUserController {
    * @param req 요청 객체
    * @param userNo 사용자 번호
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/:userNo',
+    method: 'DELETE',
     summary: '🗑️ 사용자 삭제',
     description: 'ADMIN 권한으로 특정 사용자를 삭제합니다.',
-  })
-  @ApiParam({ name: 'userNo', description: '사용자 번호', type: Number, })
-  @ApiOkResponse({
-    description: '사용자 삭제 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.USER_DELETE_SUCCESS,
-        data: null,
-      },
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+      params: [
+        [ 'userNo', '사용자 번호', 'number', true, ],
+      ],
+      responses: [
+        [
+          '사용자 삭제 성공',
+          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', null, ],
+        ],
+        [
+          '사용자를 찾을 수 없음',
+          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자 삭제 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
+        ],
+        [
+          '권한 부족',
+          [ true, 'PERMISSION_DENIED', 'PERMISSION_DENIED', null, ],
+        ],
+      ],
     },
   })
-  @ApiBearerAuth('JWT-auth')
-  @HttpCode(HttpStatus.OK)
-  @Delete(':userNo')
-  async deleteUser(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> },
-    @Param('userNo') userNo: string
+  async adminDeleteUser(
+    @Req() req: AuthRequest,
+    @Param('userNo') userNo: number
   ): Promise<ResponseDto<null>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 사용자 삭제 로직 구현
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', null);
+    const result = await this.usersService.adminDeleteUser(
+      req.user,
+      userNo
+    );
+
+    return result;
   }
 
   /**
@@ -456,46 +421,40 @@ export class AdminUserController {
    * @param req 요청 객체
    * @param body 삭제할 사용자 번호 목록
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/multiple',
+    method: 'DELETE',
     summary: '🗑️ 다수 사용자 일괄 삭제',
     description: 'ADMIN 권한으로 다수 사용자를 일괄 삭제합니다.',
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        userNos: {
-          type: 'array',
-          items: { type: 'number', },
-          description: '삭제할 사용자 번호 목록',
-          example: [ 1, 2, 3, ],
-        },
-      },
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+      body: [ '사용자 번호 목록', DeleteMultipleUsersDto, ],
+      responses: [
+        [
+          '다수 사용자 삭제 성공',
+          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', null, ],
+        ],
+        [
+          '사용자 삭제 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
+        ],
+        [
+          '권한 부족',
+          [ true, 'PERMISSION_DENIED', 'PERMISSION_DENIED', null, ],
+        ],
+      ],
     },
   })
-  @ApiOkResponse({
-    description: '다수 사용자 삭제 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.USER_DELETE_SUCCESS,
-        data: null,
-      },
-    },
-  })
-  @ApiBearerAuth('JWT-auth')
-  @HttpCode(HttpStatus.OK)
-  @Delete('multiple')
-  async multipleDeleteUser(
-    @Req() req: FastifyRequest & { user: JwtPayload | null; errorResponse?: ResponseDto<null> },
-    @Body() body: { userNos: number[] }
+  async adminMultipleDeleteUser(
+    @Req() req: AuthRequest,
+    @Body() body: DeleteMultipleUsersDto
   ): Promise<ResponseDto<null>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 다수 사용자 일괄 삭제 로직 구현
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', null);
+    const result = await this.usersService.adminMultipleDeleteUser(req.user, body.userNoList);
+    return result;
   }
 }

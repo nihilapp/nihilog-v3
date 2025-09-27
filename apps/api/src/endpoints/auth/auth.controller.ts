@@ -1,29 +1,16 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
   Req,
-  Res,
-  UseGuards,
-  UseInterceptors
+  Res
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
   ApiTags
 } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-import { MESSAGE_CODE } from '@/code/message.code';
-import { RESPONSE_CODE } from '@/code/response.code';
+import { Endpoint } from '@/decorators/endpoint.decorator';
+import type { AuthRequest } from '@/dto';
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
@@ -32,7 +19,6 @@ import { createExampleUser } from '@/utils/createExampleUser';
 import { clearCookie, setCookie } from '@/utils/setCookie';
 
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtPayload } from './jwt.strategy';
 
 @ApiTags('auth')
@@ -44,44 +30,30 @@ export class AuthController {
    * @description 일반 사용자 회원가입
    * @param createUserData 회원가입 정보
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/signup',
+    method: 'POST',
     summary: '회원가입',
     description: '일반 사용자 계정을 생성합니다.',
-  })
-  @ApiBody({
-    type: CreateUserDto,
-    description: '회원가입 DTO',
-  })
-  @ApiResponse({
-    status: 200,
-    description: '회원가입 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.SIGN_UP_SUCCESS,
-        data: createExampleUser(),
-      },
+    options: {
+      throttle: [ 3, 60000, ],
+      roles: [ 'USER', 'ADMIN', ],
+      body: [ '회원가입 DTO', CreateUserDto, ],
+      serialize: true,
+      responses: [
+        [
+          '회원가입 성공',
+          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '이메일 중복',
+          [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
+        ],
+      ],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: '이메일 중복',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.CONFLICT,
-        message: MESSAGE_CODE.EMAIL_IN_USE,
-        data: null,
-      },
-    },
-  })
-  @Throttle({ default: { limit: 3, ttl: 60000, }, })
-  @UseInterceptors(ClassSerializerInterceptor)
-  @HttpCode(HttpStatus.OK)
-  @Post('signup')
   async signUp(@Body() createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
-    return this.authService.signUp(createUserData);
+    return this.authService.signUp(null, createUserData);
   }
 
   /**
@@ -90,42 +62,28 @@ export class AuthController {
    * @param res 응답 객체
    * @param req 요청 객체
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/signin',
+    method: 'POST',
     summary: '로그인',
     description: '사용자 인증을 처리하고 JWT 토큰을 발급합니다.',
-  })
-  @ApiBody({
-    type: SignInDto,
-    description: '로그인 DTO',
-  })
-  @ApiResponse({
-    status: 200,
-    description: '로그인 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.SIGN_IN_SUCCESS,
-        data: createExampleUser(),
-      },
+    options: {
+      throttle: [ 5, 60000, ],
+      serialize: true,
+      roles: [ 'USER', 'ADMIN', ],
+      body: [ '로그인 DTO', SignInDto, ],
+      responses: [
+        [
+          '로그인 성공',
+          [ false, 'SUCCESS', 'SIGN_IN_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '인증 실패',
+          [ true, 'UNAUTHORIZED', 'INVALID_CREDENTIALS', null, ],
+        ],
+      ],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: '인증 실패',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.UNAUTHORIZED,
-        message: MESSAGE_CODE.INVALID_CREDENTIALS,
-        data: null,
-      },
-    },
-  })
-  @Throttle({ default: { limit: 5, ttl: 60000, }, })
-  @UseInterceptors(ClassSerializerInterceptor)
-  @HttpCode(HttpStatus.OK)
-  @Post('signin')
   async signIn(
     @Body() signInData: SignInDto,
     @Res({ passthrough: true, }) res: FastifyReply,
@@ -190,37 +148,27 @@ export class AuthController {
    * @param req 요청 객체
    * @param res 응답 객체
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/refresh',
+    method: 'POST',
     summary: '토큰 재발급',
     description: '리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: '토큰 재발급 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.TOKEN_REFRESH_SUCCESS,
-        data: createExampleUser(),
-      },
+    options: {
+      throttle: [ 5, 60000, ],
+      serialize: true,
+      roles: [ 'USER', 'ADMIN', ],
+      responses: [
+        [
+          '토큰 재발급 성공',
+          [ false, 'SUCCESS', 'TOKEN_REFRESH_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '리프레시 토큰이 유효하지 않음',
+          [ true, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN', null, ],
+        ],
+      ],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: '리프레시 토큰이 유효하지 않음',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.UNAUTHORIZED,
-        message: MESSAGE_CODE.INVALID_REFRESH_TOKEN,
-        data: null,
-      },
-    },
-  })
-  @UseInterceptors(ClassSerializerInterceptor)
-  @HttpCode(HttpStatus.OK)
-  @Post('refresh')
   async refreshToken(
     @Req() req: FastifyRequest,
     @Res({ passthrough: true, }) res: FastifyReply
@@ -280,35 +228,24 @@ export class AuthController {
    * @param req 요청 객체
    * @param res 응답 객체
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/signout',
+    method: 'POST',
     summary: '로그아웃',
     description: '사용자 로그아웃을 처리하고 모든 인증 정보를 제거합니다.',
-  })
-  @ApiOkResponse({
-    description: '로그아웃 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.SIGN_OUT_SUCCESS,
-        data: null,
-      },
+    options: {
+      responses: [
+        [
+          '로그아웃 성공',
+          [ false, 'SUCCESS', 'SIGN_OUT_SUCCESS', null, ],
+        ],
+        [
+          '로그아웃 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR', null, ],
+        ],
+      ],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: '로그아웃 실패',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.INTERNAL_SERVER_ERROR,
-        message: MESSAGE_CODE.SIGN_OUT_ERROR,
-        data: null,
-      },
-    },
-  })
-  @HttpCode(HttpStatus.OK)
-  @Post('signout')
   async signOut(
     @Req() req: FastifyRequest,
     @Res({ passthrough: true, }) res: FastifyReply
@@ -331,39 +268,28 @@ export class AuthController {
    * @description 현재 세션 조회
    * @param req 요청 객체
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/session',
+    method: 'GET',
     summary: '세션 조회',
     description: '현재 로그인된 사용자의 세션 정보를 조회합니다.',
-  })
-  @ApiOkResponse({
-    description: '세션 조회 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.SIGN_IN_SUCCESS,
-        data: createExampleUser(),
-      },
+    options: {
+      serialize: true,
+      roles: [ 'USER', 'ADMIN', ],
+      authGuard: 'JWT-auth',
+      responses: [
+        [
+          '세션 조회 성공',
+          [ false, 'SUCCESS', 'SESSION_GET_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '세션 조회 실패',
+          [ true, 'UNAUTHORIZED', 'SESSION_NOT_FOUND', null, ],
+        ],
+      ],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: '세션 조회 실패',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.UNAUTHORIZED,
-        message: MESSAGE_CODE.INVALID_CREDENTIALS,
-        data: null,
-      },
-    },
-  })
-  @ApiBearerAuth('JWT-auth')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Get('session')
-  async getSession(@Req() req: FastifyRequest & { user: JwtPayload | null }) {
+  async getSession(@Req() req: AuthRequest): Promise<ResponseDto<UserInfoDto>> {
     const authUser = req.user;
 
     if (!authUser) {
@@ -378,37 +304,28 @@ export class AuthController {
    * @param req 요청 객체
    * @param changePasswordData 비밀번호 변경 정보
    */
-  @ApiOperation({
+  @Endpoint({
+    endpoint: '/change-password',
+    method: 'POST',
     summary: '비밀번호 변경',
     description: '현재 로그인된 사용자의 비밀번호를 변경합니다.',
-  })
-  @ApiOkResponse({
-    description: '비밀번호 변경 성공',
-    schema: {
-      example: {
-        error: false,
-        code: RESPONSE_CODE.SUCCESS,
-        message: MESSAGE_CODE.PASSWORD_CHANGE_SUCCESS,
-        data: null,
-      },
+    options: {
+      serialize: true,
+      roles: [ 'USER', 'ADMIN', ],
+      authGuard: 'JWT-auth',
+      body: [ '비밀번호 변경 DTO', ChangePasswordDto, ],
+      responses: [
+        [
+          '비밀번호 변경 성공',
+          [ false, 'SUCCESS', 'PASSWORD_CHANGE_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '비밀번호 변경 실패',
+          [ true, 'UNAUTHORIZED', 'PASSWORD_CHANGE_ERROR', null, ],
+        ],
+      ],
     },
   })
-  @ApiResponse({
-    status: 200,
-    description: '비밀번호 변경 실패',
-    schema: {
-      example: {
-        error: true,
-        code: RESPONSE_CODE.UNAUTHORIZED,
-        message: MESSAGE_CODE.INVALID_CREDENTIALS,
-        data: null,
-      },
-    },
-  })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  @Post('change-password')
   async changePassword(
     @Req() req: FastifyRequest & { user: JwtPayload | null },
     @Body() changePasswordData: ChangePasswordDto

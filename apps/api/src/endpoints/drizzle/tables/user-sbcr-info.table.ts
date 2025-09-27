@@ -30,10 +30,6 @@ export const userSbcrInfo = nihilogSchema.table('user_sbcr_info', {
   cmntRplNtfyYn: yn('cmnt_rpl_ntfy_yn') // 내 댓글 답글 알림
     .default('Y'),
 
-  // [구독 카테고리/태그]
-  sbcrCtgryList: varchar('sbcr_ctgry_list', { length: 1000, }), // 구독 카테고리 목록 JSON
-  sbcrTagList: varchar('sbcr_tag_list', { length: 1000, }), // 구독 태그 목록 JSON
-
   // [상태]
   useYn: yn('use_yn') // 사용 여부
     .default('Y'),

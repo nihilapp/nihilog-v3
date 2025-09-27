@@ -24,6 +24,7 @@ export const MESSAGE_CODE = {
   FORGOT_PASSWORD_EMAIL_SENT: '비밀번호 재설정 이메일을 발송했습니다. 5분 안에 확인해주세요.',
   NEW_PASSWORD_SET: '새 비밀번호가 성공적으로 설정되었습니다.',
   TOKEN_REFRESH_SUCCESS: '토큰이 성공적으로 갱신되었습니다.',
+  SESSION_GET_SUCCESS: '세션 정보를 조회했습니다.',
 
   // 에러 메시지
   SIGN_UP_ERROR: '회원가입 중 오류가 발생했습니다.',
@@ -46,6 +47,7 @@ export const MESSAGE_CODE = {
   REFRESH_TOKEN_NOT_FOUND: '리프레시 토큰을 찾을 수 없습니다.',
   INVALID_REFRESH_TOKEN: '유효하지 않은 리프레시 토큰입니다.',
   ADMIN_ONLY: '관리자만 접근할 수 있습니다.',
+  SESSION_NOT_FOUND: '세션 정보를 찾을 수 없습니다.',
 
   // ===== 사용자 관련 메시지 =====
   // 성공 메시지
@@ -165,17 +167,72 @@ export const MESSAGE_CODE = {
 
   // ===== 구독 관련 메시지 =====
   // 성공 메시지
-  SUBSCRIPTION_FETCH_SUCCESS: '구독 설정을 조회했습니다.',
-  SUBSCRIPTION_UPDATE_SUCCESS: '구독 설정이 수정되었습니다.',
-  SUBSCRIPTION_CREATE_SUCCESS: '구독 설정이 생성되었습니다.',
-  SUBSCRIPTION_DELETE_SUCCESS: '구독 설정이 삭제되었습니다.',
+  SUBSCRIBE_FETCH_SUCCESS: '구독 설정을 조회했습니다.',
+  SUBSCRIBE_UPDATE_SUCCESS: '구독 설정이 수정되었습니다.',
+  SUBSCRIBE_CREATE_SUCCESS: '구독 설정이 생성되었습니다.',
+  SUBSCRIBE_DELETE_SUCCESS: '구독 설정이 삭제되었습니다.',
+  SUBSCRIBE_LIST_SUCCESS: '구독 목록을 조회했습니다.',
+  SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '다수 구독 설정이 생성되었습니다.',
+  SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 구독 설정이 수정되었습니다.',
+  SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 구독 설정이 삭제되었습니다.',
+
+  // 카테고리 구독 관련
+  CATEGORY_SUBSCRIBE_CREATE_SUCCESS: '카테고리 구독이 설정되었습니다.',
+  CATEGORY_SUBSCRIBE_UPDATE_SUCCESS: '카테고리 구독이 수정되었습니다.',
+  CATEGORY_SUBSCRIBE_DELETE_SUCCESS: '카테고리 구독이 해제되었습니다.',
+  CATEGORY_SUBSCRIBE_LIST_SUCCESS: '카테고리 구독 목록을 조회했습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '다수 카테고리 구독이 설정되었습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 카테고리 구독이 수정되었습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 카테고리 구독이 해제되었습니다.',
+
+  // 태그 구독 관련
+  TAG_SUBSCRIBE_CREATE_SUCCESS: '태그 구독이 설정되었습니다.',
+  TAG_SUBSCRIBE_UPDATE_SUCCESS: '태그 구독이 수정되었습니다.',
+  TAG_SUBSCRIBE_DELETE_SUCCESS: '태그 구독이 해제되었습니다.',
+  TAG_SUBSCRIBE_LIST_SUCCESS: '태그 구독 목록을 조회했습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '다수 태그 구독이 설정되었습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 태그 구독이 수정되었습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 태그 구독이 해제되었습니다.',
 
   // 에러 메시지
-  SUBSCRIPTION_FETCH_ERROR: '구독 설정 조회에 실패했습니다.',
-  SUBSCRIPTION_UPDATE_ERROR: '구독 설정 수정에 실패했습니다.',
-  SUBSCRIPTION_CREATE_ERROR: '구독 설정 생성에 실패했습니다.',
-  SUBSCRIPTION_DELETE_ERROR: '구독 설정 삭제에 실패했습니다.',
-  SUBSCRIPTION_NOT_FOUND: '구독 설정을 찾을 수 없습니다.',
+  SUBSCRIBE_FETCH_ERROR: '구독 설정 조회에 실패했습니다.',
+  SUBSCRIBE_UPDATE_ERROR: '구독 설정 수정에 실패했습니다.',
+  SUBSCRIBE_CREATE_ERROR: '구독 설정 생성에 실패했습니다.',
+  SUBSCRIBE_DELETE_ERROR: '구독 설정 삭제에 실패했습니다.',
+  SUBSCRIBE_NOT_FOUND: '구독 설정을 찾을 수 없습니다.',
+  SUBSCRIBE_LIST_ERROR: '구독 목록 조회에 실패했습니다.',
+  SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 구독 설정 생성에 실패했습니다.',
+  SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 구독 설정 수정에 실패했습니다.',
+  SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 구독 설정 삭제에 실패했습니다.',
+
+  // 카테고리 구독 에러
+  CATEGORY_SUBSCRIBE_CREATE_ERROR: '카테고리 구독 설정에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_UPDATE_ERROR: '카테고리 구독 수정에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_DELETE_ERROR: '카테고리 구독 해제에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_NOT_FOUND: '카테고리 구독을 찾을 수 없습니다.',
+  CATEGORY_SUBSCRIBE_LIST_ERROR: '카테고리 구독 목록 조회에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 카테고리 구독 설정에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 카테고리 구독 수정에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 카테고리 구독 해제에 실패했습니다.',
+
+  // 태그 구독 에러
+  TAG_SUBSCRIBE_CREATE_ERROR: '태그 구독 설정에 실패했습니다.',
+  TAG_SUBSCRIBE_UPDATE_ERROR: '태그 구독 수정에 실패했습니다.',
+  TAG_SUBSCRIBE_DELETE_ERROR: '태그 구독 해제에 실패했습니다.',
+  TAG_SUBSCRIBE_NOT_FOUND: '태그 구독을 찾을 수 없습니다.',
+  TAG_SUBSCRIBE_LIST_ERROR: '태그 구독 목록 조회에 실패했습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 태그 구독 설정에 실패했습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 태그 구독 수정에 실패했습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 태그 구독 해제에 실패했습니다.',
+
+  // 구독 설정 관련
+  SUBSCRIBE_EMAIL_NOTIFICATION_ERROR: '이메일 알림 설정에 실패했습니다.',
+  SUBSCRIBE_PUSH_NOTIFICATION_ERROR: '푸시 알림 설정에 실패했습니다.',
+  SUBSCRIBE_CATEGORY_LIST_INVALID: '구독 카테고리 목록이 올바르지 않습니다.',
+  SUBSCRIBE_TAG_LIST_INVALID: '구독 태그 목록이 올바르지 않습니다.',
+  SUBSCRIBE_ALREADY_EXISTS: '이미 구독 중인 항목입니다.',
+  SUBSCRIBE_DUPLICATE_CATEGORY: '중복된 카테고리 구독입니다.',
+  SUBSCRIBE_DUPLICATE_TAG: '중복된 태그 구독입니다.',
 
   // ===== 데이터베이스 관련 메시지 =====
   // 성공/정보 메시지

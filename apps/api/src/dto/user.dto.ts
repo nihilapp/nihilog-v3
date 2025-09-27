@@ -235,6 +235,34 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
     required: false,
   })
   declare delNo?: number | null;
+
+  @ApiProperty({
+    description: '생성 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
+    required: false,
+  })
+  declare crtDt?: string | null;
+
+  @ApiProperty({
+    description: '수정 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
+    required: false,
+  })
+  declare updtDt?: string | null;
+
+  @ApiProperty({
+    description: '삭제 날짜 (YYYY-MM-DD HH:MM:SS)',
+    example: '2024-01-01 00:00:00',
+    required: false,
+  })
+  declare delDt?: string | null;
+
+  @ApiProperty({
+    description: '사용자 번호 목록',
+    example: [ 1, 2, 3, ],
+    required: false,
+  })
+  declare userNoList?: number[];
 }
 
 // 사용자 검색 DTO
@@ -281,4 +309,14 @@ export class SearchUserDto extends createZodDto(searchUserSchema) {
     required: false,
   })
   declare delYn?: YnType;
+}
+
+// 다수 사용자 삭제 DTO
+export class DeleteMultipleUsersDto {
+  @ApiProperty({
+    description: '삭제할 사용자 번호 목록',
+    example: [ 1, 2, 3, ],
+    type: [ Number, ],
+  })
+  declare userNoList: number[];
 }

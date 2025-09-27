@@ -9,15 +9,14 @@ import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
-import { ResponseDto } from '@/dto/response.dto';
+import { ResponseDto, type SignInResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
+import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
 import { timeToString } from '@/utils/timeHelper';
 import { AdminUserService } from '@admin/users/admin-users.service';
 import { DRIZZLE } from '@drizzle/drizzle.module';
-import { schemas } from '@drizzle/schemas';
 import { UserRoleType } from '@drizzle/schemas/user.schema';
-import { UserRepository } from '@repositories/user.repository';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
@@ -38,8 +37,6 @@ export class AuthService {
     private readonly env: ConfigService
   ) { }
 
-  users = schemas.userInfo;
-
   /**
    * @description 현재 세션 조회
    * @param userNo 사용자 번호
@@ -57,7 +54,7 @@ export class AuthService {
 
     return createResponse(
       'SUCCESS',
-      'SIGN_IN_SUCCESS',
+      'SESSION_GET_SUCCESS',
       userToReturn as UserInfoDto
     );
   }
@@ -66,17 +63,7 @@ export class AuthService {
    * @description 사용자 로그인
    * @param signInData 로그인 정보
    */
-  async signIn(signInData: SignInDto): Promise<{
-    user: UserInfoDto;
-    acsToken: string;
-    reshToken: string;
-    accessTokenExpiresAt: number;
-  } | {
-    error: boolean;
-    code: string;
-    message: string;
-    data: null;
-  }> {
+  async signIn(signInData: SignInDto): Promise<SignInResponseDto | ResponseDto<null | UserInfoDto>> {
     const { emlAddr, password, } = signInData;
 
     // 사용자 조회
@@ -114,10 +101,14 @@ export class AuthService {
     ]);
 
     // 리프레시 토큰과 마지막 로그인 시간 업데이트
-    await this.userRepository.updateUser(user.userNo, {
-      reshToken,
-      lastLgnDt: timeToString(),
-    });
+    await this.userRepository.updateUser(
+      user.userNo,
+      user.userNo,
+      {
+        reshToken,
+        lastLgnDt: timeToString(),
+      }
+    );
 
     // AccessToken 만료시간 계산
     const accessTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000).getTime();
@@ -139,17 +130,7 @@ export class AuthService {
    * @description 액세스 토큰 재발급
    * @param token 리프레시 토큰
    */
-  async refresh(token: string): Promise<{
-    user: UserInfoDto;
-    acsToken: string;
-    reshToken: string;
-    accessTokenExpiresAt: number;
-  } | {
-    error: boolean;
-    code: string;
-    message: string;
-    data: null;
-  }> {
+  async refresh(token: string): Promise<SignInResponseDto | ResponseDto<null | UserInfoDto>> {
     if (!token) {
       return createError('UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND');
     }
@@ -182,7 +163,11 @@ export class AuthService {
         }),
       ]);
 
-      await this.userRepository.updateUser(user.userNo, { reshToken: newReshToken, });
+      await this.userRepository.updateUser(
+        user.userNo,
+        user.userNo,
+        { reshToken: newReshToken, }
+      );
 
       // AccessToken 만료시간 계산
       const accessTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000).getTime();
@@ -207,7 +192,7 @@ export class AuthService {
    * @description 일반 사용자 회원가입
    * @param createUserData 회원가입 정보
    */
-  async signUp(createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
+  async signUp(user: null, createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
     const { emlAddr, password, } = createUserData;
 
     // 이메일 중복 체크
@@ -221,20 +206,18 @@ export class AuthService {
 
     // 사용자 생성
     const newUser = await this.userRepository.createUser(
+      null,
       createUserData,
       encptPswd
     );
 
-    // 응답용 사용자 데이터 준비 (민감한 정보 제거)
-    const userToReturn = cloneDeep(newUser);
-    userToReturn.encptPswd = null;
-    userToReturn.reshToken = null;
+    // 민감정보 제거 (이미 Repository에서 처리되지만 추가 보안)
+    if (newUser.data) {
+      newUser.data.encptPswd = null;
+      newUser.data.reshToken = null;
+    }
 
-    return createResponse(
-      'SUCCESS',
-      'SIGN_UP_SUCCESS',
-      userToReturn as UserInfoDto
-    );
+    return newUser;
   }
 
   /**
@@ -266,16 +249,21 @@ export class AuthService {
     const newEncptPswd = await bcrypt.hash(newPassword, 10);
 
     // 하나의 쿼리로 업데이트 + 조회
-    const updatedUser = await this.userRepository.updateUser(userNo, { encptPswd: newEncptPswd, });
+    const updatedUser = await this.userRepository.updateUser(
+      userNo,
+      userNo,
+      { encptPswd: newEncptPswd, }
+    );
 
-    const userToReturn = cloneDeep(updatedUser);
+    // 민감정보 제거
+    const userToReturn = cloneDeep(updatedUser.data);
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
     return createResponse(
       'SUCCESS',
       'PASSWORD_CHANGE_SUCCESS',
-      userToReturn as UserInfoDto
+      userToReturn
     );
   }
 
@@ -290,7 +278,11 @@ export class AuthService {
 
       if (decoded?.userNo) {
         // 리프레시 토큰 삭제
-        await this.userRepository.updateUser(decoded.userNo, { reshToken: null, });
+        await this.userRepository.updateUser(
+          decoded.userNo,
+          decoded.userNo,
+          { reshToken: null, }
+        );
       }
 
       return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);

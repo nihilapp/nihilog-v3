@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 
+import { UserInfoDto } from '@/dto/user.dto';
+import { createExampleUser } from '@/utils';
 import {
   listResponseSchema,
+  multipleResultSchema,
   responseSchema
 } from '@drizzle/schemas/response.schema';
 
@@ -30,7 +33,7 @@ export class ResponseDto<TData = any> extends createZodDto(responseSchema()) {
     description: '응답 데이터',
     example: null,
   })
-  declare data: TData;
+  declare data?: TData | null;
 
   @ApiProperty({
     description: '응답일시',
@@ -52,6 +55,26 @@ export class ListDto<TData = any> {
     example: 100,
   })
   declare totalCnt: number;
+}
+
+export class MultipleResultDto extends createZodDto(multipleResultSchema) {
+  @ApiProperty({
+    description: '성공 개수',
+    example: 100,
+  })
+  declare successCnt?: number;
+
+  @ApiProperty({
+    description: '실패 개수',
+    example: 10,
+  })
+  declare failCnt?: number;
+
+  @ApiProperty({
+    description: '실패 번호 목록',
+    example: [ 1, 2, 3, ],
+  })
+  declare failNoList?: number[];
 }
 
 // 리스트 응답 DTO
@@ -94,4 +117,31 @@ export class ListResponseDto<TData = any> extends createZodDto(listResponseSchem
     list: TData[];
     totalCnt: number;
   };
+}
+
+export class SignInResponseDto {
+  @ApiProperty({
+    description: '사용자 정보',
+    type: UserInfoDto,
+    example: createExampleUser(),
+  })
+  declare user: UserInfoDto;
+
+  @ApiProperty({
+    description: '액세스 토큰',
+    example: 'access_token',
+  })
+  declare acsToken: string;
+
+  @ApiProperty({
+    description: '리프레시 토큰',
+    example: 'refresh_token',
+  })
+  declare reshToken: string;
+
+  @ApiProperty({
+    description: '액세스 토큰 만료 시간',
+    example: 1717000000,
+  })
+  declare accessTokenExpiresAt: number;
 }

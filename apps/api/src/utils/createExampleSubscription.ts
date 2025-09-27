@@ -1,4 +1,4 @@
-import { UserSubscriptionType } from '@drizzle/schemas/subscription.schema';
+import { UserSubscriptionType } from '@/endpoints/drizzle/schemas/subscribe.schema';
 
 /**
  * @description 구독 설정 예시 데이터.
@@ -22,8 +22,8 @@ export function createExampleSubscription() {
     emlNtfyYn: 'Y',
     newPstNtfyYn: 'Y',
     cmntRplNtfyYn: 'Y',
-    sbcrCtgryList: [1, 2, 3],
-    sbcrTagList: [1, 2, 3, 4, 5],
+    sbcrCtgryList: [ 1, 2, 3, ],
+    sbcrTagList: [ 1, 2, 3, 4, 5, ],
     useYn: 'Y',
     delYn: 'N',
     crtNo: 1,

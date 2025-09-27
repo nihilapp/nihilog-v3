@@ -20,8 +20,21 @@ const listResponseSchema = <TData = any>(dataSchema: z.ZodType<TData> = z.any())
   }))
 );
 
+const multipleResultSchema = z.object({
+  successCnt: z.number()
+    .positive('성공 개수는 양수여야 합니다.')
+    .optional(),
+  failCnt: z.number()
+    .positive('실패 개수는 양수여야 합니다.')
+    .optional(),
+  failNoList: z.array(z.number()
+    .positive('실패 번호는 양수여야 합니다.'))
+    .optional(),
+});
+
 type ResponseType<TData = any> = z.infer<ReturnType<typeof responseSchema<TData>>>;
 type ListResponseType<TData = any> = z.infer<ReturnType<typeof listResponseSchema<TData>>>;
+type MultipleResultType = z.infer<typeof multipleResultSchema>;
 type ListType<TData = any> = {
   list: TData[];
   totalCnt: number;
@@ -29,11 +42,13 @@ type ListType<TData = any> = {
 
 export {
   responseSchema,
-  listResponseSchema
+  listResponseSchema,
+  multipleResultSchema
 };
 
 export type {
   ResponseType,
   ListResponseType,
-  ListType
+  ListType,
+  MultipleResultType
 };

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/drizzle/schemas/common.schema';
 import { userRole, yn } from '@drizzle/enums';
 
 import { baseSearchSchema, addPaginationValidation } from './search.schema';
@@ -19,7 +20,7 @@ export const passwordSchema = z.string()
 
 // Zod 스키마 정의
 
-export const userInfoSchema = z.object({
+export const userInfoSchema = commonSchema.extend({
   userNo: z.coerce.number()
     .int('사용자 번호는 정수여야 합니다.')
     .positive('사용자 번호는 양수여야 합니다.')
@@ -43,40 +44,12 @@ export const userInfoSchema = z.object({
     .max(500, '리프레시 토큰은 500자 이하여야 합니다.')
     .nullable()
     .optional(),
-  useYn: ynEnumSchema
-    .default('Y'),
-  delYn: ynEnumSchema
-    .default('N'),
   lastLgnDt: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(dateTimeRegex, dateTimeMessage)
     .nullable()
     .optional(),
   lastPswdChgDt: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
-    .nullable()
-    .optional(),
-  crtNo: z.coerce.number()
-    .int('생성자 번호는 정수여야 합니다.')
-    .nullable()
-    .optional(),
-  crtDt: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
-    .nullable()
-    .optional(),
-  updtNo: z.coerce.number()
-    .int('수정자 번호는 정수여야 합니다.')
-    .nullable()
-    .optional(),
-  updtDt: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
-    .nullable()
-    .optional(),
-  delNo: z.coerce.number()
-    .int('삭제자 번호는 정수여야 합니다.')
-    .nullable()
-    .optional(),
-  delDt: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(dateTimeRegex, dateTimeMessage)
     .nullable()
     .optional(),
   rowNo: z.coerce.number()
@@ -108,17 +81,20 @@ export const createUserSchema = userInfoSchema.pick({
 
 export const updateUserSchema = userInfoSchema.pick({
   userNm: true,
+  userRole: true,
   proflImg: true,
   userBiogp: true,
-  userRole: true,
   useYn: true,
   delYn: true,
+  delDt: true,
   encptPswd: true,
   reshToken: true,
   lastLgnDt: true,
   lastPswdChgDt: true,
   crtNo: true,
+  crtDt: true,
   updtNo: true,
+  updtDt: true,
   delNo: true,
   userNoList: true,
 }).partial();

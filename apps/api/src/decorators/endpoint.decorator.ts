@@ -1,4 +1,4 @@
-import { applyDecorators, HttpCode, HttpStatus, UseGuards, Get, Post, Put, Patch, Delete } from '@nestjs/common';
+import { applyDecorators, HttpCode, HttpStatus, UseGuards, Get, Post, Put, Patch, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import {
   ApiOperation,
   ApiParam,
@@ -7,6 +7,7 @@ import {
   ApiBearerAuth,
   ApiBody
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
 import { MESSAGE_CODE, RESPONSE_CODE } from '@/code';
 import { RoleAuthGuard, Roles } from '@/endpoints/auth/role-auth.guard';
@@ -58,6 +59,8 @@ type EndpointOptions = {
     queries?: QueryConfig[];
     responses?: ResponseConfig[];
     body?: BodyConfig;
+    throttle?: [number, number]; // [limit, ttl]
+    serialize?: boolean; // ClassSerializerInterceptor 사용 여부
   };
 };
 
@@ -106,6 +109,17 @@ export function Endpoint({
   if (options?.roles && options.roles.length > 0) {
     decorators.push(UseGuards(RoleAuthGuard));
     decorators.push(Roles(...options.roles));
+  }
+
+  // 스로틀링 추가
+  if (options?.throttle) {
+    const [ limit, ttl, ] = options.throttle;
+    decorators.push(Throttle({ default: { limit, ttl, }, }));
+  }
+
+  // 직렬화 인터셉터 추가
+  if (options?.serialize) {
+    decorators.push(UseInterceptors(ClassSerializerInterceptor));
   }
 
   // 파라미터 추가 - 튜플 형식 처리

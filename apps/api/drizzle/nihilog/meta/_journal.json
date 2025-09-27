@@ -29,6 +29,13 @@
       "when": 1758806899645,
       "tag": "0003_handy_blob",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1758980828443,
+      "tag": "0004_fantastic_mandrill",
+      "breakpoints": true
     }
   ]
 }
