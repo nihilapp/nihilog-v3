@@ -1,14 +1,14 @@
 import { z } from 'zod';
 
 import { categorySubscribeItemListSchema } from '@/endpoints/drizzle/schemas/category-subscribe.schema';
-import { commonSchema } from '@/endpoints/drizzle/schemas/common.schema';
+import { commonSchema, ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
 import { addPaginationValidation, baseSearchSchema } from '@/endpoints/drizzle/schemas/search.schema';
 import { tagSubscribeItemListSchema } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
-import { ynEnumSchema } from '@/endpoints/drizzle/schemas/user.schema';
+import { userInfoSchema } from '@/endpoints/drizzle/schemas/user.schema';
 
 // Zod 스키마 정의
 
-export const userSubscribeRawSchema = commonSchema.extend({
+const userSubscribeBaseSchema = commonSchema.extend({
   sbcrNo: z.coerce.number()
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.')
@@ -38,7 +38,18 @@ export const userSubscribeRawSchema = commonSchema.extend({
     .int('총 개수는 정수여야 합니다.')
     .positive('총 개수는 양수여야 합니다.')
     .optional(),
+  userNoList: z.array(z.number()
+    .int('사용자 번호는 정수여야 합니다.')
+    .positive('사용자 번호는 양수여야 합니다.'))
+    .optional(),
 });
+
+const userPickedFields = userInfoSchema.pick({
+  userNm: true,
+  emlAddr: true,
+});
+
+export const userSubscribeRawSchema = userSubscribeBaseSchema.extend(userPickedFields.shape);
 
 // 커스텀 스키마 정의
 
@@ -48,20 +59,17 @@ export const createSubscribeSchema = userSubscribeRawSchema.pick({
   emlNtfyYn: true,
   newPstNtfyYn: true,
   cmntRplNtfyYn: true,
-  sbcrCtgryList: true,
-  sbcrTagList: true,
+  useYn: true,
+  delYn: true,
 });
 
 // 구독 설정 수정용 스키마 (카테고리/태그는 배열로 받아서 JSON 변환)
-export const updateSubscribeSchema = z.object({
-  emlNtfyYn: ynEnumSchema.optional(),
-  newPstNtfyYn: ynEnumSchema.optional(),
-  cmntRplNtfyYn: ynEnumSchema.optional(),
-  sbcrCtgryList: z.array(z.number().int().positive())
-    .optional(),
-  sbcrTagList: z.array(z.number().int().positive())
-    .optional(),
-});
+export const updateSubscribeSchema = userSubscribeRawSchema.pick({
+  emlNtfyYn: true,
+  newPstNtfyYn: true,
+  cmntRplNtfyYn: true,
+  userNoList: true,
+}).partial();
 
 // 구독 설정 조회용 스키마 (JSON 문자열을 배열로 파싱해서 반환)
 export const userSubscribeSchema = userSubscribeRawSchema.omit({

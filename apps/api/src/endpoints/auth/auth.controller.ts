@@ -11,7 +11,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
-import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
+import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import { createError, createResponse } from '@/utils';
@@ -25,36 +25,6 @@ import { JwtPayload } from './jwt.strategy';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
-
-  /**
-   * @description 일반 사용자 회원가입
-   * @param createUserData 회원가입 정보
-   */
-  @Endpoint({
-    endpoint: '/signup',
-    method: 'POST',
-    summary: '회원가입',
-    description: '일반 사용자 계정을 생성합니다.',
-    options: {
-      throttle: [ 3, 60000, ],
-      roles: [ 'USER', 'ADMIN', ],
-      body: [ '회원가입 DTO', CreateUserDto, ],
-      serialize: true,
-      responses: [
-        [
-          '회원가입 성공',
-          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser(), ],
-        ],
-        [
-          '이메일 중복',
-          [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
-        ],
-      ],
-    },
-  })
-  async signUp(@Body() createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
-    return this.authService.signUp(null, createUserData);
-  }
 
   /**
    * @description 사용자 로그인

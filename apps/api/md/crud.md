@@ -1,5 +1,23 @@
 # CRUD 메소드 명명 규칙 및 정의
 
+## 현재 구현 상태 (2025-09-28)
+
+### ✅ 완료된 기능
+
+- **Auth 관련**: 로그인, 로그아웃, 세션 관리, 토큰 갱신, 비밀번호 변경
+- **User 관련**: 프로필 조회/수정, 구독 설정, 계정 생성/삭제
+- **Admin User 관리**: 사용자 검색, 조회, 생성, 수정, 삭제 (단건/다건)
+- **Admin Subscribe 관리**: 구독 설정 조회, 생성, 수정, 삭제 (단건/다건)
+
+### 🚧 미구현 기능
+
+- **CategorySubscribe**: 카테고리 구독 관리
+- **TagSubscribe**: 태그 구독 관리
+- **Post**: 게시글 CRUD
+- **Category**: 카테고리 CRUD
+- **Tag**: 태그 CRUD
+- **Comment**: 댓글 CRUD
+
 어드민 엔드포인트 분류 예정
 
 ## 명명 규칙
@@ -112,40 +130,24 @@
 
 ## 2. UserSubscribe 엔티티
 
-### 일반 사용자 기능
-
-- [ ] GET /users/subscribe **[USER]**
-  - `getUserSubscribeByUserNo`
-  - headers: Authorization
-  - 기능: 현재 사용자의 구독 설정 조회, 이메일/푸시 알림 설정 상태 확인
-- [ ] PUT /users/subscribe **[USER]**
-  - `updateUserSubscribe`
-  - headers: Authorization
-  - body: UpdateSubscribeDto
-  - 기능: 사용자 구독 설정 변경, 이메일 알림 on/off, 푸시 알림 설정
-
 ### 관리자 기능
 
-- [ ] GET /admin/subscribes **[ADMIN]**
+- [x] GET /admin/subscribes **[ADMIN]**
   - `adminGetUserSubscribeList`
   - 기능: 전체 사용자 구독 설정 목록 조회, 구독률 통계, 필터링
-- [ ] POST /admin/subscribes **[ADMIN]**
+- [x] POST /admin/subscribes **[ADMIN]**
   - `adminCreateUserSubscribe`
   - body: CreateSubscribeDto
   - 기능: 관리자가 특정 사용자 구독 설정 생성, 기본 구독 설정 적용
-- [ ] POST /admin/subscribes/multiple **[ADMIN]**
-  - `adminMultipleCreateUserSubscribe`
-  - body: CreateSubscribeDto (userNoList 포함)
-  - 기능: 다수 사용자 구독 설정 일괄 생성, 신규 가입자 기본 설정 적용
-- [ ] PUT /admin/subscribes/multiple **[ADMIN]**
+- [x] PUT /admin/subscribes/multiple **[ADMIN]**
   - `adminMultipleUpdateUserSubscribe`
   - body: UpdateSubscribeDto (userNoList 포함)
   - 기능: 다수 사용자 구독 설정 일괄 변경, 정책 변경 시 일괄 적용
-- [ ] DELETE /admin/subscribes/:userNo **[ADMIN]**
+- [x] DELETE /admin/subscribes/:userNo **[ADMIN]**
   - `adminDeleteUserSubscribe`
   - params: userNo: number
   - 기능: 특정 사용자 구독 설정 삭제, 모든 알림 비활성화
-- [ ] DELETE /admin/subscribes/multiple **[ADMIN]**
+- [x] DELETE /admin/subscribes/multiple **[ADMIN]**
   - `adminMultipleDeleteUserSubscribe`
   - body: UpdateSubscribeDto (userNoList 포함)
   - 기능: 다수 사용자 구독 설정 일괄 삭제
@@ -251,10 +253,6 @@
   - `adminCreatePost`
   - body: CreatePostDto
   - 기능: 새 게시글 작성, 마크다운 처리, 태그 연결, 썸네일 생성, 발행 상태 설정
-- [ ] POST /admin/posts/multiple **[ADMIN]**
-  - `adminMultipleCreatePost`
-  - body: CreatePostDto (pstNoList 포함)
-  - 기능: 다수 게시글 일괄 작성, 마이그레이션용, 일괄 발행 처리
 - [ ] PATCH /admin/posts/:pstNo **[ADMIN]**
   - `adminUpdatePost`
   - params: pstNo: number
@@ -389,10 +387,6 @@
 
 ### 관리자 기능
 
-- [ ] POST /admin/comments/multiple **[ADMIN]**
-  - `adminMultipleCreateComment`
-  - body: CreateCommentDto (cmntNoList 포함)
-  - 기능: 다수 댓글 일괄 작성, 마이그레이션용
 - [ ] PATCH /admin/comments/:cmntNo **[ADMIN]**
   - `adminUpdateComment`
   - params: cmntNo: number

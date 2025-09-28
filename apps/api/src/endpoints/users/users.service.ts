@@ -47,6 +47,10 @@ export class UserService {
     try {
       const subscribe = await this.subscribeRepository.getUserSubscribeByUserNo(user.userNo);
 
+      if (!subscribe) {
+        return createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND');
+      }
+
       return createResponse(
         'SUCCESS',
         'SUBSCRIBE_FETCH_SUCCESS',

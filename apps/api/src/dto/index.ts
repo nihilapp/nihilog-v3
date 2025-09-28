@@ -33,9 +33,32 @@ export {
   UserSubscribeDto,
   CreateSubscribeDto,
   UpdateSubscribeDto,
-  TagSubscribeItemDto,
-  CategorySubscribeItemDto
+  SearchSubscribeDto
 } from './subscribe.dto';
+
+// Category Subscribe DTOs
+export {
+  CategorySubscribeDto,
+  CreateCategorySubscribeDto,
+  UpdateCategorySubscribeDto,
+  MultipleCreateCategorySubscribeDto,
+  MultipleUpdateCategorySubscribeDto,
+  MultipleDeleteCategorySubscribeDto,
+  SearchCategorySubscribeDto,
+  CategorySubscribeItemDto
+} from './category-subscribe.dto';
+
+// Tag Subscribe DTOs
+export {
+  TagSubscribeDto,
+  CreateTagSubscribeDto,
+  UpdateTagSubscribeDto,
+  MultipleCreateTagSubscribeDto,
+  MultipleUpdateTagSubscribeDto,
+  MultipleDeleteTagSubscribeDto,
+  SearchTagSubscribeDto,
+  TagSubscribeItemDto
+} from './tag-subscribe.dto';
 
 // Common DTOs
 export {

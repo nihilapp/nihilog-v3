@@ -1,44 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 
+import { CategorySubscribeItemDto } from '@/dto/category-subscribe.dto';
+import { TagSubscribeItemDto } from '@/dto/tag-subscribe.dto';
 import type { CategorySubscribeItemListType } from '@/endpoints/drizzle/schemas/category-subscribe.schema';
+import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
 import type { TagSubscribeItemListType } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
-import type { YnType } from '@/endpoints/drizzle/schemas/user.schema';
 import {
   userSubscribeSchema,
   createSubscribeSchema,
-  updateSubscribeSchema
+  updateSubscribeSchema,
+  searchSubscribeSchema
 } from '@drizzle/schemas/subscribe.schema';
-
-// Swagger 문서화를 위한 카테고리 구독 아이템 DTO
-export class CategorySubscribeItemDto {
-  @ApiProperty({
-    description: '카테고리 번호',
-    example: 1,
-  })
-  ctgryNo: number;
-
-  @ApiProperty({
-    description: '카테고리 이름',
-    example: '카테고리 1',
-  })
-  ctgryNm: string;
-}
-
-// Swagger 문서화를 위한 태그 구독 아이템 DTO
-export class TagSubscribeItemDto {
-  @ApiProperty({
-    description: '태그 번호',
-    example: 1,
-  })
-  tagNo: number;
-
-  @ApiProperty({
-    description: '태그 이름',
-    example: '태그 1',
-  })
-  tagNm: string;
-}
 
 // 구독 정보 조회 DTO
 export class UserSubscribeDto extends createZodDto(userSubscribeSchema.partial()) {
@@ -180,20 +153,6 @@ export class CreateSubscribeDto extends createZodDto(createSubscribeSchema) {
     required: false,
   })
   declare cmntRplNtfyYn: YnType;
-
-  @ApiProperty({
-    description: '구독 카테고리 목록 (JSON 문자열)',
-    example: '[1,2,3]',
-    required: false,
-  })
-  declare sbcrCtgryList?: string | null;
-
-  @ApiProperty({
-    description: '구독 태그 목록 (JSON 문자열)',
-    example: '[1,2,3]',
-    required: false,
-  })
-  declare sbcrTagList?: string | null;
 }
 
 // 구독 설정 수정 DTO
@@ -223,18 +182,48 @@ export class UpdateSubscribeDto extends createZodDto(updateSubscribeSchema) {
   declare cmntRplNtfyYn?: YnType;
 
   @ApiProperty({
-    description: '구독 카테고리 번호 목록',
+    description: '사용자 번호 목록',
     type: [ Number, ],
     example: [ 1, 2, 3, ],
     required: false,
   })
-  declare sbcrCtgryList?: number[];
+  declare userNoList?: number[];
+}
+
+export class SearchSubscribeDto extends createZodDto(searchSubscribeSchema) {
+  @ApiProperty({
+    description: '시작 행 번호 (SQL OFFSET)',
+    example: 0,
+    required: false,
+  })
+  declare strtRow?: number;
 
   @ApiProperty({
-    description: '구독 태그 번호 목록',
-    type: [ Number, ],
-    example: [ 1, 2, 3, ],
+    description: '끝 행 번호 (SQL LIMIT)',
+    example: 10,
     required: false,
   })
-  declare sbcrTagList?: number[];
+  declare endRow?: number;
+
+  @ApiProperty({
+    description: '검색 타입 (userNm, emlAddr 중 하나)',
+    example: 'userNm',
+    required: false,
+  })
+  declare srchType?: 'userNm' | 'emlAddr';
+
+  @ApiProperty({
+    description: '검색 키워드 (2-100자)',
+    example: '홍길동',
+    required: false,
+  })
+  declare srchKywd?: string;
+
+  @ApiProperty({
+    description: '삭제 여부 (미지정 시 기본값 N)',
+    enum: [ 'Y', 'N', ],
+    example: 'N',
+    required: false,
+  })
+  declare delYn?: YnType;
 }

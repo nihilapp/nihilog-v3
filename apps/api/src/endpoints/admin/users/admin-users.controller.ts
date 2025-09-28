@@ -8,14 +8,13 @@ import {
 import {
   ApiTags
 } from '@nestjs/swagger';
-import cloneDeep from 'lodash/cloneDeep';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { ListDto, ResponseDto, type MultipleResultDto } from '@/dto/response.dto';
 import { UserInfoDto, SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
-import { createError, createResponse } from '@/utils';
+import { createError, createResponse, removeSensitiveInfoFromResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
 import { AdminAuthGuard } from '@auth/admin-auth.guard';
 
@@ -73,7 +72,13 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    return await this.usersService.getUserList(body);
+    const result = await this.usersService.getUserList(body);
+
+    if (!result) {
+      return createError('BAD_REQUEST', 'INVALID_REQUEST');
+    }
+
+    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', 'USER_LIST_SUCCESS', result));
   }
 
   /**
@@ -116,9 +121,7 @@ export class AdminUserController {
       return createError('NOT_FOUND', 'USER_NOT_FOUND');
     }
 
-    const userToReturn = cloneDeep(result);
-    userToReturn.encptPswd = undefined;
-    userToReturn.reshToken = undefined;
+    const userToReturn = removeSensitiveInfo(result);
 
     return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
   }
@@ -170,9 +173,7 @@ export class AdminUserController {
       return createError('NOT_FOUND', 'USER_NOT_FOUND');
     }
 
-    const userToReturn = cloneDeep(result);
-    userToReturn.encptPswd = undefined;
-    userToReturn.reshToken = undefined;
+    const userToReturn = removeSensitiveInfo(result);
 
     return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
   }
@@ -217,9 +218,7 @@ export class AdminUserController {
       return createError('NOT_FOUND', 'USER_NOT_FOUND');
     }
 
-    const userToReturn = cloneDeep(result);
-    userToReturn.encptPswd = undefined;
-    userToReturn.reshToken = undefined;
+    const userToReturn = removeSensitiveInfo(result);
 
     return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
   }
@@ -265,7 +264,8 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    return await this.usersService.createUser(req.user, createUserData);
+    const result = await this.usersService.createUser(req.user, createUserData);
+    return removeSensitiveInfoFromResponse(result);
   }
 
   /**
@@ -316,7 +316,8 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    return await this.usersService.updateUser(req.user, userNo, updateUserData);
+    const result = await this.usersService.updateUser(req.user.userNo, userNo, updateUserData);
+    return removeSensitiveInfoFromResponse(result);
   }
 
   // TODO: 여기서부터 다시 진행할 것
@@ -359,7 +360,7 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.multipleUpdateUser(req.user as UserInfoDto, updateUserDto);
+    const result = await this.usersService.multipleUpdateUser(req.user.userNo, updateUserDto);
 
     return result;
   }
@@ -409,7 +410,7 @@ export class AdminUserController {
     }
 
     const result = await this.usersService.adminDeleteUser(
-      req.user,
+      req.user.userNo,
       userNo
     );
 
@@ -454,7 +455,7 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.adminMultipleDeleteUser(req.user, body.userNoList);
+    const result = await this.usersService.adminMultipleDeleteUser(req.user.userNo, body.userNoList);
     return result;
   }
 }

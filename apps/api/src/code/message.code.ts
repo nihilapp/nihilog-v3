@@ -171,10 +171,18 @@ export const MESSAGE_CODE = {
   SUBSCRIBE_UPDATE_SUCCESS: '구독 설정이 수정되었습니다.',
   SUBSCRIBE_CREATE_SUCCESS: '구독 설정이 생성되었습니다.',
   SUBSCRIBE_DELETE_SUCCESS: '구독 설정이 삭제되었습니다.',
-  SUBSCRIBE_LIST_SUCCESS: '구독 목록을 조회했습니다.',
+  SUBSCRIBE_LIST_SUCCESS: '구독 설정 목록을 조회했습니다.',
   SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '다수 구독 설정이 생성되었습니다.',
   SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 구독 설정이 수정되었습니다.',
   SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 구독 설정이 삭제되었습니다.',
+
+  // 관리자 구독 관련 성공 메시지
+  ADMIN_SUBSCRIBE_LIST_SUCCESS: '전체 사용자 구독 설정 목록을 조회했습니다.',
+  ADMIN_SUBSCRIBE_CREATE_SUCCESS: '사용자 구독 설정이 생성되었습니다.',
+  ADMIN_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '다수 사용자 구독 설정이 생성되었습니다.',
+  ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 사용자 구독 설정이 수정되었습니다.',
+  ADMIN_SUBSCRIBE_DELETE_SUCCESS: '사용자 구독 설정이 삭제되었습니다.',
+  ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 사용자 구독 설정이 삭제되었습니다.',
 
   // 카테고리 구독 관련
   CATEGORY_SUBSCRIBE_CREATE_SUCCESS: '카테고리 구독이 설정되었습니다.',
@@ -204,6 +212,17 @@ export const MESSAGE_CODE = {
   SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 구독 설정 생성에 실패했습니다.',
   SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 구독 설정 수정에 실패했습니다.',
   SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 구독 설정 삭제에 실패했습니다.',
+
+  // 관리자 구독 관련 에러 메시지
+  ADMIN_SUBSCRIBE_LIST_ERROR: '전체 사용자 구독 설정 목록 조회에 실패했습니다.',
+  ADMIN_SUBSCRIBE_CREATE_ERROR: '사용자 구독 설정 생성에 실패했습니다.',
+  ADMIN_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 사용자 구독 설정 생성에 실패했습니다.',
+  ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 사용자 구독 설정 수정에 실패했습니다.',
+  ADMIN_SUBSCRIBE_DELETE_ERROR: '사용자 구독 설정 삭제에 실패했습니다.',
+  ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 사용자 구독 설정 삭제에 실패했습니다.',
+  ADMIN_SUBSCRIBE_ALREADY_EXISTS: '이미 구독 설정이 존재합니다.',
+  ADMIN_SUBSCRIBE_ALREADY_DELETED: '이미 삭제된 구독 설정입니다.',
+  ADMIN_SUBSCRIBE_INVALID_USER_LIST: '유효하지 않은 사용자 목록입니다.',
 
   // 카테고리 구독 에러
   CATEGORY_SUBSCRIBE_CREATE_ERROR: '카테고리 구독 설정에 실패했습니다.',

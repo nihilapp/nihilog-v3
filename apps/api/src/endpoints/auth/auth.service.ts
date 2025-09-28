@@ -211,13 +211,11 @@ export class AuthService {
       encptPswd
     );
 
-    // 민감정보 제거 (이미 Repository에서 처리되지만 추가 보안)
-    if (newUser.data) {
-      newUser.data.encptPswd = null;
-      newUser.data.reshToken = null;
+    if (!newUser) {
+      return createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
     }
 
-    return newUser;
+    return createResponse('CREATED', 'SIGN_UP_SUCCESS', newUser);
   }
 
   /**
@@ -255,8 +253,12 @@ export class AuthService {
       { encptPswd: newEncptPswd, }
     );
 
+    if (!updatedUser) {
+      return createError('INTERNAL_SERVER_ERROR', 'PASSWORD_CHANGE_ERROR');
+    }
+
     // 민감정보 제거
-    const userToReturn = cloneDeep(updatedUser.data);
+    const userToReturn = cloneDeep(updatedUser);
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 

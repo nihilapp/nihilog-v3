@@ -2,12 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { createZodDto } from 'nestjs-zod';
 
+import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
 import {
   updateUserSchema,
   userInfoSchema,
   searchUserSchema,
   type UserRoleType,
-  type YnType
+  deleteMultipleUsersSchema
 } from '@drizzle/schemas/user.schema';
 
 // 사용자 조회 DTO
@@ -312,11 +313,10 @@ export class SearchUserDto extends createZodDto(searchUserSchema) {
 }
 
 // 다수 사용자 삭제 DTO
-export class DeleteMultipleUsersDto {
+export class DeleteMultipleUsersDto extends createZodDto(deleteMultipleUsersSchema) {
   @ApiProperty({
     description: '삭제할 사용자 번호 목록',
     example: [ 1, 2, 3, ],
-    type: [ Number, ],
   })
   declare userNoList: number[];
 }

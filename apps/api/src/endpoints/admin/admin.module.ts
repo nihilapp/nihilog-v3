@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AdminSubscribeModule } from '@/endpoints/admin/subscribe/admin-subscribe.module';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { AdminController } from '@admin/admin.controller';
 import { AdminService } from '@admin/admin.service';
@@ -9,7 +10,7 @@ import { AuthModule } from '@auth/auth.module';
 import { DrizzleModule } from '@drizzle/drizzle.module';
 
 @Module({
-  imports: [ AuthModule, DrizzleModule, AdminUserModule, AdminPostsModule, ],
+  imports: [ AuthModule, DrizzleModule, AdminUserModule, AdminPostsModule, AdminSubscribeModule, ],
   controllers: [ AdminController, ],
   providers: [ AdminService, UserRepository, ],
 })

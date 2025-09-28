@@ -1,13 +1,12 @@
 import { z } from 'zod';
 
-import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/drizzle/schemas/common.schema';
-import { userRole, yn } from '@drizzle/enums';
+import { commonSchema, dateTimeMessage, dateTimeRegex, ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
+import { userRole } from '@drizzle/enums';
 
 import { baseSearchSchema, addPaginationValidation } from './search.schema';
 
 // Drizzle enum을 Zod 스키마로 변환
 export const userRoleSchema = z.enum(userRole.enumValues, '사용자 권한은 필수입니다.');
-export const ynEnumSchema = z.enum(yn.enumValues, '올바른 값을 입력해주세요.');
 
 // 공통 비밀번호 스키마
 export const passwordSchema = z.string()
@@ -99,6 +98,10 @@ export const updateUserSchema = userInfoSchema.pick({
   userNoList: true,
 }).partial();
 
+export const deleteMultipleUsersSchema = userInfoSchema.pick({
+  userNoList: true,
+});
+
 export const signInSchema = userInfoSchema.pick({
   emlAddr: true,
 }).extend({
@@ -154,12 +157,12 @@ export const partialUserInfoSchema = userInfoSchema.partial();
 export type UserInfoType = z.infer<typeof userInfoSchema>;
 export type CreateUserType = z.infer<typeof createUserSchema>;
 export type UpdateUserType = z.infer<typeof updateUserSchema>;
+export type DeleteMultipleUsersType = z.infer<typeof deleteMultipleUsersSchema>;
 export type SignInType = z.infer<typeof signInSchema>;
 export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordSchema>;
 export type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
 export type UserRoleType = z.infer<typeof userRoleSchema>;
-export type YnType = z.infer<typeof ynEnumSchema>;
 export type PartialUserInfoType = z.infer<typeof partialUserInfoSchema>;
 export type SearchUserType = z.infer<typeof searchUserSchema>;
 export type WithdrawType = z.infer<typeof withdrawSchema>;
