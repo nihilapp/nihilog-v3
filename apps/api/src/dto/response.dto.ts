@@ -145,3 +145,17 @@ export class SignInResponseDto {
   })
   declare accessTokenExpiresAt: number;
 }
+
+export class MutationResponseDto {
+  @ApiProperty({
+    description: '영향받은 행 수',
+    example: 1,
+  })
+  declare rowsAffected: number;
+
+  @ApiProperty({
+    description: '영향받은 행 번호 목록',
+    example: [ 1, 2, 3, ],
+  })
+  declare affectedRows: number[];
+}

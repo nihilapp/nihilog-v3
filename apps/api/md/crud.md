@@ -11,14 +11,12 @@
 
 ### 🚧 미구현 기능
 
-- **CategorySubscribe**: 카테고리 구독 관리
-- **TagSubscribe**: 태그 구독 관리
+- **CategorySubscribe**: 카테고리 구독 관리 (관리자 API 구조 생성 완료, 구현 필요)
+- **TagSubscribe**: 태그 구독 관리 (관리자 API 구조 생성 완료, 구현 필요)
 - **Post**: 게시글 CRUD
 - **Category**: 카테고리 CRUD
 - **Tag**: 태그 CRUD
 - **Comment**: 댓글 CRUD
-
-어드민 엔드포인트 분류 예정
 
 ## 명명 규칙
 
@@ -191,6 +189,44 @@
   - body: UpdateCategorySubscribeDto (ctgryNoList 포함)
   - 기능: 다수 카테고리 구독 일괄 해제
 
+### 관리자 기능
+
+- [ ] POST /admin/subscribes/categories/search **[ADMIN]**
+  - `adminGetCategorySubscribeList`
+  - body: SearchCategorySubscribeDto
+  - 기능: 전체 카테고리 구독 목록 조회, 카테고리별 구독 현황 분석, 페이징, 정렬
+- [ ] GET /admin/subscribes/categories/:ctgryNo **[ADMIN]**
+  - `adminGetCategorySubscribeByCtgryNo`
+  - params: ctgryNo: number
+  - body: SearchCategorySubscribeDto
+  - 기능: 특정 카테고리의 구독자 목록 조회, 구독자 통계 분석
+- [ ] POST /admin/subscribes/categories **[ADMIN]**
+  - `adminCreateCategorySubscribe`
+  - body: CreateCategorySubscribeDto
+  - 기능: 관리자가 사용자 대신 카테고리 구독 설정, 대량 마케팅 시 활용
+- [ ] POST /admin/subscribes/categories/multiple **[ADMIN]**
+  - `adminMultipleCreateCategorySubscribe`
+  - body: MultipleCreateCategorySubscribeDto
+  - 기능: 관리자가 다수 카테고리 구독 일괄 생성, 신규 카테고리 홍보
+- [ ] PUT /admin/subscribes/categories/:ctgrySbcrNo **[ADMIN]**
+  - `adminUpdateCategorySubscribe`
+  - params: ctgrySbcrNo: number
+  - body: UpdateCategorySubscribeDto
+  - 기능: 관리자가 특정 카테고리 구독 설정 수정, 알림 설정 관리
+- [ ] PUT /admin/subscribes/categories/multiple **[ADMIN]**
+  - `adminMultipleUpdateCategorySubscribe`
+  - body: MultipleUpdateCategorySubscribeDto
+  - 기능: 관리자가 다수 카테고리 구독 일괄 수정, 정책 변경 시 활용
+- [ ] DELETE /admin/subscribes/categories/:ctgrySbcrNo **[ADMIN]**
+  - `adminDeleteCategorySubscribe`
+  - params: ctgrySbcrNo: number
+  - body: UpdateCategorySubscribeDto
+  - 기능: 관리자가 특정 카테고리 구독 삭제, 스팸 방지 및 정책 위반 처리
+- [ ] DELETE /admin/subscribes/categories/multiple **[ADMIN]**
+  - `adminMultipleDeleteCategorySubscribe`
+  - body: MultipleDeleteCategorySubscribeDto
+  - 기능: 관리자가 다수 카테고리 구독 일괄 삭제, 카테고리 폐지 시 활용
+
 ## 4. TagSubscribe 엔티티
 
 ### 일반 사용자 기능
@@ -229,6 +265,44 @@
   - headers: Authorization
   - body: UpdateTagSubscribeDto (tagNoList 포함)
   - 기능: 다수 태그 구독 일괄 해제
+
+### 관리자 기능
+
+- [ ] POST /admin/subscribes/tags/search **[ADMIN]**
+  - `adminGetTagSubscribeList`
+  - body: SearchTagSubscribeDto
+  - 기능: 전체 태그 구독 목록 조회, 태그별 구독 현황 분석, 인기 태그 통계
+- [ ] GET /admin/subscribes/tags/:tagNo **[ADMIN]**
+  - `adminGetTagSubscribeByTagNo`
+  - params: tagNo: number
+  - body: SearchTagSubscribeDto
+  - 기능: 특정 태그의 구독자 목록 조회, 태그 활용도 분석
+- [ ] POST /admin/subscribes/tags **[ADMIN]**
+  - `adminCreateTagSubscribe`
+  - body: CreateTagSubscribeDto
+  - 기능: 관리자가 사용자 대신 태그 구독 설정, 트렌드 태그 추천 시 활용
+- [ ] POST /admin/subscribes/tags/multiple **[ADMIN]**
+  - `adminMultipleCreateTagSubscribe`
+  - body: MultipleCreateTagSubscribeDto
+  - 기능: 관리자가 다수 태그 구독 일괄 생성, 신규 태그 홍보
+- [ ] PUT /admin/subscribes/tags/:tagSbcrNo **[ADMIN]**
+  - `adminUpdateTagSubscribe`
+  - params: tagSbcrNo: number
+  - body: UpdateTagSubscribeDto
+  - 기능: 관리자가 특정 태그 구독 설정 수정, 알림 빈도 관리
+- [ ] PUT /admin/subscribes/tags/multiple **[ADMIN]**
+  - `adminMultipleUpdateTagSubscribe`
+  - body: MultipleUpdateTagSubscribeDto
+  - 기능: 관리자가 다수 태그 구독 일괄 수정, 태그 정책 변경 시 활용
+- [ ] DELETE /admin/subscribes/tags/:tagSbcrNo **[ADMIN]**
+  - `adminDeleteTagSubscribe`
+  - params: tagSbcrNo: number
+  - body: UpdateTagSubscribeDto
+  - 기능: 관리자가 특정 태그 구독 삭제, 스팸 태그 방지 및 정책 위반 처리
+- [ ] DELETE /admin/subscribes/tags/multiple **[ADMIN]**
+  - `adminMultipleDeleteTagSubscribe`
+  - body: MultipleDeleteTagSubscribeDto
+  - 기능: 관리자가 다수 태그 구독 일괄 삭제, 태그 정리 및 통합 시 활용
 
 ## 5. Post 엔티티
 

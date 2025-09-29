@@ -27,6 +27,10 @@ export const categorySubscribeSchema = commonSchema.extend({
     .int('총 개수는 정수여야 합니다.')
     .positive('총 개수는 양수여야 합니다.')
     .optional(),
+  ctgryNoList: z.array(z.coerce.number()
+    .int('카테고리 번호는 정수여야 합니다.')
+    .positive('카테고리 번호는 양수여야 합니다.'))
+    .optional(),
 });
 
 export const categorySubscribeItemListSchema = categorySubscribeSchema.pick({
@@ -40,6 +44,9 @@ export const createCategorySubscribeSchema = categorySubscribeSchema.pick({
   ctgryNo: true,
   useYn: true,
   delYn: true,
+  ctgryNoList: true,
+}).partial({
+  ctgryNoList: true,
 });
 
 // 카테고리 구독 수정용 스키마

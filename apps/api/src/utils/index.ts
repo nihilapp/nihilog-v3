@@ -6,5 +6,5 @@ export {
   removeSensitiveInfo,
   removeSensitiveInfoFromList,
   removeSensitiveInfoFromResponse,
-  removeSensitiveInfoFromListResponse,
+  removeSensitiveInfoFromListResponse
 } from './removeSensitiveInfo';

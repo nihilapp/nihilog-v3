@@ -25,7 +25,8 @@ export {
   ListDto,
   ListResponseDto,
   MultipleResultDto,
-  SignInResponseDto
+  SignInResponseDto,
+  MutationResponseDto
 } from './response.dto';
 
 // Subscription DTOs

@@ -193,6 +193,16 @@ export const MESSAGE_CODE = {
   CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 카테고리 구독이 수정되었습니다.',
   CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 카테고리 구독이 해제되었습니다.',
 
+  // 관리자 카테고리 구독 관련 성공 메시지
+  ADMIN_CATEGORY_SUBSCRIBE_LIST_SUCCESS: '관리자 카테고리 구독 목록을 조회했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS: '카테고리별 구독자 목록을 조회했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS: '관리자가 카테고리 구독을 생성했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '관리자가 다수 카테고리 구독을 생성했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS: '관리자가 카테고리 구독을 수정했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '관리자가 다수 카테고리 구독을 수정했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS: '관리자가 카테고리 구독을 삭제했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '관리자가 다수 카테고리 구독을 삭제했습니다.',
+
   // 태그 구독 관련
   TAG_SUBSCRIBE_CREATE_SUCCESS: '태그 구독이 설정되었습니다.',
   TAG_SUBSCRIBE_UPDATE_SUCCESS: '태그 구독이 수정되었습니다.',
@@ -201,6 +211,16 @@ export const MESSAGE_CODE = {
   TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '다수 태그 구독이 설정되었습니다.',
   TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '다수 태그 구독이 수정되었습니다.',
   TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '다수 태그 구독이 해제되었습니다.',
+
+  // 관리자 태그 구독 관련 성공 메시지
+  ADMIN_TAG_SUBSCRIBE_LIST_SUCCESS: '관리자 태그 구독 목록을 조회했습니다.',
+  ADMIN_TAG_SUBSCRIBE_BY_TAG_SUCCESS: '태그별 구독자 목록을 조회했습니다.',
+  ADMIN_TAG_SUBSCRIBE_CREATE_SUCCESS: '관리자가 태그 구독을 생성했습니다.',
+  ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS: '관리자가 다수 태그 구독을 생성했습니다.',
+  ADMIN_TAG_SUBSCRIBE_UPDATE_SUCCESS: '관리자가 태그 구독을 수정했습니다.',
+  ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS: '관리자가 다수 태그 구독을 수정했습니다.',
+  ADMIN_TAG_SUBSCRIBE_DELETE_SUCCESS: '관리자가 태그 구독을 삭제했습니다.',
+  ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS: '관리자가 다수 태그 구독을 삭제했습니다.',
 
   // 에러 메시지
   SUBSCRIBE_FETCH_ERROR: '구독 설정 조회에 실패했습니다.',
@@ -233,6 +253,20 @@ export const MESSAGE_CODE = {
   CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 카테고리 구독 설정에 실패했습니다.',
   CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 카테고리 구독 수정에 실패했습니다.',
   CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 카테고리 구독 해제에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_CREATE_FAILED: '카테고리 구독 생성에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_FAILED: '다수 카테고리 구독 생성에 실패했습니다.',
+  CATEGORY_SUBSCRIBE_ALREADY_EXISTS: '이미 구독 중인 카테고리입니다.',
+
+  // 관리자 카테고리 구독 관련 에러 메시지
+  ADMIN_CATEGORY_SUBSCRIBE_LIST_ERROR: '관리자 카테고리 구독 목록 조회에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_ERROR: '카테고리별 구독자 조회에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_CREATE_ERROR: '관리자 카테고리 구독 생성에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '관리자 다수 카테고리 구독 생성에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_UPDATE_ERROR: '관리자 카테고리 구독 수정에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_UPDATE_NOT_IMPLEMENTED: '관리자 카테고리 구독 수정 기능이 구현되지 않았습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '관리자 다수 카테고리 구독 수정에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR: '관리자 카테고리 구독 삭제에 실패했습니다.',
+  ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '관리자 다수 카테고리 구독 삭제에 실패했습니다.',
 
   // 태그 구독 에러
   TAG_SUBSCRIBE_CREATE_ERROR: '태그 구독 설정에 실패했습니다.',
@@ -243,6 +277,20 @@ export const MESSAGE_CODE = {
   TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '다수 태그 구독 설정에 실패했습니다.',
   TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '다수 태그 구독 수정에 실패했습니다.',
   TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '다수 태그 구독 해제에 실패했습니다.',
+  TAG_SUBSCRIBE_CREATE_FAILED: '태그 구독 생성에 실패했습니다.',
+  TAG_SUBSCRIBE_MULTIPLE_CREATE_FAILED: '다수 태그 구독 생성에 실패했습니다.',
+  TAG_SUBSCRIBE_ALREADY_EXISTS: '이미 구독 중인 태그입니다.',
+
+  // 관리자 태그 구독 관련 에러 메시지
+  ADMIN_TAG_SUBSCRIBE_LIST_ERROR: '관리자 태그 구독 목록 조회에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_BY_TAG_ERROR: '태그별 구독자 조회에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_CREATE_ERROR: '관리자 태그 구독 생성에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR: '관리자 다수 태그 구독 생성에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_UPDATE_ERROR: '관리자 태그 구독 수정에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_UPDATE_NOT_IMPLEMENTED: '관리자 태그 구독 수정 기능이 구현되지 않았습니다.',
+  ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR: '관리자 다수 태그 구독 수정에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_DELETE_ERROR: '관리자 태그 구독 삭제에 실패했습니다.',
+  ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR: '관리자 다수 태그 구독 삭제에 실패했습니다.',
 
   // 구독 설정 관련
   SUBSCRIBE_EMAIL_NOTIFICATION_ERROR: '이메일 알림 설정에 실패했습니다.',
