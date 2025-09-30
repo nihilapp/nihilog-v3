@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import { userRole } from '@/endpoints/drizzle/enums';
 import { commonSchema, dateTimeMessage, dateTimeRegex, ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
-import { userRole } from '@drizzle/enums';
 
 import { baseSearchSchema, addPaginationValidation } from './search.schema';
 

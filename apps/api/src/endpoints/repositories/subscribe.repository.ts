@@ -3,15 +3,15 @@ import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import type { ResponseDto } from '@/dto';
-import { UpdateSubscribeDto, type CreateSubscribeDto, type SearchSubscribeDto, type UserSubscribeDto } from '@/dto/subscribe.dto';
-import type { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
-import type { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
+import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto, UserSubscribeDto } from '@/dto/subscribe.dto';
+import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
+import { schemas } from '@/endpoints/drizzle/schemas';
+import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
+import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { likes } from '@/utils/ormHelper';
 import { pageHelper } from '@/utils/pageHelper';
 import { isEmptyString } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
-import { DRIZZLE } from '@drizzle/drizzle.module';
-import { schemas } from '@drizzle/schemas';
 
 const { userInfo, userSbcrInfo, tagSbcrMpng, ctgrySbcrMpng, ctgryInfo, tagInfo, } = schemas;
 
@@ -318,9 +318,9 @@ export class SubscribeRepository {
   /**
    * @description 관리자가 사용자 구독 설정 삭제
    * @param adminNo 관리자 번호
-   * @param userNo 사용자 번호
+   * @param sbcrNo 구독 번호
    */
-  async deleteUserSubscribe(adminNo: number, userNo: number): Promise<boolean> {
+  async deleteUserSubscribeBySbcrNo(adminNo: number, sbcrNo: number): Promise<boolean> {
     try {
       const deletedRows = await this.db
         .update(userSbcrInfo)
@@ -333,8 +333,8 @@ export class SubscribeRepository {
           delDt: timeToString(),
         })
         .where(eq(
-          userSbcrInfo.userNo,
-          userNo
+          userSbcrInfo.sbcrNo,
+          sbcrNo
         ));
 
       return deletedRows.rowCount > 0;

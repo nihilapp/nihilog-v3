@@ -16,10 +16,10 @@ import {
   UpdateSubscribeDto,
   UserSubscribeDto
 } from '@/dto/subscribe.dto';
-import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-subscribe.service';
+import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-subscribe.service';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createResponse } from '@/utils';
 import { createExampleSubscribe } from '@/utils/createExampleSubscribe';
-import { AdminAuthGuard } from '@auth/admin-auth.guard';
 
 @ApiTags('admin/subscribe')
 @Controller('admin/subscribes')
@@ -204,7 +204,7 @@ export class AdminSubscribeController {
    * @description 특정 사용자 구독 설정 삭제
    */
   @Endpoint({
-    endpoint: '/:userNo',
+    endpoint: '/:sbcrNo',
     method: 'DELETE',
     summary: '🗑️ 구독 설정 삭제',
     description: '특정 사용자의 구독 설정을 삭제합니다.',
@@ -212,7 +212,7 @@ export class AdminSubscribeController {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
       params: [
-        [ 'userNo', '사용자 번호', 'number', true, ],
+        [ 'sbcrNo', '구독 번호', 'number', true, ],
       ],
       responses: [
         [
@@ -256,13 +256,13 @@ export class AdminSubscribeController {
   })
   async adminDeleteUserSubscribe(
     @Req() req: AuthRequest,
-    @Param('userNo') userNo: number
+    @Param('sbcrNo') sbcrNo: number
   ): Promise<ResponseDto<null>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return await this.subscribeService.adminDeleteUserSubscribe(req.user.userNo, userNo);
+    return await this.subscribeService.adminDeleteUserSubscribe(req.user.userNo, sbcrNo);
   }
 
   /**

@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 
-import { PostsController } from '@admin/posts/admin-posts.controller';
-import { PostsService } from '@admin/posts/admin-posts.service';
-import { DrizzleModule } from '@drizzle/drizzle.module';
-import { PostRepository } from '@repositories/post.repository';
+import { AdminPostsController } from '@/endpoints/admin/posts/admin-posts.controller';
+import { AdminPostsService } from '@/endpoints/admin/posts/admin-posts.service';
+import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { PostRepository } from '@/endpoints/repositories/post.repository';
 
 @Module({
   imports: [ DrizzleModule, ],
-  providers: [ PostsService, PostRepository, ],
-  controllers: [ PostsController, ],
-  exports: [ PostsService, ],
+  providers: [ AdminPostsService, PostRepository, ],
+  controllers: [ AdminPostsController, ],
+  exports: [ AdminPostsService, ],
 })
-export class PostsModule {}
+export class AdminPostsModule {}

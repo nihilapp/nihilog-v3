@@ -343,6 +343,13 @@ export class SearchCategorySubscribeDto extends createZodDto(searchCategorySubsc
     required: false,
   })
   declare delYn?: YnType;
+
+  @ApiProperty({
+    description: '카테고리 구독 번호 목록',
+    example: [ 1, 2, 3, ],
+    required: false,
+  })
+  declare ctgrySbcrNoList?: number[];
 }
 
 // Swagger 문서화를 위한 카테고리 구독 아이템 DTO

@@ -5,15 +5,15 @@ import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
+import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
+import { schemas } from '@/endpoints/drizzle/schemas';
 import type { MultipleResultType } from '@/endpoints/drizzle/schemas/response.schema';
+import { UserInfoType } from '@/endpoints/drizzle/schemas/user.schema';
 import { userInfo } from '@/endpoints/drizzle/tables';
 import { likes, updateColumns } from '@/utils/ormHelper';
 import { pageHelper } from '@/utils/pageHelper';
 import { isEmptyString } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
-import { DRIZZLE } from '@drizzle/drizzle.module';
-import { schemas } from '@drizzle/schemas';
-import { UserInfoType } from '@drizzle/schemas/user.schema';
 
 // 공용 사용자 select 매핑: 중복 제거
 const userInfoSelect = {

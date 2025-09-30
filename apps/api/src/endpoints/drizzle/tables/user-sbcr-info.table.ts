@@ -2,9 +2,9 @@ import { sql } from 'drizzle-orm';
 import { integer, varchar } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
 
-import { yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { userInfo } from '@drizzle/tables/user-info.table';
+import { yn } from '@/endpoints/drizzle/enums';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { userInfo } from '@/endpoints/drizzle/tables/user-info.table';
 
 // 사용자 구독 설정 테이블
 // - 이메일 알림 설정, 구독 카테고리/태그 관리

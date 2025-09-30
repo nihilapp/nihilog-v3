@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { PostRepository } from '@repositories/post.repository';
+import { PostRepository } from '@/endpoints/repositories/post.repository';
 
 @Injectable()
-export class PostsService {
+export class AdminPostsService {
   constructor(private readonly postRepository: PostRepository) {}
 }

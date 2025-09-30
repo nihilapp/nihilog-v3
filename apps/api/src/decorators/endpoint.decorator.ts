@@ -3,15 +3,15 @@ import {
   ApiOperation,
   ApiParam,
   ApiQuery,
-  ApiOkResponse,
   ApiBearerAuth,
-  ApiBody
+  ApiBody,
+  ApiResponse
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { MESSAGE_CODE, RESPONSE_CODE } from '@/code';
 import { RoleAuthGuard, Roles } from '@/endpoints/auth/role-auth.guard';
-import { UserRoleType } from '@drizzle/schemas/user.schema';
+import { UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
 
 // ParamConfig를 튜플로 변경
 type ParamConfig = [
@@ -202,12 +202,12 @@ export function Endpoint({
 
   // 응답 추가 - 튜플 형식 처리
   if (options?.responses && options.responses.length > 0) {
-    options.responses.forEach((response) => {
+    const responseExamples = options.responses.map((response) => {
       const [ responseDescription, exampleArray, ] = response; // 튜플 구조분해할당
       const [ error, code, message, data, ] = exampleArray; // example 배열 구조분해할당
 
-      // code와 message 키를 실제 값으로 변환
-      const processedSchema = {
+      return {
+        description: responseDescription,
         example: {
           error,
           code: RESPONSE_CODE[code],
@@ -215,13 +215,19 @@ export function Endpoint({
           data,
         },
       };
-
-      // 모든 응답은 200 상태로 처리
-      decorators.push(ApiOkResponse({
-        description: responseDescription,
-        schema: processedSchema,
-      }));
     });
+
+    // oneOf 스키마로 여러 응답 형태 표현
+    decorators.push(ApiResponse({
+      description: '응답',
+      schema: {
+        oneOf: responseExamples.map((resp) => ({
+          type: 'object',
+          description: resp.description,
+          example: resp.example,
+        })),
+      },
+    }));
   }
 
   // endpoint에서 파라미터 추출하여 자동 검증

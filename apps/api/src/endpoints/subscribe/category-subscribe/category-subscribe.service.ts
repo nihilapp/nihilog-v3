@@ -111,10 +111,10 @@ export class CategorySubscribeService {
   /**
    * @description 카테고리 구독 삭제
    * @param userNo 사용자 번호
-   * @param ctgryNo 카테고리 번호
+   * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async deleteCategorySubscribe(userNo: number, ctgryNo: number): Promise<ResponseDto<MutationResponseDto>> {
-    const deleteSubscribe = await this.categorySubscribeRepository.deleteCategorySubscribeByCtgryNo(userNo, ctgryNo);
+  async deleteCategorySubscribe(userNo: number, ctgrySbcrNo: number): Promise<ResponseDto<MutationResponseDto>> {
+    const deleteSubscribe = await this.categorySubscribeRepository.deleteCategorySubscribeByCtgrySbcrNo(userNo, ctgrySbcrNo);
 
     if (!deleteSubscribe) {
       return createError(

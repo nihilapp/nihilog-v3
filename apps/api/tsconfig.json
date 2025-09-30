@@ -19,16 +19,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@drizzle/*": ["src/endpoints/drizzle/*"],
-      "@repositories/*": ["src/endpoints/repositories/*"],
-      "@admin/*": ["src/endpoints/admin/*"],
-      "@auth/*": ["src/endpoints/auth/*"],
-      "@users/*": ["src/endpoints/users/*"],
-      "@posts/*": ["src/endpoints/posts/*"],
-      "@comments/*": ["src/endpoints/comments/*"],
-      "@tags/*": ["src/endpoints/tags/*"],
-      "@categories/*": ["src/endpoints/categories/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": [

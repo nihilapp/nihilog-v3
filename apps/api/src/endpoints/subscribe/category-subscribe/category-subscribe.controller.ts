@@ -219,10 +219,10 @@ export class CategorySubscribeController {
   /**
    * @description 특정 카테고리 구독 해제
    * @param req 요청 객체
-   * @param ctgryNo 카테고리 번호
+   * @param ctgrySbcrNo 카테고리 구독 번호
    */
   @Endpoint({
-    endpoint: '/:ctgryNo',
+    endpoint: '/:ctgrySbcrNo',
     method: 'DELETE',
     summary: '➖ 카테고리 구독 해제',
     description: '특정 카테고리 구독을 해제합니다.',
@@ -243,13 +243,13 @@ export class CategorySubscribeController {
   })
   async deleteCategorySubscribe(
     @Req() req: AuthRequest,
-    @Param('ctgryNo', ParseIntPipe) ctgryNo: number
+    @Param('ctgrySbcrNo', ParseIntPipe) ctgrySbcrNo: number
   ): Promise<ResponseDto<MutationResponseDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.categorySubscribeService.deleteCategorySubscribe(req.user.userNo, ctgryNo);
+    return this.categorySubscribeService.deleteCategorySubscribe(req.user.userNo, ctgrySbcrNo);
   }
 
   /**

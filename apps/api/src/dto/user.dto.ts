@@ -9,7 +9,7 @@ import {
   searchUserSchema,
   type UserRoleType,
   deleteMultipleUsersSchema
-} from '@drizzle/schemas/user.schema';
+} from '@/endpoints/drizzle/schemas/user.schema';
 
 // 사용자 조회 DTO
 export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {

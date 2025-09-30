@@ -5,9 +5,9 @@ import { CreateUserDto } from '@/dto/auth.dto';
 import { ListDto, type MultipleResultDto, type ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto, UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
+import { searchUserSchema } from '@/endpoints/drizzle/schemas/user.schema';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
-import { searchUserSchema } from '@drizzle/schemas/user.schema';
 
 @Injectable()
 export class AdminUserService {

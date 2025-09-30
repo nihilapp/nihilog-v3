@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { AdminSubscribeController } from '@/endpoints/admin/subscribe/admin-subscribe.controller';
-import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-subscribe.service';
-import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
-import { DrizzleModule } from '@drizzle/drizzle.module';
+import { AdminSubscribeController } from '@/endpoints/admin/subscribe/admin-user-subscribe.controller';
+import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-subscribe.service';
+import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { UserModule } from '@/endpoints/users/users.module';
 
 @Module({
-  imports: [ DrizzleModule, ],
-  providers: [ AdminSubscribeService, SubscribeRepository, ],
+  imports: [ DrizzleModule, UserModule, ],
+  providers: [ AdminSubscribeService, ],
   controllers: [ AdminSubscribeController, ],
   exports: [ AdminSubscribeService, ],
 })

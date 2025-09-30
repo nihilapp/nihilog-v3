@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 
 import { UserInfoDto } from '@/dto/user.dto';
-import { createExampleUser } from '@/utils';
 import {
   listResponseSchema,
   multipleResultSchema,
   responseSchema
-} from '@drizzle/schemas/response.schema';
+} from '@/endpoints/drizzle/schemas/response.schema';
+import { createExampleUser } from '@/utils';
 
 // 기본 응답 DTO
 export class ResponseDto<TData = any> extends createZodDto(responseSchema()) {

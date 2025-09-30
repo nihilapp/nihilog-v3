@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 
-import { changePasswordSchema, createUserSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, userRoleSchema, withdrawSchema, type UserRoleType } from '@drizzle/schemas/user.schema';
+import { changePasswordSchema, createUserSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, userRoleSchema, withdrawSchema, type UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
 
 // 회원가입 DTO
 export class CreateUserDto extends createZodDto(createUserSchema.omit({ passwordConfirm: true, })) {

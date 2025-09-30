@@ -27,6 +27,14 @@ export const tagSubscribeSchema = commonSchema.extend({
     .int('총 개수는 정수여야 합니다.')
     .positive('총 개수는 양수여야 합니다.')
     .optional(),
+  tagNoList: z.array(z.coerce.number()
+    .int('태그 번호는 정수여야 합니다.')
+    .positive('태그 번호는 양수여야 합니다.'))
+    .optional(),
+  tagSbcrNoList: z.array(z.coerce.number()
+    .int('태그 구독 번호는 정수여야 합니다.')
+    .positive('태그 구독 번호는 양수여야 합니다.'))
+    .optional(),
 });
 
 export const tagSubscribeItemListSchema = tagSubscribeSchema.pick({
@@ -40,6 +48,9 @@ export const createTagSubscribeSchema = tagSubscribeSchema.pick({
   tagNo: true,
   useYn: true,
   delYn: true,
+  tagNoList: true,
+}).partial({
+  tagNoList: true,
 });
 
 // 태그 구독 수정용 스키마

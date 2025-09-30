@@ -5,13 +5,13 @@ import { CategorySubscribeItemDto } from '@/dto/category-subscribe.dto';
 import { TagSubscribeItemDto } from '@/dto/tag-subscribe.dto';
 import type { CategorySubscribeItemListType } from '@/endpoints/drizzle/schemas/category-subscribe.schema';
 import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
-import type { TagSubscribeItemListType } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
 import {
   userSubscribeSchema,
   createSubscribeSchema,
   updateSubscribeSchema,
   searchSubscribeSchema
-} from '@drizzle/schemas/subscribe.schema';
+} from '@/endpoints/drizzle/schemas/subscribe.schema';
+import type { TagSubscribeItemListType } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
 
 // 구독 정보 조회 DTO
 export class UserSubscribeDto extends createZodDto(userSubscribeSchema.partial()) {

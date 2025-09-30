@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { yn } from '@drizzle/enums';
+import { yn } from '@/endpoints/drizzle/enums';
 
 export const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 export const dateTimeMessage = 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.';

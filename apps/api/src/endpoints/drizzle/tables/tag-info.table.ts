@@ -3,9 +3,9 @@ import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { pstInfo } from '@drizzle/tables/pst-info.table';
+import { yn } from '@/endpoints/drizzle/enums';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { pstInfo } from '@/endpoints/drizzle/tables/pst-info.table';
 
 // 태그 정보 테이블
 export const tagInfo = nihilogSchema.table('tag_info', {

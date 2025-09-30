@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 import { ResponseDto } from '@/dto/response.dto';
 import { UpdateUserDto, UserInfoDto } from '@/dto/user.dto';
+import { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
-import { JwtPayload } from '@auth/jwt.strategy';
 
 @Injectable()
 export class AdminService {

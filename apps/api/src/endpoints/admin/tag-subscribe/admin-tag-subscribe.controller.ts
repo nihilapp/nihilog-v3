@@ -24,8 +24,8 @@ import {
   UpdateTagSubscribeDto
 } from '@/dto/tag-subscribe.dto';
 import { AdminTagSubscribeService } from '@/endpoints/admin/tag-subscribe/admin-tag-subscribe.service';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createResponse } from '@/utils';
-import { AdminAuthGuard } from '@auth/admin-auth.guard';
 
 @ApiTags('admin/tag-subscribe')
 @Controller('admin/subscribes/tags')
@@ -43,8 +43,8 @@ export class AdminTagSubscribeController {
     description: '전체 태그 구독 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
-      body: ['태그 구독 검색 정보', SearchTagSubscribeDto],
+      roles: [ 'ADMIN', ],
+      body: [ '태그 구독 검색 정보', SearchTagSubscribeDto, ],
       responses: [
         [
           '태그 구독 목록 조회 성공',
@@ -96,9 +96,9 @@ export class AdminTagSubscribeController {
     description: '특정 태그의 구독자 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
+      roles: [ 'ADMIN', ],
       params: [
-        ['tagNo', '태그 번호', 'number', true],
+        [ 'tagNo', '태그 번호', 'number', true, ],
       ],
       responses: [
         [
@@ -152,8 +152,8 @@ export class AdminTagSubscribeController {
     description: '새로운 태그 구독을 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
-      body: ['태그 구독 생성 정보', CreateTagSubscribeDto],
+      roles: [ 'ADMIN', ],
+      body: [ '태그 구독 생성 정보', CreateTagSubscribeDto, ],
       responses: [
         [
           '태그 구독 생성 성공',
@@ -199,8 +199,8 @@ export class AdminTagSubscribeController {
     description: '다수 태그 구독을 일괄 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
-      body: ['다수 태그 구독 생성 정보', MultipleCreateTagSubscribeDto],
+      roles: [ 'ADMIN', ],
+      body: [ '다수 태그 구독 생성 정보', MultipleCreateTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 생성 성공',
@@ -237,11 +237,11 @@ export class AdminTagSubscribeController {
     description: '태그 구독 정보를 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
+      roles: [ 'ADMIN', ],
       params: [
-        ['tagSbcrNo', '태그 구독 번호', 'number', true],
+        [ 'tagSbcrNo', '태그 구독 번호', 'number', true, ],
       ],
-      body: ['태그 구독 수정 정보', UpdateTagSubscribeDto],
+      body: [ '태그 구독 수정 정보', UpdateTagSubscribeDto, ],
       responses: [
         [
           '태그 구독 수정 성공',
@@ -288,8 +288,8 @@ export class AdminTagSubscribeController {
     description: '다수 태그 구독을 일괄 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
-      body: ['다수 태그 구독 수정 정보', MultipleUpdateTagSubscribeDto],
+      roles: [ 'ADMIN', ],
+      body: [ '다수 태그 구독 수정 정보', MultipleUpdateTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 수정 성공',
@@ -326,9 +326,9 @@ export class AdminTagSubscribeController {
     description: '태그 구독을 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
+      roles: [ 'ADMIN', ],
       params: [
-        ['tagSbcrNo', '태그 구독 번호', 'number', true],
+        [ 'tagSbcrNo', '태그 구독 번호', 'number', true, ],
       ],
       responses: [
         [
@@ -376,8 +376,8 @@ export class AdminTagSubscribeController {
     description: '다수 태그 구독을 일괄 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
-      roles: ['ADMIN'],
-      body: ['다수 태그 구독 삭제 정보', MultipleDeleteTagSubscribeDto],
+      roles: [ 'ADMIN', ],
+      body: [ '다수 태그 구독 삭제 정보', MultipleDeleteTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 삭제 성공',

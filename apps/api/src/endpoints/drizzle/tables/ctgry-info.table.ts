@@ -4,8 +4,8 @@ import { integer } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
 import { foreignKey } from 'drizzle-orm/pg-core';
 
-import { yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
+import { yn } from '@/endpoints/drizzle/enums';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
 
 export const ctgryInfo = nihilogSchema.table('ctgry_info', {
   ctgryNo: integer('ctgry_no')

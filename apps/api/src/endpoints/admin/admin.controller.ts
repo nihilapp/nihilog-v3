@@ -10,9 +10,9 @@ import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UpdateUserDto, UserInfoDto } from '@/dto/user.dto';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createError } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
-import { AdminAuthGuard } from '@auth/admin-auth.guard';
 
 import { AdminService } from './admin.service';
 

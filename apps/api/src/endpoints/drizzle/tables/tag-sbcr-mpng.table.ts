@@ -2,10 +2,10 @@ import { sql } from 'drizzle-orm';
 import { integer, varchar } from 'drizzle-orm/pg-core';
 import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { tagInfo } from '@drizzle/tables/tag-info.table';
-import { userSbcrInfo } from '@drizzle/tables/user-sbcr-info.table';
+import { yn } from '@/endpoints/drizzle/enums';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { tagInfo } from '@/endpoints/drizzle/tables/tag-info.table';
+import { userSbcrInfo } from '@/endpoints/drizzle/tables/user-sbcr-info.table';
 
 // 태그 구독 매핑 테이블
 export const tagSbcrMpng = nihilogSchema.table('tag_sbcr_mpng', {

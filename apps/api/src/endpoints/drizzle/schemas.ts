@@ -1,4 +1,4 @@
-import { ctgryInfo, cmntInfo, pstInfo, pstTagMpng, tagInfo, userInfo, userSbcrInfo, ctgrySbcrMpng, tagSbcrMpng } from '@drizzle/tables';
+import { ctgryInfo, cmntInfo, pstInfo, pstTagMpng, tagInfo, userInfo, userSbcrInfo, ctgrySbcrMpng, tagSbcrMpng } from '@/endpoints/drizzle/tables';
 
 export const schemas = {
   // 필요하면 @repo/drizzle 패키지에서 테이블을 정의하고 빌드 후 임포트

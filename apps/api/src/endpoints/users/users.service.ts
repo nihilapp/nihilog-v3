@@ -5,7 +5,7 @@ import type { CreateUserDto, ResponseDto, UserInfoDto } from '@/dto';
 import type { UserSubscribeDto, UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
-import type { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
+import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
 

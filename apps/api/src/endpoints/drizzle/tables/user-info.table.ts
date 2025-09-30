@@ -2,8 +2,8 @@ import { sql } from 'drizzle-orm';
 import { integer, varchar } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
 
-import { userRole, yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
+import { userRole, yn } from '@/endpoints/drizzle/enums';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
 
 // 사용자 기본 정보 테이블
 // - 기본키, 계정 정보, 권한, 상태, 메타데이터로 구분

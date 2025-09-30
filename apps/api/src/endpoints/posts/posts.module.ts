@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { DrizzleModule } from '@drizzle/drizzle.module';
-import { PostsController } from '@posts/posts.controller';
-import { PostsService } from '@posts/posts.service';
-import { PostRepository } from '@repositories/post.repository';
+import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { PostsController } from '@/endpoints/posts/posts.controller';
+import { PostsService } from '@/endpoints/posts/posts.service';
+import { PostRepository } from '@/endpoints/repositories/post.repository';
 
 @Module({
   imports: [ DrizzleModule, ],

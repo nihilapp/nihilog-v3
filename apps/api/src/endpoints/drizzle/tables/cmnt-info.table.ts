@@ -5,10 +5,10 @@ import { varchar } from 'drizzle-orm/pg-core';
 import { text } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 
-import { commentStatus, yn } from '@drizzle/enums';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { pstInfo } from '@drizzle/tables/pst-info.table';
-import { userInfo } from '@drizzle/tables/user-info.table';
+import { commentStatus, yn } from '@/endpoints/drizzle/enums';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { pstInfo } from '@/endpoints/drizzle/tables/pst-info.table';
+import { userInfo } from '@/endpoints/drizzle/tables/user-info.table';
 
 export const cmntInfoSeq = sql`
   CREATE SEQUENCE cmnt_info_seq

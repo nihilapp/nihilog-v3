@@ -10,10 +10,10 @@ import { ResponseDto, AuthRequest } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UserSubscribeDto, UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UserInfoDto, UpdateUserDto } from '@/dto/user.dto';
+import { UserService } from '@/endpoints/users/users.service';
 import { removeSensitiveInfoFromResponse } from '@/utils';
 import { createExampleSubscribe } from '@/utils/createExampleSubscribe';
 import { createExampleUser } from '@/utils/createExampleUser';
-import type { UserService } from '@users/users.service';
 
 @ApiTags('users')
 @Controller('users')

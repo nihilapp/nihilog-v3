@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
-import { DrizzleModule } from '@drizzle/drizzle.module';
 
 import { AdminUserController } from './admin-users.controller';
 import { AdminUserService } from './admin-users.service';

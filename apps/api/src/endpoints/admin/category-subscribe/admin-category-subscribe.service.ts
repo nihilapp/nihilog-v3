@@ -9,7 +9,7 @@ import {
   SearchCategorySubscribeDto,
   UpdateCategorySubscribeDto
 } from '@/dto/category-subscribe.dto';
-import { ResponseDto } from '@/dto/response.dto';
+import { ResponseDto, type ListDto } from '@/dto/response.dto';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 import { createError, createResponse } from '@/utils';
 
@@ -21,10 +21,11 @@ export class AdminCategorySubscribeService {
    * @description 카테고리 구독 전체 목록 조회
    * @param searchData 검색 데이터
    */
-  async adminGetCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<CategorySubscribeDto[]> {
-    // TODO: 구현 필요
-    const result = await this.categorySubscribeRepository.getCategorySubscribeList(searchData);
-    return result || [];
+  async adminGetCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+    const result = await this.categorySubscribeRepository
+      .getCategorySubscribeList(searchData);
+
+    return result;
   }
 
   /**
@@ -32,10 +33,14 @@ export class AdminCategorySubscribeService {
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 데이터
    */
-  async adminGetCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto): Promise<CategorySubscribeDto[]> {
-    // TODO: 구현 필요
-    const result = await this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, searchData);
-    return result || [];
+  async adminGetCategorySubscribeByCtgryNo(
+    ctgryNo: number,
+    searchData: SearchCategorySubscribeDto
+  ): Promise<ListDto<CategorySubscribeDto>> {
+    const result = await this.categorySubscribeRepository
+      .getCategorySubscribeByCtgryNo(ctgryNo, searchData);
+
+    return result;
   }
 
   /**
@@ -43,19 +48,25 @@ export class AdminCategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async adminCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto>> {
+  async adminCreateCategorySubscribe(
+    userNo: number,
+    createData: CreateCategorySubscribeDto
+  ): Promise<ResponseDto<CategorySubscribeDto>> {
     try {
-      // TODO: 구현 필요
-      const result = await this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
+      const result = await this.categorySubscribeRepository
+        .createCategorySubscribe(userNo, createData);
 
-      if (!result) {
-        return createError('CONFLICT', 'CATEGORY_SUBSCRIBE_CREATE_FAILED');
-      }
-
-      return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result);
+      return createResponse(
+        'SUCCESS',
+        'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
+        result
+      );
     }
-    catch (error) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_CREATE_ERROR');
+    catch {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'ADMIN_CATEGORY_SUBSCRIBE_CREATE_ERROR'
+      );
     }
   }
 
@@ -64,19 +75,24 @@ export class AdminCategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 다수 카테고리 구독 생성 데이터
    */
-  async adminMultipleCreateCategorySubscribe(userNo: number, createData: MultipleCreateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto[]>> {
+  async adminMultipleCreateCategorySubscribe(
+    userNo: number,
+    createData: MultipleCreateCategorySubscribeDto
+  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
     try {
-      // TODO: 구현 필요
       const result = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
 
-      if (!result) {
-        return createError('CONFLICT', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_FAILED');
-      }
-
-      return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result);
+      return createResponse(
+        'SUCCESS',
+        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
+        result
+      );
     }
-    catch (error) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR');
+    catch {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+      );
     }
   }
 
@@ -86,14 +102,34 @@ export class AdminCategorySubscribeService {
    * @param ctgrySbcrNo 카테고리 구독 번호
    * @param updateData 카테고리 구독 수정 데이터
    */
-  async adminUpdateCategorySubscribe(userNo: number, ctgrySbcrNo: number, updateData: UpdateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto>> {
+  async adminUpdateCategorySubscribe(
+    userNo: number,
+    updateData: UpdateCategorySubscribeDto
+  ): Promise<ResponseDto<CategorySubscribeDto>> {
     try {
-      // TODO: 구현 필요 - 단건 수정 로직
+      const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
 
-      return createError('NOT_IMPLEMENTED', 'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_NOT_IMPLEMENTED');
+      if (!subscribe) {
+        return createError(
+          'NOT_FOUND',
+          'CATEGORY_SUBSCRIBE_NOT_FOUND'
+        );
+      }
+
+      const updateSubscribe = await this.categorySubscribeRepository
+        .updateCategorySubscribe(userNo, updateData);
+
+      return createResponse(
+        'SUCCESS',
+        'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
+        updateSubscribe
+      );
     }
-    catch (error) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_ERROR');
+    catch {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_ERROR'
+      );
     }
   }
 
@@ -102,41 +138,76 @@ export class AdminCategorySubscribeService {
    * @param userNo 사용자 번호
    * @param updateData 다수 카테고리 구독 수정 데이터
    */
-  async adminMultipleUpdateCategorySubscribe(userNo: number, updateData: MultipleUpdateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto[]>> {
+  async adminMultipleUpdateCategorySubscribe(
+    userNo: number,
+    updateData: MultipleUpdateCategorySubscribeDto
+  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
     try {
-      // TODO: 구현 필요
-      const result = await this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
+      const existingItems = await this.categorySubscribeRepository.getCategorySubscribeList({
+        ctgrySbcrNoList: updateData.ctgrySbcrNoList,
+        delYn: 'N',
+      });
 
-      if (!result) {
-        return createError('NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND');
+      if (!existingItems || existingItems.list.length === 0) {
+        return createError(
+          'NOT_FOUND',
+          'CATEGORY_SUBSCRIBE_NOT_FOUND'
+        );
       }
 
-      return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result);
+      const result = await this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
+
+      if (!result || result.length === 0) {
+        return createError(
+          'NOT_FOUND',
+          'CATEGORY_SUBSCRIBE_NOT_FOUND'
+        );
+      }
+
+      return createResponse(
+        'SUCCESS',
+        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
+        result
+      );
     }
-    catch (error) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR');
+    catch {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+      );
     }
   }
 
   /**
    * @description 카테고리 구독 삭제
    * @param userNo 사용자 번호
-   * @param ctgrySbcrNo 카테고리 구독 번호
    * @param updateData 카테고리 구독 삭제 데이터
    */
-  async adminDeleteCategorySubscribe(userNo: number, ctgrySbcrNo: number, updateData: UpdateCategorySubscribeDto): Promise<ResponseDto<null>> {
+  async adminDeleteCategorySubscribe(
+    userNo: number,
+    updateData: UpdateCategorySubscribeDto
+  ): Promise<ResponseDto<null>> {
     try {
-      // TODO: 구현 필요
-      const result = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, { ...updateData, ctgrySbcrNo, });
+      const result = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData);
 
       if (!result) {
-        return createError('NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND');
+        return createError(
+          'NOT_FOUND',
+          'CATEGORY_SUBSCRIBE_NOT_FOUND'
+        );
       }
 
-      return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', null);
+      return createResponse(
+        'SUCCESS',
+        'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS',
+        null
+      );
     }
-    catch (error) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR');
+    catch {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR'
+      );
     }
   }
 
@@ -145,19 +216,32 @@ export class AdminCategorySubscribeService {
    * @param userNo 사용자 번호
    * @param deleteData 다수 카테고리 구독 삭제 데이터
    */
-  async adminMultipleDeleteCategorySubscribe(userNo: number, deleteData: MultipleDeleteCategorySubscribeDto): Promise<ResponseDto<null>> {
+  async adminMultipleDeleteCategorySubscribe(
+    userNo: number,
+    deleteData: MultipleDeleteCategorySubscribeDto
+  ): Promise<ResponseDto<null>> {
     try {
-      // TODO: 구현 필요
-      const result = await this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
+      const result = await this.categorySubscribeRepository
+        .multipleDeleteCategorySubscribe(userNo, deleteData);
 
       if (!result) {
-        return createError('NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND');
+        return createError(
+          'NOT_FOUND',
+          'CATEGORY_SUBSCRIBE_NOT_FOUND'
+        );
       }
 
-      return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null);
+      return createResponse(
+        'SUCCESS',
+        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
+        null
+      );
     }
-    catch (error) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR');
+    catch {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+      );
     }
   }
 }

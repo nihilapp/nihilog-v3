@@ -6,7 +6,7 @@ import {
   UpdateSubscribeDto,
   UserSubscribeDto
 } from '@/dto/subscribe.dto';
-import type { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
+import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { createError, createResponse } from '@/utils';
 
 @Injectable()
@@ -58,10 +58,10 @@ export class AdminSubscribeService {
   /**
    * @description 특정 사용자 구독 설정 삭제
    * @param adminNo 관리자 번호
-   * @param userNo 사용자 번호
+   * @param sbcrNo 구독 번호
    */
-  async adminDeleteUserSubscribe(adminNo: number, userNo: number): Promise<ResponseDto<null>> {
-    const deletedSubscribe = await this.subscribeRepository.deleteUserSubscribe(adminNo, userNo);
+  async adminDeleteUserSubscribe(adminNo: number, sbcrNo: number): Promise<ResponseDto<null>> {
+    const deletedSubscribe = await this.subscribeRepository.deleteUserSubscribeBySbcrNo(adminNo, sbcrNo);
 
     if (!deletedSubscribe) {
       return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_DELETE_ERROR');

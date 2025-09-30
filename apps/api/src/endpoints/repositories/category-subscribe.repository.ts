@@ -58,7 +58,7 @@ export class CategorySubscribeRepository {
    */
   async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, ctgrySbcrNoList, } = searchData;
 
       const searchConditions: Record<string, string> = {};
       if (!isEmptyString(srchKywd) && srchType) {
@@ -69,6 +69,10 @@ export class CategorySubscribeRepository {
         ...likes(ctgrySbcrMpng, searchConditions),
         eq(ctgrySbcrMpng.delYn, delYn || 'N'),
       ];
+
+      if (ctgrySbcrNoList && ctgrySbcrNoList.length > 0) {
+        whereConditions.push(inArray(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNoList));
+      }
 
       const list = await this.db
         .select(selectWithJoin)
@@ -93,11 +97,36 @@ export class CategorySubscribeRepository {
   }
 
   /**
+   * @description 카테고리 구독 번호로 카테고리 구독 조회
+   * @param ctgrySbcrNo 카테고리 구독 번호
+   */
+  async getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo: number): Promise<CategorySubscribeDto | null> {
+    try {
+      const [ subscribe, ] = await this.db
+        .select(selectWithJoin)
+        .from(ctgrySbcrMpng)
+        .innerJoin(
+          ctgryInfo,
+          eq(ctgrySbcrMpng.ctgryNo, ctgryInfo.ctgryNo)
+        )
+        .where(eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo));
+
+      return subscribe;
+    }
+    catch {
+      return null;
+    }
+  }
+
+  /**
    * @description 사용자가 구독한 카테고리 목록 조회
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeByUserNo(userNo: number, searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeByUserNo(
+    userNo: number,
+    searchData: SearchCategorySubscribeDto
+  ): Promise<ListDto<CategorySubscribeDto>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -142,7 +171,10 @@ export class CategorySubscribeRepository {
    * @description 카테고리 구독 조회
    * @param ctgryNo 카테고리 번호
    */
-  async getCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeByCtgryNo(
+    ctgryNo: number,
+    searchData: SearchCategorySubscribeDto
+  ): Promise<ListDto<CategorySubscribeDto>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -184,7 +216,10 @@ export class CategorySubscribeRepository {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<CategorySubscribeDto | null> {
+  async createCategorySubscribe(
+    userNo: number,
+    createData: CreateCategorySubscribeDto
+  ): Promise<CategorySubscribeDto | null> {
     try {
       const { sbcrNo, ctgryNo, } = createData;
 
@@ -214,7 +249,10 @@ export class CategorySubscribeRepository {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async multipleCreateCategorySubscribe(userNo: number, createData: MultipleCreateCategorySubscribeDto): Promise<CategorySubscribeDto[] | null> {
+  async multipleCreateCategorySubscribe(
+    userNo: number,
+    createData: MultipleCreateCategorySubscribeDto
+  ): Promise<CategorySubscribeDto[] | null> {
     try {
       const { sbcrNo, ctgryNoList, } = createData;
 
@@ -251,11 +289,44 @@ export class CategorySubscribeRepository {
   }
 
   /**
+   * @description 카테고리 구독 수정
+   * @param userNo 사용자 번호
+   * @param updateData 카테고리 구독 수정 데이터
+   */
+  async updateCategorySubscribe(
+    userNo: number,
+    updateData: UpdateCategorySubscribeDto
+  ): Promise<CategorySubscribeDto | null> {
+    try {
+      const { ctgrySbcrNo, useYn, delYn, } = updateData;
+
+      const [ updateSubscribe, ] = await this.db
+        .update(ctgrySbcrMpng)
+        .set({
+          useYn,
+          delYn,
+          updtNo: userNo,
+          updtDt: timeToString(),
+        })
+        .where(eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo))
+        .returning(select);
+
+      return updateSubscribe;
+    }
+    catch {
+      return null;
+    }
+  }
+
+  /**
    * @description 카테고리 구독 목록 수정
    * @param userNo 사용자 번호
    * @param updateData 카테고리 구독 수정 데이터
    */
-  async multipleUpdateCategorySubscribe(userNo: number, updateData: MultipleUpdateCategorySubscribeDto): Promise<CategorySubscribeDto[] | null> {
+  async multipleUpdateCategorySubscribe(
+    userNo: number,
+    updateData: MultipleUpdateCategorySubscribeDto
+  ): Promise<CategorySubscribeDto[] | null> {
     try {
       const { sbcrNo, useYn, delYn, ctgrySbcrNoList, } = updateData;
 
@@ -287,7 +358,10 @@ export class CategorySubscribeRepository {
    * @param userNo 사용자 번호
    * @param updateData 카테고리 구독 삭제 데이터
    */
-  async deleteCategorySubscribe(userNo: number, updateData: UpdateCategorySubscribeDto): Promise<MutationResponseDto | null> {
+  async deleteCategorySubscribe(
+    userNo: number,
+    updateData: UpdateCategorySubscribeDto
+  ): Promise<MutationResponseDto | null> {
     try {
       const { ctgrySbcrNo, useYn, delYn, } = updateData;
 
@@ -320,26 +394,15 @@ export class CategorySubscribeRepository {
   }
 
   /**
-   * @description 카테고리 번호로 카테고리 구독 삭제
+   * @description 카테고리 구독 번호로 카테고리 구독 삭제
    * @param userNo 사용자 번호
-   * @param ctgryNo 카테고리 번호
+   * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async deleteCategorySubscribeByCtgryNo(userNo: number, ctgryNo: number): Promise<MutationResponseDto | null> {
+  async deleteCategorySubscribeByCtgrySbcrNo(
+    userNo: number,
+    ctgrySbcrNo: number
+  ): Promise<MutationResponseDto | null> {
     try {
-      // 먼저 사용자의 구독 번호 조회
-      const userSubscription = await this.db
-        .select({ sbcrNo: userSbcrInfo.sbcrNo, })
-        .from(userSbcrInfo)
-        .where(eq(userSbcrInfo.userNo, userNo))
-        .limit(1);
-
-      if (!userSubscription || userSubscription.length === 0) {
-        return null;
-      }
-
-      const sbcrNo = userSubscription[0].sbcrNo;
-
-      // 카테고리 구독 삭제
       const deletedRow = await this.db
         .update(ctgrySbcrMpng)
         .set({
@@ -351,8 +414,7 @@ export class CategorySubscribeRepository {
           delDt: timeToString(),
         })
         .where(and(
-          eq(ctgrySbcrMpng.ctgryNo, ctgryNo),
-          eq(ctgrySbcrMpng.sbcrNo, sbcrNo),
+          eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo),
           eq(ctgrySbcrMpng.useYn, ynEnumSchema.enum.Y),
           eq(ctgrySbcrMpng.delYn, ynEnumSchema.enum.N)
         ));
@@ -360,7 +422,7 @@ export class CategorySubscribeRepository {
       return {
         rowsAffected: deletedRow.rowCount || 0,
         affectedRows: deletedRow.rowCount
-          ? [ ctgryNo, ]
+          ? [ ctgrySbcrNo, ]
           : [],
       };
     }
@@ -374,7 +436,10 @@ export class CategorySubscribeRepository {
    * @param userNo 사용자 번호
    * @param updateData 카테고리 구독 목록 삭제 데이터
    */
-  async multipleDeleteCategorySubscribe(userNo: number, updateData: MultipleDeleteCategorySubscribeDto): Promise<MutationResponseDto | null> {
+  async multipleDeleteCategorySubscribe(
+    userNo: number,
+    updateData: MultipleDeleteCategorySubscribeDto
+  ): Promise<MutationResponseDto | null> {
     try {
       const { ctgrySbcrNoList, } = updateData;
 

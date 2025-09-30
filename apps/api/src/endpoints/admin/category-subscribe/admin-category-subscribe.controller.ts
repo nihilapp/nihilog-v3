@@ -1,18 +1,14 @@
 import {
   Body,
   Controller,
-  Delete,
-  Get,
   Param,
-  Post,
-  Put,
   Req,
   UseGuards
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import type { AuthRequest } from '@/dto';
+import type { AuthRequest, ListDto } from '@/dto';
 import {
   CategorySubscribeDto,
   CreateCategorySubscribeDto,
@@ -24,8 +20,9 @@ import {
 } from '@/dto/category-subscribe.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { AdminCategorySubscribeService } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.service';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createResponse } from '@/utils';
-import { AdminAuthGuard } from '@auth/admin-auth.guard';
+import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
 
 @ApiTags('admin/category-subscribe')
 @Controller('admin/subscribes/categories')
@@ -37,7 +34,7 @@ export class AdminCategorySubscribeController {
    * @description 카테고리 구독 전체 목록 조회
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/search',
     method: 'POST',
     summary: '📋 카테고리 구독 목록 조회',
     description: '전체 카테고리 구독 목록을 조회합니다.',
@@ -52,17 +49,12 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_LIST_SUCCESS',
-            [],
+            createExampleCategorySubscribe(),
           ],
         ],
         [
           '관리자 권한 없음',
-          [
-            true,
-            'FORBIDDEN',
-            'ADMIN_UNAUTHORIZED',
-            null,
-          ],
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -70,7 +62,7 @@ export class AdminCategorySubscribeController {
   async adminGetCategorySubscribeList(
     @Req() req: AuthRequest,
     @Body() searchData: SearchCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+  ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -88,7 +80,6 @@ export class AdminCategorySubscribeController {
   /**
    * @description 카테고리별 구독자 조회
    */
-  @Get('/:ctgryNo')
   @Endpoint({
     endpoint: '/:ctgryNo',
     method: 'GET',
@@ -107,17 +98,16 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS',
-            [],
+            createExampleCategorySubscribe(),
           ],
         ],
         [
           '카테고리를 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'CATEGORY_NOT_FOUND',
-            null,
-          ],
+          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -126,7 +116,7 @@ export class AdminCategorySubscribeController {
     @Req() req: AuthRequest,
     @Param('ctgryNo') ctgryNo: number,
     @Body() searchData: SearchCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+  ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -144,7 +134,6 @@ export class AdminCategorySubscribeController {
   /**
    * @description 카테고리 구독 생성
    */
-  @Post('')
   @Endpoint({
     endpoint: '',
     method: 'POST',
@@ -161,17 +150,16 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-            null,
+            createExampleCategorySubscribe(),
           ],
         ],
         [
           '이미 구독 중인 카테고리',
-          [
-            true,
-            'CONFLICT',
-            'CATEGORY_SUBSCRIBE_ALREADY_EXISTS',
-            null,
-          ],
+          [ true, 'CONFLICT', 'CATEGORY_SUBSCRIBE_ALREADY_EXISTS', null, ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -191,7 +179,6 @@ export class AdminCategorySubscribeController {
   /**
    * @description 다수 카테고리 구독 생성
    */
-  @Post('/multiple')
   @Endpoint({
     endpoint: '/multiple',
     method: 'POST',
@@ -208,8 +195,12 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [],
+            createExampleCategorySubscribe(),
           ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -229,7 +220,6 @@ export class AdminCategorySubscribeController {
   /**
    * @description 카테고리 구독 수정
    */
-  @Put('/:ctgrySbcrNo')
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
     method: 'PUT',
@@ -238,9 +228,6 @@ export class AdminCategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'ctgrySbcrNo', '카테고리 구독 번호', 'number', true, ],
-      ],
       body: [ '카테고리 구독 수정 정보', UpdateCategorySubscribeDto, ],
       responses: [
         [
@@ -249,24 +236,22 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
-            null,
+            createExampleCategorySubscribe(),
           ],
         ],
         [
           '카테고리 구독을 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'CATEGORY_SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
+          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
   })
   async adminUpdateCategorySubscribe(
     @Req() req: AuthRequest,
-    @Param('ctgrySbcrNo') ctgrySbcrNo: number,
     @Body() updateData: UpdateCategorySubscribeDto
   ): Promise<ResponseDto<CategorySubscribeDto>> {
     if (req.errorResponse) {
@@ -274,13 +259,12 @@ export class AdminCategorySubscribeController {
     }
 
     // TODO: 구현 필요
-    return await this.categorySubscribeService.adminUpdateCategorySubscribe(req.user.userNo, ctgrySbcrNo, updateData);
+    return await this.categorySubscribeService.adminUpdateCategorySubscribe(req.user.userNo, updateData);
   }
 
   /**
    * @description 다수 카테고리 구독 수정
    */
-  @Put('/multiple')
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
@@ -297,8 +281,16 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            [],
+            createExampleCategorySubscribe(),
           ],
+        ],
+        [
+          '카테고리 구독을 찾을 수 없음',
+          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -311,14 +303,12 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     return await this.categorySubscribeService.adminMultipleUpdateCategorySubscribe(req.user.userNo, updateData);
   }
 
   /**
    * @description 카테고리 구독 삭제
    */
-  @Delete('/:ctgrySbcrNo')
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
     method: 'DELETE',
@@ -327,48 +317,36 @@ export class AdminCategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'ctgrySbcrNo', '카테고리 구독 번호', 'number', true, ],
-      ],
       responses: [
         [
           '카테고리 구독 삭제 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS',
-            null,
-          ],
+          [ false, 'SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', null, ],
         ],
         [
           '카테고리 구독을 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'CATEGORY_SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
+          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
   })
   async adminDeleteCategorySubscribe(
     @Req() req: AuthRequest,
-    @Param('ctgrySbcrNo') ctgrySbcrNo: number,
     @Body() updateData: UpdateCategorySubscribeDto
   ): Promise<ResponseDto<null>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    return await this.categorySubscribeService.adminDeleteCategorySubscribe(req.user.userNo, ctgrySbcrNo, updateData);
+    return await this.categorySubscribeService.adminDeleteCategorySubscribe(req.user.userNo, updateData);
   }
 
   /**
    * @description 다수 카테고리 구독 삭제
    */
-  @Delete('/multiple')
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
@@ -387,6 +365,15 @@ export class AdminCategorySubscribeController {
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
             null,
           ],
+        ],
+        [
+          '카테고리 구독을 찾을 수 없음',
+          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null,
+          ],
+        ],
+        [
+          '관리자 권한 없음',
+          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },

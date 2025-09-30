@@ -14,9 +14,9 @@ import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { ListDto, ResponseDto, type MultipleResultDto } from '@/dto/response.dto';
 import { UserInfoDto, SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createError, createResponse, removeSensitiveInfoFromResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
-import { AdminAuthGuard } from '@auth/admin-auth.guard';
 
 import { AdminUserService } from './admin-users.service';
 

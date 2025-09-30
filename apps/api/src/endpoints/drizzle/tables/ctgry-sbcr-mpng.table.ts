@@ -2,10 +2,10 @@ import { sql } from 'drizzle-orm';
 import { integer, varchar } from 'drizzle-orm/pg-core';
 import { index, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { yn } from '@drizzle/enums';
-import { ctgryInfo } from '@drizzle/tables/ctgry-info.table';
-import { nihilogSchema } from '@drizzle/tables/nihilog.schema';
-import { userSbcrInfo } from '@drizzle/tables/user-sbcr-info.table';
+import { yn } from '@/endpoints/drizzle/enums';
+import { ctgryInfo } from '@/endpoints/drizzle/tables/ctgry-info.table';
+import { nihilogSchema } from '@/endpoints/drizzle/tables/nihilog.schema';
+import { userSbcrInfo } from '@/endpoints/drizzle/tables/user-sbcr-info.table';
 
 // 카테고리 구독 매핑 테이블
 export const ctgrySbcrMpng = nihilogSchema.table('ctgry_sbcr_mpng', {

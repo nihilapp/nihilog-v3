@@ -11,12 +11,12 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto, type SignInResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
+import { AdminUserService } from '@/endpoints/admin/users/admin-users.service';
+import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
+import { UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
 import { timeToString } from '@/utils/timeHelper';
-import { AdminUserService } from '@admin/users/admin-users.service';
-import { DRIZZLE } from '@drizzle/drizzle.module';
-import { UserRoleType } from '@drizzle/schemas/user.schema';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
