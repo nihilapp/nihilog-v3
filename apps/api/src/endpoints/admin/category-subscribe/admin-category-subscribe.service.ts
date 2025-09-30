@@ -99,7 +99,6 @@ export class AdminCategorySubscribeService {
   /**
    * @description 카테고리 구독 수정
    * @param userNo 사용자 번호
-   * @param ctgrySbcrNo 카테고리 구독 번호
    * @param updateData 카테고리 구독 수정 데이터
    */
   async adminUpdateCategorySubscribe(

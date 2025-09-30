@@ -56,7 +56,7 @@ export class CategorySubscribeRepository {
    * @description 카테고리 구독 전체 이력 조회
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, ctgrySbcrNoList, } = searchData;
 
@@ -125,7 +125,7 @@ export class CategorySubscribeRepository {
    */
   async getCategorySubscribeByUserNo(
     userNo: number,
-    searchData: SearchCategorySubscribeDto
+    searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
   ): Promise<ListDto<CategorySubscribeDto>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
@@ -173,7 +173,7 @@ export class CategorySubscribeRepository {
    */
   async getCategorySubscribeByCtgryNo(
     ctgryNo: number,
-    searchData: SearchCategorySubscribeDto
+    searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
   ): Promise<ListDto<CategorySubscribeDto>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;

@@ -11,11 +11,13 @@
 
 ### 🔄 부분 구현 기능
 
-- **CategorySubscribe**: 관리자 API 미구현
+- (없음)
 
 > **완료된 기능들은 [crud.complete.md](./crud.complete.md)에서 확인하세요.**
 
 ## 명명 규칙
+
+### 기본 CRUD
 
 - **다건 조회**: `get<Entity>List`
 - **단건 조회**: `get<Entity>By<FindKey>`
@@ -25,6 +27,14 @@
 - **다건 수정**: `multipleUpdate<Entity>`
 - **삭제**: `delete<Entity>`
 - **다건 삭제**: `multipleDelete<Entity>`
+
+### 특수 기능 (별도 관리)
+
+- **검색**: `search<Entity>`
+- **통계**: `get<Entity>Statistics`
+- **상호작용**: `<Action><Entity>` (like, bookmark, share, feature, pin 등)
+- **피드**: `get<Entity>Feed`
+- **아카이브**: `get<Entity>Archive`
 
 ## 주의사항
 
@@ -36,123 +46,107 @@
 
 ## 3. CategorySubscribe 엔티티 ✅ 완료
 
-## 4. TagSubscribe 엔티티
-
-### 일반 사용자 기능
-
-- [ ] GET /users/subscribes/tags **[USER]**
-  - `getTagSubscribeList`
-  - headers: Authorization
-  - 기능: 사용자가 구독한 태그 목록 조회, 인기 태그별 정렬
-- [ ] GET /users/subscribes/tags/:tagNo **[USER]**
-  - `getTagSubscribeByTagNo`
-  - headers: Authorization
-  - params: tagNo: number
-  - 기능: 특정 태그 구독 상태 조회, 태그별 알림 설정 확인
-- [ ] POST /users/subscribes/tags/:tagNo **[USER]**
-  - `createTagSubscribe`
-  - headers: Authorization
-  - params: tagNo: number
-  - 기능: 특정 태그 구독 설정, 태그된 새 글 알림 활성화
-- [ ] POST /users/subscribes/tags/multiple **[USER]**
-  - `multipleCreateTagSubscribe`
-  - headers: Authorization
-  - body: CreateTagSubscribeDto (tagNoList 포함)
-  - 기능: 다수 태그 일괄 구독, 관심 키워드별 구독 설정
-- [ ] PUT /users/subscribes/tags/multiple **[USER]**
-  - `multipleUpdateTagSubscribe`
-  - headers: Authorization
-  - body: UpdateTagSubscribeDto (tagNoList 포함)
-  - 기능: 다수 태그 구독 설정 일괄 변경, 알림 빈도 조정
-- [ ] DELETE /users/subscribes/tags/:tagNo **[USER]**
-  - `deleteTagSubscribe`
-  - headers: Authorization
-  - params: tagNo: number
-  - 기능: 특정 태그 구독 해제, 태그 관련 알림 비활성화
-- [ ] DELETE /users/subscribes/tags/multiple **[USER]**
-  - `multipleDeleteTagSubscribe`
-  - headers: Authorization
-  - body: UpdateTagSubscribeDto (tagNoList 포함)
-  - 기능: 다수 태그 구독 일괄 해제
-
-### 관리자 기능
-
-- [ ] POST /admin/subscribes/tags/search **[ADMIN]**
-  - `adminGetTagSubscribeList`
-  - body: SearchTagSubscribeDto
-  - 기능: 전체 태그 구독 목록 조회, 태그별 구독 현황 분석, 인기 태그 통계
-- [ ] GET /admin/subscribes/tags/:tagNo **[ADMIN]**
-  - `adminGetTagSubscribeByTagNo`
-  - params: tagNo: number
-  - body: SearchTagSubscribeDto
-  - 기능: 특정 태그의 구독자 목록 조회, 태그 활용도 분석
-- [ ] POST /admin/subscribes/tags **[ADMIN]**
-  - `adminCreateTagSubscribe`
-  - body: CreateTagSubscribeDto
-  - 기능: 관리자가 사용자 대신 태그 구독 설정, 트렌드 태그 추천 시 활용
-- [ ] POST /admin/subscribes/tags/multiple **[ADMIN]**
-  - `adminMultipleCreateTagSubscribe`
-  - body: MultipleCreateTagSubscribeDto
-  - 기능: 관리자가 다수 태그 구독 일괄 생성, 신규 태그 홍보
-- [ ] PUT /admin/subscribes/tags/:tagSbcrNo **[ADMIN]**
-  - `adminUpdateTagSubscribe`
-  - params: tagSbcrNo: number
-  - body: UpdateTagSubscribeDto
-  - 기능: 관리자가 특정 태그 구독 설정 수정, 알림 빈도 관리
-- [ ] PUT /admin/subscribes/tags/multiple **[ADMIN]**
-  - `adminMultipleUpdateTagSubscribe`
-  - body: MultipleUpdateTagSubscribeDto
-  - 기능: 관리자가 다수 태그 구독 일괄 수정, 태그 정책 변경 시 활용
-- [ ] DELETE /admin/subscribes/tags/:tagSbcrNo **[ADMIN]**
-  - `adminDeleteTagSubscribe`
-  - params: tagSbcrNo: number
-  - body: UpdateTagSubscribeDto
-  - 기능: 관리자가 특정 태그 구독 삭제, 스팸 태그 방지 및 정책 위반 처리
-- [ ] DELETE /admin/subscribes/tags/multiple **[ADMIN]**
-  - `adminMultipleDeleteTagSubscribe`
-  - body: MultipleDeleteTagSubscribeDto
-  - 기능: 관리자가 다수 태그 구독 일괄 삭제, 태그 정리 및 통합 시 활용
+## 4. TagSubscribe 엔티티 ✅ 완료
 
 ## 5. Post 엔티티
 
 ### 일반 사용자 기능
 
-- [ ] GET /posts **[USER]**
+- [ ] POST /posts/search **[USER]**
   - `getPostList`
-  - query: query?, category?, tag?, page?, size?
-  - 기능: 공개 게시글 목록 조회, 카테고리/태그 필터링, 검색, 페이징, 조회수순/최신순 정렬
+  - body: SearchPostDto (searchData)
+  - 기능: 게시글 목록 조회, 필터링, 검색, 페이징, 정렬 (모든 조회 기능 통합)
 - [ ] GET /posts/:pstNo **[USER]**
   - `getPostByPstNo`
   - params: pstNo: number
-  - 기능: 특정 게시글 상세 조회, 조회수 증가, 댓글 수 포함, 이전/다음 글 링크
+  - 기능: 특정 게시글 상세 조회, 조회수 증가, 댓글 수 포함, 이전/다음 글 링크, 관련 게시글 추천
 - [ ] GET /posts/slug/:slug **[USER]**
   - `getPostBySlug`
   - params: slug: string
-  - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함
+  - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함, 소셜 미디어 공유 정보
+- [ ] GET /posts/tag/:tagNo **[USER]**
+  - `getPostListByTagNo`
+  - params: tagNo: number
+  - query: page?, size?, sort?
+  - 기능: 특정 태그로 필터링된 게시글 목록, 태그별 게시글 수, 관련 태그 추천
+- [ ] GET /posts/category/:ctgryNo **[USER]**
+  - `getPostListByCtgryNo`
+  - params: ctgryNo: number
+  - query: page?, size?, sort?
+  - 기능: 특정 카테고리로 필터링된 게시글 목록, 카테고리별 게시글 수, 하위 카테고리 포함
+- [ ] GET /posts/archive/:year/:month **[USER]**
+  - `getPostListByDate`
+  - params: date: string (YYYYMM)
+  - query: page?, size?, sort?
+  - 기능: 특정 년월에 발행된 게시글 목록, 날짜별 게시글 수, 이전/다음 날짜 네비게이션
+- [ ] GET /posts/archive **[USER]**
+  - `getPostArchive`
+  - query: year?, month?, category?
+  - 기능: 게시글 아카이브 조회, 월별/연도별 아카이브, 카테고리별 아카이브
+- [ ] GET /posts/feed **[USER]**
+  - `getPostFeed`
+  - query: type?, page?, size?
+  - 기능: RSS/Atom 피드, 구독자용 피드, 최신 업데이트 알림
 
-### 관리자 기능
+### 사용자 상호작용 기능
+
+- [ ] POST /posts/:pstNo/like **[USER]**
+  - `likePost`
+  - params: pstNo: number
+  - 기능: 게시글 좋아요, 좋아요 취소, 좋아요 수 집계
+- [ ] POST /posts/:pstNo/bookmark **[USER]**
+  - `bookmarkPost`
+  - params: pstNo: number
+  - 기능: 게시글 북마크, 북마크 목록 관리, 북마크 통계
+- [ ] GET /posts/bookmarked **[USER]**
+  - `getPostList` (bookmarked=true)
+  - query: page?, size?
+  - 기능: 북마크한 게시글 목록, 북마크 날짜별 정렬
+- [ ] POST /posts/:pstNo/share **[USER]**
+  - `sharePost`
+  - params: pstNo: number
+  - body: { platform: string, message?: string }
+  - 기능: 소셜 미디어 공유, 공유 통계, 공유 링크 생성
+
+### 관리자 기능 (작성자)
 
 - [ ] POST /admin/posts **[ADMIN]**
   - `adminCreatePost`
   - body: CreatePostDto
-  - 기능: 새 게시글 작성, 마크다운 처리, 태그 연결, 썸네일 생성, 발행 상태 설정
+  - 기능: 새 게시글 작성, 마크다운 처리, 태그 연결, 썸네일 생성, 발행 상태 설정, 임시저장, 자동저장
 - [ ] PATCH /admin/posts/:pstNo **[ADMIN]**
   - `adminUpdatePost`
   - params: pstNo: number
   - body: UpdatePostDto
-  - 기능: 게시글 수정, 발행/비공개 상태 변경, 태그 수정, 썸네일 업데이트
+  - 기능: 게시글 수정, 발행/비공개 상태 변경, 태그 수정, 썸네일 업데이트, 수정 이력 관리
 - [ ] PATCH /admin/posts/multiple **[ADMIN]**
   - `adminMultipleUpdatePost`
   - body: UpdatePostDto (pstNoList 포함)
-  - 기능: 다수 게시글 일괄 수정, 카테고리 일괄 변경, 상태 일괄 변경
+  - 기능: 다수 게시글 일괄 수정, 카테고리 일괄 변경, 상태 일괄 변경, 일괄 발행
 - [ ] DELETE /admin/posts/:pstNo **[ADMIN]**
   - `adminDeletePost`
   - params: pstNo: number
-  - 기능: 게시글 삭제, 관련 댓글 처리, 태그 연결 해제, 이미지 파일 정리
+  - 기능: 게시글 삭제, 관련 댓글 처리, 태그 연결 해제, 이미지 파일 정리, 삭제 이력 관리
 - [ ] DELETE /admin/posts/multiple **[ADMIN]**
   - `adminMultipleDeletePost`
-  - body: UpdatePostDto (pstNoList 포함)
-  - 기능: 다수 게시글 일괄 삭제, 관련 데이터 정리
+  - body: DeletePostDto (pstNoList 포함)
+  - 기능: 다수 게시글 일괄 삭제, 관련 데이터 정리, 일괄 삭제 확인
+- [ ] POST /admin/posts/search **[ADMIN]**
+  - `getPostList`
+  - body: SearchPostDto (searchData)
+  - 기능: 관리자용 게시글 목록, 모든 상태 조회, 작성자별/상태별 필터링, 통계 정보 (관리자 조회 기능 통합)
+- [ ] GET /admin/posts/statistics **[ADMIN]**
+  - `getPostStatistics`
+  - query: period?, category?
+  - 기능: 게시글 통계, 작성량/조회수 통계, 카테고리별 통계, 트렌드 분석
+- [ ] POST /admin/posts/:pstNo/feature **[ADMIN]**
+  - `featurePost`
+  - params: pstNo: number
+  - 기능: 게시글 추천 설정, 메인 노출, 우선순위 설정
+- [ ] POST /admin/posts/:pstNo/pin **[ADMIN]**
+  - `pinPost`
+  - params: pstNo: number
+  - 기능: 게시글 고정, 상단 노출, 중요도 설정
 
 ## 6. Category 엔티티
 

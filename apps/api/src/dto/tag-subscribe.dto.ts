@@ -9,9 +9,10 @@ import {
   updateTagSubscribeSchema,
   multipleCreateTagSubscribeSchema,
   multipleUpdateTagSubscribeSchema,
-  multipleDeleteTagSubscribeSchema,
-  searchTagSubscribeSchema
+  multipleDeleteTagSubscribeSchema
 } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
+
+import { SearchDto } from './search.dto';
 
 export class TagSubscribeDto extends createZodDto(tagSubscribeSchema) {
   @ApiProperty({
@@ -276,72 +277,14 @@ export class MultipleDeleteTagSubscribeDto extends createZodDto(multipleDeleteTa
 }
 
 // 태그 구독 검색 DTO
-export class SearchTagSubscribeDto extends createZodDto(searchTagSubscribeSchema) {
+export class SearchTagSubscribeDto extends SearchDto {
   @ApiProperty({
-    description: '검색 타입',
+    description: '검색 타입 (tagNm 중 하나)',
     example: 'tagNm',
-    enum: [ 'tagNm', ],
     required: false,
+    enum: [ 'tagNm', ],
   })
   declare srchType?: 'tagNm';
-
-  @ApiProperty({
-    description: '검색 키워드',
-    example: 'JavaScript',
-    required: false,
-  })
-  declare srchKywd?: string;
-
-  @ApiProperty({
-    description: '시작행',
-    example: 0,
-    required: false,
-  })
-  declare strtRow?: number;
-
-  @ApiProperty({
-    description: '끝행',
-    example: 10,
-    required: false,
-  })
-  declare endRow?: number;
-
-  @ApiProperty({
-    description: '페이지',
-    example: 1,
-    required: false,
-  })
-  declare page?: number;
-
-  @ApiProperty({
-    description: '구독 번호',
-    example: 1,
-    required: false,
-  })
-  declare sbcrNo?: number;
-
-  @ApiProperty({
-    description: '태그 번호',
-    example: 1,
-    required: false,
-  })
-  declare tagNo?: number;
-
-  @ApiProperty({
-    description: '사용 여부',
-    example: 'Y',
-    enum: [ 'Y', 'N', ],
-    required: false,
-  })
-  declare useYn?: YnType;
-
-  @ApiProperty({
-    description: '삭제 여부',
-    example: 'N',
-    enum: [ 'Y', 'N', ],
-    required: false,
-  })
-  declare delYn?: YnType;
 }
 
 // Swagger 문서화를 위한 태그 구독 아이템 DTO

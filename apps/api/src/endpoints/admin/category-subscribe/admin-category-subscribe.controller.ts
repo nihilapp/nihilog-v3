@@ -21,7 +21,7 @@ import {
 import { ResponseDto } from '@/dto/response.dto';
 import { AdminCategorySubscribeService } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import { createResponse } from '@/utils';
+import { createError, createResponse } from '@/utils';
 import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
 
 @ApiTags('admin/category-subscribe')
@@ -32,6 +32,8 @@ export class AdminCategorySubscribeController {
 
   /**
    * @description 카테고리 구독 전체 목록 조회
+   * @param req 인증 요청 객체
+   * @param searchData 검색 데이터
    */
   @Endpoint({
     endpoint: '/search',
@@ -49,7 +51,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_LIST_SUCCESS',
-            createExampleCategorySubscribe(),
+            [ createExampleCategorySubscribe(), ],
           ],
         ],
         [
@@ -61,14 +63,17 @@ export class AdminCategorySubscribeController {
   })
   async adminGetCategorySubscribeList(
     @Req() req: AuthRequest,
-    @Body() searchData: SearchCategorySubscribeDto
+    @Body() searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
   ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     const result = await this.categorySubscribeService.adminGetCategorySubscribeList(searchData);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_LIST_ERROR');
+    }
 
     return createResponse(
       'SUCCESS',
@@ -79,6 +84,9 @@ export class AdminCategorySubscribeController {
 
   /**
    * @description 카테고리별 구독자 조회
+   * @param req 인증 요청 객체
+   * @param ctgryNo 카테고리 번호
+   * @param searchData 검색 데이터
    */
   @Endpoint({
     endpoint: '/:ctgryNo',
@@ -98,7 +106,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS',
-            createExampleCategorySubscribe(),
+            [ createExampleCategorySubscribe(), ],
           ],
         ],
         [
@@ -115,14 +123,17 @@ export class AdminCategorySubscribeController {
   async adminGetCategorySubscribeByCtgryNo(
     @Req() req: AuthRequest,
     @Param('ctgryNo') ctgryNo: number,
-    @Body() searchData: SearchCategorySubscribeDto
+    @Body() searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
   ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     const result = await this.categorySubscribeService.adminGetCategorySubscribeByCtgryNo(ctgryNo, searchData);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_LIST_ERROR');
+    }
 
     return createResponse(
       'SUCCESS',
@@ -133,6 +144,8 @@ export class AdminCategorySubscribeController {
 
   /**
    * @description 카테고리 구독 생성
+   * @param req 인증 요청 객체
+   * @param createData 카테고리 구독 생성 데이터
    */
   @Endpoint({
     endpoint: '',
@@ -172,12 +185,13 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     return await this.categorySubscribeService.adminCreateCategorySubscribe(req.user.userNo, createData);
   }
 
   /**
    * @description 다수 카테고리 구독 생성
+   * @param req 인증 요청 객체
+   * @param createData 다수 카테고리 구독 생성 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
@@ -195,7 +209,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            createExampleCategorySubscribe(),
+            [ createExampleCategorySubscribe(), ],
           ],
         ],
         [
@@ -213,12 +227,13 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     return await this.categorySubscribeService.adminMultipleCreateCategorySubscribe(req.user.userNo, createData);
   }
 
   /**
    * @description 카테고리 구독 수정
+   * @param req 인증 요청 객체
+   * @param updateData 카테고리 구독 수정 데이터
    */
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
@@ -258,12 +273,13 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     return await this.categorySubscribeService.adminUpdateCategorySubscribe(req.user.userNo, updateData);
   }
 
   /**
    * @description 다수 카테고리 구독 수정
+   * @param req 인증 요청 객체
+   * @param updateData 다수 카테고리 구독 수정 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
@@ -308,6 +324,8 @@ export class AdminCategorySubscribeController {
 
   /**
    * @description 카테고리 구독 삭제
+   * @param req 인증 요청 객체
+   * @param updateData 카테고리 구독 삭제 데이터
    */
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
@@ -346,6 +364,8 @@ export class AdminCategorySubscribeController {
 
   /**
    * @description 다수 카테고리 구독 삭제
+   * @param req 인증 요청 객체
+   * @param deleteData 다수 카테고리 구독 삭제 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
@@ -386,7 +406,6 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
     return await this.categorySubscribeService.adminMultipleDeleteCategorySubscribe(req.user.userNo, deleteData);
   }
 }

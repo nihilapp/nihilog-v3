@@ -8,10 +8,11 @@ import {
   updateCategorySubscribeSchema,
   multipleCreateCategorySubscribeSchema,
   multipleUpdateCategorySubscribeSchema,
-  multipleDeleteCategorySubscribeSchema,
-  searchCategorySubscribeSchema
+  multipleDeleteCategorySubscribeSchema
 } from '@/endpoints/drizzle/schemas/category-subscribe.schema';
 import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
+
+import { SearchDto } from './search.dto';
 
 // 카테고리 구독 기본 DTO
 export class CategorySubscribeDto extends createZodDto(categorySubscribeSchema) {
@@ -277,79 +278,14 @@ export class MultipleDeleteCategorySubscribeDto extends createZodDto(multipleDel
 }
 
 // 카테고리 구독 검색 DTO
-export class SearchCategorySubscribeDto extends createZodDto(searchCategorySubscribeSchema) {
+export class SearchCategorySubscribeDto extends SearchDto {
   @ApiProperty({
-    description: '검색 타입',
+    description: '검색 타입 (ctgryNm 중 하나)',
     example: 'ctgryNm',
-    enum: [ 'ctgryNm', ],
     required: false,
+    enum: [ 'ctgryNm', ],
   })
   declare srchType?: 'ctgryNm';
-
-  @ApiProperty({
-    description: '검색 키워드',
-    example: 'JavaScript',
-    required: false,
-  })
-  declare srchKywd?: string;
-
-  @ApiProperty({
-    description: '시작행',
-    example: 0,
-    required: false,
-  })
-  declare strtRow?: number;
-
-  @ApiProperty({
-    description: '끝행',
-    example: 10,
-    required: false,
-  })
-  declare endRow?: number;
-
-  @ApiProperty({
-    description: '페이지',
-    example: 1,
-    required: false,
-  })
-  declare page?: number;
-
-  @ApiProperty({
-    description: '구독 번호',
-    example: 1,
-    required: false,
-  })
-  declare sbcrNo?: number;
-
-  @ApiProperty({
-    description: '카테고리 번호',
-    example: 1,
-    required: false,
-  })
-  declare ctgryNo?: number;
-
-  @ApiProperty({
-    description: '사용 여부',
-    example: 'Y',
-    enum: [ 'Y', 'N', ],
-    required: false,
-  })
-  declare useYn?: YnType;
-
-  @ApiProperty({
-    description: '삭제 여부',
-    example: 'N',
-    enum: [ 'Y', 'N', ],
-    required: false,
-  })
-  declare delYn?: YnType;
-
-  @ApiProperty({
-    description: '카테고리 구독 번호 목록',
-    example: [ 1, 2, 3, ],
-    required: false,
-  })
-  declare ctgrySbcrNoList?: number[];
 }
 
 // Swagger 문서화를 위한 카테고리 구독 아이템 DTO

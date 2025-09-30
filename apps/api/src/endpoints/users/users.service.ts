@@ -127,6 +127,11 @@ export class UserService {
     }
   }
 
+  /**
+   * @description 사용자 구독 설정 수정
+   * @param user 사용자 정보
+   * @param updateData 구독 설정 수정 데이터
+   */
   async updateUserSubscribe(
     user: JwtPayload,
     updateData: UpdateSubscribeDto

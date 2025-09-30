@@ -8,8 +8,9 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import type { AuthRequest } from '@/dto';
+import type { AuthRequest, SearchSubscribeDto } from '@/dto';
 import { DeleteMultipleUsersDto } from '@/dto';
+import type { ListDto } from '@/dto/response.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import {
   CreateSubscribeDto,
@@ -60,8 +61,8 @@ export class AdminSubscribeController {
       ],
     },
   })
-  async adminGetUserSubscribeList(): Promise<ResponseDto<UserSubscribeDto[]>> {
-    const result = await this.subscribeService.adminGetUserSubscribeList();
+  async adminGetUserSubscribeList(@Body() searchData: SearchSubscribeDto & Partial<UserSubscribeDto>): Promise<ResponseDto<ListDto<UserSubscribeDto>>> {
+    const result = await this.subscribeService.adminGetUserSubscribeList(searchData);
 
     return createResponse(
       'SUCCESS',
@@ -72,6 +73,8 @@ export class AdminSubscribeController {
 
   /**
    * @description 관리자가 특정 사용자 구독 설정 생성
+   * @param req 인증 요청 객체
+   * @param createData 구독 설정 생성 데이터
    */
   @Endpoint({
     endpoint: '',
@@ -135,6 +138,8 @@ export class AdminSubscribeController {
 
   /**
    * @description 다수 사용자 구독 설정 일괄 변경
+   * @param req 인증 요청 객체
+   * @param updateData 구독 설정 수정 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
@@ -202,6 +207,8 @@ export class AdminSubscribeController {
 
   /**
    * @description 특정 사용자 구독 설정 삭제
+   * @param req 인증 요청 객체
+   * @param sbcrNo 구독 번호
    */
   @Endpoint({
     endpoint: '/:sbcrNo',
@@ -267,6 +274,8 @@ export class AdminSubscribeController {
 
   /**
    * @description 다수 사용자 구독 설정 일괄 삭제
+   * @param req 인증 요청 객체
+   * @param deleteData 삭제할 사용자 목록 데이터
    */
   @Endpoint({
     endpoint: '/multiple',

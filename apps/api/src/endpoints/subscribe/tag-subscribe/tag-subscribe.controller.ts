@@ -1,15 +1,20 @@
-import { Body, Controller, Param, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Req,
+  Param,
+  ParseIntPipe
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { CreateTagSubscribeDto, UpdateTagSubscribeDto, type AuthRequest } from '@/dto';
-import { JwtAuthGuard } from '@/endpoints/auth/jwt-auth.guard';
-import type { TagSubscribeService } from '@/endpoints/subscribe/tag-subscribe/tag-subscribe.service';
-import { createResponse } from '@/utils';
+import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type ListDto, type CreateTagSubscribeDto, type MultipleCreateTagSubscribeDto, type MultipleDeleteTagSubscribeDto, type MultipleUpdateTagSubscribeDto, type MutationResponseDto } from '@/dto';
+import { createError, createResponse } from '@/utils';
 
-@ApiTags('tag-subscribe')
+import { TagSubscribeService } from './tag-subscribe.service';
+
+@ApiTags('users/subscribes/tags')
 @Controller('users/subscribes/tags')
-@UseGuards(JwtAuthGuard)
 export class TagSubscribeController {
   constructor(private readonly tagSubscribeService: TagSubscribeService) {}
 
@@ -18,7 +23,7 @@ export class TagSubscribeController {
    * @param req 요청 객체
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/',
     method: 'GET',
     summary: '📋 태그 구독 목록 조회',
     description: '사용자가 구독한 태그 목록을 조회합니다.',
@@ -30,18 +35,28 @@ export class TagSubscribeController {
           '태그 구독 목록 조회 성공',
           [ false, 'SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', [], ],
         ],
+        [
+          '태그 구독 목록 조회 실패',
+          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_LIST_ERROR', null, ],
+        ],
       ],
     },
   })
-  async getTagSubscribeList(@Req() req: AuthRequest) {
+  async getTagSubscribeList(
+    @Req() req: AuthRequest,
+    @Body() body: SearchTagSubscribeDto & Partial<TagSubscribeDto>
+  ): Promise<ResponseDto<ListDto<TagSubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.getTagSubscribeList(req.user.userNo);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', result);
+    try {
+      const result = await this.tagSubscribeService.getTagSubscribeList(body);
+      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', result);
+    }
+    catch {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_LIST_ERROR');
+    }
   }
 
   /**
@@ -52,32 +67,39 @@ export class TagSubscribeController {
   @Endpoint({
     endpoint: '/:tagNo',
     method: 'GET',
-    summary: '📋 태그 구독 상태 조회',
+    summary: '📋 특정 태그 구독 상태 조회',
     description: '특정 태그의 구독 상태를 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      params: [ [ 'tagNo', '태그 번호', 'number', true, ], ],
       responses: [
         [
           '태그 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', {}, ],
+        ],
+        [
+          '태그 구독 상태 조회 실패',
+          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
         ],
       ],
     },
   })
   async getTagSubscribeByTagNo(
     @Req() req: AuthRequest,
-    @Param('tagNo') tagNo: number
-  ) {
+    @Param('tagNo', ParseIntPipe) tagNo: number,
+    @Body() body: SearchTagSubscribeDto & Partial<TagSubscribeDto>
+  ): Promise<ResponseDto<ListDto<TagSubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.getTagSubscribeByTagNo(req.user.userNo, tagNo);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', result);
+    try {
+      const result = await this.tagSubscribeService.getTagSubscribeByTagNo(tagNo, body);
+      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', result);
+    }
+    catch {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_LIST_ERROR');
+    }
   }
 
   /**
@@ -93,170 +115,174 @@ export class TagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      params: [ [ 'tagNo', '태그 번호', 'number', true, ], ],
       responses: [
         [
           '태그 구독 설정 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', {}, ],
+        ],
+        [
+          '태그 구독 설정 실패',
+          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_CREATE_ERROR', null, ],
         ],
       ],
     },
   })
   async createTagSubscribe(
     @Req() req: AuthRequest,
-    @Param('tagNo') tagNo: number
-  ) {
+    @Param('tagNo', ParseIntPipe) tagNo: number,
+    @Body() body: CreateTagSubscribeDto
+  ): Promise<ResponseDto<TagSubscribeDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.createTagSubscribe(req.user.userNo, tagNo);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result);
+    return this.tagSubscribeService.createTagSubscribe(req.user.userNo, { ...body, tagNo, });
   }
 
   /**
-   * @description 다수 태그 구독 설정
+   * @description 다수 태그 일괄 구독
    * @param req 요청 객체
    * @param body 구독할 태그 목록
    */
   @Endpoint({
     endpoint: '/multiple',
     method: 'POST',
-    summary: '➕ 다수 태그 구독 설정',
-    description: '다수 태그를 일괄 구독합니다.',
+    summary: '➕ 다수 태그 일괄 구독',
+    description: '여러 태그를 한 번에 구독합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '다수 태그 구독 정보', CreateTagSubscribeDto, ],
+      body: [ '구독할 태그 목록 DTO', Object, ],
       responses: [
         [
-          '다수 태그 구독 설정 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [], ],
+          '다수 태그 구독 성공',
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', {}, ],
+        ],
+        [
+          '다수 태그 구독 실패',
+          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR', null, ],
         ],
       ],
     },
   })
   async multipleCreateTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() body: CreateTagSubscribeDto
-  ) {
+    @Body() body: MultipleCreateTagSubscribeDto
+  ): Promise<ResponseDto<TagSubscribeDto[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.multipleCreateTagSubscribe(req.user.userNo, body);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result);
+    return this.tagSubscribeService.multipleCreateTagSubscribe(req.user.userNo, body);
   }
 
   /**
-   * @description 다수 태그 구독 설정 변경
+   * @description 다수 태그 구독 설정 일괄 변경
    * @param req 요청 객체
-   * @param body 변경할 태그 구독 설정
+   * @param body 변경할 구독 설정
    */
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '🔄 다수 태그 구독 설정 변경',
-    description: '다수 태그 구독 설정을 일괄 변경합니다.',
+    summary: '✏️ 다수 태그 구독 설정 일괄 변경',
+    description: '여러 태그의 구독 설정을 한 번에 변경합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '다수 태그 구독 변경 정보', UpdateTagSubscribeDto, ],
+      body: [ '구독 설정 변경 DTO', Object, ],
       responses: [
         [
           '다수 태그 구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [], ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', {}, ],
+        ],
+        [
+          '다수 태그 구독 설정 변경 실패',
+          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR', null, ],
         ],
       ],
     },
   })
   async multipleUpdateTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() body: UpdateTagSubscribeDto
-  ) {
+    @Body() body: MultipleUpdateTagSubscribeDto
+  ): Promise<ResponseDto<TagSubscribeDto[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.multipleUpdateTagSubscribe(req.user.userNo, body);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result);
+    return this.tagSubscribeService.multipleUpdateTagSubscribe(req.user.userNo, body);
   }
 
   /**
    * @description 특정 태그 구독 해제
    * @param req 요청 객체
-   * @param tagNo 태그 번호
+   * @param tagSbcrNo 태그 구독 번호
    */
   @Endpoint({
-    endpoint: '/:tagNo',
+    endpoint: '/:tagSbcrNo',
     method: 'DELETE',
     summary: '➖ 태그 구독 해제',
     description: '특정 태그 구독을 해제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      params: [ [ 'tagNo', '태그 번호', 'number', true, ], ],
       responses: [
         [
           '태그 구독 해제 성공',
           [ false, 'SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', null, ],
+        ],
+        [
+          '태그 구독 해제 실패',
+          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_DELETE_ERROR', null, ],
         ],
       ],
     },
   })
   async deleteTagSubscribe(
     @Req() req: AuthRequest,
-    @Param('tagNo') tagNo: number
-  ) {
+    @Param('tagSbcrNo', ParseIntPipe) tagSbcrNo: number
+  ): Promise<ResponseDto<MutationResponseDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.deleteTagSubscribe(req.user.userNo, tagNo);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result);
+    return this.tagSubscribeService.deleteTagSubscribe(req.user.userNo, tagSbcrNo);
   }
 
   /**
-   * @description 다수 태그 구독 해제
+   * @description 다수 태그 구독 일괄 해제
    * @param req 요청 객체
    * @param body 해제할 태그 목록
    */
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '➖ 다수 태그 구독 해제',
-    description: '다수 태그 구독을 일괄 해제합니다.',
+    summary: '➖ 다수 태그 구독 일괄 해제',
+    description: '여러 태그 구독을 한 번에 해제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '다수 태그 구독 해제 정보', UpdateTagSubscribeDto, ],
+      body: [ '구독 해제할 태그 목록 DTO', Object, ],
       responses: [
         [
           '다수 태그 구독 해제 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', {}, ],
+        ],
+        [
+          '다수 태그 구독 해제 실패',
+          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR', null, ],
         ],
       ],
     },
   })
   async multipleDeleteTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() body: UpdateTagSubscribeDto
-  ) {
+    @Body() body: MultipleDeleteTagSubscribeDto
+  ): Promise<ResponseDto<MutationResponseDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    // TODO: 구현 필요
-    const result = await this.tagSubscribeService.multipleDeleteTagSubscribe(req.user.userNo, body);
-
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result);
+    return this.tagSubscribeService.multipleDeleteTagSubscribe(req.user.userNo, body);
   }
 }

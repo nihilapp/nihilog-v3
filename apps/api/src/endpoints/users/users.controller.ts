@@ -53,6 +53,10 @@ export class UserController {
     return removeSensitiveInfoFromResponse(result);
   }
 
+  /**
+   * @description 이메일 구독 설정 조회
+   * @param req 요청 객체
+   */
   @Endpoint({
     endpoint: '/subscribe',
     method: 'GET',
@@ -110,6 +114,11 @@ export class UserController {
     return this.userService.createUser(createUserData);
   }
 
+  /**
+   * @description 프로필 정보 수정
+   * @param req 요청 객체
+   * @param updateData 사용자 정보 수정 데이터
+   */
   @Endpoint({
     endpoint: '/profile',
     method: 'PUT',
@@ -142,6 +151,11 @@ export class UserController {
     return removeSensitiveInfoFromResponse(result);
   }
 
+  /**
+   * @description 이메일 구독 설정 변경
+   * @param req 요청 객체
+   * @param updateData 구독 설정 수정 데이터
+   */
   @Endpoint({
     endpoint: '/subscribe',
     method: 'PUT',
@@ -174,6 +188,10 @@ export class UserController {
     return this.userService.updateUserSubscribe(req.user, updateData);
   }
 
+  /**
+   * @description 내 프로필 삭제
+   * @param req 요청 객체
+   */
   @Endpoint({
     endpoint: '/profile',
     method: 'DELETE',

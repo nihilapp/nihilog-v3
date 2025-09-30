@@ -202,31 +202,31 @@ export function Endpoint({
 
   // 응답 추가 - 튜플 형식 처리
   if (options?.responses && options.responses.length > 0) {
-    const responseExamples = options.responses.map((response) => {
+    const responseExamples = options.responses.reduce((acc, response) => {
       const [ responseDescription, exampleArray, ] = response; // 튜플 구조분해할당
       const [ error, code, message, data, ] = exampleArray; // example 배열 구조분해할당
 
-      return {
-        description: responseDescription,
-        example: {
+      // 응답 코드를 키로 사용 (공백과 특수문자를 언더스코어로 변환)
+      const key = RESPONSE_CODE[code].replace(/[^가-힣a-zA-Z0-9]/g, '_');
+
+      acc[key] = {
+        summary: responseDescription,
+        value: {
           error,
           code: RESPONSE_CODE[code],
           message: MESSAGE_CODE[message],
           data,
         },
       };
-    });
 
-    // oneOf 스키마로 여러 응답 형태 표현
+      return acc;
+    }, {} as Record<string, any>);
+
+    // examples를 사용한 응답 표현
     decorators.push(ApiResponse({
+      status: 200,
       description: '응답',
-      schema: {
-        oneOf: responseExamples.map((resp) => ({
-          type: 'object',
-          description: resp.description,
-          example: resp.example,
-        })),
-      },
+      examples: responseExamples,
     }));
   }
 

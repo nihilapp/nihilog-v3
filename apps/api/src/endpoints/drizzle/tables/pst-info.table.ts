@@ -3,6 +3,7 @@ import { jsonb } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
 import { index } from 'drizzle-orm/pg-core';
+import { text } from 'drizzle-orm/pg-core';
 
 import { yn } from '@/endpoints/drizzle/enums';
 import { postStatus } from '@/endpoints/drizzle/enums/post-status.enum';
@@ -32,6 +33,10 @@ export const pstInfo = nihilogSchema.table('pst_info', {
   pstSmry: varchar('pst_smry', { length: 500, }), // 포스트 요약(옵션)
   pstMtxt: jsonb('pst_mtxt') // 포스트 본문(JSON)
     .notNull(),
+  pstCd: varchar('pst_cd', { length: 255, }), // 포스트 코드(슬러그)
+  pstThmbLink: text('pst_thmb_link'), // 썸네일 링크
+  pstView: integer('pst_view') // 조회수
+    .default(0),
 
   // [게시]
   pstStts: postStatus('pst_stts') // 게시물 상태 (empty | writing | finished)
@@ -80,4 +85,8 @@ export const pstInfo = nihilogSchema.table('pst_info', {
     .on(table.delYn, table.useYn, table.rlsYn),
   index('post_info_crt_dt_idx')
     .on(table.crtDt),
+  index('post_info_pst_cd_idx')
+    .on(table.pstCd),
+  index('post_info_pst_view_idx')
+    .on(table.pstView),
 ]);

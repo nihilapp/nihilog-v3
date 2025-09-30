@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+import type { ListDto } from '@/dto/response.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import {
   CreateSubscribeDto,
   UpdateSubscribeDto,
-  UserSubscribeDto
+  UserSubscribeDto,
+  type SearchSubscribeDto
 } from '@/dto/subscribe.dto';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { createError, createResponse } from '@/utils';
@@ -16,8 +18,8 @@ export class AdminSubscribeService {
   /**
    * @description 전체 사용자 구독 설정 목록 조회
    */
-  async adminGetUserSubscribeList(): Promise<UserSubscribeDto[]> {
-    const subscribeList = await this.subscribeRepository.getSubscribeList();
+  async adminGetUserSubscribeList(searchData: SearchSubscribeDto & Partial<UserSubscribeDto>): Promise<ListDto<UserSubscribeDto>> {
+    const subscribeList = await this.subscribeRepository.getSubscribeList(searchData);
 
     return subscribeList;
   }

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 import { userRole } from '@/endpoints/drizzle/enums';
-import { commonSchema, dateTimeMessage, dateTimeRegex, ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
+import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/drizzle/schemas/common.schema';
 
-import { baseSearchSchema, addPaginationValidation } from './search.schema';
+import { baseSearchSchema } from './search.schema';
 
 // Drizzle enum을 Zod 스키마로 변환
 export const userRoleSchema = z.enum(userRole.enumValues, '사용자 권한은 필수입니다.');
@@ -143,12 +143,12 @@ export const withdrawSchema = z.object({
   });
 
 // 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
-export const searchUserSchema = addPaginationValidation(baseSearchSchema.extend({
+export const searchUserSchema = baseSearchSchema.partial().extend({
+  ...userInfoSchema.partial().shape,
   srchType: z.enum([ 'userNm', 'emlAddr', 'userRole', ], {
     error: '검색 타입은 userNm, emlAddr, userRole 중 하나여야 합니다.',
   }).optional(),
-  delYn: ynEnumSchema.optional(),
-}));
+});
 
 // 모든 항목이 선택값인 스키마
 export const partialUserInfoSchema = userInfoSchema.partial();

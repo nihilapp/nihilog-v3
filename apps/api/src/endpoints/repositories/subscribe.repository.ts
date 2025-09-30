@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-import type { ResponseDto } from '@/dto';
+import type { ListDto } from '@/dto/response.dto';
 import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto, UserSubscribeDto } from '@/dto/subscribe.dto';
 import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
 import { schemas } from '@/endpoints/drizzle/schemas';
@@ -171,7 +171,7 @@ export class SubscribeRepository {
    * @description 전체 사용자 구독 설정 목록 조회 (단일 쿼리 최적화)
    * @param searchData 검색 조건
    */
-  async getSubscribeList(searchData: SearchSubscribeDto = {}): Promise<UserSubscribeDto[]> {
+  async getSubscribeList(searchData: SearchSubscribeDto & Partial<UserSubscribeDto>): Promise<ListDto<UserSubscribeDto>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -251,10 +251,16 @@ export class SubscribeRepository {
         .limit(pageHelper(page, strtRow, endRow).limit)
         .offset(pageHelper(page, strtRow, endRow).offset);
 
-      return result;
+      return {
+        list: result ?? [],
+        totalCnt: result?.[0]?.totalCnt ?? 0,
+      };
     }
     catch {
-      return [];
+      return {
+        list: [],
+        totalCnt: 0,
+      };
     }
   }
 
@@ -364,222 +370,6 @@ export class SubscribeRepository {
         .where(inArray(userSbcrInfo.userNo, userNoList || []));
 
       return deletedRows.rowCount > 0;
-    }
-    catch {
-      return false;
-    }
-  }
-
-  // ===== 카테고리 구독 관련 메서드 =====
-
-  /**
-   * @description 사용자 카테고리 구독 목록 조회
-   * @param userNo 사용자 번호
-   */
-  async getCategorySubscribeList(userNo: number): Promise<any[]> {
-    try {
-      // TODO: 사용자 카테고리 구독 목록 조회 구현
-      return [];
-    }
-    catch {
-      return [];
-    }
-  }
-
-  /**
-   * @description 특정 카테고리 구독 상태 조회
-   * @param userNo 사용자 번호
-   * @param ctgryNo 카테고리 번호
-   */
-  async getCategorySubscribeByCtgryNo(userNo: number, ctgryNo: number): Promise<any | null> {
-    try {
-      // TODO: 특정 카테고리 구독 상태 조회 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 카테고리 구독 설정
-   * @param userNo 사용자 번호
-   * @param ctgryNo 카테고리 번호
-   * @param createData 구독 설정 데이터
-   */
-  async createCategorySubscribe(userNo: number, ctgryNo: number, createData: any): Promise<any | null> {
-    try {
-      // TODO: 카테고리 구독 설정 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 다수 카테고리 일괄 구독
-   * @param userNo 사용자 번호
-   * @param ctgryNoList 카테고리 번호 목록
-   * @param createDataList 구독 설정 데이터 목록
-   */
-  async multipleCreateCategorySubscribe(userNo: number, ctgryNoList: number[], createDataList: any[]): Promise<any> {
-    try {
-      // TODO: 다수 카테고리 일괄 구독 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 다수 카테고리 구독 설정 일괄 변경
-   * @param userNo 사용자 번호
-   * @param updateDataList 구독 설정 일괄 변경 데이터
-   */
-  async multipleUpdateCategorySubscribe(userNo: number, updateDataList: any[]): Promise<any> {
-    try {
-      // TODO: 다수 카테고리 구독 설정 일괄 변경 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 카테고리 구독 해제
-   * @param userNo 사용자 번호
-   * @param ctgryNo 카테고리 번호
-   */
-  async deleteCategorySubscribe(userNo: number, ctgryNo: number): Promise<boolean> {
-    try {
-      // TODO: 카테고리 구독 해제 구현
-      return false;
-    }
-    catch {
-      return false;
-    }
-  }
-
-  /**
-   * @description 다수 카테고리 구독 일괄 해제
-   * @param userNo 사용자 번호
-   * @param ctgryNoList 카테고리 번호 목록
-   */
-  async multipleDeleteCategorySubscribe(userNo: number, ctgryNoList: number[]): Promise<boolean> {
-    try {
-      // TODO: 다수 카테고리 구독 일괄 해제 구현
-      return false;
-    }
-    catch {
-      return false;
-    }
-  }
-
-  // ===== 태그 구독 관련 메서드 =====
-
-  /**
-   * @description 사용자 태그 구독 목록 조회
-   * @param userNo 사용자 번호
-   */
-  async getTagSubscribeList(userNo: number): Promise<any[]> {
-    try {
-      // TODO: 사용자 태그 구독 목록 조회 구현
-      return [];
-    }
-    catch {
-      return [];
-    }
-  }
-
-  /**
-   * @description 특정 태그 구독 상태 조회
-   * @param userNo 사용자 번호
-   * @param tagNo 태그 번호
-   */
-  async getTagSubscribeByTagNo(userNo: number, tagNo: number): Promise<any | null> {
-    try {
-      // TODO: 특정 태그 구독 상태 조회 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 태그 구독 설정
-   * @param userNo 사용자 번호
-   * @param tagNo 태그 번호
-   * @param createData 구독 설정 데이터
-   */
-  async createTagSubscribe(userNo: number, tagNo: number, createData: any): Promise<any | null> {
-    try {
-      // TODO: 태그 구독 설정 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 다수 태그 일괄 구독
-   * @param userNo 사용자 번호
-   * @param tagNoList 태그 번호 목록
-   * @param createDataList 구독 설정 데이터 목록
-   */
-  async multipleCreateTagSubscribe(userNo: number, tagNoList: number[], createDataList: any[]): Promise<any> {
-    try {
-      // TODO: 다수 태그 일괄 구독 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 다수 태그 구독 설정 일괄 변경
-   * @param userNo 사용자 번호
-   * @param updateDataList 구독 설정 일괄 변경 데이터
-   */
-  async multipleUpdateTagSubscribe(userNo: number, updateDataList: any[]): Promise<any> {
-    try {
-      // TODO: 다수 태그 구독 설정 일괄 변경 구현
-      return null;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 태그 구독 해제
-   * @param userNo 사용자 번호
-   * @param tagNo 태그 번호
-   */
-  async deleteTagSubscribe(userNo: number, tagNo: number): Promise<boolean> {
-    try {
-      // TODO: 태그 구독 해제 구현
-      return false;
-    }
-    catch {
-      return false;
-    }
-  }
-
-  /**
-   * @description 다수 태그 구독 일괄 해제
-   * @param userNo 사용자 번호
-   * @param tagNoList 태그 번호 목록
-   */
-  async multipleDeleteTagSubscribe(userNo: number, tagNoList: number[]): Promise<boolean> {
-    try {
-      // TODO: 다수 태그 구독 일괄 해제 구현
-      return false;
     }
     catch {
       return false;

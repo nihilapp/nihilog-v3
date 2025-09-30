@@ -61,6 +61,18 @@ export {
   TagSubscribeItemDto
 } from './tag-subscribe.dto';
 
+// Post DTOs
+export {
+  PostDto,
+  CreatePostDto,
+  UpdatePostDto,
+  DeletePostDto,
+  SearchPostDto
+} from './post.dto';
+
+// Search DTOs
+export { SearchDto } from './search.dto';
+
 // Common DTOs
 export {
   AuthRequest

@@ -19,7 +19,6 @@ export {
 
 export {
   baseSearchSchema,
-  addPaginationValidation,
   type BaseSearchType
 } from './search.schema';
 
@@ -50,6 +49,19 @@ export {
   type WithdrawType,
   type DeleteMultipleUsersType
 } from './user.schema';
+
+export {
+  postSchema,
+  updatePostSchema,
+  deletePostSchema,
+  searchPostSchema,
+  type PostType,
+  type PostInfoType,
+  type CreatePostType,
+  type UpdatePostType,
+  type DeletePostType,
+  type SearchPostType
+} from './post.schema';
 
 export {
   userSubscribeSchema,

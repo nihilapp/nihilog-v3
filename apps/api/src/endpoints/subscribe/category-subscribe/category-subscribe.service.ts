@@ -11,8 +11,9 @@ export class CategorySubscribeService {
 
   /**
    * @description 사용자가 구독한 카테고리 목록 조회
+   * @param searchData 검색 데이터
    */
-  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
     const categorySubscribeList = await this.categorySubscribeRepository.getCategorySubscribeList(searchData);
 
     return categorySubscribeList;
@@ -23,7 +24,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeByUserNo(userNo: number, searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeByUserNo(userNo: number, searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
     const categorySubscribeList = await this.categorySubscribeRepository.getCategorySubscribeByUserNo(userNo, searchData);
 
     return categorySubscribeList;
@@ -34,7 +35,7 @@ export class CategorySubscribeService {
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
     const categorySubscribeList = await this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, searchData);
 
     return categorySubscribeList;
@@ -133,7 +134,7 @@ export class CategorySubscribeService {
   /**
    * @description 카테고리 구독 목록 삭제
    * @param userNo 사용자 번호
-   * @param ctgryNoList 카테고리 번호 목록
+   * @param deleteData 삭제할 카테고리 구독 데이터
    */
   async multipleDeleteCategorySubscribe(userNo: number, deleteData: MultipleDeleteCategorySubscribeDto): Promise<ResponseDto<MutationResponseDto>> {
     const deleteSubscribe = await this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);

@@ -4,7 +4,7 @@ import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
-import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
+import { UpdateUserDto, type SearchUserDto, type UserInfoDto } from '@/dto/user.dto';
 import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
 import { schemas } from '@/endpoints/drizzle/schemas';
 import type { MultipleResultType } from '@/endpoints/drizzle/schemas/response.schema';
@@ -192,7 +192,7 @@ export class UserRepository {
    * @description 사용자 목록 조회
    * @param searchData 검색 조건
    */
-  async getUserList(searchData: SearchUserDto): Promise<UserInfoType[]> {
+  async getUserList(searchData: SearchUserDto & Partial<UserInfoDto>): Promise<UserInfoType[]> {
     const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
     const searchConditions: Record<string, string> = {};

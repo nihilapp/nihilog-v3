@@ -66,7 +66,7 @@ export class AdminUserController {
   })
   async adminGetUserList(
     @Req() req: AuthRequest,
-    @Body() body: SearchUserDto
+    @Body() body: SearchUserDto & Partial<UserInfoDto>
   ): Promise<ResponseDto<ListDto<UserInfoDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;

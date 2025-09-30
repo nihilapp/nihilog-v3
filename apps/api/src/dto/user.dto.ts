@@ -6,10 +6,11 @@ import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
 import {
   updateUserSchema,
   userInfoSchema,
-  searchUserSchema,
   type UserRoleType,
   deleteMultipleUsersSchema
 } from '@/endpoints/drizzle/schemas/user.schema';
+
+import { SearchDto } from './search.dto';
 
 // 사용자 조회 DTO
 export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
@@ -267,49 +268,14 @@ export class UpdateUserDto extends createZodDto(updateUserSchema) {
 }
 
 // 사용자 검색 DTO
-export class SearchUserDto extends createZodDto(searchUserSchema) {
-  @ApiProperty({
-    description: '시작 행 번호 (SQL OFFSET)',
-    example: 0,
-    required: false,
-  })
-  declare strtRow?: number;
-
-  @ApiProperty({
-    description: '끝 행 번호 (SQL LIMIT)',
-    example: 10,
-    required: false,
-  })
-  declare endRow?: number;
-
+export class SearchUserDto extends SearchDto {
   @ApiProperty({
     description: '검색 타입 (emlAddr, userNm, userRole 중 하나)',
     example: 'userNm',
     required: false,
+    enum: [ 'emlAddr', 'userNm', 'userRole', ],
   })
   declare srchType?: 'emlAddr' | 'userNm' | 'userRole';
-
-  @ApiProperty({
-    description: '검색 키워드 (2-100자)',
-    example: '홍길동',
-    required: false,
-  })
-  declare srchKywd?: string;
-
-  @ApiProperty({
-    description: '페이지 번호',
-    example: 1,
-    required: false,
-  })
-  declare page?: number;
-
-  @ApiProperty({
-    description: '삭제 여부 (미지정 시 기본값 N)',
-    enum: [ 'Y', 'N', ],
-    example: 'N',
-    required: false,
-  })
-  declare delYn?: YnType;
 }
 
 // 다수 사용자 삭제 DTO

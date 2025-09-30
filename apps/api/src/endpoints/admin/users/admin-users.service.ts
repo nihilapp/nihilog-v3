@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 
 import { CreateUserDto } from '@/dto/auth.dto';
 import { ListDto, type MultipleResultDto, type ResponseDto } from '@/dto/response.dto';
-import { UserInfoDto, UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
+import { UserInfoDto, UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import { searchUserSchema } from '@/endpoints/drizzle/schemas/user.schema';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
@@ -22,7 +22,7 @@ export class AdminUserService {
    * @param srchKywd 검색 키워드
    * @param delYn 삭제 여부
    */
-  async getUserList(searchData: SearchUserDto): Promise<ListDto<UserInfoDto> | null> {
+  async getUserList(searchData: SearchUserDto & Partial<UserInfoDto>): Promise<ListDto<UserInfoDto> | null> {
     const safeData = searchUserSchema.safeParse(searchData);
 
     if (!safeData.success) {

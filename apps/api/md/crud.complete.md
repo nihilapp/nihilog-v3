@@ -8,7 +8,8 @@
 - **User 관련**: 프로필 조회/수정, 구독 설정, 계정 생성/삭제
 - **Admin User 관리**: 사용자 검색, 조회, 생성, 수정, 삭제 (단건/다건)
 - **Admin Subscribe 관리**: 구독 설정 조회, 생성, 수정, 삭제 (단건/다건)
-- **CategorySubscribe**: 일반 사용자 API 완료
+- **CategorySubscribe**: 일반 사용자 API 및 관리자 API 완료
+- **TagSubscribe**: 일반 사용자 API 및 관리자 API 완료
 
 ## 명명 규칙
 
@@ -228,3 +229,83 @@
   - `adminMultipleDeleteCategorySubscribe`
   - body: MultipleDeleteCategorySubscribeDto
   - 기능: 관리자가 다수 카테고리 구독 일괄 삭제, 카테고리 폐지 시 활용
+
+## 4. TagSubscribe 엔티티
+
+### 일반 사용자 기능
+
+- [x] GET /users/subscribes/tags **[USER]**
+  - `getTagSubscribeList`
+  - headers: Authorization
+  - body: SearchTagSubscribeDto
+  - 기능: 사용자가 구독한 태그 목록 조회, 인기 태그별 정렬
+- [x] GET /users/subscribes/tags/:tagNo **[USER]**
+  - `getTagSubscribeByTagNo`
+  - headers: Authorization
+  - params: tagNo: number
+  - body: SearchTagSubscribeDto
+  - 기능: 특정 태그 구독 상태 조회, 태그별 알림 설정 확인
+- [x] POST /users/subscribes/tags/:tagNo **[USER]**
+  - `createTagSubscribe`
+  - headers: Authorization
+  - params: tagNo: number
+  - body: CreateTagSubscribeDto
+  - 기능: 특정 태그 구독 설정, 태그된 새 글 알림 활성화
+- [x] POST /users/subscribes/tags/multiple **[USER]**
+  - `multipleCreateTagSubscribe`
+  - headers: Authorization
+  - body: MultipleCreateTagSubscribeDto
+  - 기능: 다수 태그 일괄 구독, 관심 키워드별 구독 설정
+- [x] PUT /users/subscribes/tags/multiple **[USER]**
+  - `multipleUpdateTagSubscribe`
+  - headers: Authorization
+  - body: MultipleUpdateTagSubscribeDto
+  - 기능: 다수 태그 구독 설정 일괄 변경, 알림 빈도 조정
+- [x] DELETE /users/subscribes/tags/:tagSbcrNo **[USER]**
+  - `deleteTagSubscribe`
+  - headers: Authorization
+  - params: tagSbcrNo: number
+  - 기능: 특정 태그 구독 해제, 태그 관련 알림 비활성화
+- [x] DELETE /users/subscribes/tags/multiple **[USER]**
+  - `multipleDeleteTagSubscribe`
+  - headers: Authorization
+  - body: MultipleDeleteTagSubscribeDto
+  - 기능: 다수 태그 구독 일괄 해제
+
+### 관리자 기능
+
+- [x] POST /admin/subscribes/tags/search **[ADMIN]**
+  - `adminGetTagSubscribeList`
+  - body: SearchTagSubscribeDto
+  - 기능: 전체 태그 구독 목록 조회, 태그별 구독 현황 분석, 인기 태그 통계
+- [x] GET /admin/subscribes/tags/:tagNo **[ADMIN]**
+  - `adminGetTagSubscribeByTagNo`
+  - params: tagNo: number
+  - body: SearchTagSubscribeDto
+  - 기능: 특정 태그의 구독자 목록 조회, 태그 활용도 분석
+- [x] POST /admin/subscribes/tags **[ADMIN]**
+  - `adminCreateTagSubscribe`
+  - body: CreateTagSubscribeDto
+  - 기능: 관리자가 사용자 대신 태그 구독 설정, 트렌드 태그 추천 시 활용
+- [x] POST /admin/subscribes/tags/multiple **[ADMIN]**
+  - `adminMultipleCreateTagSubscribe`
+  - body: MultipleCreateTagSubscribeDto
+  - 기능: 관리자가 다수 태그 구독 일괄 생성, 신규 태그 홍보
+- [x] PUT /admin/subscribes/tags/:tagSbcrNo **[ADMIN]**
+  - `adminUpdateTagSubscribe`
+  - params: tagSbcrNo: number
+  - body: UpdateTagSubscribeDto
+  - 기능: 관리자가 특정 태그 구독 설정 수정, 알림 빈도 관리
+- [x] PUT /admin/subscribes/tags/multiple **[ADMIN]**
+  - `adminMultipleUpdateTagSubscribe`
+  - body: MultipleUpdateTagSubscribeDto
+  - 기능: 관리자가 다수 태그 구독 일괄 수정, 태그 정책 변경 시 활용
+- [x] DELETE /admin/subscribes/tags/:tagSbcrNo **[ADMIN]**
+  - `adminDeleteTagSubscribe`
+  - params: tagSbcrNo: number
+  - body: UpdateTagSubscribeDto
+  - 기능: 관리자가 특정 태그 구독 삭제, 스팸 태그 방지 및 정책 위반 처리
+- [x] DELETE /admin/subscribes/tags/multiple **[ADMIN]**
+  - `adminMultipleDeleteTagSubscribe`
+  - body: MultipleDeleteTagSubscribeDto
+  - 기능: 관리자가 다수 태그 구독 일괄 삭제, 태그 정리 및 통합 시 활용

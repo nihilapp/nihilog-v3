@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { commonSchema } from '@/endpoints/drizzle/schemas/common.schema';
-import { addPaginationValidation } from '@/endpoints/drizzle/schemas/search.schema';
+import { baseSearchSchema } from '@/endpoints/drizzle/schemas/search.schema';
 
 export const categorySubscribeSchema = commonSchema.extend({
   ctgrySbcrNo: z.coerce.number()
@@ -87,19 +87,12 @@ export const multipleDeleteCategorySubscribeSchema = categorySubscribeSchema.pic
 });
 
 // 카테고리 구독 검색용 스키마
-export const searchCategorySubscribeSchema = addPaginationValidation(
-  categorySubscribeSchema.pick({
-    sbcrNo: true,
-    ctgryNo: true,
-    useYn: true,
-    delYn: true,
-    ctgrySbcrNoList: true,
-  }).partial().extend({
-    srchType: z.enum([ 'ctgryNm', ], {
-      error: '검색 타입은 ctgryNm 여야 합니다.',
-    }).optional(),
-  })
-);
+export const searchCategorySubscribeSchema = baseSearchSchema.extend({
+  ...categorySubscribeSchema.shape,
+  srchType: z.enum([ 'ctgryNm', ], {
+    error: '검색 타입은 ctgryNm 여야 합니다.',
+  }).optional(),
+}).partial();
 
 export type CategorySubscribeType = z.infer<typeof categorySubscribeSchema>;
 export type CategorySubscribeInfoType = Partial<CategorySubscribeType>;

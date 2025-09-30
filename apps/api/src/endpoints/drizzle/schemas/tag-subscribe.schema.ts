@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { commonSchema } from '@/endpoints/drizzle/schemas/common.schema';
-import { addPaginationValidation, baseSearchSchema } from '@/endpoints/drizzle/schemas/search.schema';
+import { baseSearchSchema } from '@/endpoints/drizzle/schemas/search.schema';
 
 export const tagSubscribeSchema = commonSchema.extend({
   tagSbcrNo: z.coerce.number()
@@ -87,25 +87,12 @@ export const multipleDeleteTagSubscribeSchema = tagSubscribeSchema.pick({
 });
 
 // 태그 구독 검색용 스키마
-export const searchTagSubscribeSchema = addPaginationValidation(baseSearchSchema.extend({
+export const searchTagSubscribeSchema = baseSearchSchema.extend({
+  ...tagSubscribeSchema.shape,
   srchType: z.enum([ 'tagNm', ], {
     error: '검색 타입은 tagNm 여야 합니다.',
   }).optional(),
-  sbcrNo: z.coerce.number()
-    .int('구독 번호는 정수여야 합니다.')
-    .positive('구독 번호는 양수여야 합니다.')
-    .optional(),
-  tagNo: z.coerce.number()
-    .int('태그 번호는 정수여야 합니다.')
-    .positive('태그 번호는 양수여야 합니다.')
-    .optional(),
-  useYn: z.enum([ 'Y', 'N', ], {
-    error: '사용 여부는 Y 또는 N이어야 합니다.',
-  }).optional(),
-  delYn: z.enum([ 'Y', 'N', ], {
-    error: '삭제 여부는 Y 또는 N이어야 합니다.',
-  }).optional(),
-}));
+}).partial();
 
 export type TagSubscribeType = z.infer<typeof tagSubscribeSchema>;
 export type TagSubscribeInfoType = Partial<TagSubscribeType>;

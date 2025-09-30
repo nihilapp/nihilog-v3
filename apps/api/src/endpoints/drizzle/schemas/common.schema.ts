@@ -6,7 +6,7 @@ export const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 export const dateTimeMessage = 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.';
 
 // Drizzle enum을 Zod 스키마로 변환
-export const ynEnumSchema = z.enum(yn.enumValues, '올바른 값을 입력해주세요.');
+export const ynEnumSchema = z.enum(yn.enumValues, 'Y 또는 N 값을 입력해주세요.');
 
 // 타입 추출
 export type YnType = z.infer<typeof ynEnumSchema>;

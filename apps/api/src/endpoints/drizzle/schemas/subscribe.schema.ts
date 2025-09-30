@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { categorySubscribeItemListSchema } from '@/endpoints/drizzle/schemas/category-subscribe.schema';
 import { commonSchema, ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
-import { addPaginationValidation, baseSearchSchema } from '@/endpoints/drizzle/schemas/search.schema';
+import { baseSearchSchema } from '@/endpoints/drizzle/schemas/search.schema';
 import { tagSubscribeItemListSchema } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
 import { userInfoSchema } from '@/endpoints/drizzle/schemas/user.schema';
 
@@ -94,12 +94,12 @@ export const defaultSubscribeSchema = userSubscribeRawSchema.pick({
 // 모든 항목이 선택값인 스키마
 export const partialSubscribeSchema = userSubscribeRawSchema.partial();
 
-export const searchSubscribeSchema = addPaginationValidation(baseSearchSchema.extend({
+export const searchSubscribeSchema = baseSearchSchema.extend({
+  ...userSubscribeRawSchema.shape,
   srchType: z.enum([ 'userNm', 'emlAddr', ], {
     error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
   }).optional(),
-  delYn: ynEnumSchema.optional(),
-}));
+}).partial();
 
 // 타입 추출
 export type UserSubscribeType = z

@@ -35,7 +35,7 @@ export class CategorySubscribeController {
         [
           '카테고리 구독 목록 조회 성공',
           [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', [
-            createExampleCategorySubscribe(),
+            [ createExampleCategorySubscribe(), ],
           ], ],
         ],
         [
@@ -47,7 +47,7 @@ export class CategorySubscribeController {
   })
   async getCategorySubscribeList(
     @Req() req: AuthRequest,
-    @Body() body: SearchCategorySubscribeDto
+    @Body() body: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
   ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -90,7 +90,7 @@ export class CategorySubscribeController {
   async getCategorySubscribeByCtgryNo(
     @Req() req: AuthRequest,
     @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
-    @Body() body: SearchCategorySubscribeDto
+    @Body() body: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
   ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;

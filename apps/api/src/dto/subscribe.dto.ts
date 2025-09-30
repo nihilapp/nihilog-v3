@@ -8,10 +8,11 @@ import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
 import {
   userSubscribeSchema,
   createSubscribeSchema,
-  updateSubscribeSchema,
-  searchSubscribeSchema
+  updateSubscribeSchema
 } from '@/endpoints/drizzle/schemas/subscribe.schema';
 import type { TagSubscribeItemListType } from '@/endpoints/drizzle/schemas/tag-subscribe.schema';
+
+import { SearchDto } from './search.dto';
 
 // 구독 정보 조회 DTO
 export class UserSubscribeDto extends createZodDto(userSubscribeSchema.partial()) {
@@ -190,40 +191,12 @@ export class UpdateSubscribeDto extends createZodDto(updateSubscribeSchema) {
   declare userNoList?: number[];
 }
 
-export class SearchSubscribeDto extends createZodDto(searchSubscribeSchema) {
-  @ApiProperty({
-    description: '시작 행 번호 (SQL OFFSET)',
-    example: 0,
-    required: false,
-  })
-  declare strtRow?: number;
-
-  @ApiProperty({
-    description: '끝 행 번호 (SQL LIMIT)',
-    example: 10,
-    required: false,
-  })
-  declare endRow?: number;
-
+export class SearchSubscribeDto extends SearchDto {
   @ApiProperty({
     description: '검색 타입 (userNm, emlAddr 중 하나)',
     example: 'userNm',
     required: false,
+    enum: [ 'userNm', 'emlAddr', ],
   })
   declare srchType?: 'userNm' | 'emlAddr';
-
-  @ApiProperty({
-    description: '검색 키워드 (2-100자)',
-    example: '홍길동',
-    required: false,
-  })
-  declare srchKywd?: string;
-
-  @ApiProperty({
-    description: '삭제 여부 (미지정 시 기본값 N)',
-    enum: [ 'Y', 'N', ],
-    example: 'N',
-    required: false,
-  })
-  declare delYn?: YnType;
 }
