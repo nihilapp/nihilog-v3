@@ -7,10 +7,16 @@ import { timeToString } from './timeHelper';
 /**
  * @description 구독 설정 예시 데이터.
  */
-export function createExampleSubscribe() {
+export function createExampleSubscribe(type: 'list' | 'detail' = 'detail') {
   const now = DateTime.now();
 
   return {
+    ...(type === 'list'
+      ? {
+        rowNo: 1,
+        totalCnt: 1,
+      }
+      : {}),
     sbcrNo: 1,
     userNo: 1,
     emlNtfyYn: 'Y',

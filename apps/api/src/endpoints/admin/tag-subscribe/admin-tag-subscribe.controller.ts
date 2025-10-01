@@ -51,7 +51,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_LIST_SUCCESS',
-            [ createExampleTagSubscribe(), ],
+            [ createExampleTagSubscribe('list'), ],
           ],
         ],
         [
@@ -109,7 +109,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_BY_TAG_SUCCESS',
-            [ createExampleTagSubscribe(), ],
+            [ createExampleTagSubscribe('list'), ],
           ],
         ],
         [
@@ -162,7 +162,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_CREATE_SUCCESS',
-            createExampleTagSubscribe(),
+            createExampleTagSubscribe('detail'),
           ],
         ],
         [
@@ -208,7 +208,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [ createExampleTagSubscribe(), ],
+            [ createExampleTagSubscribe('detail'), ],
           ],
         ],
         [
@@ -254,7 +254,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_UPDATE_SUCCESS',
-            createExampleTagSubscribe(),
+            createExampleTagSubscribe('detail'),
           ],
         ],
         [
@@ -301,7 +301,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            createExampleTagSubscribe(),
+            [ createExampleTagSubscribe('detail'), ],
           ],
         ],
         [

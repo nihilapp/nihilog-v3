@@ -48,7 +48,7 @@ export class AdminUserController {
             'SUCCESS',
             'USER_LIST_SUCCESS',
             {
-              list: [ createExampleUser(), ],
+              list: [ createExampleUser('list'), ],
               totalCnt: 1,
             },
           ],
@@ -99,7 +99,7 @@ export class AdminUserController {
       ],
       responses: [
         [ '사용자 조회 성공',
-          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', createExampleUser('detail'), ],
         ],
         [ '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
@@ -196,7 +196,7 @@ export class AdminUserController {
       ],
       responses: [
         [ '사용자 조회 성공',
-          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', createExampleUser('detail'), ],
         ],
         [ '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
@@ -239,7 +239,7 @@ export class AdminUserController {
       body: [ '사용자 생성 DTO', CreateUserDto, ],
       responses: [
         [ '사용자 생성 성공',
-          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser(), ],
+          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser('detail'), ],
         ],
         [
           '권한 부족',
@@ -293,7 +293,7 @@ export class AdminUserController {
             false,
             'SUCCESS',
             'USER_UPDATE_SUCCESS',
-            createExampleUser(),
+            createExampleUser('detail'),
           ],
         ],
         [

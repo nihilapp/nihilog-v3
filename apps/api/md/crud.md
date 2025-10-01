@@ -52,17 +52,17 @@
 
 ### 일반 사용자 기능
 
-- [ ] POST /posts/search **[USER]**
+- [x] POST /posts/search **[USER]**
   - `getPostList`
   - body: SearchPostDto (searchData)
   - 기능: 게시글 목록 조회, 필터링, 검색, 페이징, 정렬 (모든 조회 기능 통합)
-- [ ] GET /posts/:pstNo **[USER]**
+- [x] GET /posts/:pstNo **[USER]**
   - `getPostByPstNo`
   - params: pstNo: number
   - 기능: 특정 게시글 상세 조회, 조회수 증가, 댓글 수 포함, 이전/다음 글 링크, 관련 게시글 추천
-- [ ] GET /posts/slug/:slug **[USER]**
-  - `getPostBySlug`
-  - params: slug: string
+- [x] GET /posts/slug/:pstCd **[USER]**
+  - `getPostByPstCd`
+  - params: pstCd: string
   - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함, 소셜 미디어 공유 정보
 - [ ] GET /posts/tag/:tagNo **[USER]**
   - `getPostListByTagNo`
@@ -75,18 +75,10 @@
   - query: page?, size?, sort?
   - 기능: 특정 카테고리로 필터링된 게시글 목록, 카테고리별 게시글 수, 하위 카테고리 포함
 - [ ] GET /posts/archive/:year/:month **[USER]**
-  - `getPostListByDate`
+  - `getPostListFromArchive`
   - params: date: string (YYYYMM)
   - query: page?, size?, sort?
   - 기능: 특정 년월에 발행된 게시글 목록, 날짜별 게시글 수, 이전/다음 날짜 네비게이션
-- [ ] GET /posts/archive **[USER]**
-  - `getPostArchive`
-  - query: year?, month?, category?
-  - 기능: 게시글 아카이브 조회, 월별/연도별 아카이브, 카테고리별 아카이브
-- [ ] GET /posts/feed **[USER]**
-  - `getPostFeed`
-  - query: type?, page?, size?
-  - 기능: RSS/Atom 피드, 구독자용 피드, 최신 업데이트 알림
 
 ### 사용자 상호작용 기능
 

@@ -7,10 +7,16 @@ import { timeToString } from './timeHelper';
 /**
  * @description 사용자 예시 데이터.
  */
-export function createExampleUser() {
+export function createExampleUser(type: 'list' | 'detail' = 'detail') {
   const now = DateTime.now();
 
   return {
+    ...(type === 'list'
+      ? {
+        rowNo: 1,
+        totalCnt: 1,
+      }
+      : {}),
     userNo: 1,
     emlAddr: 'user@example.com',
     userNm: '홍길동',

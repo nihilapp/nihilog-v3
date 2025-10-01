@@ -35,7 +35,7 @@ export class CategorySubscribeController {
         [
           '카테고리 구독 목록 조회 성공',
           [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', [
-            [ createExampleCategorySubscribe(), ],
+            createExampleCategorySubscribe('list'),
           ], ],
         ],
         [
@@ -78,7 +78,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', createExampleCategorySubscribe('detail'), ],
         ],
         [
           '카테고리 구독 상태 조회 실패',
@@ -121,7 +121,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 설정 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', createExampleCategorySubscribe('detail'), ],
         ],
         [
           '카테고리 구독 설정 실패',
@@ -159,7 +159,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '다수 카테고리 구독 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ createExampleCategorySubscribe('detail'), ], ],
         ],
         [
           '다수 카테고리 구독 실패',
@@ -196,7 +196,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '다수 카테고리 구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ createExampleCategorySubscribe('detail'), ], ],
         ],
         [
           '다수 카테고리 구독 설정 변경 실패',
@@ -269,7 +269,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '다수 카테고리 구독 해제 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null, ],
         ],
         [
           '다수 카테고리 구독 해제 실패',

@@ -5,10 +5,16 @@ import { timeToString } from './timeHelper';
 /**
  * @description 태그 구독 예시 데이터.
  */
-export function createExampleTagSubscribe() {
+export function createExampleTagSubscribe(type: 'list' | 'detail' = 'detail') {
   const now = DateTime.now();
 
   return {
+    ...(type === 'list'
+      ? {
+        rowNo: 1,
+        totalCnt: 1,
+      }
+      : {}),
     tagSbcrNo: 1,
     sbcrNo: 1,
     tagNo: 1,

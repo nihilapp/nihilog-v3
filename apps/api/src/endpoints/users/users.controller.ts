@@ -35,7 +35,7 @@ export class UserController {
       responses: [
         [
           '프로필 조회 성공',
-          [ false, 'SUCCESS', 'PROFILE_GET_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'PROFILE_GET_SUCCESS', createExampleUser('detail'), ],
         ],
         [
           '프로필 조회 실패',
@@ -67,7 +67,7 @@ export class UserController {
       responses: [
         [
           '구독 설정 조회 성공',
-          [ false, 'SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', createExampleSubscribe(), ],
+          [ false, 'SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', createExampleSubscribe('detail'), ],
         ],
         [
           '구독 설정 조회 실패',
@@ -101,7 +101,7 @@ export class UserController {
       responses: [
         [
           '사용자 생성 성공',
-          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser(), ],
+          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser('detail'), ],
         ],
         [
           '이메일 중복',
@@ -130,7 +130,7 @@ export class UserController {
       responses: [
         [
           '프로필 수정 성공',
-          [ false, 'SUCCESS', 'USER_UPDATE_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'USER_UPDATE_SUCCESS', createExampleUser('detail'), ],
         ],
         [
           '프로필 수정 실패',
@@ -168,7 +168,7 @@ export class UserController {
       responses: [
         [
           '구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', createExampleSubscribe(), ],
+          [ false, 'SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', createExampleSubscribe('detail'), ],
         ],
         [
           '구독 설정을 찾을 수 없음',

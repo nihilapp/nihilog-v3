@@ -128,7 +128,9 @@ export const updatePostSchema = postSchema.partial().pick({
 
 // 게시글 검색 스키마 (기본 검색 스키마 확장)
 export const searchPostSchema = baseSearchSchema.extend({
-  ...postSchema.shape,
+  ...postSchema.pick({
+    delYn: true,
+  }).shape,
   srchType: z.enum([ 'pstTtl', 'pstSmry', 'pstMtxt', ], {
     error: '검색 타입은 pstTtl, pstSmry, pstMtxt 중 하나여야 합니다.',
   }).optional(),

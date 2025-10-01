@@ -44,7 +44,7 @@ type ResponseConfig = [
 // BodyConfig를 튜플로 변경
 type BodyConfig = [
   string, // description
-  new (...args: any[]) => any // type
+  (new (...args: any[]) => any) | string // type 또는 타입 문자열
 ];
 
 type EndpointOptions = {
@@ -194,9 +194,15 @@ export function Endpoint({
   // 요청 본문 추가 - 튜플 형식 처리
   if (options?.body) {
     const [ bodyDescription, bodyType, ] = options.body; // 튜플 구조분해할당
+
+    // 타입이 문자열인 경우 (교차 타입 등) Object로 처리
+    const apiBodyType = typeof bodyType === 'string'
+      ? Object
+      : bodyType;
+
     decorators.push(ApiBody({
       description: bodyDescription,
-      type: bodyType,
+      type: apiBodyType,
     }));
   }
 

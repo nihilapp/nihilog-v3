@@ -51,7 +51,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_LIST_SUCCESS',
-            [ createExampleCategorySubscribe(), ],
+            [ createExampleCategorySubscribe('list'), ],
           ],
         ],
         [
@@ -106,7 +106,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS',
-            [ createExampleCategorySubscribe(), ],
+            [ createExampleCategorySubscribe('list'), ],
           ],
         ],
         [
@@ -163,7 +163,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-            createExampleCategorySubscribe(),
+            createExampleCategorySubscribe('detail'),
           ],
         ],
         [
@@ -209,7 +209,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [ createExampleCategorySubscribe(), ],
+            [ createExampleCategorySubscribe('detail'), ],
           ],
         ],
         [
@@ -251,7 +251,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
-            createExampleCategorySubscribe(),
+            createExampleCategorySubscribe('detail'),
           ],
         ],
         [
@@ -297,7 +297,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            createExampleCategorySubscribe(),
+            [ createExampleCategorySubscribe('detail'), ],
           ],
         ],
         [

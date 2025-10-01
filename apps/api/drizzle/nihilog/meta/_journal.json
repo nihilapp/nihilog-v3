@@ -43,6 +43,13 @@
       "when": 1759247838370,
       "tag": "0005_right_retro_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759339572698,
+      "tag": "0006_careful_logan",
+      "breakpoints": true
     }
   ]
 }

@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { jsonb } from 'drizzle-orm/pg-core';
 import { varchar } from 'drizzle-orm/pg-core';
 import { integer } from 'drizzle-orm/pg-core';
-import { index } from 'drizzle-orm/pg-core';
+import { index, unique } from 'drizzle-orm/pg-core';
 import { text } from 'drizzle-orm/pg-core';
 
 import { yn } from '@/endpoints/drizzle/enums';
@@ -89,4 +89,10 @@ export const pstInfo = nihilogSchema.table('pst_info', {
     .on(table.pstCd),
   index('post_info_pst_view_idx')
     .on(table.pstView),
+
+  // [유니크 제약조건]
+  unique('post_info_pst_ttl_unique')
+    .on(table.pstTtl),
+  unique('post_info_pst_cd_unique')
+    .on(table.pstCd),
 ]);

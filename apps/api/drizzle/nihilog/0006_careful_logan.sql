@@ -1,0 +1,2 @@
+ALTER TABLE "nihilog"."pst_info" ADD CONSTRAINT "post_info_pst_ttl_unique" UNIQUE("pst_ttl");--> statement-breakpoint
+ALTER TABLE "nihilog"."pst_info" ADD CONSTRAINT "post_info_pst_cd_unique" UNIQUE("pst_cd");

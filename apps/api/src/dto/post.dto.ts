@@ -6,10 +6,9 @@ import {
   postSchema,
   createPostSchema,
   updatePostSchema,
-  deletePostSchema
+  deletePostSchema,
+  searchPostSchema
 } from '@/endpoints/drizzle/schemas/post.schema';
-
-import { SearchDto } from './search.dto';
 
 // 게시글 기본 DTO
 export class PostDto extends createZodDto(postSchema) {
@@ -464,7 +463,7 @@ export class DeletePostDto extends createZodDto(deletePostSchema) {
 }
 
 // 게시글 검색 DTO
-export class SearchPostDto extends SearchDto {
+export class SearchPostDto extends createZodDto(searchPostSchema) {
   @ApiProperty({
     description: '검색 타입 (pstTtl, pstSmry, pstMtxt 중 하나)',
     example: 'pstTtl',

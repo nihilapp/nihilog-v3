@@ -46,7 +46,7 @@ export class AdminSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_SUBSCRIBE_LIST_SUCCESS',
-            [ createExampleSubscribe(), ],
+            [ createExampleSubscribe('list'), ],
           ],
         ],
         [
@@ -92,7 +92,7 @@ export class AdminSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_SUBSCRIBE_CREATE_SUCCESS',
-            createExampleSubscribe(),
+            createExampleSubscribe('detail'),
           ],
         ],
         [
@@ -160,7 +160,7 @@ export class AdminSubscribeController {
             {
               successCount: 3,
               failureCount: 1,
-              updatedSubscribes: [ createExampleSubscribe(), ],
+              updatedSubscribes: [ createExampleSubscribe('detail'), ],
             },
           ],
         ],
