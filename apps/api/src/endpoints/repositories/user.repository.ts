@@ -36,6 +36,45 @@ const userInfoSelect = {
   delDt: userInfo.delDt,
 } as const;
 
+const userInfoSelectSql = sql`
+    USER_NO AS "userNo"
+  , EML_ADDR AS "emlAddr"
+  , USER_NM AS "userNm"
+  , USER_ROLE AS "userRole"
+  , PROFL_IMG AS "proflImg"
+  , USER_BIOGP AS "userBiogp"
+  , ENCPT_PSWD AS "encptPswd"
+  , RESH_TOKEN AS "reshToken"
+  , USE_YN AS "useYn"
+  , DEL_YN AS "delYn"
+  , TO_CHAR(LAST_LGN_DT, 'YYYY-MM-DD HH24:MI:SS') AS "lastLgnDt"
+  , CRT_NO AS "crtNo"
+  , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "crtDt"
+  , UPDT_NO AS "updtNo"
+  , TO_CHAR(UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "updtDt"
+  , DEL_NO AS "delNo"
+  , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
+`;
+// {
+//   userNo: userInfo.userNo,
+//   emlAddr: userInfo.emlAddr,
+//   userNm: userInfo.userNm,
+//   userRole: userInfo.userRole,
+//   proflImg: userInfo.proflImg,
+//   userBiogp: userInfo.userBiogp,
+//   encptPswd: userInfo.encptPswd,
+//   reshToken: userInfo.reshToken,
+//   useYn: userInfo.useYn,
+//   delYn: userInfo.delYn,
+//   lastLgnDt: userInfo.lastLgnDt,
+//   crtNo: userInfo.crtNo,
+//   crtDt: userInfo.crtDt,
+//   updtNo: userInfo.updtNo,
+//   updtDt: userInfo.updtDt,
+//   delNo: userInfo.delNo,
+//   delDt: userInfo.delDt,
+// } as const;
+
 const userInfoSelectWithoutPassword = {
   userNo: userInfo.userNo,
   emlAddr: userInfo.emlAddr,
@@ -72,19 +111,25 @@ export class UserRepository {
    * @param userNo 사용자 번호
    * @param delYn 삭제 여부
    */
-  async getUserByNo(userNo: number, delYn: 'Y' | 'N' = 'N'): Promise<UserInfoType | null> {
-    const whereConditions = [
-      eq(userInfo.userNo, userNo),
-      eq(userInfo.delYn, delYn),
-    ];
-
+  async getUserByNo(userNo: number, delYn: 'Y' | 'N' = 'N'): Promise<typeof userInfo.$inferSelect | null> {
     try {
-      const [ result, ] = await this.db
-        .select(userInfoSelect)
-        .from(userInfo)
-        .where(and(...whereConditions));
+      const user = await this.db.execute<typeof userInfo.$inferSelect>(sql`
+        SELECT
+          ${userInfoSelectSql}
+        FROM
+          USER_INFO
+        WHERE
+          1 = 1
+        ${userNo != null && userNo !== 0
+          ? sql`AND USER_NO = ${userNo}`
+          : sql``}
+        AND
+          DEL_YN = COALESCE(${delYn}, 'N')
+      `);
 
-      return result;
+      console.log(user);
+
+      return user.rows[0] || null;
     }
     catch {
       return null;

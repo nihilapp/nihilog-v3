@@ -1,13 +1,24 @@
 # CRUD 메소드 명명 규칙 및 정의
 
-## 현재 구현 상태 (2025-09-28)
+## 현재 구현 상태 (2025-10-02)
 
 ### 🚧 미구현 기능
 
+#### 기본 CRUD
 - **Post**: 게시글 CRUD (기본 구조만 존재, 구현 필요)
 - **Category**: 카테고리 CRUD (완전 미구현)
 - **Tag**: 태그 CRUD (완전 미구현)
 - **Comment**: 댓글 CRUD (완전 미구현)
+
+#### 확장 기능
+- **포스트 상호작용**: 좋아요, 북마크, 공유 추적 (완전 미구현)
+- **검색 시스템**: 전문 검색, 자동완성, 인기 키워드 (완전 미구현)
+- **RSS/피드**: RSS 생성, 사이트맵, Atom 피드 (완전 미구현)
+- **통계/분석**: 포스트 분석, 방문자 통계, 성과 측정 (완전 미구현)
+- **알림 시스템**: 이메일 발송, 웹훅 연동 (완전 미구현)
+- **SEO 도구**: 메타 태그 관리, 구조화 데이터 (완전 미구현)
+- **백업/관리**: 데이터 백업, 미디어 관리, 시스템 유지보수 (완전 미구현)
+- **개발자 도구**: API 모니터링, 로그 관리 (완전 미구현)
 
 ### 🔄 부분 구현 기능
 
@@ -64,28 +75,41 @@
   - `getPostByPstCd`
   - params: pstCd: string
   - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함, 소셜 미디어 공유 정보
-- [ ] GET /posts/tag/:tagNo **[USER]**
+- [x] GET /posts/tag/:tagNo **[USER]**
   - `getPostListByTagNo`
   - params: tagNo: number
-  - query: page?, size?, sort?
+  - body: SearchPostDto (searchData)
   - 기능: 특정 태그로 필터링된 게시글 목록, 태그별 게시글 수, 관련 태그 추천
-- [ ] GET /posts/category/:ctgryNo **[USER]**
+- [x] GET /posts/category/:ctgryNo **[USER]**
   - `getPostListByCtgryNo`
   - params: ctgryNo: number
-  - query: page?, size?, sort?
+  - body: SearchPostDto (searchData)
   - 기능: 특정 카테고리로 필터링된 게시글 목록, 카테고리별 게시글 수, 하위 카테고리 포함
-- [ ] GET /posts/archive/:year/:month **[USER]**
+- [x] GET /posts/archive/:date **[USER]**
   - `getPostListFromArchive`
-  - params: date: string (YYYYMM)
-  - query: page?, size?, sort?
+  - params: date: string (yyyyMM)
+  - body: SearchPostDto (searchData)
   - 기능: 특정 년월에 발행된 게시글 목록, 날짜별 게시글 수, 이전/다음 날짜 네비게이션
 
 ### 사용자 상호작용 기능
 
-- [ ] POST /posts/:pstNo/like **[USER]**
-  - `likePost`
+- [ ] POST /posts/:pstNo/like **[USER/GUEST]**
+  - `togglePostLike`
   - params: pstNo: number
-  - 기능: 게시글 좋아요, 좋아요 취소, 좋아요 수 집계
+  - 기능: 게시글 좋아요/취소 토글, 회원/비회원 모두 지원, IP+UserAgent 중복 방지
+- [ ] GET /posts/:pstNo/like/status **[USER/GUEST]**
+  - `getPostLikeStatus`
+  - params: pstNo: number
+  - 기능: 현재 사용자의 좋아요 상태 조회
+- [ ] GET /posts/:pstNo/like/count **[PUBLIC]**
+  - `getPostLikeCount`
+  - params: pstNo: number
+  - 기능: 게시글 총 좋아요 수 조회
+- [ ] GET /posts/:pstNo/views **[USER]**
+  - `getPostViewStats`
+  - params: pstNo: number
+  - query: period?
+  - 기능: 게시글 조회수 통계 (일/주/월별)
 - [ ] POST /posts/:pstNo/bookmark **[USER]**
   - `bookmarkPost`
   - params: pstNo: number
@@ -95,10 +119,10 @@
   - query: page?, size?
   - 기능: 북마크한 게시글 목록, 북마크 날짜별 정렬
 - [ ] POST /posts/:pstNo/share **[USER]**
-  - `sharePost`
+  - `trackPostShare`
   - params: pstNo: number
-  - body: { platform: string, message?: string }
-  - 기능: 소셜 미디어 공유, 공유 통계, 공유 링크 생성
+  - body: { platform: string, url?: string }
+  - 기능: 포스트 공유 추적, 플랫폼별 공유 통계 (트위터, 페이스북, 링크드인 등)
 
 ### 관리자 기능 (작성자)
 
@@ -273,3 +297,194 @@
   - `adminMultipleDeleteComment`
   - body: UpdateCommentDto (cmntNoList 포함)
   - 기능: 다수 댓글 일괄 삭제, 스팸 댓글 일괄 정리
+
+---
+
+## 9. 검색 및 필터링 확장 기능
+
+### 고급 검색 기능
+
+- [ ] POST /search/posts **[USER]**
+  - `searchPostsAdvanced`
+  - body: AdvancedSearchDto
+  - 기능: 제목, 본문, 태그 통합 전문 검색, 검색 하이라이팅, 필터링 조합
+
+- [ ] GET /search/autocomplete **[USER]**
+  - `getSearchSuggestions`
+  - query: term: string
+  - 기능: 입력한 글자 기반 검색어 자동완성, 인기 키워드 우선 표시
+
+- [ ] GET /search/popular **[USER]**
+  - `getPopularSearchTerms`
+  - query: period?
+  - 기능: 실시간/주간/월간 인기 검색 키워드 통계
+
+### 관리자 검색 관리
+
+- [ ] GET /admin/search/history **[ADMIN]**
+  - `getSearchHistory`
+  - query: period?, page?, size?
+  - 기능: 사용자 검색 히스토리 분석, 검색 패턴 통계
+
+## 10. RSS 피드 및 사이트맵
+
+### 공개 피드
+
+- [ ] GET /feeds/rss **[PUBLIC]**
+  - `generateRSSFeed`
+  - query: limit?
+  - 기능: 전체 포스트 RSS 2.0 피드 생성, 자동 업데이트
+
+- [ ] GET /feeds/rss/category/:ctgryNo **[PUBLIC]**
+  - `generateCategoryRSSFeed`
+  - params: ctgryNo: number
+  - query: limit?
+  - 기능: 특정 카테고리 RSS 피드
+
+- [ ] GET /feeds/rss/tag/:tagNo **[PUBLIC]**
+  - `generateTagRSSFeed`
+  - params: tagNo: number
+  - query: limit?
+  - 기능: 특정 태그 RSS 피드
+
+- [ ] GET /sitemap.xml **[PUBLIC]**
+  - `generateSitemap`
+  - 기능: SEO용 XML 사이트맵 자동 생성, 포스트/카테고리/태그 포함
+
+- [ ] GET /feeds/atom **[PUBLIC]**
+  - `generateAtomFeed`
+  - 기능: Atom 1.0 형식 피드 (RSS 대안)
+
+## 11. 통계 및 분석 대시보드
+
+### 포스트 분석
+
+- [ ] GET /admin/analytics/posts **[ADMIN]**
+  - `getPostAnalytics`
+  - query: period?, category?, tag?
+  - 기능: 포스트별 조회수, 좋아요, 댓글, 공유 통계 종합
+
+- [ ] GET /admin/analytics/popular **[ADMIN]**
+  - `getPopularContent`
+  - query: period?, type?, limit?
+  - 기능: 실시간 인기 글, 트렌딩 태그, 핫 카테고리 분석
+
+### 방문자 분석
+
+- [ ] GET /admin/analytics/visitors **[ADMIN]**
+  - `getVisitorAnalytics`
+  - query: period?
+  - 기능: 방문자 수, 유입 경로, 시간대별 패턴, 지역별 분포
+
+- [ ] GET /admin/analytics/traffic **[ADMIN]**
+  - `getTrafficAnalytics`
+  - query: period?
+  - 기능: 페이지뷰, 세션 시간, 이탈률, 재방문율
+
+### 콘텐츠 성과
+
+- [ ] GET /admin/analytics/engagement **[ADMIN]**
+  - `getEngagementMetrics`
+  - query: period?
+  - 기능: 좋아요율, 댓글율, 공유율, 구독 전환율
+
+## 12. 알림 및 구독 시스템
+
+### 이메일 알림
+
+- [ ] POST /admin/notifications/email **[ADMIN]**
+  - `sendEmailNotification`
+  - body: EmailNotificationDto
+  - 기능: 새 글 발행 시 구독자들에게 이메일 일괄 발송
+
+- [ ] GET /admin/notifications/email/status **[ADMIN]**
+  - `getEmailNotificationStatus`
+  - query: notificationId: string
+  - 기능: 이메일 발송 상태 및 통계 조회
+
+### 웹훅 연동
+
+- [ ] POST /admin/webhooks **[ADMIN]**
+  - `createWebhook`
+  - body: CreateWebhookDto
+  - 기능: 웹훅 URL 등록 (슬랙, 디스코드, 자체 서비스)
+
+- [ ] PUT /admin/webhooks/:webhookId **[ADMIN]**
+  - `updateWebhook`
+  - params: webhookId: string
+  - body: UpdateWebhookDto
+  - 기능: 웹훅 설정 수정, 활성/비활성화
+
+- [ ] POST /admin/webhooks/test **[ADMIN]**
+  - `testWebhook`
+  - body: TestWebhookDto
+  - 기능: 웹훅 연결 테스트
+
+## 13. SEO 최적화 도구
+
+### 메타 태그 관리
+
+- [ ] PUT /admin/posts/:pstNo/seo **[ADMIN]**
+  - `updatePostSEO`
+  - params: pstNo: number
+  - body: PostSEODto
+  - 기능: 포스트별 메타 디스크립션, 키워드, OG 태그 관리
+
+- [ ] GET /posts/:pstNo/structured-data **[PUBLIC]**
+  - `getStructuredData`
+  - params: pstNo: number
+  - 기능: JSON-LD 형태의 구조화된 데이터 (Article 스키마)
+
+### SEO 분석
+
+- [ ] GET /admin/seo/analysis **[ADMIN]**
+  - `getSEOAnalysis`
+  - 기능: 사이트 전체 SEO 상태 분석, 개선 제안
+
+## 14. 백업 및 데이터 관리
+
+### 콘텐츠 백업
+
+- [ ] GET /admin/backup/posts **[ADMIN]**
+  - `exportPosts`
+  - query: format?, category?, period?
+  - 기능: 포스트 백업 (Markdown, JSON, HTML 형식)
+
+- [ ] POST /admin/backup/import **[ADMIN]**
+  - `importPosts`
+  - body: ImportDataDto
+  - 기능: 다른 플랫폼에서 포스트 가져오기 (Medium, WordPress 등)
+
+### 미디어 관리
+
+- [ ] POST /admin/media/optimize **[ADMIN]**
+  - `optimizeImages`
+  - body: OptimizeImageDto
+  - 기능: 업로드된 이미지 일괄 최적화, 리사이징, WebP 변환
+
+- [ ] GET /admin/media/storage **[ADMIN]**
+  - `getStorageStats`
+  - 기능: 스토리지 사용량, 파일 통계, 용량 분석
+
+### 시스템 유지보수
+
+- [ ] POST /admin/maintenance/cleanup **[ADMIN]**
+  - `performCleanup`
+  - body: CleanupOptionsDto
+  - 기능: 미사용 파일 정리, 캐시 클리어, 로그 정리
+
+## 15. 개발자 도구
+
+### API 모니터링
+
+- [ ] GET /admin/api/usage **[ADMIN]**
+  - `getAPIUsageStats`
+  - query: period?
+  - 기능: API 호출 통계, 엔드포인트별 사용량, 응답 시간
+
+### 로그 관리
+
+- [ ] GET /admin/logs/errors **[ADMIN]**
+  - `getErrorLogs`
+  - query: period?, level?, page?
+  - 기능: 에러 로그 조회, 빈도별 분석, 알림 설정

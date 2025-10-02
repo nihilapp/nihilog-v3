@@ -95,7 +95,6 @@ export class UserController {
     description: '새로운 사용자 계정을 생성합니다.',
     options: {
       throttle: [ 3, 60000, ],
-      roles: [ 'USER', 'ADMIN', ],
       body: [ '사용자 생성 DTO', CreateUserDto, ],
       serialize: true,
       responses: [

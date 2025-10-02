@@ -471,4 +471,89 @@ export class SearchPostDto extends createZodDto(searchPostSchema) {
     enum: [ 'pstTtl', 'pstSmry', 'pstMtxt', ],
   })
   declare srchType?: 'pstTtl' | 'pstSmry' | 'pstMtxt';
+
+  @ApiProperty({
+    description: '복합 검색 필드 배열',
+    example: [ 'pstTtl', 'pstSmry', ],
+    required: false,
+    type: [ String, ],
+    enum: [ 'pstTtl', 'pstSmry', 'pstMtxt', ],
+  })
+  declare srchFields?: ('pstTtl' | 'pstSmry' | 'pstMtxt')[];
+
+  @ApiProperty({
+    description: '태그 번호 목록',
+    example: [ 1, 2, 3, ],
+    required: false,
+    type: [ Number, ],
+  })
+  declare tagNoList?: number[];
+
+  @ApiProperty({
+    description: '태그명 목록',
+    example: [ 'React', 'TypeScript', ],
+    required: false,
+    type: [ String, ],
+  })
+  declare tagNmList?: string[];
+
+  @ApiProperty({
+    description: '카테고리 번호 목록',
+    example: [ 1, 2, ],
+    required: false,
+    type: [ Number, ],
+  })
+  declare ctgryNoList?: number[];
+
+  @ApiProperty({
+    description: '날짜 범위',
+    example: { startDt: '2024-01-01 00:00:00', endDt: '2024-12-31 23:59:59', },
+    required: false,
+  })
+  declare dateRange?: {
+    startDt?: string;
+    endDt?: string;
+  };
+
+  @ApiProperty({
+    description: '조회수 범위',
+    example: { minViews: 100, maxViews: 1000, },
+    required: false,
+  })
+  declare viewRange?: {
+    minViews?: number;
+    maxViews?: number;
+  };
+
+  @ApiProperty({
+    description: '정렬 방식',
+    example: 'latest',
+    required: false,
+    enum: [ 'latest', 'popular', 'relevance', ],
+  })
+  declare orderBy?: 'latest' | 'popular' | 'relevance';
+
+  @ApiProperty({
+    description: '포스트 상태',
+    example: 'FINISHED',
+    required: false,
+    enum: [ 'EMPTY', 'WRITING', 'FINISHED', ],
+  })
+  declare pstStts?: 'EMPTY' | 'WRITING' | 'FINISHED';
+
+  @ApiProperty({
+    description: '공개 여부',
+    example: 'Y',
+    required: false,
+    enum: [ 'Y', 'N', ],
+  })
+  declare rlsYn?: 'Y' | 'N';
+
+  @ApiProperty({
+    description: '보관 여부',
+    example: 'N',
+    required: false,
+    enum: [ 'Y', 'N', ],
+  })
+  declare archYn?: 'Y' | 'N';
 }

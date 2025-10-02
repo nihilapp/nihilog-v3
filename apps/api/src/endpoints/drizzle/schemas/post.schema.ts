@@ -130,10 +130,36 @@ export const updatePostSchema = postSchema.partial().pick({
 export const searchPostSchema = baseSearchSchema.extend({
   ...postSchema.pick({
     delYn: true,
+    pstStts: true,
+    rlsYn: true,
+    archYn: true,
   }).shape,
   srchType: z.enum([ 'pstTtl', 'pstSmry', 'pstMtxt', ], {
     error: '검색 타입은 pstTtl, pstSmry, pstMtxt 중 하나여야 합니다.',
   }).optional(),
+
+  // 복합 검색 필드
+  srchFields: z.array(z.enum([ 'pstTtl', 'pstSmry', 'pstMtxt', ])).optional(),
+
+  // 태그/카테고리 필터
+  tagNoList: z.array(z.coerce.number().int().positive()).optional(),
+  tagNmList: z.array(z.string().min(1).max(128)).optional(),
+  ctgryNoList: z.array(z.coerce.number().int().positive()).optional(),
+
+  // 날짜 범위
+  dateRange: z.object({
+    startDt: z.string().max(50).optional(),
+    endDt: z.string().max(50).optional(),
+  }).optional(),
+
+  // 조회수 범위
+  viewRange: z.object({
+    minViews: z.coerce.number().int().min(0).optional(),
+    maxViews: z.coerce.number().int().min(0).optional(),
+  }).optional(),
+
+  // 정렬 옵션
+  orderBy: z.enum([ 'latest', 'popular', 'relevance', ]).default('latest'),
 }).partial();
 
 // 게시글 삭제 스키마 (포스트 번호 또는 리스트 선택)

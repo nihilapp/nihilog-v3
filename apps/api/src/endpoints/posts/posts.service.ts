@@ -43,16 +43,26 @@ export class PostsService {
   /**
    * @description 카테고리 번호로 게시글 목록 조회
    * @param ctgryNo 카테고리 번호
+   * @param searchData 검색 조건
    */
-  async getPostListByCtgryNo(ctgryNo: number) {
-    return false;
+  async getPostListByCtgryNo(ctgryNo: number, searchData: SearchPostDto) {
+    return this.postRepository.getPostListByCtgryNo(ctgryNo, searchData);
   }
 
   /**
    * @description 날짜로 게시글 목록 조회
    * @param date 날짜(yyyyMM)
+   * @param searchData 검색 조건
    */
-  async getPostListFromArchive(date: string) {
-    return false;
+  async getPostListFromArchive(date: string, searchData: SearchPostDto) {
+    return this.postRepository.getPostListFromArchive(date, searchData);
+  }
+
+  /**
+   * @description 고급 검색을 통한 게시글 목록 조회
+   * @param searchData 고급 검색 조건
+   */
+  async getAdvancedPostList(searchData: SearchPostDto) {
+    return this.postRepository.getAdvancedPostList(searchData);
   }
 }

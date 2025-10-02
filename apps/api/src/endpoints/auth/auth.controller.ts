@@ -40,7 +40,6 @@ export class AuthController {
     options: {
       throttle: [ 5, 60000, ],
       serialize: true,
-      roles: [ 'USER', 'ADMIN', ],
       body: [ '로그인 DTO', SignInDto, ],
       responses: [
         [

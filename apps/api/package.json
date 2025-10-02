@@ -39,7 +39,7 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "date-fns": "^4.1.0",
-    "drizzle-orm": "^0.44.5",
+    "drizzle-orm": "^0.44.6",
     "fastify": "^5.6.1",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
@@ -67,8 +67,8 @@
     "@types/express": "^5.0.3",
     "@types/js-yaml": "^4.0.9",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^24.5.2",
-    "@types/nodemailer": "^7.0.1",
+    "@types/node": "^24.6.2",
+    "@types/nodemailer": "^7.0.2",
     "@types/pg": "^8.15.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
@@ -81,7 +81,7 @@
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.44.1"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.45.0"
   }
 }
