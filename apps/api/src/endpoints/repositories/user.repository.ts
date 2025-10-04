@@ -4,8 +4,7 @@ import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType } from '@/endpoints/prisma/schemas/response.schema';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectUserInfoListItemType,
   SelectUserInfoType

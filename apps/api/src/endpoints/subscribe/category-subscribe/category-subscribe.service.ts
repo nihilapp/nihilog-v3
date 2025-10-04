@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
 import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 import { createError, createResponse } from '@/utils';
 import type { CtgrySbcrMpng } from '~prisma/client';
@@ -71,7 +71,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async multipleCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<CtgrySbcrMpng[]>> {
+  async multipleCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<MultipleResultType>> {
     const createSubscribe = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
 
     if (!createSubscribe) {
@@ -116,7 +116,7 @@ export class CategorySubscribeService {
    * @param ctgrySbcrNo 카테고리 구독 번호
    */
   async deleteCategorySubscribe(userNo: number, ctgrySbcrNo: number): Promise<ResponseDto<boolean>> {
-    const deleteSubscribe = await this.categorySubscribeRepository.deleteCategorySubscribeByCtgrySbcrNo(userNo, ctgrySbcrNo);
+    const deleteSubscribe = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, ctgrySbcrNo);
 
     if (!deleteSubscribe) {
       return createError(

@@ -8,7 +8,7 @@ import type {
   TagSubscribeDto,
   UpdateTagSubscribeDto
 } from '@/dto/tag-subscribe.dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { createError, createResponse } from '@/utils';
@@ -79,7 +79,7 @@ export class AdminTagSubscribeService {
   async adminMultipleCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSbcrMpng[]>> {
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
       const result = await this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
 
@@ -176,7 +176,7 @@ export class AdminTagSubscribeService {
     updateData: UpdateTagSubscribeDto
   ): Promise<ResponseDto<null>> {
     try {
-      const result = await this.tagSubscribeRepository.deleteTagSubscribe(userNo, updateData);
+      const result = await this.tagSubscribeRepository.deleteTagSubscribe(userNo, updateData.tagSbcrNo);
 
       if (!result) {
         return createError(

@@ -8,16 +8,6 @@ export {
 } from './common.schema';
 
 export {
-  responseSchema,
-  listResponseSchema,
-  multipleResultSchema,
-  type ResponseType,
-  type ListResponseType,
-  type ListType,
-  type MultipleResultType
-} from './response.schema';
-
-export {
   baseSearchSchema,
   type BaseSearchType
 } from './search.schema';

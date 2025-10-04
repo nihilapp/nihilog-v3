@@ -1,16 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
 
 import { UserInfoDto } from '@/dto/user.dto';
-import {
-  listResponseSchema,
-  multipleResultSchema,
-  responseSchema
-} from '@/endpoints/prisma/schemas/response.schema';
 import { createExampleUser } from '@/utils';
 
 // 기본 응답 DTO
-export class ResponseDto<TData = any> extends createZodDto(responseSchema()) {
+export class ResponseDto<TData = any> {
   @ApiProperty({
     description: '에러 여부',
     example: false,
@@ -57,28 +51,28 @@ export class ListDto<TData = any> {
   declare totalCnt: number;
 }
 
-export class MultipleResultDto extends createZodDto(multipleResultSchema) {
+export class MultipleResultDto {
   @ApiProperty({
     description: '성공 개수',
     example: 100,
   })
-  declare successCnt?: number;
+  declare successCnt: number;
 
   @ApiProperty({
     description: '실패 개수',
     example: 10,
   })
-  declare failCnt?: number;
+  declare failCnt: number;
 
   @ApiProperty({
     description: '실패 번호 목록',
     example: [ 1, 2, 3, ],
   })
-  declare failNoList?: number[];
+  declare failNoList: number[];
 }
 
 // 리스트 응답 DTO
-export class ListResponseDto<TData = any> extends createZodDto(listResponseSchema()) {
+export class ListResponseDto<TData = any> {
   @ApiProperty({
     description: '에러 여부',
     example: false,

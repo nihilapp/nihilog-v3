@@ -7,8 +7,8 @@ import type {
   UpdateCategorySubscribeDto
 } from '@/dto/category-subscribe.dto';
 import { ResponseDto } from '@/dto/response.dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
 import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 import { createError, createResponse } from '@/utils';
 import type { CtgrySbcrMpng } from '~prisma/client';
@@ -78,7 +78,7 @@ export class AdminCategorySubscribeService {
   async adminMultipleCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<ResponseDto<CtgrySbcrMpng[]>> {
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
       const result = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
 
@@ -173,9 +173,9 @@ export class AdminCategorySubscribeService {
   async adminDeleteCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<ResponseDto<boolean>> {
     try {
-      const result = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData);
+      const result = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData.ctgrySbcrNo);
 
       if (!result) {
         return createError(

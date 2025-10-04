@@ -2,11 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
 import type {
   SelectCtgrySbcrMpngListItemType,
   SelectCtgrySbcrMpngType
 } from '@/endpoints/prisma/types/category-subscribe.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
 import { PrismaClient, type CtgrySbcrMpng } from '~prisma/client';
@@ -28,8 +28,10 @@ export class CategorySubscribeRepository {
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'ctgryNm') && {
           category: {
-            ctgryNm: {
-              contains: srchKywd,
+            is: {
+              ctgryNm: {
+                contains: srchKywd,
+              },
             },
           },
         },
@@ -55,9 +57,6 @@ export class CategorySubscribeRepository {
         }),
         this.prisma.ctgrySbcrMpng.count({
           where,
-          orderBy: {
-            ctgrySbcrNo: 'desc',
-          },
         }),
       ]);
 
@@ -118,8 +117,10 @@ export class CategorySubscribeRepository {
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'ctgryNm') && {
           category: {
-            ctgryNm: {
-              contains: srchKywd,
+            is: {
+              ctgryNm: {
+                contains: srchKywd,
+              },
             },
           },
         },
@@ -145,9 +146,6 @@ export class CategorySubscribeRepository {
         }),
         this.prisma.ctgrySbcrMpng.count({
           where,
-          orderBy: {
-            ctgrySbcrNo: 'desc',
-          },
         }),
       ]);
 
@@ -182,8 +180,10 @@ export class CategorySubscribeRepository {
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'ctgryNm') && {
           category: {
-            ctgryNm: {
-              contains: srchKywd,
+            is: {
+              ctgryNm: {
+                contains: srchKywd,
+              },
             },
           },
         },
@@ -209,9 +209,6 @@ export class CategorySubscribeRepository {
         }),
         this.prisma.ctgrySbcrMpng.count({
           where,
-          orderBy: {
-            ctgrySbcrNo: 'desc',
-          },
         }),
       ]);
 
@@ -269,7 +266,7 @@ export class CategorySubscribeRepository {
   async multipleCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<CtgrySbcrMpng[] | null> {
+  ): Promise<MultipleResultType | null> {
     try {
       const { ctgryNoList, sbcrNo, } = createData;
 
@@ -297,9 +294,16 @@ export class CategorySubscribeRepository {
             updtNo: userNo,
             updtDt: timeToString(),
           },
+          select: {
+            ctgrySbcrNo: true,
+          },
         })));
 
-      return subscribeList;
+      return {
+        successCnt: subscribeList.length,
+        failCnt: ctgryNoList.length - subscribeList.length,
+        failNoList: [],
+      };
     }
     catch {
       return null;
@@ -382,53 +386,14 @@ export class CategorySubscribeRepository {
   /**
    * @description 카테고리 구독 삭제
    * @param userNo 사용자 번호
-   * @param updateData 카테고리 구독 삭제 데이터
-   */
-  async deleteCategorySubscribe(
-    userNo: number,
-    updateData: UpdateCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      const { ctgrySbcrNo, useYn, delYn, } = updateData;
-
-      await this.prisma.ctgrySbcrMpng.update({
-        where: {
-          ctgrySbcrNo,
-          useYn: useYn || 'Y',
-          delYn: delYn || 'N',
-        },
-        data: {
-          useYn: 'N',
-          delYn: 'Y',
-          updtNo: userNo,
-          updtDt: timeToString(),
-          delNo: userNo,
-          delDt: timeToString(),
-        },
-      });
-
-      return {
-        successCnt: 1,
-        failCnt: 0,
-        failNoList: [],
-      };
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 카테고리 구독 번호로 카테고리 구독 삭제
-   * @param userNo 사용자 번호
    * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async deleteCategorySubscribeByCtgrySbcrNo(
+  async deleteCategorySubscribe(
     userNo: number,
     ctgrySbcrNo: number
   ): Promise<boolean> {
     try {
-      const result = await this.prisma.ctgrySbcrMpng.update({
+      const result = await this.prisma.ctgrySbcrMpng.updateMany({
         where: {
           ctgrySbcrNo,
           useYn: 'Y',
@@ -444,11 +409,7 @@ export class CategorySubscribeRepository {
         },
       });
 
-      if (result) {
-        return true;
-      }
-
-      return false;
+      return result.count === 1;
     }
     catch {
       return false;

@@ -8,7 +8,7 @@ import {
   UpdateSubscribeDto,
   type SearchSubscribeDto
 } from '@/dto/subscribe.dto';
-import type { MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { createError, createResponse } from '@/utils';
@@ -65,7 +65,7 @@ export class AdminSubscribeService {
    * @param sbcrNo 구독 번호
    */
   async adminDeleteUserSubscribe(adminNo: number, sbcrNo: number): Promise<ResponseDto<null>> {
-    const deletedSubscribe = await this.subscribeRepository.deleteUserSubscribeBySbcrNo(adminNo, sbcrNo);
+    const deletedSubscribe = await this.subscribeRepository.deleteUserSubscribe(adminNo, sbcrNo);
 
     if (!deletedSubscribe) {
       return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_DELETE_ERROR');

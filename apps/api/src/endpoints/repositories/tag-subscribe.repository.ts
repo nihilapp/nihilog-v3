@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectTagSbcrMpngListItemType,
   SelectTagSbcrMpngType
@@ -28,16 +28,22 @@ export class TagSubscribeRepository {
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'tagNm') && {
           tag: {
-            tagNm: {
-              contains: srchKywd,
+            is: {
+              tagNm: {
+                contains: srchKywd,
+              },
             },
           },
         },
         ...(srchKywd && srchType === 'userNm') && {
           subscription: {
-            user: {
-              userNm: {
-                contains: srchKywd,
+            is: {
+              user: {
+                is: {
+                  userNm: {
+                    contains: srchKywd,
+                  },
+                },
               },
             },
           },
@@ -62,12 +68,7 @@ export class TagSubscribeRepository {
           skip,
           take,
         }),
-        this.prisma.tagSbcrMpng.count({
-          where,
-          orderBy: {
-            tagSbcrNo: 'desc',
-          },
-        }),
+        this.prisma.tagSbcrMpng.count({ where, }),
       ]);
 
       return {
@@ -121,7 +122,9 @@ export class TagSubscribeRepository {
           sbcrNo,
           delYn: 'N',
           tag: {
-            delYn: 'N',
+            is: {
+              delYn: 'N',
+            },
           },
         },
         include: {
@@ -157,23 +160,33 @@ export class TagSubscribeRepository {
 
       const where = {
         subscription: {
-          user: {
-            userNo,
+          is: {
+            user: {
+              is: {
+                userNo,
+              },
+            },
           },
         },
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'tagNm') && {
           tag: {
-            tagNm: {
-              contains: srchKywd,
+            is: {
+              tagNm: {
+                contains: srchKywd,
+              },
             },
           },
         },
         ...(srchKywd && srchType === 'userNm') && {
           subscription: {
-            user: {
-              userNm: {
-                contains: srchKywd,
+            is: {
+              user: {
+                is: {
+                  userNm: {
+                    contains: srchKywd,
+                  },
+                },
               },
             },
           },
@@ -198,12 +211,7 @@ export class TagSubscribeRepository {
           skip,
           take,
         }),
-        this.prisma.tagSbcrMpng.count({
-          where,
-          orderBy: {
-            tagSbcrNo: 'desc',
-          },
-        }),
+        this.prisma.tagSbcrMpng.count({ where, }),
       ]);
 
       return {
@@ -233,22 +241,26 @@ export class TagSubscribeRepository {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
       const where = {
-        tag: {
-          tagNo,
-        },
+        tagNo,
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'tagNm') && {
           tag: {
-            tagNm: {
-              contains: srchKywd,
+            is: {
+              tagNm: {
+                contains: srchKywd,
+              },
             },
           },
         },
         ...(srchKywd && srchType === 'userNm') && {
           subscription: {
-            user: {
-              userNm: {
-                contains: srchKywd,
+            is: {
+              user: {
+                is: {
+                  userNm: {
+                    contains: srchKywd,
+                  },
+                },
               },
             },
           },
@@ -273,12 +285,7 @@ export class TagSubscribeRepository {
           skip,
           take,
         }),
-        this.prisma.tagSbcrMpng.count({
-          where,
-          orderBy: {
-            tagSbcrNo: 'desc',
-          },
-        }),
+        this.prisma.tagSbcrMpng.count({ where, }),
       ]);
 
       return {
@@ -335,7 +342,7 @@ export class TagSubscribeRepository {
   async multipleCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<TagSbcrMpng[] | null> {
+  ): Promise<MultipleResultType | null> {
     try {
       const { tagNoList, sbcrNo, } = createData;
 
@@ -363,9 +370,16 @@ export class TagSubscribeRepository {
             updtNo: userNo,
             updtDt: timeToString(),
           },
+          select: {
+            tagSbcrNo: true,
+          },
         })));
 
-      return subscribeList;
+      return {
+        successCnt: subscribeList.length,
+        failCnt: tagNoList.length - subscribeList.length,
+        failNoList: [],
+      };
     }
     catch {
       return null;
@@ -449,53 +463,14 @@ export class TagSubscribeRepository {
   /**
    * @description 태그 구독 삭제
    * @param userNo 사용자 번호
-   * @param updateData 태그 구독 삭제 데이터
-   */
-  async deleteTagSubscribe(
-    userNo: number,
-    updateData: UpdateTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      const { tagSbcrNo, useYn, delYn, } = updateData;
-
-      await this.prisma.tagSbcrMpng.update({
-        where: {
-          tagSbcrNo,
-          useYn: useYn || 'Y',
-          delYn: delYn || 'N',
-        },
-        data: {
-          useYn: 'N',
-          delYn: 'Y',
-          updtNo: userNo,
-          updtDt: timeToString(),
-          delNo: userNo,
-          delDt: timeToString(),
-        },
-      });
-
-      return {
-        successCnt: 1,
-        failCnt: 0,
-        failNoList: [],
-      };
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 태그 구독 번호로 태그 구독 삭제
-   * @param userNo 사용자 번호
    * @param tagSbcrNo 태그 구독 번호
    */
-  async deleteTagSubscribeByTagSbcrNo(
+  async deleteTagSubscribe(
     userNo: number,
     tagSbcrNo: number
   ): Promise<boolean> {
     try {
-      const result = await this.prisma.tagSbcrMpng.update({
+      const result = await this.prisma.tagSbcrMpng.updateMany({
         where: {
           tagSbcrNo,
           useYn: 'Y',
@@ -511,11 +486,7 @@ export class TagSubscribeRepository {
         },
       });
 
-      if (result) {
-        return true;
-      }
-
-      return false;
+      return result.count === 1;
     }
     catch {
       return false;

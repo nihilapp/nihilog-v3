@@ -12,15 +12,14 @@ import type { AuthRequest, ListDto } from '@/dto';
 import {
   CategorySubscribeDto,
   CreateCategorySubscribeDto,
-  MultipleCreateCategorySubscribeDto,
-  MultipleDeleteCategorySubscribeDto,
-  MultipleUpdateCategorySubscribeDto,
+  DeleteCategorySubscribeDto,
   SearchCategorySubscribeDto,
   UpdateCategorySubscribeDto
 } from '@/dto/category-subscribe.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { AdminCategorySubscribeService } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
 
@@ -201,7 +200,7 @@ export class AdminCategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 카테고리 구독 생성 정보', MultipleCreateCategorySubscribeDto, ],
+      body: [ '다수 카테고리 구독 생성 정보', CreateCategorySubscribeDto, ],
       responses: [
         [
           '다수 카테고리 구독 생성 성공',
@@ -221,8 +220,8 @@ export class AdminCategorySubscribeController {
   })
   async adminMultipleCreateCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() createData: MultipleCreateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+    @Body() createData: CreateCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -289,7 +288,7 @@ export class AdminCategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 카테고리 구독 수정 정보', MultipleUpdateCategorySubscribeDto, ],
+      body: [ '다수 카테고리 구독 수정 정보', UpdateCategorySubscribeDto, ],
       responses: [
         [
           '다수 카테고리 구독 수정 성공',
@@ -313,8 +312,8 @@ export class AdminCategorySubscribeController {
   })
   async adminMultipleUpdateCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() updateData: MultipleUpdateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+    @Body() updateData: UpdateCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -353,8 +352,8 @@ export class AdminCategorySubscribeController {
   })
   async adminDeleteCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<null>> {
+    @Body() updateData: DeleteCategorySubscribeDto
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -375,7 +374,7 @@ export class AdminCategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 카테고리 구독 삭제 정보', MultipleDeleteCategorySubscribeDto, ],
+      body: [ '다수 카테고리 구독 삭제 정보', DeleteCategorySubscribeDto, ],
       responses: [
         [
           '다수 카테고리 구독 삭제 성공',
@@ -400,8 +399,8 @@ export class AdminCategorySubscribeController {
   })
   async adminMultipleDeleteCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() deleteData: MultipleDeleteCategorySubscribeDto
-  ): Promise<ResponseDto<null>> {
+    @Body() deleteData: DeleteCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }

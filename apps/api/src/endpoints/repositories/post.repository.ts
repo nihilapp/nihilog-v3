@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { MutationResponseDto } from '@/dto/response.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectPostInfoListItemType,
   SelectPostInfoType
@@ -25,10 +25,11 @@ export class PostRepository {
    */
   async getPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
         delYn: delYn || 'N',
+        rlsYn: rlsYn || 'Y',
         ...(srchKywd && srchType && {
           [ srchType ]: {
             contains: srchKywd,
@@ -46,7 +47,7 @@ export class PostRepository {
           skip,
           take,
         }),
-        this.prisma.pstInfo.count({ where, orderBy: { pstNo: 'desc', }, }),
+        this.prisma.pstInfo.count({ where, }),
       ]);
 
       return {
@@ -107,10 +108,11 @@ export class PostRepository {
     searchData: SearchPostDto
   ): Promise<ListType<SelectPostInfoListItemType>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
         delYn: delYn || 'N',
+        rlsYn: rlsYn || 'Y',
         ...(srchKywd && srchType && {
           [ srchType ]: {
             contains: srchKywd,
@@ -161,11 +163,12 @@ export class PostRepository {
     searchData: SearchPostDto
   ): Promise<ListType<SelectPostInfoListItemType>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
         ctgryNo,
         delYn: delYn || 'N',
+        rlsYn: rlsYn || 'Y',
         ...(srchKywd && srchType && {
           [ srchType ]: {
             contains: srchKywd,
@@ -213,10 +216,11 @@ export class PostRepository {
     searchData: SearchPostDto
   ): Promise<ListType<SelectPostInfoListItemType>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
         delYn: delYn || 'N',
+        rlsYn: rlsYn || 'Y',
         publDt: {
           startsWith: date,
         },
@@ -390,7 +394,7 @@ export class PostRepository {
 
       const [ list, totalCnt, ] = await this.prisma.$transaction([
         this.prisma.pstInfo.findMany({ where, orderBy: orderByClause, skip, take, }),
-        this.prisma.pstInfo.count({ where, orderBy: { pstNo: 'desc', }, }),
+        this.prisma.pstInfo.count({ where, }),
       ]);
 
       return {
@@ -430,7 +434,7 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param updateData 게시글 일괄 수정 데이터
    */
-  multipleUpdatePost(_userNo: number, _updateData: UpdatePostDto): Promise<SelectPostInfoType[] | null> {
+  multipleUpdatePost(_userNo: number, _updateData: UpdatePostDto): Promise<MultipleResultType | null> {
     // TODO: 다수 게시글 일괄 수정 구현
     return Promise.resolve(null);
   }
@@ -440,9 +444,9 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param deleteData 게시글 삭제 데이터
    */
-  deletePost(_userNo: number, _deleteData: DeletePostDto): Promise<MutationResponseDto | null> {
+  deletePost(_userNo: number, _deleteData: DeletePostDto): Promise<boolean> {
     // TODO: 게시글 삭제 구현
-    return Promise.resolve(null);
+    return Promise.resolve(false);
   }
 
   /**
@@ -450,7 +454,7 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param deleteData 게시글 일괄 삭제 데이터
    */
-  multipleDeletePost(_userNo: number, _deleteData: DeletePostDto): Promise<MutationResponseDto | null> {
+  multipleDeletePost(_userNo: number, _deleteData: DeletePostDto): Promise<MultipleResultType | null> {
     // TODO: 다수 게시글 일괄 삭제 구현
     return Promise.resolve(null);
   }

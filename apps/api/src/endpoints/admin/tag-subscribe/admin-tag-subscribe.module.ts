@@ -5,8 +5,8 @@ import { AdminTagSubscribeService } from '@/endpoints/admin/tag-subscribe/admin-
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 
 @Module({
-  controllers: [AdminTagSubscribeController],
-  providers: [AdminTagSubscribeService, TagSubscribeRepository],
-  exports: [AdminTagSubscribeService],
+  controllers: [ AdminTagSubscribeController, ],
+  providers: [ AdminTagSubscribeService, TagSubscribeRepository, ],
+  exports: [ AdminTagSubscribeService, ],
 })
 export class AdminTagSubscribeModule {}

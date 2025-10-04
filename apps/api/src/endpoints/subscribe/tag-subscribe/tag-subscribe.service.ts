@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, TagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import type { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { createError, createResponse } from '@/utils';
@@ -71,7 +71,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
    */
-  async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<TagSbcrMpng[]>> {
+  async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<MultipleResultType>> {
     const createSubscribe = await this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
 
     if (!createSubscribe) {
@@ -116,7 +116,7 @@ export class TagSubscribeService {
    * @param tagSbcrNo 태그 구독 번호
    */
   async deleteTagSubscribe(userNo: number, tagSbcrNo: number): Promise<ResponseDto<boolean>> {
-    const deleteSubscribe = await this.tagSubscribeRepository.deleteTagSubscribeByTagSbcrNo(userNo, tagSbcrNo);
+    const deleteSubscribe = await this.tagSubscribeRepository.deleteTagSubscribe(userNo, tagSbcrNo);
 
     if (!deleteSubscribe) {
       return createError(

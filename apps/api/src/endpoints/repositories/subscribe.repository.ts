@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto } from '@/dto/subscribe.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
@@ -90,15 +90,19 @@ export class SubscribeRepository {
         delYn: delYn || 'N',
         ...(srchKywd && (srchType === 'userNm') && {
           user: {
-            userNm: {
-              contains: srchKywd,
+            is: {
+              userNm: {
+                contains: srchKywd,
+              },
             },
           },
         }),
         ...(srchKywd && (srchType === 'emlAddr') && {
           user: {
-            emlAddr: {
-              contains: srchKywd,
+            is: {
+              emlAddr: {
+                contains: srchKywd,
+              },
             },
           },
         }),
@@ -215,12 +219,12 @@ export class SubscribeRepository {
           updtDt: timeToString(),
         },
         select: {
-          sbcrNo: true,
+          userNo: true,
         },
       });
 
       const failNoList = userNoList
-        .filter((item) => !result.some((resultItem) => resultItem.sbcrNo === item));
+        .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
       return {
         successCnt: result.length,
@@ -238,7 +242,7 @@ export class SubscribeRepository {
    * @param adminNo 관리자 번호
    * @param sbcrNo 구독 번호
    */
-  async deleteUserSubscribeBySbcrNo(
+  async deleteUserSubscribe(
     adminNo: number,
     sbcrNo: number
   ): Promise<boolean> {
@@ -297,12 +301,12 @@ export class SubscribeRepository {
           delDt: timeToString(),
         },
         select: {
-          sbcrNo: true,
+          userNo: true,
         },
       });
 
       const failNoList = userNoList
-        .filter((item) => !result.some((resultItem) => resultItem.sbcrNo === item));
+        .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
       return {
         successCnt: result.length,
