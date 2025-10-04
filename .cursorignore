@@ -1,19 +1,19 @@
-# Dependencies
+# Node modules
 node_modules
 
 # Prisma generated client
 **/prisma/client
-
-# Environment files
-.env
-.env.local
-.env.*.local
 
 # Build outputs
 dist
 build
 .next
 out
+
+# Environment files
+.env
+.env.local
+.env.*.local
 
 # Logs
 *.log
@@ -31,3 +31,4 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
