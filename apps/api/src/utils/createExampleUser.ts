@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { UserInfoType } from '@/endpoints/drizzle/schemas/user.schema';
+import { UserInfoType } from '@/endpoints/prisma/schemas/user.schema';
 
 import { timeToString } from './timeHelper';
 

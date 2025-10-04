@@ -1,102 +1,82 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, eq, inArray, sql } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-import type { TagSubscribeDto, CreateTagSubscribeDto, MultipleCreateTagSubscribeDto, MultipleDeleteTagSubscribeDto, MultipleUpdateTagSubscribeDto, SearchTagSubscribeDto, TagSubscribeItemDto, UpdateTagSubscribeDto } from '@/dto';
-import type { ListDto, MutationResponseDto } from '@/dto/response.dto';
-import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
-import { schemas } from '@/endpoints/drizzle/schemas';
-import { ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
-import { likes } from '@/utils/ormHelper';
+import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
+import { PRISMA } from '@/endpoints/prisma/prisma.module';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type {
+  SelectTagSbcrMpngListItemType,
+  SelectTagSbcrMpngType
+} from '@/endpoints/prisma/types/tag-subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
-import { isEmptyString } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
-
-const { tagSbcrMpng, tagInfo, userSbcrInfo, } = schemas;
-
-const select = {
-  rowNo: sql<number>`row_number() over (order by ${tagSbcrMpng.tagSbcrNo} desc)`.as('rowNo'),
-  totalCnt: sql<number>`count(1) over ()`.as('totalCnt'),
-  tagSbcrNo: tagSbcrMpng.tagSbcrNo,
-  tagNo: tagSbcrMpng.tagNo,
-  sbcrNo: tagSbcrMpng.sbcrNo,
-  delYn: tagSbcrMpng.delYn,
-  useYn: tagSbcrMpng.useYn,
-  crtNo: tagSbcrMpng.crtNo,
-  crtDt: tagSbcrMpng.crtDt,
-  updtNo: tagSbcrMpng.updtNo,
-  updtDt: tagSbcrMpng.updtDt,
-  delNo: tagSbcrMpng.delNo,
-  delDt: tagSbcrMpng.delDt,
-};
-
-const selectWithJoin = {
-  rowNo: sql<number>`row_number() over (order by ${tagSbcrMpng.tagSbcrNo} desc)`.as('rowNo'),
-  totalCnt: sql<number>`count(1) over ()`.as('totalCnt'),
-  tagSbcrNo: tagSbcrMpng.tagSbcrNo,
-  tagNo: tagSbcrMpng.tagNo,
-  sbcrNo: tagSbcrMpng.sbcrNo,
-  tagNm: tagInfo.tagNm,
-  delYn: tagSbcrMpng.delYn,
-  useYn: tagSbcrMpng.useYn,
-  crtNo: tagSbcrMpng.crtNo,
-  crtDt: tagSbcrMpng.crtDt,
-  updtNo: tagSbcrMpng.updtNo,
-  updtDt: tagSbcrMpng.updtDt,
-  delNo: tagSbcrMpng.delNo,
-  delDt: tagSbcrMpng.delDt,
-} as const;
+import { PrismaClient, type TagSbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class TagSubscribeRepository {
-  constructor(@Inject(DRIZZLE)
-  private readonly db: NodePgDatabase<typeof schemas>) { }
+  constructor(@Inject(PRISMA)
+  private readonly prisma: PrismaClient) { }
 
   /**
    * @description 태그 구독 전체 이력 조회
    * @param searchData 검색 데이터
    */
-  async getTagSubscribeList(searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListDto<TagSubscribeDto>> {
+  async getTagSubscribeList(searchData: SearchTagSubscribeDto): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, sbcrNo, tagNo, tagSbcrNoList, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-      const searchConditions: Record<string, string> = {};
-      if (!isEmptyString(srchKywd) && srchType) {
-        searchConditions[srchType] = srchKywd;
-      }
+      const where = {
+        delYn: delYn || 'N',
+        ...(srchKywd && srchType === 'tagNm') && {
+          tag: {
+            tagNm: {
+              contains: srchKywd,
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'userNm') && {
+          subscription: {
+            user: {
+              userNm: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
+      };
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
 
-      const whereConditions = [
-        ...likes(tagSbcrMpng, searchConditions),
-        eq(tagSbcrMpng.delYn, delYn || 'N'),
-      ];
-
-      if (sbcrNo) {
-        whereConditions.push(eq(tagSbcrMpng.sbcrNo, sbcrNo));
-      }
-
-      if (tagNo) {
-        whereConditions.push(eq(tagSbcrMpng.tagNo, tagNo));
-      }
-
-      if (tagSbcrNoList && tagSbcrNoList.length > 0) {
-        whereConditions.push(inArray(tagSbcrMpng.tagSbcrNo, tagSbcrNoList));
-      }
-
-      const list = await this.db
-        .select(selectWithJoin)
-        .from(tagSbcrMpng)
-        .innerJoin(
-          tagInfo,
-          eq(tagSbcrMpng.tagNo, tagInfo.tagNo)
-        )
-        .where(and(...whereConditions))
-        .orderBy(asc(selectWithJoin.rowNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.tagSbcrMpng.findMany({
+          where,
+          include: {
+            tag: {
+              select: {
+                tagNm: true,
+              },
+            },
+          },
+          orderBy: {
+            tagSbcrNo: 'desc',
+          },
+          skip,
+          take,
+        }),
+        this.prisma.tagSbcrMpng.count({
+          where,
+          orderBy: {
+            tagSbcrNo: 'desc',
+          },
+        }),
+      ]);
 
       return {
-        list: list ?? [],
-        totalCnt: list?.[0]?.totalCnt ?? 0,
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
       };
     }
     catch {
@@ -108,16 +88,20 @@ export class TagSubscribeRepository {
    * @description 태그 구독 번호로 태그 구독 조회
    * @param tagSbcrNo 태그 구독 번호
    */
-  async getTagSubscribeByTagSbcrNo(tagSbcrNo: number): Promise<TagSubscribeDto | null> {
+  async getTagSubscribeByTagSbcrNo(tagSbcrNo: number): Promise<SelectTagSbcrMpngType | null> {
     try {
-      const [ subscribe, ] = await this.db
-        .select(selectWithJoin)
-        .from(tagSbcrMpng)
-        .innerJoin(
-          tagInfo,
-          eq(tagSbcrMpng.tagNo, tagInfo.tagNo)
-        )
-        .where(eq(tagSbcrMpng.tagSbcrNo, tagSbcrNo));
+      const subscribe = await this.prisma.tagSbcrMpng.findUnique({
+        where: {
+          tagSbcrNo,
+        },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
+        },
+      });
 
       return subscribe;
     }
@@ -130,29 +114,27 @@ export class TagSubscribeRepository {
    * @description 구독 태그 목록 조회
    * @param sbcrNo 구독 번호
    */
-  async getTagSubscribeItemListBySbcrNo(sbcrNo: number): Promise<TagSubscribeItemDto[]> {
+  async getTagSubscribeItemListBySbcrNo(sbcrNo: number): Promise<SelectTagSbcrMpngType[]> {
     try {
-      const itemList = await this.db
-        .select({
-          tagNo: tagSbcrMpng.tagNo,
-          tagNm: tagInfo.tagNm,
-        })
-        .from(tagSbcrMpng)
-        .innerJoin(tagInfo, and(
-          eq(
-            tagSbcrMpng.tagNo,
-            tagInfo.tagNo
-          ),
-          eq(tagInfo.delYn, 'N')
-        ))
-        .where(and(
-          eq(
-            tagSbcrMpng.sbcrNo,
-            sbcrNo
-          ),
-          eq(tagSbcrMpng.delYn, 'N')
-        ))
-        .orderBy(asc(tagSbcrMpng.tagNo));
+      const itemList = await this.prisma.tagSbcrMpng.findMany({
+        where: {
+          sbcrNo,
+          delYn: 'N',
+          tag: {
+            delYn: 'N',
+          },
+        },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
+        },
+        orderBy: {
+          tagNo: 'asc',
+        },
+      });
 
       return itemList;
     }
@@ -168,41 +150,69 @@ export class TagSubscribeRepository {
    */
   async getTagSubscribeByUserNo(
     userNo: number,
-    searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>
-  ): Promise<ListDto<TagSubscribeDto>> {
+    searchData: SearchTagSubscribeDto
+  ): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-      const searchConditions: Record<string, string> = {};
-      if (!isEmptyString(srchKywd) && srchType) {
-        searchConditions[srchType] = srchKywd;
-      }
+      const where = {
+        subscription: {
+          user: {
+            userNo,
+          },
+        },
+        delYn: delYn || 'N',
+        ...(srchKywd && srchType === 'tagNm') && {
+          tag: {
+            tagNm: {
+              contains: srchKywd,
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'userNm') && {
+          subscription: {
+            user: {
+              userNm: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
+      };
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
 
-      const whereConditions = [
-        ...likes(tagSbcrMpng, searchConditions),
-        eq(userSbcrInfo.userNo, userNo),
-        eq(tagSbcrMpng.delYn, delYn || 'N'),
-      ];
-
-      const list = await this.db
-        .select(selectWithJoin)
-        .from(tagSbcrMpng)
-        .innerJoin(
-          tagInfo,
-          eq(tagSbcrMpng.tagNo, tagInfo.tagNo)
-        )
-        .innerJoin(
-          userSbcrInfo,
-          eq(tagSbcrMpng.sbcrNo, userSbcrInfo.sbcrNo)
-        )
-        .where(and(...whereConditions))
-        .orderBy(asc(select.rowNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.tagSbcrMpng.findMany({
+          where,
+          include: {
+            tag: {
+              select: {
+                tagNm: true,
+              },
+            },
+          },
+          orderBy: {
+            tagSbcrNo: 'desc',
+          },
+          skip,
+          take,
+        }),
+        this.prisma.tagSbcrMpng.count({
+          where,
+          orderBy: {
+            tagSbcrNo: 'desc',
+          },
+        }),
+      ]);
 
       return {
-        list: list ?? [],
-        totalCnt: list?.[0]?.totalCnt ?? 0,
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
       };
     }
     catch {
@@ -217,37 +227,67 @@ export class TagSubscribeRepository {
    */
   async getTagSubscribeByTagNo(
     tagNo: number,
-    searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>
-  ): Promise<ListDto<TagSubscribeDto>> {
+    searchData: SearchTagSubscribeDto
+  ): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-      const searchConditions: Record<string, string> = {};
-      if (!isEmptyString(srchKywd) && srchType) {
-        searchConditions[srchType] = srchKywd;
-      }
+      const where = {
+        tag: {
+          tagNo,
+        },
+        delYn: delYn || 'N',
+        ...(srchKywd && srchType === 'tagNm') && {
+          tag: {
+            tagNm: {
+              contains: srchKywd,
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'userNm') && {
+          subscription: {
+            user: {
+              userNm: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
+      };
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
 
-      const whereConditions = [
-        ...likes(tagSbcrMpng, searchConditions),
-        eq(tagSbcrMpng.tagNo, tagNo),
-        eq(tagSbcrMpng.delYn, delYn || 'N'),
-      ];
-
-      const list = await this.db
-        .select(selectWithJoin)
-        .from(tagSbcrMpng)
-        .innerJoin(
-          tagInfo,
-          eq(tagSbcrMpng.tagNo, tagInfo.tagNo)
-        )
-        .where(and(...whereConditions))
-        .orderBy(asc(select.rowNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.tagSbcrMpng.findMany({
+          where,
+          include: {
+            tag: {
+              select: {
+                tagNm: true,
+              },
+            },
+          },
+          orderBy: {
+            tagSbcrNo: 'desc',
+          },
+          skip,
+          take,
+        }),
+        this.prisma.tagSbcrMpng.count({
+          where,
+          orderBy: {
+            tagSbcrNo: 'desc',
+          },
+        }),
+      ]);
 
       return {
-        list: list ?? [],
-        totalCnt: list?.[0]?.totalCnt ?? 0,
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
       };
     }
     catch {
@@ -263,23 +303,22 @@ export class TagSubscribeRepository {
   async createTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<TagSubscribeDto | null> {
+  ): Promise<TagSbcrMpng | null> {
     try {
-      const { sbcrNo, tagNo, } = createData;
+      const { tagNo, sbcrNo, } = createData;
 
-      const [ createSubscribe, ] = await this.db
-        .insert(tagSbcrMpng)
-        .values({
+      const createSubscribe = await this.prisma.tagSbcrMpng.create({
+        data: {
           sbcrNo,
           tagNo,
-          useYn: ynEnumSchema.enum.Y,
-          delYn: ynEnumSchema.enum.N,
+          useYn: 'Y',
+          delYn: 'N',
           crtNo: userNo,
           crtDt: timeToString(),
           updtNo: userNo,
           updtDt: timeToString(),
-        })
-        .returning(select);
+        },
+      });
 
       return createSubscribe;
     }
@@ -295,35 +334,36 @@ export class TagSubscribeRepository {
    */
   async multipleCreateTagSubscribe(
     userNo: number,
-    createData: MultipleCreateTagSubscribeDto
-  ): Promise<TagSubscribeDto[] | null> {
+    createData: CreateTagSubscribeDto
+  ): Promise<TagSbcrMpng[] | null> {
     try {
-      const { sbcrNo, tagNoList, } = createData;
+      const { tagNoList, sbcrNo, } = createData;
 
-      const subscribeList = await this.db.transaction(async (context) => {
-        return await context
-          .insert(tagSbcrMpng)
-          .values(tagNoList.map((item) => ({
+      const subscribeList = await this.prisma.$transaction(tagNoList.map((tagNo) =>
+        this.prisma.tagSbcrMpng.upsert({
+          where: {
+            sbcrNo_tagNo: {
+              sbcrNo,
+              tagNo,
+            },
+          },
+          create: {
             sbcrNo,
-            tagNo: item,
-            useYn: ynEnumSchema.enum.Y,
-            delYn: ynEnumSchema.enum.N,
+            tagNo,
+            useYn: 'Y',
+            delYn: 'N',
             crtNo: userNo,
             crtDt: timeToString(),
             updtNo: userNo,
             updtDt: timeToString(),
-          })))
-          .onConflictDoUpdate({
-            target: [ tagSbcrMpng.sbcrNo, tagSbcrMpng.tagNo, ],
-            set: {
-              useYn: ynEnumSchema.enum.Y,
-              delYn: ynEnumSchema.enum.N,
-              updtNo: userNo,
-              updtDt: timeToString(),
-            },
-          })
-          .returning(select);
-      });
+          },
+          update: {
+            useYn: 'Y',
+            delYn: 'N',
+            updtNo: userNo,
+            updtDt: timeToString(),
+          },
+        })));
 
       return subscribeList;
     }
@@ -340,20 +380,21 @@ export class TagSubscribeRepository {
   async updateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<TagSubscribeDto | null> {
+  ): Promise<TagSbcrMpng | null> {
     try {
       const { tagSbcrNo, useYn, delYn, } = updateData;
 
-      const [ updateSubscribe, ] = await this.db
-        .update(tagSbcrMpng)
-        .set({
+      const updateSubscribe = await this.prisma.tagSbcrMpng.update({
+        where: {
+          tagSbcrNo,
+        },
+        data: {
           useYn,
           delYn,
           updtNo: userNo,
           updtDt: timeToString(),
-        })
-        .where(eq(tagSbcrMpng.tagSbcrNo, tagSbcrNo))
-        .returning(select);
+        },
+      });
 
       return updateSubscribe;
     }
@@ -369,28 +410,36 @@ export class TagSubscribeRepository {
    */
   async multipleUpdateTagSubscribe(
     userNo: number,
-    updateData: MultipleUpdateTagSubscribeDto
-  ): Promise<TagSubscribeDto[] | null> {
+    updateData: UpdateTagSubscribeDto
+  ): Promise<MultipleResultType | null> {
     try {
-      const { sbcrNo, useYn, delYn, tagSbcrNoList, } = updateData;
+      const { useYn, delYn, tagSbcrNoList, sbcrNo, } = updateData;
 
-      const subscribeList = await this.db.transaction(async (context) => {
-        return await context
-          .update(tagSbcrMpng)
-          .set({
-            useYn,
+      const result = await this.prisma.tagSbcrMpng.updateMany({
+        where: {
+          sbcrNo,
+          tagSbcrNo: {
+            in: tagSbcrNoList,
+          },
+        },
+        data: {
+          useYn,
+          delYn: delYn || 'N',
+          updtNo: userNo,
+          updtDt: timeToString(),
+          ...(delYn && {
             delYn,
-            updtNo: userNo,
-            updtDt: timeToString(),
-          })
-          .where(and(
-            eq(tagSbcrMpng.sbcrNo, sbcrNo),
-            inArray(tagSbcrMpng.tagSbcrNo, tagSbcrNoList)
-          ))
-          .returning(select);
+            delNo: userNo,
+            delDt: timeToString(),
+          }),
+        },
       });
 
-      return subscribeList;
+      return {
+        successCnt: result.count,
+        failCnt: tagSbcrNoList.length - result.count,
+        failNoList: [],
+      };
     }
     catch {
       return null;
@@ -405,31 +454,30 @@ export class TagSubscribeRepository {
   async deleteTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<MutationResponseDto | null> {
+  ): Promise<MultipleResultType | null> {
     try {
       const { tagSbcrNo, useYn, delYn, } = updateData;
 
-      const deletedRow = await this.db
-        .update(tagSbcrMpng)
-        .set({
-          useYn: ynEnumSchema.enum.N,
-          delYn: ynEnumSchema.enum.Y,
+      await this.prisma.tagSbcrMpng.update({
+        where: {
+          tagSbcrNo,
+          useYn: useYn || 'Y',
+          delYn: delYn || 'N',
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
           updtNo: userNo,
           updtDt: timeToString(),
           delNo: userNo,
           delDt: timeToString(),
-        })
-        .where(and(
-          eq(tagSbcrMpng.tagSbcrNo, tagSbcrNo),
-          eq(tagSbcrMpng.useYn, useYn || ynEnumSchema.enum.Y),
-          eq(tagSbcrMpng.delYn, delYn || ynEnumSchema.enum.N)
-        ));
+        },
+      });
 
       return {
-        rowsAffected: deletedRow.rowCount || 0,
-        affectedRows: deletedRow.rowCount
-          ? [ tagSbcrNo, ]
-          : [],
+        successCnt: 1,
+        failCnt: 0,
+        failNoList: [],
       };
     }
     catch {
@@ -445,33 +493,32 @@ export class TagSubscribeRepository {
   async deleteTagSubscribeByTagSbcrNo(
     userNo: number,
     tagSbcrNo: number
-  ): Promise<MutationResponseDto | null> {
+  ): Promise<boolean> {
     try {
-      const deletedRow = await this.db
-        .update(tagSbcrMpng)
-        .set({
-          useYn: ynEnumSchema.enum.N,
-          delYn: ynEnumSchema.enum.Y,
+      const result = await this.prisma.tagSbcrMpng.update({
+        where: {
+          tagSbcrNo,
+          useYn: 'Y',
+          delYn: 'N',
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
           updtNo: userNo,
           updtDt: timeToString(),
           delNo: userNo,
           delDt: timeToString(),
-        })
-        .where(and(
-          eq(tagSbcrMpng.tagSbcrNo, tagSbcrNo),
-          eq(tagSbcrMpng.useYn, ynEnumSchema.enum.Y),
-          eq(tagSbcrMpng.delYn, ynEnumSchema.enum.N)
-        ));
+        },
+      });
 
-      return {
-        rowsAffected: deletedRow.rowCount || 0,
-        affectedRows: deletedRow.rowCount
-          ? [ tagSbcrNo, ]
-          : [],
-      };
+      if (result) {
+        return true;
+      }
+
+      return false;
     }
     catch {
-      return null;
+      return false;
     }
   }
 
@@ -482,30 +529,36 @@ export class TagSubscribeRepository {
    */
   async multipleDeleteTagSubscribe(
     userNo: number,
-    updateData: MultipleDeleteTagSubscribeDto
-  ): Promise<MutationResponseDto | null> {
+    updateData: DeleteTagSubscribeDto
+  ): Promise<MultipleResultType | null> {
     try {
       const { tagSbcrNoList, } = updateData;
 
-      const deletedRows = await this.db.transaction((context) => {
-        return context
-          .update(tagSbcrMpng)
-          .set({
-            useYn: ynEnumSchema.enum.N,
-            delYn: ynEnumSchema.enum.Y,
-            updtNo: userNo,
-            updtDt: timeToString(),
-            delNo: userNo,
-            delDt: timeToString(),
-          })
-          .where(inArray(tagSbcrMpng.tagSbcrNo, tagSbcrNoList));
+      const result = await this.prisma.tagSbcrMpng.updateManyAndReturn({
+        where: {
+          tagSbcrNo: {
+            in: tagSbcrNoList,
+          },
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
+          updtNo: userNo,
+          updtDt: timeToString(),
+          delNo: userNo,
+          delDt: timeToString(),
+        },
+        select: {
+          tagSbcrNo: true,
+        },
       });
 
+      const failNoList = tagSbcrNoList.filter((item) => !result.some((resultItem) => resultItem.tagSbcrNo === item));
+
       return {
-        rowsAffected: deletedRows.rowCount || 0,
-        affectedRows: deletedRows.rowCount
-          ? tagSbcrNoList
-          : [],
+        successCnt: result.length,
+        failCnt: tagSbcrNoList.length - result.length,
+        failNoList,
       };
     }
     catch {

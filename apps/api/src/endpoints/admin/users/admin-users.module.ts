@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 
 import { AdminUserController } from './admin-users.controller';
 import { AdminUserService } from './admin-users.service';
 
 @Module({
-  imports: [ DrizzleModule, ],
+  imports: [ PrismaModule, ],
   providers: [ AdminUserService, UserRepository, ],
   controllers: [ AdminUserController, ],
   exports: [ AdminUserService, ],

@@ -11,7 +11,7 @@ import { Throttle } from '@nestjs/throttler';
 
 import { MESSAGE_CODE, RESPONSE_CODE } from '@/code';
 import { RoleAuthGuard, Roles } from '@/endpoints/auth/role-auth.guard';
-import { UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
+import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 
 // ParamConfig를 튜플로 변경
 type ParamConfig = [

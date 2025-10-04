@@ -1,0 +1,363 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["nihilog"]
+}
+
+// 사용자 권한 enum
+enum UserRole {
+  ADMIN
+  USER
+
+  @@schema("nihilog")
+}
+
+// Y/N 상태 enum
+enum YnStatus {
+  Y
+  N
+
+  @@schema("nihilog")
+}
+
+// 포스트 상태 enum
+enum PostStatus {
+  EMPTY
+  WRITING
+  FINISHED
+
+  @@schema("nihilog")
+}
+
+// 댓글 상태 enum
+enum CommentStatus {
+  ACTIVE
+  HIDDEN
+  DELETED
+
+  @@schema("nihilog")
+}
+
+// 사용자 기본 정보 테이블
+model UserInfo {
+  userNo        Int      @id @default(autoincrement()) @map("user_no")
+  emlAddr       String   @unique @map("eml_addr")
+  userNm        String   @unique @map("user_nm")
+  userRole      UserRole @default(USER) @map("user_role")
+  proflImg      String?  @map("profl_img")
+  userBiogp     String?  @map("user_biogp")
+  encptPswd     String   @map("encpt_pswd")
+  reshToken     String?  @map("resh_token")
+  useYn         YnStatus @default(Y) @map("use_yn")
+  delYn         YnStatus @default(N) @map("del_yn")
+  lastLgnDt     String?  @map("last_lgn_dt")
+  lastPswdChgDt String?  @map("last_pswd_chg_dt")
+  crtNo         Int?     @map("crt_no")
+  crtDt         String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo        Int?     @map("updt_no")
+  updtDt        String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo         Int?     @map("del_no")
+  delDt         String?  @map("del_dt")
+
+  // Relations
+  createdCategories         CtgryInfo[]     @relation("CategoryCreator")
+  updatedCategories         CtgryInfo[]     @relation("CategoryUpdater")
+  deletedCategories         CtgryInfo[]     @relation("CategoryDeleter")
+  createdTags               TagInfo[]       @relation("TagCreator")
+  updatedTags               TagInfo[]       @relation("TagUpdater")
+  deletedTags               TagInfo[]       @relation("TagDeleter")
+  createdPosts              PstInfo[]       @relation("PostCreator")
+  updatedPosts              PstInfo[]       @relation("PostUpdater")
+  deletedPosts              PstInfo[]       @relation("PostDeleter")
+  createdComments           CmntInfo[]      @relation("CommentCreator")
+  updatedComments           CmntInfo[]      @relation("CommentUpdater")
+  deletedComments           CmntInfo[]      @relation("CommentDeleter")
+  // 사용자의 직접 구독 매핑은 UserSbcrInfo를 통해 참조합니다.
+  subscriptionSettings      UserSbcrInfo?
+  createdCtgrySubscriptions CtgrySbcrMpng[] @relation("CtgrySbcrCreator")
+  updatedCtgrySubscriptions CtgrySbcrMpng[] @relation("CtgrySbcrUpdater")
+  deletedCtgrySubscriptions CtgrySbcrMpng[] @relation("CtgrySbcrDeleter")
+  createdTagSubscriptions   TagSbcrMpng[]   @relation("TagSbcrCreator")
+  updatedTagSubscriptions   TagSbcrMpng[]   @relation("TagSbcrUpdater")
+  deletedTagSubscriptions   TagSbcrMpng[]   @relation("TagSbcrDeleter")
+  createdUserSubscriptions  UserSbcrInfo[]  @relation("UserSbcrCreator")
+  updatedUserSubscriptions  UserSbcrInfo[]  @relation("UserSbcrUpdater")
+  deletedUserSubscriptions  UserSbcrInfo[]  @relation("UserSbcrDeleter")
+  createdPostTags           PstTagMpng[]    @relation("PstTagCreator")
+  updatedPostTags           PstTagMpng[]    @relation("PstTagUpdater")
+  deletedPostTags           PstTagMpng[]    @relation("PstTagDeleter")
+
+  @@map("user_info")
+  @@schema("nihilog")
+}
+
+// 카테고리 정보 테이블
+model CtgryInfo {
+  ctgryNo    Int      @id @default(autoincrement()) @map("ctgry_no")
+  ctgryNm    String   @unique @map("ctgry_nm")
+  ctgryExpln String?  @map("ctgry_expln")
+  ctgryColr  String?  @map("ctgry_colr")
+  ctgryStp   Int      @default(0) @map("ctgry_stp")
+  upCtgryNo  Int?     @map("up_ctgry_no")
+  useYn      YnStatus @default(Y) @map("use_yn")
+  delYn      YnStatus @default(N) @map("del_yn")
+  crtNo      Int?     @map("crt_no")
+  crtDt      String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo     Int?     @map("updt_no")
+  updtDt     String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo      Int?     @map("del_no")
+  delDt      String?  @map("del_dt")
+
+  // Relations
+  creator         UserInfo?       @relation("CategoryCreator", fields: [crtNo], references: [userNo])
+  updater         UserInfo?       @relation("CategoryUpdater", fields: [updtNo], references: [userNo])
+  deleter         UserInfo?       @relation("CategoryDeleter", fields: [delNo], references: [userNo])
+  parentCategory  CtgryInfo?      @relation("CategoryHierarchy", fields: [upCtgryNo], references: [ctgryNo])
+  childCategories CtgryInfo[]     @relation("CategoryHierarchy")
+  posts           PstInfo[]
+  subscribers     CtgrySbcrMpng[]
+
+  @@map("ctgry_info")
+  @@schema("nihilog")
+}
+
+// 태그 정보 테이블
+model TagInfo {
+  tagNo    Int      @id @default(autoincrement()) @map("tag_no")
+  tagNm    String   @unique @map("tag_nm")
+  tagExpln String?  @map("tag_expln")
+  tagColr  String?  @map("tag_colr")
+  useYn    YnStatus @default(Y) @map("use_yn")
+  delYn    YnStatus @default(N) @map("del_yn")
+  crtNo    Int?     @map("crt_no")
+  crtDt    String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo   Int?     @map("updt_no")
+  updtDt   String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo    Int?     @map("del_no")
+  delDt    String?  @map("del_dt")
+
+  // Relations
+  creator     UserInfo?     @relation("TagCreator", fields: [crtNo], references: [userNo])
+  updater     UserInfo?     @relation("TagUpdater", fields: [updtNo], references: [userNo])
+  deleter     UserInfo?     @relation("TagDeleter", fields: [delNo], references: [userNo])
+  subscribers TagSbcrMpng[]
+  posts       PstTagMpng[]
+
+  @@map("tag_info")
+  @@schema("nihilog")
+}
+
+// 포스트 정보 테이블
+model PstInfo {
+  pstNo       Int        @id @default(autoincrement()) @map("pst_no")
+  userNo      Int        @map("user_no")
+  ctgryNo     Int?       @map("ctgry_no")
+  pstTtl      String     @map("pst_ttl")
+  pstSmry     String?    @map("pst_smry")
+  pstMtxt     Json       @map("pst_mtxt")
+  pstCd       String?    @map("pst_cd")
+  pstThmbLink String?    @map("pst_thmb_link")
+  pstView     Int        @default(0) @map("pst_view")
+  pstStts     PostStatus @default(EMPTY) @map("pst_stts")
+  publDt      String?    @map("publ_dt")
+  rlsYn       YnStatus   @default(Y) @map("rls_yn")
+  archYn      YnStatus   @default(N) @map("arch_yn")
+  secrYn      YnStatus?  @map("secr_yn")
+  pstPswd     String?    @map("pst_pswd")
+  useYn       YnStatus   @default(Y) @map("use_yn")
+  delYn       YnStatus   @default(N) @map("del_yn")
+  crtNo       Int?       @map("crt_no")
+  crtDt       String     @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo      Int?       @map("updt_no")
+  updtDt      String     @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo       Int?       @map("del_no")
+  delDt       String?    @map("del_dt")
+
+  // Relations
+  creator   UserInfo?    @relation("PostCreator", fields: [crtNo], references: [userNo])
+  updater   UserInfo?    @relation("PostUpdater", fields: [updtNo], references: [userNo])
+  deleter   UserInfo?    @relation("PostDeleter", fields: [delNo], references: [userNo])
+  category  CtgryInfo?   @relation(fields: [ctgryNo], references: [ctgryNo])
+  comments  CmntInfo[]
+  tags      PstTagMpng[]
+  viewLogs  PstViewLog[]
+  shareLogs PstShrnLog[]
+
+  @@unique([pstTtl])
+  @@unique([pstCd])
+  @@map("pst_info")
+  @@schema("nihilog")
+}
+
+// 댓글 정보 테이블
+model CmntInfo {
+  cmntNo     Int           @id @default(autoincrement()) @map("cmnt_no")
+  pstNo      Int           @map("pst_no")
+  cmntCntnt  String        @map("cmnt_cntnt") @db.Text
+  cmntSts    CommentStatus @default(ACTIVE) @map("cmnt_sts")
+  prntCmntNo Int?          @map("prnt_cmnt_no")
+  useYn      YnStatus      @default(Y) @map("use_yn")
+  delYn      YnStatus      @default(N) @map("del_yn")
+  crtNo      Int?          @map("crt_no")
+  crtDt      String        @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo     Int?          @map("updt_no")
+  updtDt     String        @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo      Int?          @map("del_no")
+  delDt      String?       @map("del_dt")
+
+  // Relations
+  creator       UserInfo?  @relation("CommentCreator", fields: [crtNo], references: [userNo])
+  updater       UserInfo?  @relation("CommentUpdater", fields: [updtNo], references: [userNo])
+  deleter       UserInfo?  @relation("CommentDeleter", fields: [delNo], references: [userNo])
+  post          PstInfo    @relation(fields: [pstNo], references: [pstNo])
+  parentComment CmntInfo?  @relation("CommentReplies", fields: [prntCmntNo], references: [cmntNo])
+  replies       CmntInfo[] @relation("CommentReplies")
+
+  @@map("cmnt_info")
+  @@schema("nihilog")
+}
+
+// 카테고리 구독 매핑 테이블
+model CtgrySbcrMpng {
+  ctgrySbcrNo Int      @id @default(autoincrement()) @map("ctgry_sbcr_no")
+  sbcrNo      Int      @map("sbcr_no")
+  ctgryNo     Int      @map("ctgry_no")
+  useYn       YnStatus @default(Y) @map("use_yn")
+  delYn       YnStatus @default(N) @map("del_yn")
+  crtNo       Int?     @map("crt_no")
+  crtDt       String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo      Int?     @map("updt_no")
+  updtDt      String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo       Int?     @map("del_no")
+  delDt       String?  @map("del_dt")
+
+  // Relations
+  subscription UserSbcrInfo @relation(fields: [sbcrNo], references: [sbcrNo])
+  category     CtgryInfo    @relation(fields: [ctgryNo], references: [ctgryNo])
+  creator      UserInfo?    @relation("CtgrySbcrCreator", fields: [crtNo], references: [userNo])
+  updater      UserInfo?    @relation("CtgrySbcrUpdater", fields: [updtNo], references: [userNo])
+  deleter      UserInfo?    @relation("CtgrySbcrDeleter", fields: [delNo], references: [userNo])
+
+  @@unique([sbcrNo, ctgryNo])
+  @@map("ctgry_sbcr_mpng")
+  @@schema("nihilog")
+}
+
+// 태그 구독 매핑 테이블
+model TagSbcrMpng {
+  tagSbcrNo Int      @id @default(autoincrement()) @map("tag_sbcr_no")
+  sbcrNo    Int      @map("sbcr_no")
+  tagNo     Int      @map("tag_no")
+  useYn     YnStatus @default(Y) @map("use_yn")
+  delYn     YnStatus @default(N) @map("del_yn")
+  crtNo     Int?     @map("crt_no")
+  crtDt     String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo    Int?     @map("updt_no")
+  updtDt    String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo     Int?     @map("del_no")
+  delDt     String?  @map("del_dt")
+
+  // Relations
+  subscription UserSbcrInfo @relation(fields: [sbcrNo], references: [sbcrNo])
+  tag          TagInfo      @relation(fields: [tagNo], references: [tagNo])
+  creator      UserInfo?    @relation("TagSbcrCreator", fields: [crtNo], references: [userNo])
+  updater      UserInfo?    @relation("TagSbcrUpdater", fields: [updtNo], references: [userNo])
+  deleter      UserInfo?    @relation("TagSbcrDeleter", fields: [delNo], references: [userNo])
+
+  @@unique([sbcrNo, tagNo])
+  @@map("tag_sbcr_mpng")
+  @@schema("nihilog")
+}
+
+// 사용자 구독 설정 테이블
+model UserSbcrInfo {
+  sbcrNo        Int      @id @default(autoincrement()) @map("sbcr_no")
+  userNo        Int      @unique @map("user_no")
+  emlNtfyYn     YnStatus @default(Y) @map("eml_ntfy_yn")
+  newPstNtfyYn  YnStatus @default(Y) @map("new_pst_ntfy_yn")
+  cmntRplNtfyYn YnStatus @default(Y) @map("cmnt_rpl_ntfy_yn")
+  useYn         YnStatus @default(Y) @map("use_yn")
+  delYn         YnStatus @default(N) @map("del_yn")
+  crtNo         Int?     @map("crt_no")
+  crtDt         String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo        Int?     @map("updt_no")
+  updtDt        String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo         Int?     @map("del_no")
+  delDt         String?  @map("del_dt")
+
+  // Relations
+  user                  UserInfo        @relation(fields: [userNo], references: [userNo])
+  creator               UserInfo?       @relation("UserSbcrCreator", fields: [crtNo], references: [userNo])
+  updater               UserInfo?       @relation("UserSbcrUpdater", fields: [updtNo], references: [userNo])
+  deleter               UserInfo?       @relation("UserSbcrDeleter", fields: [delNo], references: [userNo])
+  tagSubscriptions      TagSbcrMpng[]
+  categorySubscriptions CtgrySbcrMpng[]
+
+  @@map("user_sbcr_info")
+  @@schema("nihilog")
+}
+
+// 포스트-태그 매핑 테이블
+model PstTagMpng {
+  tagMapNo Int      @id @default(autoincrement()) @map("tag_map_no")
+  pstNo    Int      @map("pst_no")
+  tagNo    Int      @map("tag_no")
+  useYn    YnStatus @default(Y) @map("use_yn")
+  delYn    YnStatus @default(N) @map("del_yn")
+  crtNo    Int?     @map("crt_no")
+  crtDt    String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  updtNo   Int?     @map("updt_no")
+  updtDt   String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  delNo    Int?     @map("del_no")
+  delDt    String?  @map("del_dt")
+
+  // Relations
+  post    PstInfo   @relation(fields: [pstNo], references: [pstNo])
+  tag     TagInfo   @relation(fields: [tagNo], references: [tagNo])
+  creator UserInfo? @relation("PstTagCreator", fields: [crtNo], references: [userNo])
+  updater UserInfo? @relation("PstTagUpdater", fields: [updtNo], references: [userNo])
+  deleter UserInfo? @relation("PstTagDeleter", fields: [delNo], references: [userNo])
+
+  @@unique([pstNo, tagNo])
+  @@map("pst_tag_mpng")
+  @@schema("nihilog")
+}
+
+// 게시글 조회 로그 테이블
+model PstViewLog {
+  viewNo   Int     @id @default(autoincrement()) @map("view_no")
+  pstNo    Int     @map("pst_no")
+  viewerIp String? @map("viewer_ip")
+  viewDt   String  @map("view_dt")
+
+  // Relations
+  post PstInfo @relation(fields: [pstNo], references: [pstNo])
+
+  @@index([pstNo, viewDt])
+  @@map("pst_view_log")
+  @@schema("nihilog")
+}
+
+// 게시글 공유 로그 테이블
+model PstShrnLog {
+  shrnNo   Int    @id @default(autoincrement()) @map("shrn_no")
+  pstNo    Int    @map("pst_no")
+  shrnSite String @map("shrn_site")
+  shrnDt   String @map("shrn_dt")
+
+  // Relations
+  post PstInfo @relation(fields: [pstNo], references: [pstNo])
+
+  @@index([pstNo, shrnDt])
+  @@map("pst_shrn_log")
+  @@schema("nihilog")
+}

@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import type { TagSubscribeDto, CreateTagSubscribeDto, ListDto, MultipleCreateTagSubscribeDto, MultipleDeleteTagSubscribeDto, MultipleUpdateTagSubscribeDto, MutationResponseDto, SearchTagSubscribeDto } from '@/dto';
+import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, TagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import type { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { createError, createResponse } from '@/utils';
+import type { TagSbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class TagSubscribeService {
@@ -13,7 +16,7 @@ export class TagSubscribeService {
    * @description 사용자가 구독한 태그 목록 조회
    * @param searchData 검색 데이터
    */
-  async getTagSubscribeList(searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListDto<TagSubscribeDto>> {
+  async getTagSubscribeList(searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     const tagSubscribeList = await this.tagSubscribeRepository.getTagSubscribeList(searchData);
 
     return tagSubscribeList;
@@ -24,7 +27,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
-  async getTagSubscribeByUserNo(userNo: number, searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListDto<TagSubscribeDto>> {
+  async getTagSubscribeByUserNo(userNo: number, searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     const tagSubscribeList = await this.tagSubscribeRepository.getTagSubscribeByUserNo(userNo, searchData);
 
     return tagSubscribeList;
@@ -35,7 +38,7 @@ export class TagSubscribeService {
    * @param tagNo 태그 번호
    * @param searchData 검색 데이터
    */
-  async getTagSubscribeByTagNo(tagNo: number, searchData: SearchTagSubscribeDto): Promise<ListDto<TagSubscribeDto>> {
+  async getTagSubscribeByTagNo(tagNo: number, searchData: SearchTagSubscribeDto): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     const tagSubscribeList = await this.tagSubscribeRepository.getTagSubscribeByTagNo(tagNo, searchData);
 
     return tagSubscribeList;
@@ -46,7 +49,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
    */
-  async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<TagSubscribeDto>> {
+  async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<TagSbcrMpng>> {
     const createSubscribe = await this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
 
     if (!createSubscribe) {
@@ -68,7 +71,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
    */
-  async multipleCreateTagSubscribe(userNo: number, createData: MultipleCreateTagSubscribeDto): Promise<ResponseDto<TagSubscribeDto[]>> {
+  async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<TagSbcrMpng[]>> {
     const createSubscribe = await this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
 
     if (!createSubscribe) {
@@ -90,7 +93,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param updateData 태그 구독 수정 데이터
    */
-  async multipleUpdateTagSubscribe(userNo: number, updateData: MultipleUpdateTagSubscribeDto): Promise<ResponseDto<TagSubscribeDto[]>> {
+  async multipleUpdateTagSubscribe(userNo: number, updateData: UpdateTagSubscribeDto): Promise<ResponseDto<MultipleResultType>> {
     const updateSubscribe = await this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
 
     if (!updateSubscribe) {
@@ -112,7 +115,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param tagSbcrNo 태그 구독 번호
    */
-  async deleteTagSubscribe(userNo: number, tagSbcrNo: number): Promise<ResponseDto<MutationResponseDto>> {
+  async deleteTagSubscribe(userNo: number, tagSbcrNo: number): Promise<ResponseDto<boolean>> {
     const deleteSubscribe = await this.tagSubscribeRepository.deleteTagSubscribeByTagSbcrNo(userNo, tagSbcrNo);
 
     if (!deleteSubscribe) {
@@ -134,7 +137,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param deleteData 다수 태그 구독 삭제 데이터
    */
-  async multipleDeleteTagSubscribe(userNo: number, deleteData: MultipleDeleteTagSubscribeDto): Promise<ResponseDto<MutationResponseDto>> {
+  async multipleDeleteTagSubscribe(userNo: number, deleteData: DeleteTagSubscribeDto): Promise<ResponseDto<MultipleResultType>> {
     const deleteSubscribe = await this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
 
     if (!deleteSubscribe) {

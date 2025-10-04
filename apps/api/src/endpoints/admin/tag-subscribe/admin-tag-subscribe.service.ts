@@ -1,17 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
-import { ResponseDto, type ListDto } from '@/dto/response.dto';
-import {
-  TagSubscribeDto,
+import { ResponseDto } from '@/dto/response.dto';
+import type {
   CreateTagSubscribeDto,
-  MultipleCreateTagSubscribeDto,
-  MultipleDeleteTagSubscribeDto,
-  MultipleUpdateTagSubscribeDto,
+  DeleteTagSubscribeDto,
   SearchTagSubscribeDto,
+  TagSubscribeDto,
   UpdateTagSubscribeDto
 } from '@/dto/tag-subscribe.dto';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { createError, createResponse } from '@/utils';
+import type { TagSbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class AdminTagSubscribeService {
@@ -21,7 +22,7 @@ export class AdminTagSubscribeService {
    * @description 태그 구독 전체 목록 조회
    * @param searchData 검색 데이터
    */
-  async adminGetTagSubscribeList(searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListDto<TagSubscribeDto>> {
+  async adminGetTagSubscribeList(searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     const result = await this.tagSubscribeRepository
       .getTagSubscribeList(searchData);
 
@@ -36,7 +37,7 @@ export class AdminTagSubscribeService {
   async adminGetTagSubscribeByTagNo(
     tagNo: number,
     searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>
-  ): Promise<ListDto<TagSubscribeDto>> {
+  ): Promise<ListType<SelectTagSbcrMpngListItemType>> {
     const result = await this.tagSubscribeRepository
       .getTagSubscribeByTagNo(tagNo, searchData);
 
@@ -51,7 +52,7 @@ export class AdminTagSubscribeService {
   async adminCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto>> {
+  ): Promise<ResponseDto<TagSbcrMpng>> {
     try {
       const result = await this.tagSubscribeRepository
         .createTagSubscribe(userNo, createData);
@@ -77,8 +78,8 @@ export class AdminTagSubscribeService {
    */
   async adminMultipleCreateTagSubscribe(
     userNo: number,
-    createData: MultipleCreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto[]>> {
+    createData: CreateTagSubscribeDto
+  ): Promise<ResponseDto<TagSbcrMpng[]>> {
     try {
       const result = await this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
 
@@ -104,7 +105,7 @@ export class AdminTagSubscribeService {
   async adminUpdateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto>> {
+  ): Promise<ResponseDto<TagSbcrMpng>> {
     try {
       const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
 
@@ -139,24 +140,12 @@ export class AdminTagSubscribeService {
    */
   async adminMultipleUpdateTagSubscribe(
     userNo: number,
-    updateData: MultipleUpdateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto[]>> {
+    updateData: UpdateTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
-      const existingItems = await this.tagSubscribeRepository.getTagSubscribeList({
-        tagSbcrNoList: updateData.tagSbcrNoList,
-        delYn: 'N',
-      });
-
-      if (!existingItems || existingItems.list.length === 0) {
-        return createError(
-          'NOT_FOUND',
-          'TAG_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
       const result = await this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
 
-      if (!result || result.length === 0) {
+      if (!result || result.successCnt === 0) {
         return createError(
           'NOT_FOUND',
           'TAG_SUBSCRIBE_NOT_FOUND'
@@ -217,8 +206,8 @@ export class AdminTagSubscribeService {
    */
   async adminMultipleDeleteTagSubscribe(
     userNo: number,
-    deleteData: MultipleDeleteTagSubscribeDto
-  ): Promise<ResponseDto<null>> {
+    deleteData: DeleteTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
       const result = await this.tagSubscribeRepository
         .multipleDeleteTagSubscribe(userNo, deleteData);
@@ -233,7 +222,7 @@ export class AdminTagSubscribeService {
       return createResponse(
         'SUCCESS',
         'ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-        null
+        result
       );
     }
     catch {

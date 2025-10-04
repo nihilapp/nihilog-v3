@@ -35,6 +35,7 @@ export interface Config {
   };
   database?: {
     url?: string;
+    directUrl?: string;
     host?: string;
     port?: number;
     user?: string;

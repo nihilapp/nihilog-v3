@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AdminUserModule } from '@/endpoints/admin/users/admin-users.module';
-import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 
 import { AuthController } from './auth.controller';
@@ -16,7 +16,7 @@ import { JwtStrategy } from './jwt.strategy';
   imports: [
     AdminUserModule,
     MailerModule,
-    DrizzleModule,
+    PrismaModule,
     PassportModule.register({ defaultStrategy: 'jwt', }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({

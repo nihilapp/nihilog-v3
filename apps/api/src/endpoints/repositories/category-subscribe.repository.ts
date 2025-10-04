@@ -1,94 +1,73 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, eq, inArray, sql } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
-import type { CategorySubscribeDto, CreateCategorySubscribeDto, MultipleCreateCategorySubscribeDto, MultipleDeleteCategorySubscribeDto, MultipleUpdateCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
-import type { ListDto, MutationResponseDto } from '@/dto/response.dto';
-import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
-import { schemas } from '@/endpoints/drizzle/schemas';
-import { ynEnumSchema } from '@/endpoints/drizzle/schemas/common.schema';
-import { likes } from '@/utils/ormHelper';
+import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
+import { PRISMA } from '@/endpoints/prisma/prisma.module';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type {
+  SelectCtgrySbcrMpngListItemType,
+  SelectCtgrySbcrMpngType
+} from '@/endpoints/prisma/types/category-subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
-import { isEmptyString } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
-
-const { ctgrySbcrMpng, ctgryInfo, userSbcrInfo, } = schemas;
-
-const select = {
-  rowNo: sql<number>`row_number() over (order by ${ctgrySbcrMpng.ctgrySbcrNo} desc)`.as('rowNo'),
-  totalCnt: sql<number>`count(1) over ()`.as('totalCnt'),
-  ctgrySbcrNo: ctgrySbcrMpng.ctgrySbcrNo,
-  ctgryNo: ctgrySbcrMpng.ctgryNo,
-  sbcrNo: ctgrySbcrMpng.sbcrNo,
-  delYn: ctgrySbcrMpng.delYn,
-  useYn: ctgrySbcrMpng.useYn,
-  crtNo: ctgrySbcrMpng.crtNo,
-  crtDt: ctgrySbcrMpng.crtDt,
-  updtNo: ctgrySbcrMpng.updtNo,
-  updtDt: ctgrySbcrMpng.updtDt,
-  delNo: ctgrySbcrMpng.delNo,
-  delDt: ctgrySbcrMpng.delDt,
-};
-
-const selectWithJoin = {
-  rowNo: sql<number>`row_number() over (order by ${ctgrySbcrMpng.ctgrySbcrNo} desc)`.as('rowNo'),
-  totalCnt: sql<number>`count(1) over ()`.as('totalCnt'),
-  ctgrySbcrNo: ctgrySbcrMpng.ctgrySbcrNo,
-  ctgryNo: ctgrySbcrMpng.ctgryNo,
-  sbcrNo: ctgrySbcrMpng.sbcrNo,
-  ctgryNm: ctgryInfo.ctgryNm,
-  delYn: ctgrySbcrMpng.delYn,
-  useYn: ctgrySbcrMpng.useYn,
-  crtNo: ctgrySbcrMpng.crtNo,
-  crtDt: ctgrySbcrMpng.crtDt,
-  updtNo: ctgrySbcrMpng.updtNo,
-  updtDt: ctgrySbcrMpng.updtDt,
-  delNo: ctgrySbcrMpng.delNo,
-  delDt: ctgrySbcrMpng.delDt,
-} as const;
+import { PrismaClient, type CtgrySbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class CategorySubscribeRepository {
-  constructor(@Inject(DRIZZLE)
-  private readonly db: NodePgDatabase<typeof schemas>) { }
+  constructor(@Inject(PRISMA)
+  private readonly prisma: PrismaClient) { }
 
   /**
    * @description 카테고리 구독 전체 이력 조회
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, ctgrySbcrNoList, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-      const searchConditions: Record<string, string> = {};
-      if (!isEmptyString(srchKywd) && srchType) {
-        searchConditions[srchType] = srchKywd;
-      }
+      const where = {
+        delYn: delYn || 'N',
+        ...(srchKywd && srchType === 'ctgryNm') && {
+          category: {
+            ctgryNm: {
+              contains: srchKywd,
+            },
+          },
+        },
+      };
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
 
-      const whereConditions = [
-        ...likes(ctgrySbcrMpng, searchConditions),
-        eq(ctgrySbcrMpng.delYn, delYn || 'N'),
-      ];
-
-      if (ctgrySbcrNoList && ctgrySbcrNoList.length > 0) {
-        whereConditions.push(inArray(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNoList));
-      }
-
-      const list = await this.db
-        .select(selectWithJoin)
-        .from(ctgrySbcrMpng)
-        .innerJoin(
-          ctgryInfo,
-          eq(ctgrySbcrMpng.ctgryNo, ctgryInfo.ctgryNo)
-        )
-        .where(and(...whereConditions))
-        .orderBy(asc(selectWithJoin.rowNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.ctgrySbcrMpng.findMany({
+          where,
+          include: {
+            category: {
+              select: {
+                ctgryNm: true,
+              },
+            },
+          },
+          orderBy: {
+            ctgrySbcrNo: 'desc',
+          },
+          skip,
+          take,
+        }),
+        this.prisma.ctgrySbcrMpng.count({
+          where,
+          orderBy: {
+            ctgrySbcrNo: 'desc',
+          },
+        }),
+      ]);
 
       return {
-        list: list ?? [],
-        totalCnt: list?.[0]?.totalCnt ?? 0,
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
       };
     }
     catch {
@@ -100,16 +79,20 @@ export class CategorySubscribeRepository {
    * @description 카테고리 구독 번호로 카테고리 구독 조회
    * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo: number): Promise<CategorySubscribeDto | null> {
+  async getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo: number): Promise<SelectCtgrySbcrMpngType | null> {
     try {
-      const [ subscribe, ] = await this.db
-        .select(selectWithJoin)
-        .from(ctgrySbcrMpng)
-        .innerJoin(
-          ctgryInfo,
-          eq(ctgrySbcrMpng.ctgryNo, ctgryInfo.ctgryNo)
-        )
-        .where(eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo));
+      const subscribe = await this.prisma.ctgrySbcrMpng.findUnique({
+        where: {
+          ctgrySbcrNo,
+        },
+        include: {
+          category: {
+            select: {
+              ctgryNm: true,
+            },
+          },
+        },
+      });
 
       return subscribe;
     }
@@ -125,41 +108,56 @@ export class CategorySubscribeRepository {
    */
   async getCategorySubscribeByUserNo(
     userNo: number,
-    searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
-  ): Promise<ListDto<CategorySubscribeDto>> {
+    searchData: SearchCategorySubscribeDto
+  ): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-      const searchConditions: Record<string, string> = {};
-      if (!isEmptyString(srchKywd) && srchType) {
-        searchConditions[srchType] = srchKywd;
-      }
+      const where = {
+        userNo,
+        delYn: delYn || 'N',
+        ...(srchKywd && srchType === 'ctgryNm') && {
+          category: {
+            ctgryNm: {
+              contains: srchKywd,
+            },
+          },
+        },
+      };
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
 
-      const whereConditions = [
-        ...likes(ctgrySbcrMpng, searchConditions),
-        eq(userSbcrInfo.userNo, userNo),
-        eq(ctgrySbcrMpng.delYn, delYn || 'N'),
-      ];
-
-      const list = await this.db
-        .select(selectWithJoin)
-        .from(ctgrySbcrMpng)
-        .innerJoin(
-          ctgryInfo,
-          eq(ctgrySbcrMpng.ctgryNo, ctgryInfo.ctgryNo)
-        )
-        .innerJoin(
-          userSbcrInfo,
-          eq(ctgrySbcrMpng.sbcrNo, userSbcrInfo.sbcrNo)
-        )
-        .where(and(...whereConditions))
-        .orderBy(asc(select.rowNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.ctgrySbcrMpng.findMany({
+          where,
+          include: {
+            category: {
+              select: {
+                ctgryNm: true,
+              },
+            },
+          },
+          orderBy: {
+            ctgrySbcrNo: 'desc',
+          },
+          skip,
+          take,
+        }),
+        this.prisma.ctgrySbcrMpng.count({
+          where,
+          orderBy: {
+            ctgrySbcrNo: 'desc',
+          },
+        }),
+      ]);
 
       return {
-        list: list ?? [],
-        totalCnt: list?.[0]?.totalCnt ?? 0,
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
       };
     }
     catch {
@@ -170,40 +168,60 @@ export class CategorySubscribeRepository {
   /**
    * @description 카테고리 구독 조회
    * @param ctgryNo 카테고리 번호
+   * @param searchData 검색 데이터
    */
   async getCategorySubscribeByCtgryNo(
     ctgryNo: number,
-    searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
-  ): Promise<ListDto<CategorySubscribeDto>> {
+    searchData: SearchCategorySubscribeDto
+  ): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-      const searchConditions: Record<string, string> = {};
-      if (!isEmptyString(srchKywd) && srchType) {
-        searchConditions[srchType] = srchKywd;
-      }
+      const where = {
+        ctgryNo,
+        delYn: delYn || 'N',
+        ...(srchKywd && srchType === 'ctgryNm') && {
+          category: {
+            ctgryNm: {
+              contains: srchKywd,
+            },
+          },
+        },
+      };
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
 
-      const whereConditions = [
-        ...likes(ctgrySbcrMpng, searchConditions),
-        eq(ctgrySbcrMpng.ctgryNo, ctgryNo),
-        eq(ctgrySbcrMpng.delYn, delYn || 'N'),
-      ];
-
-      const list = await this.db
-        .select(selectWithJoin)
-        .from(ctgrySbcrMpng)
-        .innerJoin(
-          ctgryInfo,
-          eq(ctgrySbcrMpng.ctgryNo, ctgryInfo.ctgryNo)
-        )
-        .where(and(...whereConditions))
-        .orderBy(asc(select.rowNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.ctgrySbcrMpng.findMany({
+          where,
+          include: {
+            category: {
+              select: {
+                ctgryNm: true,
+              },
+            },
+          },
+          orderBy: {
+            ctgrySbcrNo: 'desc',
+          },
+          skip,
+          take,
+        }),
+        this.prisma.ctgrySbcrMpng.count({
+          where,
+          orderBy: {
+            ctgrySbcrNo: 'desc',
+          },
+        }),
+      ]);
 
       return {
-        list: list ?? [],
-        totalCnt: list?.[0]?.totalCnt ?? 0,
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
       };
     }
     catch {
@@ -219,23 +237,22 @@ export class CategorySubscribeRepository {
   async createCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<CategorySubscribeDto | null> {
+  ): Promise<CtgrySbcrMpng | null> {
     try {
-      const { sbcrNo, ctgryNo, } = createData;
+      const { ctgryNo, sbcrNo, } = createData;
 
-      const [ createSubscribe, ] = await this.db
-        .insert(ctgrySbcrMpng)
-        .values({
+      const createSubscribe = await this.prisma.ctgrySbcrMpng.create({
+        data: {
           sbcrNo,
           ctgryNo,
-          useYn: ynEnumSchema.enum.Y,
-          delYn: ynEnumSchema.enum.N,
+          useYn: 'Y',
+          delYn: 'N',
           crtNo: userNo,
           crtDt: timeToString(),
           updtNo: userNo,
           updtDt: timeToString(),
-        })
-        .returning(select);
+        },
+      });
 
       return createSubscribe;
     }
@@ -251,35 +268,36 @@ export class CategorySubscribeRepository {
    */
   async multipleCreateCategorySubscribe(
     userNo: number,
-    createData: MultipleCreateCategorySubscribeDto
-  ): Promise<CategorySubscribeDto[] | null> {
+    createData: CreateCategorySubscribeDto
+  ): Promise<CtgrySbcrMpng[] | null> {
     try {
-      const { sbcrNo, ctgryNoList, } = createData;
+      const { ctgryNoList, sbcrNo, } = createData;
 
-      const subscribeList = await this.db.transaction(async (context) => {
-        return await context
-          .insert(ctgrySbcrMpng)
-          .values(ctgryNoList.map((item) => ({
+      const subscribeList = await this.prisma.$transaction(ctgryNoList.map((ctgryNo) =>
+        this.prisma.ctgrySbcrMpng.upsert({
+          where: {
+            sbcrNo_ctgryNo: {
+              sbcrNo,
+              ctgryNo,
+            },
+          },
+          create: {
             sbcrNo,
-            ctgryNo: item,
-            useYn: ynEnumSchema.enum.Y,
-            delYn: ynEnumSchema.enum.N,
+            ctgryNo,
+            useYn: 'Y',
+            delYn: 'N',
             crtNo: userNo,
             crtDt: timeToString(),
             updtNo: userNo,
             updtDt: timeToString(),
-          })))
-          .onConflictDoUpdate({
-            target: [ ctgrySbcrMpng.sbcrNo, ctgrySbcrMpng.ctgryNo, ],
-            set: {
-              useYn: ynEnumSchema.enum.Y,
-              delYn: ynEnumSchema.enum.N,
-              updtNo: userNo,
-              updtDt: timeToString(),
-            },
-          })
-          .returning(select);
-      });
+          },
+          update: {
+            useYn: 'Y',
+            delYn: 'N',
+            updtNo: userNo,
+            updtDt: timeToString(),
+          },
+        })));
 
       return subscribeList;
     }
@@ -296,20 +314,21 @@ export class CategorySubscribeRepository {
   async updateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<CategorySubscribeDto | null> {
+  ): Promise<CtgrySbcrMpng | null> {
     try {
       const { ctgrySbcrNo, useYn, delYn, } = updateData;
 
-      const [ updateSubscribe, ] = await this.db
-        .update(ctgrySbcrMpng)
-        .set({
+      const updateSubscribe = await this.prisma.ctgrySbcrMpng.update({
+        where: {
+          ctgrySbcrNo,
+        },
+        data: {
           useYn,
           delYn,
           updtNo: userNo,
           updtDt: timeToString(),
-        })
-        .where(eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo))
-        .returning(select);
+        },
+      });
 
       return updateSubscribe;
     }
@@ -325,28 +344,35 @@ export class CategorySubscribeRepository {
    */
   async multipleUpdateCategorySubscribe(
     userNo: number,
-    updateData: MultipleUpdateCategorySubscribeDto
-  ): Promise<CategorySubscribeDto[] | null> {
+    updateData: UpdateCategorySubscribeDto
+  ): Promise<MultipleResultType | null> {
     try {
-      const { sbcrNo, useYn, delYn, ctgrySbcrNoList, } = updateData;
+      const { useYn, delYn, ctgrySbcrNoList, } = updateData;
 
-      const subscribeList = await this.db.transaction(async (context) => {
-        return await context
-          .update(ctgrySbcrMpng)
-          .set({
-            useYn,
+      const result = await this.prisma.ctgrySbcrMpng.updateMany({
+        where: {
+          ctgrySbcrNo: {
+            in: ctgrySbcrNoList,
+          },
+        },
+        data: {
+          useYn,
+          delYn: delYn || 'N',
+          updtNo: userNo,
+          updtDt: timeToString(),
+          ...(delYn && {
             delYn,
-            updtNo: userNo,
-            updtDt: timeToString(),
-          })
-          .where(and(
-            eq(ctgrySbcrMpng.sbcrNo, sbcrNo),
-            inArray(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNoList)
-          ))
-          .returning(select);
+            delNo: userNo,
+            delDt: timeToString(),
+          }),
+        },
       });
 
-      return subscribeList;
+      return {
+        successCnt: result.count,
+        failCnt: ctgrySbcrNoList.length - result.count,
+        failNoList: [],
+      };
     }
     catch {
       return null;
@@ -361,31 +387,30 @@ export class CategorySubscribeRepository {
   async deleteCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<MutationResponseDto | null> {
+  ): Promise<MultipleResultType | null> {
     try {
       const { ctgrySbcrNo, useYn, delYn, } = updateData;
 
-      const deletedRow = await this.db
-        .update(ctgrySbcrMpng)
-        .set({
-          useYn: ynEnumSchema.enum.N,
-          delYn: ynEnumSchema.enum.Y,
+      await this.prisma.ctgrySbcrMpng.update({
+        where: {
+          ctgrySbcrNo,
+          useYn: useYn || 'Y',
+          delYn: delYn || 'N',
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
           updtNo: userNo,
           updtDt: timeToString(),
           delNo: userNo,
           delDt: timeToString(),
-        })
-        .where(and(
-          eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo),
-          eq(ctgrySbcrMpng.useYn, useYn || ynEnumSchema.enum.Y),
-          eq(ctgrySbcrMpng.delYn, delYn || ynEnumSchema.enum.N)
-        ));
+        },
+      });
 
       return {
-        rowsAffected: deletedRow.rowCount || 0,
-        affectedRows: deletedRow.rowCount
-          ? [ ctgrySbcrNo, ]
-          : [],
+        successCnt: 1,
+        failCnt: 0,
+        failNoList: [],
       };
     }
     catch {
@@ -401,33 +426,32 @@ export class CategorySubscribeRepository {
   async deleteCategorySubscribeByCtgrySbcrNo(
     userNo: number,
     ctgrySbcrNo: number
-  ): Promise<MutationResponseDto | null> {
+  ): Promise<boolean> {
     try {
-      const deletedRow = await this.db
-        .update(ctgrySbcrMpng)
-        .set({
-          useYn: ynEnumSchema.enum.N,
-          delYn: ynEnumSchema.enum.Y,
+      const result = await this.prisma.ctgrySbcrMpng.update({
+        where: {
+          ctgrySbcrNo,
+          useYn: 'Y',
+          delYn: 'N',
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
           updtNo: userNo,
           updtDt: timeToString(),
           delNo: userNo,
           delDt: timeToString(),
-        })
-        .where(and(
-          eq(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNo),
-          eq(ctgrySbcrMpng.useYn, ynEnumSchema.enum.Y),
-          eq(ctgrySbcrMpng.delYn, ynEnumSchema.enum.N)
-        ));
+        },
+      });
 
-      return {
-        rowsAffected: deletedRow.rowCount || 0,
-        affectedRows: deletedRow.rowCount
-          ? [ ctgrySbcrNo, ]
-          : [],
-      };
+      if (result) {
+        return true;
+      }
+
+      return false;
     }
     catch {
-      return null;
+      return false;
     }
   }
 
@@ -438,30 +462,36 @@ export class CategorySubscribeRepository {
    */
   async multipleDeleteCategorySubscribe(
     userNo: number,
-    updateData: MultipleDeleteCategorySubscribeDto
-  ): Promise<MutationResponseDto | null> {
+    updateData: DeleteCategorySubscribeDto
+  ): Promise<MultipleResultType | null> {
     try {
       const { ctgrySbcrNoList, } = updateData;
 
-      const deletedRows = await this.db.transaction((context) => {
-        return context
-          .update(ctgrySbcrMpng)
-          .set({
-            useYn: ynEnumSchema.enum.N,
-            delYn: ynEnumSchema.enum.Y,
-            updtNo: userNo,
-            updtDt: timeToString(),
-            delNo: userNo,
-            delDt: timeToString(),
-          })
-          .where(inArray(ctgrySbcrMpng.ctgrySbcrNo, ctgrySbcrNoList));
+      const result = await this.prisma.ctgrySbcrMpng.updateManyAndReturn({
+        where: {
+          ctgrySbcrNo: {
+            in: ctgrySbcrNoList,
+          },
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
+          updtNo: userNo,
+          updtDt: timeToString(),
+          delNo: userNo,
+          delDt: timeToString(),
+        },
+        select: {
+          ctgrySbcrNo: true,
+        },
       });
 
+      const failNoList = ctgrySbcrNoList.filter((item) => !result.some((resultItem) => resultItem.ctgrySbcrNo === item));
+
       return {
-        rowsAffected: deletedRows.rowCount || 0,
-        affectedRows: deletedRows.rowCount
-          ? ctgrySbcrNoList
-          : [],
+        successCnt: result.length,
+        failCnt: ctgrySbcrNoList.length - result.length,
+        failNoList,
       };
     }
     catch {

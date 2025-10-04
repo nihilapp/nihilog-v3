@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  CategorySubscribeDto,
+import type {
   CreateCategorySubscribeDto,
-  MultipleCreateCategorySubscribeDto,
-  MultipleDeleteCategorySubscribeDto,
-  MultipleUpdateCategorySubscribeDto,
+  DeleteCategorySubscribeDto,
   SearchCategorySubscribeDto,
   UpdateCategorySubscribeDto
 } from '@/dto/category-subscribe.dto';
-import { ResponseDto, type ListDto } from '@/dto/response.dto';
+import { ResponseDto } from '@/dto/response.dto';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 import { createError, createResponse } from '@/utils';
+import type { CtgrySbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class AdminCategorySubscribeService {
@@ -21,7 +21,7 @@ export class AdminCategorySubscribeService {
    * @description 카테고리 구독 전체 목록 조회
    * @param searchData 검색 데이터
    */
-  async adminGetCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListDto<CategorySubscribeDto>> {
+  async adminGetCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     const result = await this.categorySubscribeRepository
       .getCategorySubscribeList(searchData);
 
@@ -36,7 +36,7 @@ export class AdminCategorySubscribeService {
   async adminGetCategorySubscribeByCtgryNo(
     ctgryNo: number,
     searchData: SearchCategorySubscribeDto
-  ): Promise<ListDto<CategorySubscribeDto>> {
+  ): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     const result = await this.categorySubscribeRepository
       .getCategorySubscribeByCtgryNo(ctgryNo, searchData);
 
@@ -51,7 +51,7 @@ export class AdminCategorySubscribeService {
   async adminCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto>> {
+  ): Promise<ResponseDto<CtgrySbcrMpng>> {
     try {
       const result = await this.categorySubscribeRepository
         .createCategorySubscribe(userNo, createData);
@@ -77,8 +77,8 @@ export class AdminCategorySubscribeService {
    */
   async adminMultipleCreateCategorySubscribe(
     userNo: number,
-    createData: MultipleCreateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+    createData: CreateCategorySubscribeDto
+  ): Promise<ResponseDto<CtgrySbcrMpng[]>> {
     try {
       const result = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
 
@@ -104,7 +104,7 @@ export class AdminCategorySubscribeService {
   async adminUpdateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto>> {
+  ): Promise<ResponseDto<CtgrySbcrMpng>> {
     try {
       const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
 
@@ -139,24 +139,12 @@ export class AdminCategorySubscribeService {
    */
   async adminMultipleUpdateCategorySubscribe(
     userNo: number,
-    updateData: MultipleUpdateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+    updateData: UpdateCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
-      const existingItems = await this.categorySubscribeRepository.getCategorySubscribeList({
-        ctgrySbcrNoList: updateData.ctgrySbcrNoList,
-        delYn: 'N',
-      });
-
-      if (!existingItems || existingItems.list.length === 0) {
-        return createError(
-          'NOT_FOUND',
-          'CATEGORY_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
       const result = await this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
 
-      if (!result || result.length === 0) {
+      if (!result || result.successCnt === 0) {
         return createError(
           'NOT_FOUND',
           'CATEGORY_SUBSCRIBE_NOT_FOUND'
@@ -185,7 +173,7 @@ export class AdminCategorySubscribeService {
   async adminDeleteCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
       const result = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData);
 
@@ -199,7 +187,7 @@ export class AdminCategorySubscribeService {
       return createResponse(
         'SUCCESS',
         'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS',
-        null
+        result
       );
     }
     catch {
@@ -217,8 +205,8 @@ export class AdminCategorySubscribeService {
    */
   async adminMultipleDeleteCategorySubscribe(
     userNo: number,
-    deleteData: MultipleDeleteCategorySubscribeDto
-  ): Promise<ResponseDto<null>> {
+    deleteData: DeleteCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     try {
       const result = await this.categorySubscribeRepository
         .multipleDeleteCategorySubscribe(userNo, deleteData);
@@ -233,7 +221,7 @@ export class AdminCategorySubscribeService {
       return createResponse(
         'SUCCESS',
         'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-        null
+        result
       );
     }
     catch {

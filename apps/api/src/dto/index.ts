@@ -42,9 +42,7 @@ export {
   CategorySubscribeDto,
   CreateCategorySubscribeDto,
   UpdateCategorySubscribeDto,
-  MultipleCreateCategorySubscribeDto,
-  MultipleUpdateCategorySubscribeDto,
-  MultipleDeleteCategorySubscribeDto,
+  DeleteCategorySubscribeDto,
   SearchCategorySubscribeDto,
   CategorySubscribeItemDto
 } from './category-subscribe.dto';
@@ -54,9 +52,7 @@ export {
   TagSubscribeDto,
   CreateTagSubscribeDto,
   UpdateTagSubscribeDto,
-  MultipleCreateTagSubscribeDto,
-  MultipleUpdateTagSubscribeDto,
-  MultipleDeleteTagSubscribeDto,
+  DeleteTagSubscribeDto,
   SearchTagSubscribeDto,
   TagSubscribeItemDto
 } from './tag-subscribe.dto';

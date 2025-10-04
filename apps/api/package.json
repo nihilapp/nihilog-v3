@@ -15,9 +15,13 @@
     "lint:fix": "eslint \"{src,apps,libs}/**/*.ts\" --config eslint.config.mjs --fix",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "prisma:generate": "pnpm dlx prisma generate",
+    "prisma:migrate": "pnpm dlx prisma migrate dev",
+    "prisma:studio": "pnpm dlx prisma studio"
   },
   "dependencies": {
+    "@asteasolutions/zod-to-openapi": "^8.1.0",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.1.0",
     "@fastify/static": "^8.2.0",
@@ -32,6 +36,7 @@
     "@nestjs/platform-fastify": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/throttler": "^6.4.0",
+    "@prisma/client": "^6.16.3",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/lodash": "^4.17.20",
@@ -77,6 +82,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.16.1",
     "globals": "^16.4.0",
+    "prisma": "^6.16.3",
     "source-map-support": "^0.5.21",
     "ts-loader": "^9.5.4",
     "ts-node": "^10.9.2",

@@ -6,7 +6,7 @@ import {
   listResponseSchema,
   multipleResultSchema,
   responseSchema
-} from '@/endpoints/drizzle/schemas/response.schema';
+} from '@/endpoints/prisma/schemas/response.schema';
 import { createExampleUser } from '@/utils';
 
 // 기본 응답 DTO

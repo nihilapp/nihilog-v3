@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { PostInfoType } from '@/endpoints/drizzle/schemas/post.schema';
+import { PostInfoType } from '@/endpoints/prisma/schemas/post.schema';
 
 import { timeToString } from './timeHelper';
 

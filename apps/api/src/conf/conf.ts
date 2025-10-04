@@ -91,6 +91,7 @@ export const initialAdminConfig = registerAs('initialAdmin', () => ({
 // 데이터베이스 설정 객체 (YAML만 사용)
 export const databaseConfig = registerAs('database', () => ({
   url: config.database?.url || '',
+  directUrl: config.database?.directUrl || '',
   host: config.database?.host || 'localhost',
   port: config.database?.port || 5432,
   user: config.database?.user || 'postgres',

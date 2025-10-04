@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import type { CategorySubscribeDto, CreateCategorySubscribeDto, ListDto, MultipleCreateCategorySubscribeDto, MultipleDeleteCategorySubscribeDto, MultipleUpdateCategorySubscribeDto, MutationResponseDto, SearchCategorySubscribeDto } from '@/dto';
+import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/schemas/response.schema';
+import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 import { createError, createResponse } from '@/utils';
+import type { CtgrySbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class CategorySubscribeService {
@@ -13,7 +16,7 @@ export class CategorySubscribeService {
    * @description 사용자가 구독한 카테고리 목록 조회
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     const categorySubscribeList = await this.categorySubscribeRepository.getCategorySubscribeList(searchData);
 
     return categorySubscribeList;
@@ -24,7 +27,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeByUserNo(userNo: number, searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeByUserNo(userNo: number, searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     const categorySubscribeList = await this.categorySubscribeRepository.getCategorySubscribeByUserNo(userNo, searchData);
 
     return categorySubscribeList;
@@ -35,7 +38,7 @@ export class CategorySubscribeService {
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>): Promise<ListDto<CategorySubscribeDto>> {
+  async getCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
     const categorySubscribeList = await this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, searchData);
 
     return categorySubscribeList;
@@ -46,7 +49,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto>> {
+  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<CtgrySbcrMpng>> {
     const createSubscribe = await this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
 
     if (!createSubscribe) {
@@ -63,14 +66,12 @@ export class CategorySubscribeService {
     );
   }
 
-  // TODO: 여기서부터 시작
-
   /**
    * @description 카테고리 구독 목록 생성
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async multipleCreateCategorySubscribe(userNo: number, createData: MultipleCreateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto[]>> {
+  async multipleCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<CtgrySbcrMpng[]>> {
     const createSubscribe = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
 
     if (!createSubscribe) {
@@ -92,7 +93,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param updateData 카테고리 구독 수정 데이터
    */
-  async multipleUpdateCategorySubscribe(userNo: number, updateData: MultipleUpdateCategorySubscribeDto): Promise<ResponseDto<CategorySubscribeDto[]>> {
+  async multipleUpdateCategorySubscribe(userNo: number, updateData: UpdateCategorySubscribeDto): Promise<ResponseDto<MultipleResultType>> {
     const updateSubscribe = await this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
 
     if (!updateSubscribe) {
@@ -114,7 +115,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async deleteCategorySubscribe(userNo: number, ctgrySbcrNo: number): Promise<ResponseDto<MutationResponseDto>> {
+  async deleteCategorySubscribe(userNo: number, ctgrySbcrNo: number): Promise<ResponseDto<boolean>> {
     const deleteSubscribe = await this.categorySubscribeRepository.deleteCategorySubscribeByCtgrySbcrNo(userNo, ctgrySbcrNo);
 
     if (!deleteSubscribe) {
@@ -136,7 +137,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param deleteData 삭제할 카테고리 구독 데이터
    */
-  async multipleDeleteCategorySubscribe(userNo: number, deleteData: MultipleDeleteCategorySubscribeDto): Promise<ResponseDto<MutationResponseDto>> {
+  async multipleDeleteCategorySubscribe(userNo: number, deleteData: DeleteCategorySubscribeDto): Promise<ResponseDto<MultipleResultType>> {
     const deleteSubscribe = await this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
 
     if (!deleteSubscribe) {

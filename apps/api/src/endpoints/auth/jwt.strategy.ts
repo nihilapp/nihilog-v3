@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import type { FastifyRequest } from 'fastify';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
+import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 
 export interface JwtPayload {
   userNo: number;

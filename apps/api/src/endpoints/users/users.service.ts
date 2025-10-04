@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
-import type { CreateUserDto, ResponseDto, UserInfoDto } from '@/dto';
-import type { UserSubscribeDto, UpdateSubscribeDto } from '@/dto/subscribe.dto';
+import type { CreateUserDto, ResponseDto } from '@/dto';
+import type { UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
+import type { SelectUserSbcrInfoType } from '@/endpoints/prisma/types/subscribe.types';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
@@ -20,7 +22,7 @@ export class UserService {
    * @description 현재 로그인한 사용자의 프로필 정보를 조회합니다.
    * @param user 현재 로그인한 사용자의 정보
    */
-  async getUserProfile(user: JwtPayload): Promise<ResponseDto<UserInfoDto>> {
+  async getUserProfile(user: JwtPayload): Promise<ResponseDto<SelectUserInfoType>> {
     try {
       const findUser = await this.userRepository.getUserByNo(user.userNo);
 
@@ -43,7 +45,7 @@ export class UserService {
    * @description 현재 로그인한 사용자의 구독 정보를 조회합니다.
    * @param user 현재 로그인한 사용자의 정보
    */
-  async getUserSubscribeByUserNo(user: JwtPayload): Promise<ResponseDto<UserSubscribeDto>> {
+  async getUserSubscribeByUserNo(user: JwtPayload): Promise<ResponseDto<SelectUserSbcrInfoType>> {
     try {
       const subscribe = await this.subscribeRepository.getUserSubscribeByUserNo(user.userNo);
 
@@ -69,7 +71,7 @@ export class UserService {
    * @description 사용자 계정 생성
    * @param createUserDto 사용자 계정 생성 정보
    */
-  async createUser(createUserDto: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
+  async createUser(createUserDto: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     try {
       const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
 
@@ -97,7 +99,7 @@ export class UserService {
    * @param user 현재 로그인한 사용자의 정보
    * @param updateData 수정할 프로필 정보
    */
-  async updateUserProfile(user: JwtPayload, updateData: UpdateUserDto): Promise<ResponseDto<UserInfoDto>> {
+  async updateUserProfile(user: JwtPayload, updateData: UpdateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     try {
       const findUser = await this.userRepository.getUserByNo(user.userNo);
 
@@ -135,7 +137,7 @@ export class UserService {
   async updateUserSubscribe(
     user: JwtPayload,
     updateData: UpdateSubscribeDto
-  ): Promise<ResponseDto<UserSubscribeDto>> {
+  ): Promise<ResponseDto<SelectUserSbcrInfoType>> {
     try {
       const findUser = await this.userRepository.getUserByNo(user.userNo);
 

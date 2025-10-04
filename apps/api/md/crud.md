@@ -1,17 +1,25 @@
 # CRUD 메소드 명명 규칙 및 정의
 
-## 현재 구현 상태 (2025-10-02)
+## 현재 구현 상태 (2025-10-04)
+
+### 🏗️ 기술 스택 상태
+
+#### ORM 전환 현황
+
+- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post
+- ❌ **미구현**: Category, Tag, Comment
 
 ### 🚧 미구현 기능
 
 #### 기본 CRUD
-- **Post**: 게시글 CRUD (기본 구조만 존재, 구현 필요)
+
 - **Category**: 카테고리 CRUD (완전 미구현)
 - **Tag**: 태그 CRUD (완전 미구현)
 - **Comment**: 댓글 CRUD (완전 미구현)
 
 #### 확장 기능
-- **포스트 상호작용**: 좋아요, 북마크, 공유 추적 (완전 미구현)
+
+- **포스트 상호작용**: 북마크, 공유 추적 (완전 미구현)
 - **검색 시스템**: 전문 검색, 자동완성, 인기 키워드 (완전 미구현)
 - **RSS/피드**: RSS 생성, 사이트맵, Atom 피드 (완전 미구현)
 - **통계/분석**: 포스트 분석, 방문자 통계, 성과 측정 (완전 미구현)
@@ -22,7 +30,19 @@
 
 ### 🔄 부분 구현 기능
 
-- (없음)
+#### Post (게시글) - Prisma 사용 중
+
+**구현 완료**:
+
+- ✅ 게시글 목록 조회 (일반/태그별/카테고리별/아카이브)
+- ✅ 게시글 상세 조회 (번호/슬러그)
+- ✅ 고급 검색 (복합 필드, 날짜/조회수 범위 필터)
+
+**미구현**:
+
+- ❌ 관리자 CRUD (생성, 수정, 삭제)
+- ❌ 사용자 상호작용 (북마크, 공유, 조회수 통계)
+- ❌ 통계 및 관리 기능 (추천, 고정, 통계)
 
 > **완료된 기능들은 [crud.complete.md](./crud.complete.md)에서 확인하세요.**
 
@@ -93,22 +113,10 @@
 
 ### 사용자 상호작용 기능
 
-- [ ] POST /posts/:pstNo/like **[USER/GUEST]**
-  - `togglePostLike`
-  - params: pstNo: number
-  - 기능: 게시글 좋아요/취소 토글, 회원/비회원 모두 지원, IP+UserAgent 중복 방지
-- [ ] GET /posts/:pstNo/like/status **[USER/GUEST]**
-  - `getPostLikeStatus`
-  - params: pstNo: number
-  - 기능: 현재 사용자의 좋아요 상태 조회
-- [ ] GET /posts/:pstNo/like/count **[PUBLIC]**
-  - `getPostLikeCount`
-  - params: pstNo: number
-  - 기능: 게시글 총 좋아요 수 조회
 - [ ] GET /posts/:pstNo/views **[USER]**
   - `getPostViewStats`
   - params: pstNo: number
-  - query: period?
+  - query: startDt: string, endDt: string
   - 기능: 게시글 조회수 통계 (일/주/월별)
 - [ ] POST /posts/:pstNo/bookmark **[USER]**
   - `bookmarkPost`
@@ -121,7 +129,7 @@
 - [ ] POST /posts/:pstNo/share **[USER]**
   - `trackPostShare`
   - params: pstNo: number
-  - body: { platform: string, url?: string }
+  - body: { platform: string, url: string }
   - 기능: 포스트 공유 추적, 플랫폼별 공유 통계 (트위터, 페이스북, 링크드인 등)
 
 ### 관리자 기능 (작성자)
@@ -305,11 +313,13 @@
 ### 고급 검색 기능
 
 - [ ] POST /search/posts **[USER]**
+
   - `searchPostsAdvanced`
   - body: AdvancedSearchDto
   - 기능: 제목, 본문, 태그 통합 전문 검색, 검색 하이라이팅, 필터링 조합
 
 - [ ] GET /search/autocomplete **[USER]**
+
   - `getSearchSuggestions`
   - query: term: string
   - 기능: 입력한 글자 기반 검색어 자동완성, 인기 키워드 우선 표시
@@ -331,23 +341,27 @@
 ### 공개 피드
 
 - [ ] GET /feeds/rss **[PUBLIC]**
+
   - `generateRSSFeed`
   - query: limit?
   - 기능: 전체 포스트 RSS 2.0 피드 생성, 자동 업데이트
 
 - [ ] GET /feeds/rss/category/:ctgryNo **[PUBLIC]**
+
   - `generateCategoryRSSFeed`
   - params: ctgryNo: number
   - query: limit?
   - 기능: 특정 카테고리 RSS 피드
 
 - [ ] GET /feeds/rss/tag/:tagNo **[PUBLIC]**
+
   - `generateTagRSSFeed`
   - params: tagNo: number
   - query: limit?
   - 기능: 특정 태그 RSS 피드
 
 - [ ] GET /sitemap.xml **[PUBLIC]**
+
   - `generateSitemap`
   - 기능: SEO용 XML 사이트맵 자동 생성, 포스트/카테고리/태그 포함
 
@@ -360,9 +374,10 @@
 ### 포스트 분석
 
 - [ ] GET /admin/analytics/posts **[ADMIN]**
+
   - `getPostAnalytics`
   - query: period?, category?, tag?
-  - 기능: 포스트별 조회수, 좋아요, 댓글, 공유 통계 종합
+  - 기능: 포스트별 조회수, 댓글, 공유 통계 종합
 
 - [ ] GET /admin/analytics/popular **[ADMIN]**
   - `getPopularContent`
@@ -372,6 +387,7 @@
 ### 방문자 분석
 
 - [ ] GET /admin/analytics/visitors **[ADMIN]**
+
   - `getVisitorAnalytics`
   - query: period?
   - 기능: 방문자 수, 유입 경로, 시간대별 패턴, 지역별 분포
@@ -386,13 +402,14 @@
 - [ ] GET /admin/analytics/engagement **[ADMIN]**
   - `getEngagementMetrics`
   - query: period?
-  - 기능: 좋아요율, 댓글율, 공유율, 구독 전환율
+  - 기능: 댓글율, 공유율, 구독 전환율
 
 ## 12. 알림 및 구독 시스템
 
 ### 이메일 알림
 
 - [ ] POST /admin/notifications/email **[ADMIN]**
+
   - `sendEmailNotification`
   - body: EmailNotificationDto
   - 기능: 새 글 발행 시 구독자들에게 이메일 일괄 발송
@@ -405,11 +422,13 @@
 ### 웹훅 연동
 
 - [ ] POST /admin/webhooks **[ADMIN]**
+
   - `createWebhook`
   - body: CreateWebhookDto
   - 기능: 웹훅 URL 등록 (슬랙, 디스코드, 자체 서비스)
 
 - [ ] PUT /admin/webhooks/:webhookId **[ADMIN]**
+
   - `updateWebhook`
   - params: webhookId: string
   - body: UpdateWebhookDto
@@ -425,6 +444,7 @@
 ### 메타 태그 관리
 
 - [ ] PUT /admin/posts/:pstNo/seo **[ADMIN]**
+
   - `updatePostSEO`
   - params: pstNo: number
   - body: PostSEODto
@@ -446,6 +466,7 @@
 ### 콘텐츠 백업
 
 - [ ] GET /admin/backup/posts **[ADMIN]**
+
   - `exportPosts`
   - query: format?, category?, period?
   - 기능: 포스트 백업 (Markdown, JSON, HTML 형식)
@@ -458,6 +479,7 @@
 ### 미디어 관리
 
 - [ ] POST /admin/media/optimize **[ADMIN]**
+
   - `optimizeImages`
   - body: OptimizeImageDto
   - 기능: 업로드된 이미지 일괄 최적화, 리사이징, WebP 변환

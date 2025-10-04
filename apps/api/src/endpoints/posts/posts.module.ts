@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
-import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { PostsController } from '@/endpoints/posts/posts.controller';
 import { PostsService } from '@/endpoints/posts/posts.service';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 
 @Module({
-  imports: [ DrizzleModule, ],
+  imports: [ PrismaModule, ],
   providers: [ PostsService, PostRepository, ],
   controllers: [ PostsController, ],
   exports: [ PostsService, ],

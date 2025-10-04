@@ -5,7 +5,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 
 import { ResponseDto } from '@/dto/response.dto';
-import { userRoleSchema } from '@/endpoints/drizzle/schemas/user.schema';
+import { userRoleSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError } from '@/utils';
 
 import { JwtPayload } from './jwt.strategy';

@@ -12,8 +12,7 @@ import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto, type SignInResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import { AdminUserService } from '@/endpoints/admin/users/admin-users.service';
-import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
-import { UserRoleType } from '@/endpoints/drizzle/schemas/user.schema';
+import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
 import { timeToString } from '@/utils/timeHelper';
@@ -29,7 +28,6 @@ interface JwtPayload {
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(DRIZZLE)
     private readonly usersService: AdminUserService,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,

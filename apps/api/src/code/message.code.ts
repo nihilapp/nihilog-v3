@@ -377,12 +377,9 @@ export const MESSAGE_CODE = {
   // 성공/정보 메시지
   DB_CONNECTED: '데이터베이스에 연결되었습니다.',
   DB_DISCONNECTED: '데이터베이스 연결이 종료되었습니다.',
-  DB_SEARCH_PATH_SET: '데이터베이스 검색 경로가 설정되었습니다.',
 
   // 에러 메시지
   DB_CONNECTION_ERROR: '데이터베이스 연결에 실패했습니다.',
-  DB_POOL_INIT_ERROR: '데이터베이스 풀 초기화에 실패했습니다.',
-  DB_SEARCH_PATH_SET_FAILED: '데이터베이스 검색 경로 설정에 실패했습니다.',
   DB_QUERY_ERROR: '데이터베이스 쿼리 실행 중 오류가 발생했습니다.',
-  DRIZZLE_INIT_ERROR: 'Drizzle 초기화 중 오류가 발생했습니다.',
+  PRISMA_INIT_ERROR: 'Prisma 초기화 중 오류가 발생했습니다.',
 } as const;

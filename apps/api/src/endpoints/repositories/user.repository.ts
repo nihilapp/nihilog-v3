@@ -1,135 +1,42 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { and, asc, eq, inArray, sql } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
-import { UpdateUserDto, type SearchUserDto, type UserInfoDto } from '@/dto/user.dto';
-import { DRIZZLE } from '@/endpoints/drizzle/drizzle.module';
-import { schemas } from '@/endpoints/drizzle/schemas';
-import type { MultipleResultType } from '@/endpoints/drizzle/schemas/response.schema';
-import { UserInfoType } from '@/endpoints/drizzle/schemas/user.schema';
-import { userInfo } from '@/endpoints/drizzle/tables';
-import { likes, updateColumns } from '@/utils/ormHelper';
+import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
+import { PRISMA } from '@/endpoints/prisma/prisma.module';
+import type { ListType } from '@/endpoints/prisma/schemas/response.schema';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type {
+  SelectUserInfoListItemType,
+  SelectUserInfoType
+} from '@/endpoints/prisma/types/user.types';
 import { pageHelper } from '@/utils/pageHelper';
-import { isEmptyString } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
-
-// 공용 사용자 select 매핑: 중복 제거
-const userInfoSelect = {
-  userNo: userInfo.userNo,
-  emlAddr: userInfo.emlAddr,
-  userNm: userInfo.userNm,
-  userRole: userInfo.userRole,
-  proflImg: userInfo.proflImg,
-  userBiogp: userInfo.userBiogp,
-  encptPswd: userInfo.encptPswd,
-  reshToken: userInfo.reshToken,
-  useYn: userInfo.useYn,
-  delYn: userInfo.delYn,
-  lastLgnDt: userInfo.lastLgnDt,
-  crtNo: userInfo.crtNo,
-  crtDt: userInfo.crtDt,
-  updtNo: userInfo.updtNo,
-  updtDt: userInfo.updtDt,
-  delNo: userInfo.delNo,
-  delDt: userInfo.delDt,
-} as const;
-
-const userInfoSelectSql = sql`
-    USER_NO AS "userNo"
-  , EML_ADDR AS "emlAddr"
-  , USER_NM AS "userNm"
-  , USER_ROLE AS "userRole"
-  , PROFL_IMG AS "proflImg"
-  , USER_BIOGP AS "userBiogp"
-  , ENCPT_PSWD AS "encptPswd"
-  , RESH_TOKEN AS "reshToken"
-  , USE_YN AS "useYn"
-  , DEL_YN AS "delYn"
-  , TO_CHAR(LAST_LGN_DT, 'YYYY-MM-DD HH24:MI:SS') AS "lastLgnDt"
-  , CRT_NO AS "crtNo"
-  , TO_CHAR(CRT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "crtDt"
-  , UPDT_NO AS "updtNo"
-  , TO_CHAR(UPDT_DT, 'YYYY-MM-DD HH24:MI:SS') AS "updtDt"
-  , DEL_NO AS "delNo"
-  , TO_CHAR(DEL_DT, 'YYYY-MM-DD HH24:MI:SS') AS "delDt"
-`;
-// {
-//   userNo: userInfo.userNo,
-//   emlAddr: userInfo.emlAddr,
-//   userNm: userInfo.userNm,
-//   userRole: userInfo.userRole,
-//   proflImg: userInfo.proflImg,
-//   userBiogp: userInfo.userBiogp,
-//   encptPswd: userInfo.encptPswd,
-//   reshToken: userInfo.reshToken,
-//   useYn: userInfo.useYn,
-//   delYn: userInfo.delYn,
-//   lastLgnDt: userInfo.lastLgnDt,
-//   crtNo: userInfo.crtNo,
-//   crtDt: userInfo.crtDt,
-//   updtNo: userInfo.updtNo,
-//   updtDt: userInfo.updtDt,
-//   delNo: userInfo.delNo,
-//   delDt: userInfo.delDt,
-// } as const;
-
-const userInfoSelectWithoutPassword = {
-  userNo: userInfo.userNo,
-  emlAddr: userInfo.emlAddr,
-  userNm: userInfo.userNm,
-  userRole: userInfo.userRole,
-  proflImg: userInfo.proflImg,
-  userBiogp: userInfo.userBiogp,
-  encptPswd: sql<null>`null`.as('encptPswd'),
-  reshToken: sql<null>`null`.as('reshToken'),
-  useYn: userInfo.useYn,
-  delYn: userInfo.delYn,
-  lastLgnDt: userInfo.lastLgnDt,
-  crtNo: userInfo.crtNo,
-  crtDt: userInfo.crtDt,
-  updtNo: userInfo.updtNo,
-  updtDt: userInfo.updtDt,
-  delNo: userInfo.delNo,
-  delDt: userInfo.delDt,
-} as const;
-
-// 리스트 조회용 select 매핑 (totalCnt 포함)
-const userInfoSelectWithTotal = {
-  ...userInfoSelect,
-  totalCnt: sql<number>`count(1) over()`.as('totalCnt'),
-} as const;
+import { PrismaClient, type UserRole } from '~prisma/client';
 
 @Injectable()
 export class UserRepository {
-  constructor(@Inject(DRIZZLE)
-  private readonly db: NodePgDatabase<typeof schemas>) { }
+  constructor(@Inject(PRISMA)
+  private readonly prisma: PrismaClient) { }
 
   /**
    * @description 사용자 번호로 조회
    * @param userNo 사용자 번호
    * @param delYn 삭제 여부
    */
-  async getUserByNo(userNo: number, delYn: 'Y' | 'N' = 'N'): Promise<typeof userInfo.$inferSelect | null> {
+  async getUserByNo(
+    userNo: number,
+    delYn: 'Y' | 'N' = 'N'
+  ): Promise<SelectUserInfoType | null> {
     try {
-      const user = await this.db.execute<typeof userInfo.$inferSelect>(sql`
-        SELECT
-          ${userInfoSelectSql}
-        FROM
-          USER_INFO
-        WHERE
-          1 = 1
-        ${userNo != null && userNo !== 0
-          ? sql`AND USER_NO = ${userNo}`
-          : sql``}
-        AND
-          DEL_YN = COALESCE(${delYn}, 'N')
-      `);
+      const user = await this.prisma.userInfo.findFirst({
+        where: {
+          userNo,
+          delYn,
+        },
+      });
 
-      console.log(user);
-
-      return user.rows[0] || null;
+      return user;
     }
     catch {
       return null;
@@ -146,25 +53,22 @@ export class UserRepository {
     userNo: number | null,
     signUpData: CreateUserDto | CreateAdminDto,
     hashedPassword: string
-  ): Promise<UserInfoType | null> {
+  ): Promise<SelectUserInfoType | null> {
     const currentTime = timeToString();
 
     try {
-      const [ result, ] = await this.db
-        .insert(userInfo)
-        .values({
-          emlAddr: signUpData.emlAddr,
-          userNm: signUpData.userNm,
-          userRole: signUpData.userRole,
+      const newUser = await this.prisma.userInfo.create({
+        data: {
+          ...signUpData,
           encptPswd: hashedPassword,
-          crtNo: userNo || null,
+          crtNo: userNo ?? null,
           crtDt: currentTime,
-          updtNo: userNo || null,
+          updtNo: userNo ?? null,
           updtDt: currentTime,
-        })
-        .returning(userInfoSelectWithoutPassword);
+        },
+      });
 
-      return result;
+      return newUser;
     }
     catch {
       return null;
@@ -177,28 +81,24 @@ export class UserRepository {
    * @param targetUserNo 대상 사용자 번호
    * @param updateData 업데이트 데이터
    */
-  async updateUser(userNo: number, targetUserNo: number, updateData: UpdateUserDto): Promise<UserInfoType | null> {
-    const updateValues = updateColumns(updateData);
-
-    if (Object.keys(updateValues).length === 0) {
-      return null;
-    }
-
+  async updateUser(
+    userNo: number,
+    targetUserNo: number,
+    updateData: UpdateUserDto
+  ): Promise<SelectUserInfoType | null> {
     try {
-      const [ result, ] = await this.db
-        .update(userInfo)
-        .set({
-          ...updateValues,
+      const updateUser = await this.prisma.userInfo.update({
+        where: {
+          userNo: targetUserNo,
+        },
+        data: {
+          ...updateData,
           updtNo: userNo,
           updtDt: timeToString(),
-        })
-        .where(eq(
-          userInfo.userNo,
-          targetUserNo
-        ))
-        .returning(userInfoSelectWithoutPassword);
+        },
+      });
 
-      return result;
+      return updateUser;
     }
     catch {
       return null;
@@ -210,23 +110,32 @@ export class UserRepository {
    * @param userNo 현재 사용자 번호
    * @param targetUserNo 대상 사용자 번호
    */
-  async deleteUser(userNo: number, targetUserNo: number): Promise<boolean> {
+  async deleteUser(
+    userNo: number,
+    targetUserNo: number
+  ): Promise<boolean> {
     const currentTime = timeToString();
 
     try {
-      await this.db
-        .update(userInfo)
-        .set({
+      const result = await this.prisma.userInfo.update({
+        where: {
+          userNo: targetUserNo,
+        },
+        data: {
           useYn: 'N',
           delYn: 'Y',
           delDt: currentTime,
           delNo: userNo,
           updtDt: currentTime,
           updtNo: userNo,
-        })
-        .where(eq(userInfo.userNo, targetUserNo));
+        },
+      });
 
-      return true;
+      if (result) {
+        return true;
+      }
+
+      return false;
     }
     catch {
       return false;
@@ -237,32 +146,53 @@ export class UserRepository {
    * @description 사용자 목록 조회
    * @param searchData 검색 조건
    */
-  async getUserList(searchData: SearchUserDto & Partial<UserInfoDto>): Promise<UserInfoType[]> {
+  async getUserList(searchData: SearchUserDto): Promise<ListType<SelectUserInfoListItemType>> {
     const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
-    const searchConditions: Record<string, string> = {};
-    if (!isEmptyString(srchKywd) && srchType) {
-      searchConditions[srchType] = srchKywd;
-    }
+    const where = {
+      delYn,
+      ...(srchKywd && (srchType === 'userNm') && {
+        userNm: {
+          contains: srchKywd,
+        },
+      }),
+      ...(srchKywd && (srchType === 'emlAddr') && {
+        emlAddr: {
+          contains: srchKywd,
+        },
+      }),
+      ...(srchKywd && (srchType === 'userRole') && {
+        userRole: srchKywd as UserRole,
+      }),
+    };
 
-    const whereConditions = [
-      ...likes(userInfo, searchConditions),
-      eq(userInfo.delYn, delYn || 'N'),
-    ];
+    const skip = pageHelper(page, strtRow, endRow).offset;
+    const take = pageHelper(page, strtRow, endRow).limit;
 
     try {
-      const result = await this.db
-        .select(userInfoSelectWithTotal)
-        .from(userInfo)
-        .where(and(...whereConditions))
-        .orderBy(asc(userInfo.userNo))
-        .limit(pageHelper(page, strtRow, endRow).limit)
-        .offset(pageHelper(page, strtRow, endRow).offset);
+      const [ totalCnt, list, ] = await this.prisma.$transaction([
+        this.prisma.userInfo.count({ where, orderBy: { userNo: 'desc', }, }),
+        this.prisma.userInfo.findMany({
+          where,
+          skip,
+          take,
+          orderBy: {
+            userNo: 'desc',
+          },
+        }),
+      ]);
 
-      return result;
+      return {
+        list: list.map((user, index) => ({
+          ...user,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
+      };
     }
     catch {
-      return [];
+      return null;
     }
   }
 
@@ -271,19 +201,19 @@ export class UserRepository {
    * @param emlAddr 이메일 주소
    * @param delYn 삭제 여부
    */
-  async getUserByEmail(emlAddr: string, delYn: 'Y' | 'N' = 'N'): Promise<UserInfoType | null> {
-    const whereConditions = [
-      eq(userInfo.emlAddr, emlAddr),
-      eq(userInfo.delYn, delYn),
-    ];
-
+  async getUserByEmail(
+    emlAddr: string,
+    delYn: 'Y' | 'N' = 'N'
+  ): Promise<SelectUserInfoType | null> {
     try {
-      const [ result, ] = await this.db
-        .select(userInfoSelect)
-        .from(userInfo)
-        .where(and(...whereConditions));
+      const user = await this.prisma.userInfo.findFirst({
+        where: {
+          emlAddr,
+          delYn,
+        },
+      });
 
-      return result;
+      return user;
     }
     catch {
       return null;
@@ -295,88 +225,19 @@ export class UserRepository {
    * @param userNm 사용자명
    * @param delYn 삭제 여부
    */
-  async getUserByName(userNm: string, delYn: 'Y' | 'N' = 'N'): Promise<UserInfoType | null> {
-    const whereConditions = [
-      eq(userInfo.userNm, userNm),
-      eq(userInfo.delYn, delYn),
-    ];
-
+  async getUserByName(
+    userNm: string,
+    delYn: 'Y' | 'N' = 'N'
+  ): Promise<SelectUserInfoType | null> {
     try {
-      const [ result, ] = await this.db
-        .select(userInfoSelect)
-        .from(userInfo)
-        .where(and(...whereConditions));
+      const user = await this.prisma.userInfo.findFirst({
+        where: {
+          userNm,
+          delYn,
+        },
+      });
 
-      return result;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 관리자가 사용자 계정 생성
-   * @param userNo 현재 사용자 번호
-   * @param signUpData 회원가입 정보
-   * @param hashedPassword 해시된 비밀번호
-   */
-  async adminCreateUser(
-    userNo: number | null,
-    signUpData: CreateUserDto | CreateAdminDto,
-    hashedPassword: string
-  ): Promise<UserInfoType | null> {
-    const currentTime = timeToString();
-
-    try {
-      const [ result, ] = await this.db
-        .insert(userInfo)
-        .values({
-          emlAddr: signUpData.emlAddr,
-          userNm: signUpData.userNm,
-          userRole: signUpData.userRole,
-          encptPswd: hashedPassword,
-          crtNo: userNo || null,
-          crtDt: currentTime,
-          updtNo: userNo || null,
-          updtDt: currentTime,
-        })
-        .returning(userInfoSelectWithoutPassword);
-
-      return result;
-    }
-    catch {
-      return null;
-    }
-  }
-
-  /**
-   * @description 관리자가 사용자 정보 업데이트
-   * @param userNo 현재 사용자 번호
-   * @param targetUserNo 대상 사용자 번호
-   * @param updateData 업데이트 데이터
-   */
-  async adminUpdateUser(userNo: number, targetUserNo: number, updateData: UpdateUserDto): Promise<UserInfoType | null> {
-    const updateValues = updateColumns(updateData);
-
-    if (Object.keys(updateValues).length === 0) {
-      return null;
-    }
-
-    try {
-      const [ result, ] = await this.db
-        .update(userInfo)
-        .set({
-          ...updateValues,
-          updtNo: userNo,
-          updtDt: timeToString(),
-        })
-        .where(eq(
-          userInfo.userNo,
-          targetUserNo
-        ))
-        .returning(userInfoSelectWithoutPassword);
-
-      return result;
+      return user;
     }
     catch {
       return null;
@@ -388,42 +249,44 @@ export class UserRepository {
    * @param userNo 현재 사용자 번호
    * @param updateUserDto 사용자 수정 정보 목록
    */
-  async adminMultipleUpdateUser(userNo: number, updateUserDto: UpdateUserDto): Promise<MultipleResultType | null> {
-    const { userNoList, delYn, useYn, userRole, } = updateUserDto;
+  async adminMultipleUpdateUser(
+    userNo: number,
+    updateUserDto: UpdateUserDto
+  ): Promise<MultipleResultType | null> {
+    const { userNoList, ...restData } = updateUserDto;
 
     if (!userNoList || userNoList.length === 0) {
       return null;
     }
 
     try {
-      const result = await this.db
-        .update(userInfo)
-        .set({
+      const result = await this.prisma.userInfo.updateManyAndReturn({
+        where: {
+          userNo: {
+            in: userNoList,
+          },
+        },
+        data: {
+          ...restData,
           updtNo: userNo,
           updtDt: timeToString(),
-          ...(delYn && {
+          ...(restData.delYn && {
+            delYn: restData.delYn,
             delNo: userNo,
-            delYn,
             delDt: timeToString(),
           }),
-          ...(useYn && { useYn, }),
-          ...(userRole && { userRole, }),
-        })
-        .where(inArray(userInfo.userNo, userNoList))
-        .returning({
-          userNo: userInfo.userNo,
-        });
+        },
+        select: {
+          userNo: true,
+        },
+      });
 
-      const successCnt = result.length;
-      const failCnt = userNoList.length - successCnt;
       const failNoList = userNoList
-        .filter((item) => (
-          !result.some((resultItem) => resultItem.userNo === item)
-        ));
+        .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
       return {
-        successCnt,
-        failCnt,
+        successCnt: result.length,
+        failCnt: userNoList.length - result.length,
         failNoList,
       };
     }
@@ -433,60 +296,49 @@ export class UserRepository {
   }
 
   /**
-   * @description 관리자가 사용자 소프트 삭제
-   * @param userNo 현재 사용자 번호
-   * @param targetUserNo 대상 사용자 번호
-   */
-  async adminDeleteUser(userNo: number, targetUserNo: number): Promise<boolean> {
-    const currentTime = timeToString();
-
-    try {
-      await this.db
-        .update(userInfo)
-        .set({
-          useYn: 'N',
-          delYn: 'Y',
-          delDt: currentTime,
-          delNo: userNo,
-          updtDt: currentTime,
-          updtNo: userNo,
-        })
-        .where(eq(userInfo.userNo, targetUserNo));
-
-      return true;
-    }
-    catch {
-      return false;
-    }
-  }
-
-  /**
    * @description 다수 사용자 일괄 삭제
    * @param userNo 현재 사용자 번호
    * @param userNoList 사용자 번호 목록
    */
-  async adminMultipleDeleteUser(userNo: number, userNoList: number[]): Promise<boolean> {
+  async adminMultipleDeleteUser(
+    userNo: number,
+    userNoList: number[]
+  ): Promise<MultipleResultType | null> {
     if (!userNoList || userNoList.length === 0) {
-      return false;
+      return null;
     }
 
     try {
-      await this.db
-        .update(userInfo)
-        .set({
+      const result = await this.prisma.userInfo.updateManyAndReturn({
+        where: {
+          userNo: {
+            in: userNoList,
+          },
+        },
+        data: {
           useYn: 'N',
           delYn: 'Y',
           delDt: timeToString(),
           delNo: userNo,
           updtDt: timeToString(),
           updtNo: userNo,
-        })
-        .where(inArray(userInfo.userNo, userNoList));
+        },
+        select: {
+          userNo: true,
+        },
+      });
 
-      return true;
+      const failNoList = userNoList
+        .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
+
+      return {
+        successCnt: result.length,
+        failCnt: userNoList.length - result.length,
+        failNoList,
+      };
     }
     catch {
-      return false;
+      return null;
     }
   }
 }

@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
 import { CreateUserDto } from '@/dto/auth.dto';
-import { ListDto, type MultipleResultDto, type ResponseDto } from '@/dto/response.dto';
-import { UserInfoDto, UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
+import { type MultipleResultDto, type ResponseDto } from '@/dto/response.dto';
+import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
-import { searchUserSchema } from '@/endpoints/drizzle/schemas/user.schema';
+import type { ListType } from '@/endpoints/prisma/schemas/response.schema';
+import { searchUserSchema } from '@/endpoints/prisma/schemas/user.schema';
+import type { SelectUserInfoType, SelectUserInfoListItemType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { createError, createResponse } from '@/utils';
 
@@ -22,7 +24,7 @@ export class AdminUserService {
    * @param srchKywd 검색 키워드
    * @param delYn 삭제 여부
    */
-  async getUserList(searchData: SearchUserDto & Partial<UserInfoDto>): Promise<ListDto<UserInfoDto> | null> {
+  async getUserList(searchData: SearchUserDto): Promise<ListType<SelectUserInfoListItemType> | null> {
     const safeData = searchUserSchema.safeParse(searchData);
 
     if (!safeData.success) {
@@ -43,14 +45,7 @@ export class AdminUserService {
         delYn: safeData.data.delYn,
       });
 
-      const totalCnt = result.length > 0
-        ? result[0].totalCnt
-        : 0;
-
-      return {
-        list: result,
-        totalCnt,
-      };
+      return result;
     }
     catch {
       return null;
@@ -61,7 +56,7 @@ export class AdminUserService {
    * @description 사용자 번호로 조회
    * @param userNo 사용자 번호
    */
-  async getUserByNo(userNo: number): Promise<UserInfoDto | null> {
+  async getUserByNo(userNo: number): Promise<SelectUserInfoType | null> {
     try {
       const userData = await this.userRepository.getUserByNo(userNo);
       return userData;
@@ -75,7 +70,7 @@ export class AdminUserService {
    * @description 사용자명으로 조회
    * @param userNm 사용자명
    */
-  async getUserByNm(userNm: string): Promise<UserInfoDto | null> {
+  async getUserByNm(userNm: string): Promise<SelectUserInfoType | null> {
     try {
       const userData = await this.userRepository.getUserByName(userNm);
       return userData;
@@ -89,7 +84,7 @@ export class AdminUserService {
    * @description 이메일로 사용자 조회
    * @param emlAddr 이메일 주소
    */
-  async getUserByEmail(emlAddr: string): Promise<UserInfoDto | null> {
+  async getUserByEmail(emlAddr: string): Promise<SelectUserInfoType | null> {
     try {
       const userData = await this.userRepository.getUserByEmail(emlAddr);
       return userData;
@@ -104,7 +99,7 @@ export class AdminUserService {
    * @param user 사용자 정보
    * @param createUserData 사용자 생성 정보
    */
-  async createUser(user: JwtPayload, createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
+  async createUser(user: JwtPayload, createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     try {
       // 이메일 중복 확인
       const findUser = await this.userRepository.getUserByEmail(createUserData.emlAddr);
@@ -123,7 +118,7 @@ export class AdminUserService {
       );
 
       // 사용자 계정 생성
-      const newUser = await this.userRepository.adminCreateUser(
+      const newUser = await this.userRepository.createUser(
         user.userNo,
         createUserData,
         hashedPassword
@@ -149,7 +144,7 @@ export class AdminUserService {
    * @param targetUserNo 대상 사용자 번호
    * @param updateUserData 사용자 수정 정보
    */
-  async updateUser(adminUserNo: number, targetUserNo: number, updateUserData: UpdateUserDto): Promise<ResponseDto<UserInfoDto>> {
+  async updateUser(adminUserNo: number, targetUserNo: number, updateUserData: UpdateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     try {
       // 사용자 검색
       const findUser = await this.userRepository.getUserByNo(targetUserNo);
@@ -170,7 +165,7 @@ export class AdminUserService {
         }
       }
 
-      const result = await this.userRepository.adminUpdateUser(
+      const result = await this.userRepository.updateUser(
         adminUserNo,
         targetUserNo,
         updateUserData
@@ -233,7 +228,7 @@ export class AdminUserService {
         );
       }
 
-      const result = await this.userRepository.adminDeleteUser(adminUserNo, targetUserNo);
+      const result = await this.userRepository.deleteUser(adminUserNo, targetUserNo);
 
       if (!result) {
         return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');

@@ -1,288 +1,33 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { createZodDto } from 'nestjs-zod';
 
-import type { YnType } from '@/endpoints/drizzle/schemas/common.schema';
 import {
   updateUserSchema,
   userInfoSchema,
-  type UserRoleType,
-  deleteMultipleUsersSchema
-} from '@/endpoints/drizzle/schemas/user.schema';
-
-import { SearchDto } from './search.dto';
+  deleteMultipleUsersSchema,
+  searchUserSchema
+} from '@/endpoints/prisma/schemas/user.schema';
 
 // 사용자 조회 DTO
 export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {
-  @ApiProperty({
-    description: '사용자 번호',
-    example: 1,
-    required: false,
-  })
-  declare userNo?: number;
-
-  @ApiProperty({
-    description: '사용자 이메일 주소 (올바른 이메일 형식)',
-    example: 'user@example.com',
-  })
-  declare emlAddr: string;
-
-  @ApiProperty({
-    description: '사용자명 (2-30자)',
-    example: '홍길동',
-  })
-  declare userNm: string;
-
-  @ApiProperty({
-    description: '사용자 역할',
-    enum: [ 'USER', 'ADMIN', ],
-    example: 'USER',
-  })
-  declare userRole: UserRoleType;
-
-  @ApiProperty({
-    description: '사용 여부',
-    enum: [ 'Y', 'N', ],
-    example: 'Y',
-  })
-  declare useYn: YnType;
-
-  @ApiProperty({
-    description: '삭제 여부',
-    enum: [ 'Y', 'N', ],
-    example: 'N',
-  })
-  declare delYn: YnType;
-
   @Exclude({ toPlainOnly: true, })
-  @ApiProperty({
-    description: '암호화된 비밀번호 (8-255자, 영문/숫자/특수문자 포함)',
-    example: 'hashedPassword123!',
-  })
   declare encptPswd: string;
 
-  @ApiProperty({
-    description: '사용자 자기소개 (500자 이하)',
-    example: '안녕하세요! 개발자입니다.',
-    required: false,
-  })
-  declare userBiogp?: string | null;
-
-  @ApiProperty({
-    description: '프로필 이미지 URL (올바른 URL 형식)',
-    example: 'https://example.com/profile.jpg',
-    required: false,
-  })
-  declare proflImg?: string | null;
-
   @Exclude({ toPlainOnly: true, })
-  @ApiProperty({
-    description: '리프레시 토큰',
-    example: 'refresh_token_here',
-    required: false,
-  })
   declare reshToken?: string | null;
-
-  @ApiProperty({
-    description: '마지막 로그인 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare lastLgnDt?: string | null;
-
-  @ApiProperty({
-    description: '마지막 비밀번호 변경 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare lastPswdChgDt?: string | null;
-
-  @ApiProperty({
-    description: '생성자 번호',
-    example: 1,
-    required: false,
-  })
-  declare crtNo?: number | null;
-
-  @ApiProperty({
-    description: '생성 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare crtDt?: string | null;
-
-  @ApiProperty({
-    description: '수정자 번호',
-    example: 1,
-    required: false,
-  })
-  declare updtNo?: number | null;
-
-  @ApiProperty({
-    description: '수정 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare updtDt?: string | null;
-
-  @ApiProperty({
-    description: '삭제자 번호',
-    example: 1,
-    required: false,
-  })
-  declare delNo?: number | null;
-
-  @ApiProperty({
-    description: '삭제 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare delDt?: string | null;
 }
 
-// 사용자 프로필 업데이트 DTO - 수정 가능한 모든 필드 포함
+// 사용자 업데이트 DTO
 export class UpdateUserDto extends createZodDto(updateUserSchema) {
-  @ApiProperty({
-    description: '사용자명 (2-30자)',
-    example: '홍길동',
-    required: false,
-  })
-  declare userNm?: string;
-
-  @ApiProperty({
-    description: '프로필 이미지 URL (올바른 URL 형식)',
-    example: 'https://example.com/profile.jpg',
-    required: false,
-  })
-  declare proflImg?: string;
-
-  @ApiProperty({
-    description: '사용자 자기소개 (500자 이하)',
-    example: '안녕하세요! 개발자입니다.',
-    required: false,
-  })
-  declare userBiogp?: string;
-
-  @ApiProperty({
-    description: '사용자 역할',
-    enum: [ 'USER', 'ADMIN', ],
-    example: 'USER',
-    required: false,
-  })
-  declare userRole?: UserRoleType;
-
-  @ApiProperty({
-    description: '사용 여부',
-    enum: [ 'Y', 'N', ],
-    example: 'Y',
-    required: false,
-  })
-  declare useYn?: YnType;
-
-  @ApiProperty({
-    description: '삭제 여부',
-    enum: [ 'Y', 'N', ],
-    example: 'N',
-    required: false,
-  })
-  declare delYn?: YnType;
-
   @Exclude({ toPlainOnly: true, })
-  @ApiProperty({
-    description: '암호화된 비밀번호',
-    example: 'hashedPassword123!',
-    required: false,
-  })
   declare encptPswd?: string;
 
   @Exclude({ toPlainOnly: true, })
-  @ApiProperty({
-    description: '리프레시 토큰',
-    example: 'refresh_token_here',
-    required: false,
-  })
   declare reshToken?: string | null;
-
-  @ApiProperty({
-    description: '마지막 로그인 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare lastLgnDt?: string | null;
-
-  @ApiProperty({
-    description: '마지막 비밀번호 변경 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare lastPswdChgDt?: string | null;
-
-  @ApiProperty({
-    description: '생성자 번호',
-    example: 1,
-    required: false,
-  })
-  declare crtNo?: number | null;
-
-  @ApiProperty({
-    description: '수정자 번호',
-    example: 1,
-    required: false,
-  })
-  declare updtNo?: number | null;
-
-  @ApiProperty({
-    description: '삭제자 번호',
-    example: 1,
-    required: false,
-  })
-  declare delNo?: number | null;
-
-  @ApiProperty({
-    description: '생성 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare crtDt?: string | null;
-
-  @ApiProperty({
-    description: '수정 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare updtDt?: string | null;
-
-  @ApiProperty({
-    description: '삭제 날짜 (YYYY-MM-DD HH:MM:SS)',
-    example: '2024-01-01 00:00:00',
-    required: false,
-  })
-  declare delDt?: string | null;
-
-  @ApiProperty({
-    description: '사용자 번호 목록',
-    example: [ 1, 2, 3, ],
-    required: false,
-  })
-  declare userNoList?: number[];
 }
 
 // 사용자 검색 DTO
-export class SearchUserDto extends SearchDto {
-  @ApiProperty({
-    description: '검색 타입 (emlAddr, userNm, userRole 중 하나)',
-    example: 'userNm',
-    required: false,
-    enum: [ 'emlAddr', 'userNm', 'userRole', ],
-  })
-  declare srchType?: 'emlAddr' | 'userNm' | 'userRole';
-}
+export class SearchUserDto extends createZodDto(searchUserSchema) {}
 
 // 다수 사용자 삭제 DTO
-export class DeleteMultipleUsersDto extends createZodDto(deleteMultipleUsersSchema) {
-  @ApiProperty({
-    description: '삭제할 사용자 번호 목록',
-    example: [ 1, 2, 3, ],
-  })
-  declare userNoList: number[];
-}
+export class DeleteMultipleUsersDto extends createZodDto(deleteMultipleUsersSchema) {}

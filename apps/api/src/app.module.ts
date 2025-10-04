@@ -6,7 +6,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AdminModule } from '@/endpoints/admin/admin.module';
 import { AuthModule } from '@/endpoints/auth/auth.module';
-import { DrizzleModule } from '@/endpoints/drizzle/drizzle.module';
+import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { PostsModule } from '@/endpoints/posts/posts.module';
 
 import config from './conf/conf';
@@ -17,7 +17,7 @@ import config from './conf/conf';
       load: config,
       isGlobal: true,
     }),
-    DrizzleModule,
+    PrismaModule,
     ThrottlerModule.forRoot([ {
       ttl: 60000, // 1분
       limit: 60, // 60회
