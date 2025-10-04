@@ -1,6 +1,6 @@
 # 완료된 CRUD 기능 목록
 
-## 현재 구현 상태 (2025-10-04)
+## 현재 구현 상태 (2025-10-05)
 
 ### ✅ 완료된 기능
 
@@ -11,6 +11,7 @@
 - **CategorySubscribe**: 일반 사용자 API 및 관리자 API 완료
 - **TagSubscribe**: 일반 사용자 API 및 관리자 API 완료
 - **Post 조회 기능**: 목록/상세/고급 검색 (Prisma 전환 완료)
+- **Admin 관리 기능**: 모든 관리자 CRUD 기능 완료 (User, Subscribe, CategorySubscribe, TagSubscribe)
 
 ## 명명 규칙
 
@@ -310,3 +311,35 @@
   - `adminMultipleDeleteTagSubscribe`
   - body: MultipleDeleteTagSubscribeDto
   - 기능: 관리자가 다수 태그 구독 일괄 삭제, 태그 정리 및 통합 시 활용
+
+## 5. Post 엔티티
+
+### 일반 사용자 기능
+
+- [x] POST /posts/search **[USER]**
+  - `getPostList`
+  - body: SearchPostDto (searchData)
+  - 기능: 게시글 목록 조회, 필터링, 검색, 페이징, 정렬 (모든 조회 기능 통합)
+- [x] GET /posts/:pstNo **[USER]**
+  - `getPostByPstNo`
+  - params: pstNo: number
+  - 기능: 특정 게시글 상세 조회, 조회수 증가, 댓글 수 포함, 이전/다음 글 링크, 관련 게시글 추천
+- [x] GET /posts/slug/:pstCd **[USER]**
+  - `getPostByPstCd`
+  - params: pstCd: string
+  - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함, 소셜 미디어 공유 정보
+- [x] GET /posts/tag/:tagNo **[USER]**
+  - `getPostListByTagNo`
+  - params: tagNo: number
+  - body: SearchPostDto (searchData)
+  - 기능: 특정 태그로 필터링된 게시글 목록, 태그별 게시글 수, 관련 태그 추천
+- [x] GET /posts/category/:ctgryNo **[USER]**
+  - `getPostListByCtgryNo`
+  - params: ctgryNo: number
+  - body: SearchPostDto (searchData)
+  - 기능: 특정 카테고리로 필터링된 게시글 목록, 카테고리별 게시글 수, 하위 카테고리 포함
+- [x] GET /posts/archive/:date **[USER]**
+  - `getPostListFromArchive`
+  - params: date: string (yyyyMM)
+  - body: SearchPostDto (searchData)
+  - 기능: 특정 년월에 발행된 게시글 목록, 날짜별 게시글 수, 이전/다음 날짜 네비게이션

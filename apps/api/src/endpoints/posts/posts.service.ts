@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
 import type { SearchPostDto } from '@/dto';
+import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectPostInfoListItemType,
-  SelectPostInfoType
+  SelectPostInfoType,
+  SelectPostShareLogType,
+  SelectPostViewLogType
 } from '@/endpoints/prisma/types/post.types';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 
@@ -69,5 +72,22 @@ export class PostsService {
    */
   async getAdvancedPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
     return this.postRepository.getAdvancedPostList(searchData);
+  }
+
+  /**
+   * @description 게시글 조회 로그 기록
+   * @param pstNo 게시글 번호
+   * @param ip 사용자 IP
+   */
+  async createPostViewLog(pstNo: number, ip: string): Promise<SelectPostViewLogType | null> {
+    return this.postRepository.createPostViewLog(pstNo, ip);
+  }
+
+  /**
+   * @description 게시글 공유 로그 기록
+   * @param createData 공유 로그 생성 데이터
+   */
+  async createPostShareLog(createData: CreatePostShareLogDto): Promise<SelectPostShareLogType | null> {
+    return this.postRepository.createPostShareLog(createData);
   }
 }

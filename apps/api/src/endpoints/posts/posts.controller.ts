@@ -1,13 +1,16 @@
-import { Body, Controller, Param } from '@nestjs/common';
+import { Body, Controller, Ip, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { type ResponseDto, SearchPostDto } from '@/dto';
+import { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import { PostsService } from '@/endpoints/posts/posts.service';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostInfoListItemType, SelectPostInfoType } from '@/endpoints/prisma/types/post.types';
+import type { SelectPostInfoListItemType, SelectPostInfoType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 import { createExamplePost } from '@/utils/createExamplePost';
+import { createExamplePostShareLog } from '@/utils/createExamplePostShareLog';
+import { createExamplePostViewLog } from '@/utils/createExamplePostViewLog';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -320,6 +323,92 @@ export class PostsController {
       'SUCCESS',
       'POST_SEARCH_SUCCESS',
       list
+    );
+  }
+
+  /**
+   * @description 게시글 조회 로그 기록
+   * @param pstNo 게시글 번호
+   * @param ip 사용자 IP
+   */
+  @Endpoint({
+    endpoint: '/:pstNo/view',
+    method: 'POST',
+    summary: '게시글 조회 로그 기록',
+    description: '게시글 조회 로그를 기록합니다.',
+    options: {
+      params: [
+        [ 'pstNo', '게시글 번호', 'number', true, ],
+      ],
+      responses: [
+        [
+          '게시글 조회 로그 기록 성공',
+          [ false, 'SUCCESS', 'POST_VIEW_LOG_SUCCESS', createExamplePostViewLog(), ],
+        ],
+        [
+          '게시글 조회 로그 기록 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'POST_VIEW_LOG_ERROR', null, ],
+        ],
+      ],
+    },
+  })
+  async createPostViewLog(
+    @Param('pstNo') pstNo: number,
+    @Ip() ip: string
+  ): Promise<ResponseDto<SelectPostViewLogType>> {
+    const viewLog = await this.postsService.createPostViewLog(pstNo, ip);
+
+    if (!viewLog) {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'POST_VIEW_LOG_ERROR'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      'POST_VIEW_LOG_SUCCESS',
+      viewLog
+    );
+  }
+
+  /**
+   * @description 게시글 공유 로그 기록
+   * @param createData 공유 로그 생성 데이터
+   */
+  @Endpoint({
+    endpoint: '/:pstNo/share',
+    method: 'POST',
+    summary: '게시글 공유 로그 기록',
+    description: '게시글 공유 로그를 기록합니다.',
+    options: {
+      body: [ '공유 로그 생성 데이터', CreatePostShareLogDto, ],
+      responses: [
+        [
+          '게시글 공유 로그 기록 성공',
+          [ false, 'SUCCESS', 'POST_SHARE_LOG_SUCCESS', createExamplePostShareLog(), ],
+        ],
+        [
+          '게시글 공유 로그 기록 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'POST_SHARE_LOG_ERROR', null, ],
+        ],
+      ],
+    },
+  })
+  async createPostShareLog(@Body() createData: CreatePostShareLogDto): Promise<ResponseDto<SelectPostShareLogType>> {
+    const shareLog = await this.postsService.createPostShareLog(createData);
+
+    if (!shareLog) {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'POST_SHARE_LOG_ERROR'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      'POST_SHARE_LOG_SUCCESS',
+      shareLog
     );
   }
 }

@@ -1,18 +1,19 @@
 # CRUD 메소드 명명 규칙 및 정의
 
-## 현재 구현 상태 (2025-10-04)
+## 현재 구현 상태 (2025-10-05)
 
 ### 🏗️ 기술 스택 상태
 
 #### ORM 전환 현황
 
-- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post
+- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post (조회 기능)
 - ❌ **미구현**: Category, Tag, Comment
 
 ### 🚧 미구현 기능
 
 #### 기본 CRUD
 
+- **Post**: 관리자 CRUD (생성, 수정, 삭제) - 조회 기능만 완료
 - **Category**: 카테고리 CRUD (완전 미구현)
 - **Tag**: 태그 CRUD (완전 미구현)
 - **Comment**: 댓글 CRUD (완전 미구현)
@@ -27,22 +28,6 @@
 - **SEO 도구**: 메타 태그 관리, 구조화 데이터 (완전 미구현)
 - **백업/관리**: 데이터 백업, 미디어 관리, 시스템 유지보수 (완전 미구현)
 - **개발자 도구**: API 모니터링, 로그 관리 (완전 미구현)
-
-### 🔄 부분 구현 기능
-
-#### Post (게시글) - Prisma 사용 중
-
-**구현 완료**:
-
-- ✅ 게시글 목록 조회 (일반/태그별/카테고리별/아카이브)
-- ✅ 게시글 상세 조회 (번호/슬러그)
-- ✅ 고급 검색 (복합 필드, 날짜/조회수 범위 필터)
-
-**미구현**:
-
-- ❌ 관리자 CRUD (생성, 수정, 삭제)
-- ❌ 사용자 상호작용 (북마크, 공유, 조회수 통계)
-- ❌ 통계 및 관리 기능 (추천, 고정, 통계)
 
 > **완료된 기능들은 [crud.complete.md](./crud.complete.md)에서 확인하세요.**
 
@@ -71,66 +56,27 @@
 
 - 삭제(소프트 딜리트) 는 PK 로 삭제합니다.
 
-## 1. User 엔티티 ✅ 완료
-
-## 2. UserSubscribe 엔티티 ✅ 완료
-
-## 3. CategorySubscribe 엔티티 ✅ 완료
-
-## 4. TagSubscribe 엔티티 ✅ 완료
-
-## 5. Post 엔티티
-
-### 일반 사용자 기능
-
-- [x] POST /posts/search **[USER]**
-  - `getPostList`
-  - body: SearchPostDto (searchData)
-  - 기능: 게시글 목록 조회, 필터링, 검색, 페이징, 정렬 (모든 조회 기능 통합)
-- [x] GET /posts/:pstNo **[USER]**
-  - `getPostByPstNo`
-  - params: pstNo: number
-  - 기능: 특정 게시글 상세 조회, 조회수 증가, 댓글 수 포함, 이전/다음 글 링크, 관련 게시글 추천
-- [x] GET /posts/slug/:pstCd **[USER]**
-  - `getPostByPstCd`
-  - params: pstCd: string
-  - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함, 소셜 미디어 공유 정보
-- [x] GET /posts/tag/:tagNo **[USER]**
-  - `getPostListByTagNo`
-  - params: tagNo: number
-  - body: SearchPostDto (searchData)
-  - 기능: 특정 태그로 필터링된 게시글 목록, 태그별 게시글 수, 관련 태그 추천
-- [x] GET /posts/category/:ctgryNo **[USER]**
-  - `getPostListByCtgryNo`
-  - params: ctgryNo: number
-  - body: SearchPostDto (searchData)
-  - 기능: 특정 카테고리로 필터링된 게시글 목록, 카테고리별 게시글 수, 하위 카테고리 포함
-- [x] GET /posts/archive/:date **[USER]**
-  - `getPostListFromArchive`
-  - params: date: string (yyyyMM)
-  - body: SearchPostDto (searchData)
-  - 기능: 특정 년월에 발행된 게시글 목록, 날짜별 게시글 수, 이전/다음 날짜 네비게이션
+## 1. Post 엔티티
 
 ### 사용자 상호작용 기능
 
-- [ ] GET /posts/:pstNo/views **[USER]**
-  - `getPostViewStats`
+- [x] POST /posts/:pstNo/view **[USER]**
+  - `createPostViewLog`
   - params: pstNo: number
-  - query: startDt: string, endDt: string
-  - 기능: 게시글 조회수 통계 (일/주/월별)
-- [ ] POST /posts/:pstNo/bookmark **[USER]**
-  - `bookmarkPost`
+  - 기능: 게시글 조회 로그 기록, IP 기반 중복 방지
+- [x] POST /posts/:pstNo/share **[USER]**
+  - `createPostShareLog`
+  - params: pstNo: number
+  - body: { platform: string }
+  - 기능: 게시글 공유 로그 기록 (플랫폼별)
+- [x] POST /posts/:pstNo/bookmark **[USER]**
+  - `createPostBookmark`
   - params: pstNo: number
   - 기능: 게시글 북마크, 북마크 목록 관리, 북마크 통계
 - [ ] GET /posts/bookmarked **[USER]**
-  - `getPostList` (bookmarked=true)
+  - `getBookmarkedPostListByUserNo`
   - query: page?, size?
   - 기능: 북마크한 게시글 목록, 북마크 날짜별 정렬
-- [ ] POST /posts/:pstNo/share **[USER]**
-  - `trackPostShare`
-  - params: pstNo: number
-  - body: { platform: string, url: string }
-  - 기능: 포스트 공유 추적, 플랫폼별 공유 통계 (트위터, 페이스북, 링크드인 등)
 
 ### 관리자 기능 (작성자)
 
@@ -171,8 +117,22 @@
   - `pinPost`
   - params: pstNo: number
   - 기능: 게시글 고정, 상단 노출, 중요도 설정
+- [x] POST /admin/posts/:pstNo/views **[ADMIN]**
+  - `adminGetPostViewStats`
+  - params: pstNo: number
+  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
+  - 기능: 게시글 조회수 통계 (일/주/월/연간)
+- [x] POST /admin/posts/:pstNo/shares **[ADMIN]**
+  - `adminGetPostShareStatsByPlatform`
+  - params: pstNo: number
+  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
+  - 기능: 특정 게시글 플랫폼별 공유 통계
+- [x] POST /admin/posts/shares **[ADMIN]**
+  - `adminGetAllPostShareStatsByPlatform`
+  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
+  - 기능: 전체 게시글 플랫폼별 공유 통계
 
-## 6. Category 엔티티
+## 2. Category 엔티티
 
 ### 일반 사용자 기능
 
@@ -216,7 +176,7 @@
   - body: UpdateCategorySubscribeDto (ctgryNoList 포함)
   - 기능: 다수 카테고리 일괄 삭제, 관련 데이터 정리
 
-## 7. Tag 엔티티
+## 3. Tag 엔티티
 
 ### 일반 사용자 기능
 
@@ -260,7 +220,7 @@
   - body: UpdateTagSubscribeDto (tagNoList 포함)
   - 기능: 다수 태그 일괄 삭제, 관련 연결 정보 정리
 
-## 8. Comment 엔티티
+## 4. Comment 엔티티
 
 ### 일반 사용자 기능
 
@@ -308,7 +268,7 @@
 
 ---
 
-## 9. 검색 및 필터링 확장 기능
+## 5. 검색 및 필터링 확장 기능
 
 ### 고급 검색 기능
 
@@ -336,7 +296,7 @@
   - query: period?, page?, size?
   - 기능: 사용자 검색 히스토리 분석, 검색 패턴 통계
 
-## 10. RSS 피드 및 사이트맵
+## 6. RSS 피드 및 사이트맵
 
 ### 공개 피드
 
@@ -369,7 +329,7 @@
   - `generateAtomFeed`
   - 기능: Atom 1.0 형식 피드 (RSS 대안)
 
-## 11. 통계 및 분석 대시보드
+## 7. 통계 및 분석 대시보드
 
 ### 포스트 분석
 
@@ -404,7 +364,7 @@
   - query: period?
   - 기능: 댓글율, 공유율, 구독 전환율
 
-## 12. 알림 및 구독 시스템
+## 8. 알림 및 구독 시스템
 
 ### 이메일 알림
 
@@ -439,7 +399,7 @@
   - body: TestWebhookDto
   - 기능: 웹훅 연결 테스트
 
-## 13. SEO 최적화 도구
+## 9. SEO 최적화 도구
 
 ### 메타 태그 관리
 
@@ -461,7 +421,7 @@
   - `getSEOAnalysis`
   - 기능: 사이트 전체 SEO 상태 분석, 개선 제안
 
-## 14. 백업 및 데이터 관리
+## 10. 백업 및 데이터 관리
 
 ### 콘텐츠 백업
 
@@ -495,7 +455,7 @@
   - body: CleanupOptionsDto
   - 기능: 미사용 파일 정리, 캐시 클리어, 로그 정리
 
-## 15. 개발자 도구
+## 11. 개발자 도구
 
 ### API 모니터링
 

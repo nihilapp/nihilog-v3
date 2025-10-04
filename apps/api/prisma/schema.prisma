@@ -94,6 +94,10 @@ model UserInfo {
   createdPostTags           PstTagMpng[]    @relation("PstTagCreator")
   updatedPostTags           PstTagMpng[]    @relation("PstTagUpdater")
   deletedPostTags           PstTagMpng[]    @relation("PstTagDeleter")
+  bookmarks                 PstBkmrkMpng[]  @relation("UserBookmarks")
+  createdPostBookmarks      PstBkmrkMpng[]  @relation("PstBkmrkCreator")
+  updatedPostBookmarks      PstBkmrkMpng[]  @relation("PstBkmrkUpdater")
+  deletedPostBookmarks      PstBkmrkMpng[]  @relation("PstBkmrkDeleter")
 
   @@map("user_info")
   @@schema("nihilog")
@@ -182,14 +186,15 @@ model PstInfo {
   delDt       String?    @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
-  creator   UserInfo?    @relation("PostCreator", fields: [crtNo], references: [userNo])
-  updater   UserInfo?    @relation("PostUpdater", fields: [updtNo], references: [userNo])
-  deleter   UserInfo?    @relation("PostDeleter", fields: [delNo], references: [userNo])
-  category  CtgryInfo?   @relation(fields: [ctgryNo], references: [ctgryNo])
+  creator   UserInfo?      @relation("PostCreator", fields: [crtNo], references: [userNo])
+  updater   UserInfo?      @relation("PostUpdater", fields: [updtNo], references: [userNo])
+  deleter   UserInfo?      @relation("PostDeleter", fields: [delNo], references: [userNo])
+  category  CtgryInfo?     @relation(fields: [ctgryNo], references: [ctgryNo])
   comments  CmntInfo[]
   tags      PstTagMpng[]
   viewLogs  PstViewLog[]
   shareLogs PstShrnLog[]
+  bookmarks PstBkmrkMpng[]
 
   @@unique([pstTtl])
   @@unique([pstCd])
@@ -358,5 +363,31 @@ model PstShrnLog {
 
   @@index([pstNo, shrnDt])
   @@map("pst_shrn_log")
+  @@schema("nihilog")
+}
+
+// 게시글 북마크 매핑 테이블
+model PstBkmrkMpng {
+  bkmrkNo Int      @id @default(autoincrement()) @map("bkmrk_no")
+  userNo  Int      @map("user_no")
+  pstNo   Int      @map("pst_no")
+  useYn   YnStatus @default(Y) @map("use_yn")
+  delYn   YnStatus @default(N) @map("del_yn")
+  crtNo   Int?     @map("crt_no")
+  crtDt   String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
+  updtNo  Int?     @map("updt_no")
+  updtDt  String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
+  delNo   Int?     @map("del_no")
+  delDt   String?  @map("del_dt")
+
+  // Relations
+  user    UserInfo  @relation("UserBookmarks", fields: [userNo], references: [userNo])
+  post    PstInfo   @relation(fields: [pstNo], references: [pstNo])
+  creator UserInfo? @relation("PstBkmrkCreator", fields: [crtNo], references: [userNo])
+  updater UserInfo? @relation("PstBkmrkUpdater", fields: [updtNo], references: [userNo])
+  deleter UserInfo? @relation("PstBkmrkDeleter", fields: [delNo], references: [userNo])
+
+  @@unique([userNo, pstNo])
+  @@map("pst_bkmrk_mpng")
   @@schema("nihilog")
 }

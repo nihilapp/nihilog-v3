@@ -45,12 +45,14 @@ export {
   updatePostSchema,
   deletePostSchema,
   searchPostSchema,
+  viewStatSchema,
   type PostType,
   type PostInfoType,
   type CreatePostType,
   type UpdatePostType,
   type DeletePostType,
-  type SearchPostType
+  type SearchPostType,
+  type ViewStatType
 } from './post.schema';
 
 export {
@@ -97,3 +99,23 @@ export {
   type DeleteTagSubscribeType,
   type SearchTagSubscribeType
 } from './tag-subscribe.schema';
+
+export {
+  postBookmarkSchema,
+  createPostBookmarkSchema,
+  deletePostBookmarkSchema,
+  type CreatePostBookmarkSchemaType,
+  type DeletePostBookmarkSchemaType
+} from './bookmark.schema';
+
+export {
+  postViewLogSchema,
+  type PostViewLogSchemaType
+} from './post-viewlog.schema';
+
+export {
+  postShareLogSchema,
+  createPostShareLogSchema,
+  type PostShareLogSchemaType,
+  type CreatePostShareLogSchemaType
+} from './post-sharelog.schema';

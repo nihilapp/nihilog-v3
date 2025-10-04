@@ -4,7 +4,8 @@ import {
   createPostSchema,
   deletePostSchema,
   searchPostSchema,
-  updatePostSchema
+  updatePostSchema,
+  viewStatSchema
 } from '@/endpoints/prisma/schemas/post.schema';
 
 // 게시글 생성 DTO
@@ -18,3 +19,6 @@ export class DeletePostDto extends createZodDto(deletePostSchema) {}
 
 // 게시글 검색 DTO
 export class SearchPostDto extends createZodDto(searchPostSchema) {}
+
+// 게시글 조회수 통계 DTO
+export class ViewStatDto extends createZodDto(viewStatSchema) {}

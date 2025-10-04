@@ -312,7 +312,15 @@ export const MESSAGE_CODE = {
   POST_BOOKMARK_SUCCESS: '게시글을 북마크했습니다.',
   POST_BOOKMARK_CANCEL_SUCCESS: '게시글 북마크를 취소했습니다.',
   POST_BOOKMARK_LIST_SUCCESS: '북마크한 게시글 목록을 조회했습니다.',
+  POST_BOOKMARK_CREATE_SUCCESS: '게시글 북마크가 생성되었습니다.',
+  POST_BOOKMARK_DELETE_SUCCESS: '게시글 북마크가 삭제되었습니다.',
+  POST_BOOKMARK_UPDATE_SUCCESS: '게시글 북마크가 수정되었습니다.',
+  POST_BOOKMARK_GET_SUCCESS: '게시글 북마크 정보를 조회했습니다.',
   POST_SHARE_SUCCESS: '게시글을 공유했습니다.',
+  POST_VIEW_STATS_SUCCESS: '게시글 조회수 통계를 조회했습니다.',
+  POST_SHARE_STATS_SUCCESS: '게시글 공유 통계를 조회했습니다.',
+  POST_VIEW_LOG_SUCCESS: '게시글 조회 로그를 기록했습니다.',
+  POST_SHARE_LOG_SUCCESS: '게시글 공유 로그를 기록했습니다.',
 
   // 일반 사용자 에러 메시지
   POST_SEARCH_ERROR: '게시글 목록 조회에 실패했습니다.',
@@ -324,7 +332,13 @@ export const MESSAGE_CODE = {
   POST_LIKE_ERROR: '게시글 좋아요 처리에 실패했습니다.',
   POST_BOOKMARK_ERROR: '게시글 북마크 처리에 실패했습니다.',
   POST_BOOKMARK_LIST_ERROR: '북마크한 게시글 목록 조회에 실패했습니다.',
+  POST_BOOKMARK_CREATE_ERROR: '게시글 북마크 생성에 실패했습니다.',
+  POST_BOOKMARK_DELETE_ERROR: '게시글 북마크 삭제에 실패했습니다.',
+  POST_BOOKMARK_UPDATE_ERROR: '게시글 북마크 수정에 실패했습니다.',
+  POST_BOOKMARK_GET_ERROR: '게시글 북마크 정보 조회에 실패했습니다.',
   POST_SHARE_ERROR: '게시글 공유에 실패했습니다.',
+  POST_VIEW_STATS_ERROR: '게시글 조회수 통계 조회에 실패했습니다.',
+  POST_SHARE_STATS_ERROR: '게시글 공유 통계 조회에 실패했습니다.',
   POST_NOT_FOUND: '게시글을 찾을 수 없습니다.',
   POST_ALREADY_LIKED: '이미 좋아요를 누른 게시글입니다.',
   POST_ALREADY_BOOKMARKED: '이미 북마크한 게시글입니다.',
@@ -334,6 +348,8 @@ export const MESSAGE_CODE = {
   POST_INVALID_TAG: '유효하지 않은 태그입니다.',
   POST_INVALID_CATEGORY: '유효하지 않은 카테고리입니다.',
   POST_INVALID_ARCHIVE_DATE: '유효하지 않은 아카이브 날짜입니다.',
+  POST_VIEW_LOG_ERROR: '게시글 조회 로그 기록에 실패했습니다.',
+  POST_SHARE_LOG_ERROR: '게시글 공유 로그 기록에 실패했습니다.',
 
   // 관리자 성공 메시지
   ADMIN_POST_CREATE_SUCCESS: '게시글이 생성되었습니다.',

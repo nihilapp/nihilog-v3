@@ -225,26 +225,40 @@ export const searchPostSchema = baseSearchSchema.extend({
   }).shape,
   srchType: z.enum([ 'pstTtl', 'pstSmry', ], {
     error: '검색 타입은 pstTtl 또는 pstSmry 여야 합니다.',
-  }).optional().openapi({
-    description: '검색 타입 (pstTtl: 제목, pstSmry: 요약)',
-    example: 'pstTtl',
-  }),
+  })
+    .optional()
+    .openapi({
+      description: '검색 타입 (pstTtl: 제목, pstSmry: 요약)',
+      example: 'pstTtl',
+    }),
 
   // 태그/카테고리 필터
-  tagNoList: z.array(z.coerce.number().int().positive()).optional().openapi({
-    description: '태그 번호 목록 (AND 조건)',
-    example: [ 1, 2, 3, ],
-  }),
-  ctgryNoList: z.array(z.coerce.number().int().positive()).optional().openapi({
-    description: '카테고리 번호 목록 (OR 조건)',
-    example: [ 1, 2, ],
-  }),
+  tagNoList: z.array(z.coerce
+    .number()
+    .int()
+    .positive())
+    .optional()
+    .openapi({
+      description: '태그 번호 목록 (AND 조건)',
+      example: [ 1, 2, 3, ],
+    }),
+  ctgryNoList: z.array(z.coerce
+    .number()
+    .int()
+    .positive())
+    .optional()
+    .openapi({
+      description: '카테고리 번호 목록 (OR 조건)',
+      example: [ 1, 2, ],
+    }),
 
   // 정렬 옵션
-  orderBy: z.enum([ 'LATEST', 'POPULAR', 'OLDEST', ]).default('LATEST').openapi({
-    description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, OLDEST: 관련도순)',
-    example: 'LATEST',
-  }),
+  orderBy: z.enum([ 'LATEST', 'POPULAR', 'OLDEST', ])
+    .default('LATEST')
+    .openapi({
+      description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, OLDEST: 관련도순)',
+      example: 'LATEST',
+    }),
 }).partial();
 
 // 게시글 삭제 스키마 (포스트 번호 또는 리스트 선택)
@@ -255,6 +269,26 @@ export const deletePostSchema = postSchema.pick({
   message: '게시글 번호 또는 게시글 번호 목록 중 하나는 필수입니다.',
 });
 
+// 게시글 조회수 통계 스키마
+export const viewStatSchema = z.object({
+  mode: z.enum([ 'daily', 'weekly', 'monthly', 'yearly', ])
+    .default('daily')
+    .openapi({
+      description: '모드 (daily: 일간, weekly: 주간, monthly: 월간, yearly: 연간)',
+      example: 'daily',
+    }),
+  startDt: z.string()
+    .openapi({
+      description: '시작 날짜',
+      example: '2024-01-01',
+    }),
+  endDt: z.string()
+    .openapi({
+      description: '종료 날짜',
+      example: '2024-01-01',
+    }),
+});
+
 // 타입 추출
 export type PostType = z.infer<typeof postSchema>;
 export type PostInfoType = Partial<PostType>;
@@ -262,3 +296,4 @@ export type CreatePostType = z.infer<typeof createPostSchema>;
 export type UpdatePostType = z.infer<typeof updatePostSchema>;
 export type DeletePostType = z.infer<typeof deletePostSchema>;
 export type SearchPostType = z.infer<typeof searchPostSchema>;
+export type ViewStatType = z.infer<typeof viewStatSchema>;

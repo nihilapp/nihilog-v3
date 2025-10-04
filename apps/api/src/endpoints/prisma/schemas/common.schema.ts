@@ -43,8 +43,8 @@ export const commonSchema = z.object({
     .nullable()
     .optional()
     .openapi({
-      description: '생성 날짜 (YYYY-MM-DD HH:MM:SS)',
-      example: '2024-01-01 00:00:00',
+      description: '생성 날짜 (ISO 8601 UTC 형식)',
+      example: '2024-01-01T00:00:00.000Z',
     }),
   updtNo: z.coerce.number()
     .int('수정자 번호는 정수여야 합니다.')
@@ -59,8 +59,8 @@ export const commonSchema = z.object({
     .nullable()
     .optional()
     .openapi({
-      description: '수정 날짜 (YYYY-MM-DD HH:MM:SS)',
-      example: '2024-01-01 00:00:00',
+      description: '수정 날짜 (ISO 8601 UTC 형식)',
+      example: '2024-01-01T00:00:00.000Z',
     }),
   delNo: z.coerce.number()
     .int('삭제자 번호는 정수여야 합니다.')
@@ -75,7 +75,7 @@ export const commonSchema = z.object({
     .nullable()
     .optional()
     .openapi({
-      description: '삭제 날짜 (YYYY-MM-DD HH:MM:SS)',
-      example: '2024-01-01 00:00:00',
+      description: '삭제 날짜 (ISO 8601 UTC 형식)',
+      example: '2024-01-01T00:00:00.000Z',
     }),
 });

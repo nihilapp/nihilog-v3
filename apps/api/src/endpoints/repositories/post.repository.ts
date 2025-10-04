@@ -1,15 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 
-import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
+import type { CreatePostBookmarkDto, CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
+import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
+import type { ViewStatDto } from '@/dto/post.dto';
 import type { MutationResponseDto } from '@/dto/response.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { SelectPostBookmarkType } from '@/endpoints/prisma/types/post-bookmark.types';
 import type {
   SelectPostInfoListItemType,
-  SelectPostInfoType
+  SelectPostInfoType,
+  SelectPostShareLogType,
+  SelectPostViewLogType,
+  SharePlatformStatItemType,
+  ViewStatItemType,
+  ViewStatModeType
 } from '@/endpoints/prisma/types/post.types';
 import { pageHelper } from '@/utils/pageHelper';
+import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
 export class PostRepository {
@@ -269,51 +278,183 @@ export class PostRepository {
   /**
    * @description 게시글 조회수 통계 조회
    * @param pstNo 게시글 번호
-   * @param startDt 시작 날짜
-   * @param endDt 종료 날짜
+   * @param viewStatData 조회 통계 데이터
    */
   async getPostViewStats(
     pstNo: number,
-    startDt: string,
-    endDt: string
-  ): Promise<number> {
+    viewStatData: ViewStatDto
+  ): Promise<ViewStatItemType[]> {
     try {
-      //
-      const viewStats = await this.prisma.pstViewLog.findMany();
-      return 0;
+      const { mode, startDt, endDt, } = viewStatData;
+
+      // mode를 PostgreSQL date_trunc 단위로 변환
+      const truncUnitMap: Record<ViewStatModeType, string> = {
+        daily: 'day',
+        weekly: 'week',
+        monthly: 'month',
+        yearly: 'year',
+      };
+      const truncUnit = truncUnitMap[mode];
+
+      const stats = await this.prisma.$queryRaw<ViewStatItemType[]>`
+        SELECT
+          date_trunc(${truncUnit}, view_dt::timestamptz)::date::text AS date,
+          COUNT(*)::int AS count
+        FROM
+          nihilog.pst_view_log
+        WHERE
+          pst_no = ${pstNo}
+          AND view_dt >= ${startDt}
+          AND view_dt <= ${endDt}
+        GROUP BY
+          date_trunc(${truncUnit}, view_dt::timestamptz)::date
+        ORDER BY
+          date_trunc(${truncUnit}, view_dt::timestamptz)::date
+      `;
+
+      return stats;
     }
     catch {
-      //
-      return 0;
+      return [];
     }
   }
 
   /**
-   * @description 게시글 공유 추적
+   * @description 특정 게시글의 플랫폼별 공유 통계
    * @param pstNo 게시글 번호
-   * @param platform 플랫폼
-   * @param url 공유 URL
+   * @param viewStatData 조회 통계 데이터
    */
-  async trackPostShare(pstNo: number, platform: string, url: string): Promise<void> {
+  async getPostShareStatsByPlatform(
+    pstNo: number,
+    viewStatData: ViewStatDto
+  ): Promise<SharePlatformStatItemType[]> {
+    try {
+      const { startDt, endDt, } = viewStatData;
 
+      const stats = await this.prisma.$queryRaw<SharePlatformStatItemType[]>`
+        SELECT
+          shrn_site AS platform,
+          COUNT(*)::int AS count
+        FROM
+          nihilog.pst_shrn_log
+        WHERE
+          pst_no = ${pstNo}
+          AND shrn_dt >= ${startDt}
+          AND shrn_dt <= ${endDt}
+        GROUP BY
+          shrn_site
+        ORDER BY
+          count DESC, platform
+      `;
+
+      return stats;
+    }
+    catch {
+      return [];
+    }
+  }
+
+  /**
+   * @description 전체 게시글의 플랫폼별 공유 통계
+   * @param viewStatData 조회 통계 데이터
+   */
+  async getAllPostShareStatsByPlatform(viewStatData: ViewStatDto): Promise<SharePlatformStatItemType[]> {
+    try {
+      const { startDt, endDt, } = viewStatData;
+
+      const stats = await this.prisma.$queryRaw<SharePlatformStatItemType[]>`
+        SELECT
+          shrn_site AS platform,
+          COUNT(*)::int AS count
+        FROM
+          nihilog.pst_shrn_log
+        WHERE
+          shrn_dt >= ${startDt}
+          AND shrn_dt <= ${endDt}
+        GROUP BY
+          shrn_site
+        ORDER BY
+          count DESC, platform
+      `;
+
+      return stats;
+    }
+    catch {
+      return [];
+    }
+  }
+
+  /**
+   * @description 게시글 조회 로그 기록
+   * @param pstNo 게시글 번호
+   * @param ip 사용자 IP
+   */
+  async createPostViewLog(pstNo: number, ip: string): Promise<SelectPostViewLogType | null> {
+    try {
+      const viewLog = await this.prisma.pstViewLog.create({
+        data: {
+          pstNo,
+          viewerIp: ip,
+          viewDt: timeToString(),
+        },
+      });
+
+      return viewLog;
+    }
+    catch {
+      return null;
+    }
+  }
+
+  /**
+   * @description 게시글 공유 로그 기록
+   * @param createData 공유 로그 생성 데이터
+   */
+  async createPostShareLog(createData: CreatePostShareLogDto): Promise<SelectPostShareLogType | null> {
+    try {
+      const shareLog = await this.prisma.pstShrnLog.create({
+        data: {
+          pstNo: createData.pstNo,
+          shrnSite: createData.shrnSite,
+          shrnDt: timeToString(createData.shrnDt),
+        },
+      });
+
+      return shareLog;
+    }
+    catch {
+      return null;
+    }
   }
 
   /**
    * @description 게시글 북마크
-   * @param userNo 사용자 번호
-   * @param pstNo 게시글 번호
+   * @param createData 북마크 생성 데이터
    */
-  bookmarkPost(_userNo: number, _pstNo: number): Promise<MutationResponseDto | null> {
-    // TODO: 게시글 북마크 구현
-    return Promise.resolve(null);
+  async createPostBookmark(createData: CreatePostBookmarkDto): Promise<SelectPostBookmarkType | null> {
+    try {
+      const bookmark = await this.prisma.pstBkmrkMpng.create({
+        data: {
+          userNo: createData.userNo,
+          pstNo: createData.pstNo,
+        },
+      });
+
+      return bookmark;
+    }
+    catch {
+      return null;
+    }
   }
+
+  // TODO: 여기서부터 시작.
 
   /**
    * @description 북마크한 게시글 목록 조회
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
-  getBookmarkedPostList(_userNo: number, _searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  getBookmarkedPostListByUserNo(_userNo: number, _searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
     // TODO: 북마크한 게시글 목록 조회 구현
     return Promise.resolve({ list: [], totalCnt: 0, });
   }
