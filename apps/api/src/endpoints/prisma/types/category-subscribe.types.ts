@@ -1,4 +1,4 @@
-import type { Prisma } from '~prisma/client';
+import type { Prisma } from '@prisma/client';
 
 // 단일 카테고리 구독 조회 (category 정보 포함)
 export type SelectCtgrySbcrMpngType = Prisma.CtgrySbcrMpngGetPayload<{

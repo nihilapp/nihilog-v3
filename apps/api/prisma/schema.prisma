@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "./client"
 }
 
 datasource db {
@@ -59,14 +58,14 @@ model UserInfo {
   reshToken     String?  @map("resh_token")
   useYn         YnStatus @default(Y) @map("use_yn")
   delYn         YnStatus @default(N) @map("del_yn")
-  lastLgnDt     String?  @map("last_lgn_dt")
-  lastPswdChgDt String?  @map("last_pswd_chg_dt")
+  lastLgnDt     String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("last_lgn_dt")
+  lastPswdChgDt String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("last_pswd_chg_dt")
   crtNo         Int?     @map("crt_no")
-  crtDt         String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt         String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo        Int?     @map("updt_no")
-  updtDt        String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt        String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo         Int?     @map("del_no")
-  delDt         String?  @map("del_dt")
+  delDt         String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   createdCategories         CtgryInfo[]     @relation("CategoryCreator")
@@ -111,11 +110,11 @@ model CtgryInfo {
   useYn      YnStatus @default(Y) @map("use_yn")
   delYn      YnStatus @default(N) @map("del_yn")
   crtNo      Int?     @map("crt_no")
-  crtDt      String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt      String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo     Int?     @map("updt_no")
-  updtDt     String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt     String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo      Int?     @map("del_no")
-  delDt      String?  @map("del_dt")
+  delDt      String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   creator         UserInfo?       @relation("CategoryCreator", fields: [crtNo], references: [userNo])
@@ -139,11 +138,11 @@ model TagInfo {
   useYn    YnStatus @default(Y) @map("use_yn")
   delYn    YnStatus @default(N) @map("del_yn")
   crtNo    Int?     @map("crt_no")
-  crtDt    String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt    String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo   Int?     @map("updt_no")
-  updtDt   String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt   String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo    Int?     @map("del_no")
-  delDt    String?  @map("del_dt")
+  delDt    String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   creator     UserInfo?     @relation("TagCreator", fields: [crtNo], references: [userNo])
@@ -168,7 +167,7 @@ model PstInfo {
   pstThmbLink String?    @map("pst_thmb_link")
   pstView     Int        @default(0) @map("pst_view")
   pstStts     PostStatus @default(EMPTY) @map("pst_stts")
-  publDt      String?    @map("publ_dt")
+  publDt      String?    @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("publ_dt")
   rlsYn       YnStatus   @default(Y) @map("rls_yn")
   archYn      YnStatus   @default(N) @map("arch_yn")
   secrYn      YnStatus?  @map("secr_yn")
@@ -176,11 +175,11 @@ model PstInfo {
   useYn       YnStatus   @default(Y) @map("use_yn")
   delYn       YnStatus   @default(N) @map("del_yn")
   crtNo       Int?       @map("crt_no")
-  crtDt       String     @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt       String     @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo      Int?       @map("updt_no")
-  updtDt      String     @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt      String     @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo       Int?       @map("del_no")
-  delDt       String?    @map("del_dt")
+  delDt       String?    @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   creator   UserInfo?    @relation("PostCreator", fields: [crtNo], references: [userNo])
@@ -208,11 +207,11 @@ model CmntInfo {
   useYn      YnStatus      @default(Y) @map("use_yn")
   delYn      YnStatus      @default(N) @map("del_yn")
   crtNo      Int?          @map("crt_no")
-  crtDt      String        @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt      String        @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo     Int?          @map("updt_no")
-  updtDt     String        @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt     String        @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo      Int?          @map("del_no")
-  delDt      String?       @map("del_dt")
+  delDt      String?       @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   creator       UserInfo?  @relation("CommentCreator", fields: [crtNo], references: [userNo])
@@ -234,11 +233,11 @@ model CtgrySbcrMpng {
   useYn       YnStatus @default(Y) @map("use_yn")
   delYn       YnStatus @default(N) @map("del_yn")
   crtNo       Int?     @map("crt_no")
-  crtDt       String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt       String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo      Int?     @map("updt_no")
-  updtDt      String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt      String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo       Int?     @map("del_no")
-  delDt       String?  @map("del_dt")
+  delDt       String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   subscription UserSbcrInfo @relation(fields: [sbcrNo], references: [sbcrNo])
@@ -260,9 +259,9 @@ model TagSbcrMpng {
   useYn     YnStatus @default(Y) @map("use_yn")
   delYn     YnStatus @default(N) @map("del_yn")
   crtNo     Int?     @map("crt_no")
-  crtDt     String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt     String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo    Int?     @map("updt_no")
-  updtDt    String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt    String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo     Int?     @map("del_no")
   delDt     String?  @map("del_dt")
 
@@ -288,11 +287,11 @@ model UserSbcrInfo {
   useYn         YnStatus @default(Y) @map("use_yn")
   delYn         YnStatus @default(N) @map("del_yn")
   crtNo         Int?     @map("crt_no")
-  crtDt         String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt         String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo        Int?     @map("updt_no")
-  updtDt        String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt        String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo         Int?     @map("del_no")
-  delDt         String?  @map("del_dt")
+  delDt         String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   user                  UserInfo        @relation(fields: [userNo], references: [userNo])
@@ -314,11 +313,11 @@ model PstTagMpng {
   useYn    YnStatus @default(Y) @map("use_yn")
   delYn    YnStatus @default(N) @map("del_yn")
   crtNo    Int?     @map("crt_no")
-  crtDt    String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("crt_dt")
+  crtDt    String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("crt_dt")
   updtNo   Int?     @map("updt_no")
-  updtDt   String   @default(dbgenerated("to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS')")) @map("updt_dt")
+  updtDt   String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo    Int?     @map("del_no")
-  delDt    String?  @map("del_dt")
+  delDt    String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
 
   // Relations
   post    PstInfo   @relation(fields: [pstNo], references: [pstNo])
@@ -337,7 +336,7 @@ model PstViewLog {
   viewNo   Int     @id @default(autoincrement()) @map("view_no")
   pstNo    Int     @map("pst_no")
   viewerIp String? @map("viewer_ip")
-  viewDt   String  @map("view_dt")
+  viewDt   String  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("view_dt")
 
   // Relations
   post PstInfo @relation(fields: [pstNo], references: [pstNo])
@@ -352,7 +351,7 @@ model PstShrnLog {
   shrnNo   Int    @id @default(autoincrement()) @map("shrn_no")
   pstNo    Int    @map("pst_no")
   shrnSite String @map("shrn_site")
-  shrnDt   String @map("shrn_dt")
+  shrnDt   String @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("shrn_dt")
 
   // Relations
   post PstInfo @relation(fields: [pstNo], references: [pstNo])

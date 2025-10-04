@@ -8,10 +8,12 @@ import { ApiTags } from '@nestjs/swagger';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
-import { UserSubscribeDto, UpdateSubscribeDto } from '@/dto/subscribe.dto';
-import { UserInfoDto, UpdateUserDto } from '@/dto/user.dto';
+import { UpdateSubscribeDto } from '@/dto/subscribe.dto';
+import { UpdateUserDto } from '@/dto/user.dto';
+import type { SelectUserSbcrInfoType } from '@/endpoints/prisma/types/subscribe.types';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserService } from '@/endpoints/users/users.service';
-import { removeSensitiveInfoFromResponse } from '@/utils';
+import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 import { createExampleSubscribe } from '@/utils/createExampleSubscribe';
 import { createExampleUser } from '@/utils/createExampleUser';
 
@@ -44,13 +46,19 @@ export class UserController {
       ],
     },
   })
-  async getUserProfile(@Req() req: AuthRequest): Promise<ResponseDto<UserInfoDto>> {
+  async getUserProfile(@Req() req: AuthRequest): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.userService.getUserProfile(req.user);
-    return removeSensitiveInfoFromResponse(result);
+
+    if (!result) {
+      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    }
+
+    const userToReturn = removeSensitiveInfo(result);
+    return createResponse('SUCCESS', 'PROFILE_GET_SUCCESS', userToReturn);
   }
 
   /**
@@ -76,12 +84,18 @@ export class UserController {
       ],
     },
   })
-  async getUserSubscribeByUserNo(@Req() req: AuthRequest): Promise<ResponseDto<UserSubscribeDto>> {
+  async getUserSubscribeByUserNo(@Req() req: AuthRequest): Promise<ResponseDto<SelectUserSbcrInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.userService.getUserSubscribeByUserNo(req.user);
+    const result = await this.userService.getUserSubscribeByUserNo(req.user);
+
+    if (!result) {
+      return createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND');
+    }
+
+    return createResponse('SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', result);
   }
 
   /**
@@ -109,8 +123,14 @@ export class UserController {
       ],
     },
   })
-  async createUser(@Body() createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
-    return this.userService.createUser(createUserData);
+  async createUser(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
+    const result = await this.userService.createUser(createUserData);
+
+    if (!result) {
+      return createError('CONFLICT', 'EMAIL_IN_USE');
+    }
+
+    return createResponse('CREATED', 'USER_CREATE_SUCCESS', result);
   }
 
   /**
@@ -141,13 +161,19 @@ export class UserController {
   async updateUserProfile(
     @Req() req: AuthRequest,
     @Body() updateData: UpdateUserDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.userService.updateUserProfile(req.user, updateData);
-    return removeSensitiveInfoFromResponse(result);
+
+    if (!result) {
+      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    }
+
+    const userToReturn = removeSensitiveInfo(result);
+    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', userToReturn);
   }
 
   /**
@@ -179,12 +205,18 @@ export class UserController {
   async updateUserSubscribe(
     @Req() req: AuthRequest,
     @Body() updateData: UpdateSubscribeDto
-  ): Promise<ResponseDto<UserSubscribeDto>> {
+  ): Promise<ResponseDto<SelectUserSbcrInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.userService.updateUserSubscribe(req.user, updateData);
+    const result = await this.userService.updateUserSubscribe(req.user, updateData);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'SUBSCRIBE_UPDATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', result);
   }
 
   /**
@@ -211,11 +243,17 @@ export class UserController {
       ],
     },
   })
-  async deleteUserProfile(@Req() req: AuthRequest): Promise<ResponseDto<null>> {
+  async deleteUserProfile(@Req() req: AuthRequest): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.userService.deleteUserProfile(req.user);
+    const result = await this.userService.deleteUserProfile(req.user);
+
+    if (!result) {
+      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    }
+
+    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result);
   }
 }

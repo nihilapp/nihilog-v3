@@ -8,7 +8,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type ListDto, type CreateTagSubscribeDto, type MultipleCreateTagSubscribeDto, type MultipleDeleteTagSubscribeDto, type MultipleUpdateTagSubscribeDto, type MutationResponseDto } from '@/dto';
+import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type ListDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 
 import { TagSubscribeService } from './tag-subscribe.service';
@@ -136,7 +137,13 @@ export class TagSubscribeController {
       return req.errorResponse;
     }
 
-    return this.tagSubscribeService.createTagSubscribe(req.user.userNo, { ...body, tagNo, });
+    const result = await this.tagSubscribeService.createTagSubscribe(req.user.userNo, { ...body, tagNo, });
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_CREATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result);
   }
 
   /**
@@ -167,13 +174,19 @@ export class TagSubscribeController {
   })
   async multipleCreateTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() body: MultipleCreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto[]>> {
+    @Body() body: CreateTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.tagSubscribeService.multipleCreateTagSubscribe(req.user.userNo, body);
+    const result = await this.tagSubscribeService.multipleCreateTagSubscribe(req.user.userNo, body);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_CREATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result);
   }
 
   /**
@@ -204,13 +217,19 @@ export class TagSubscribeController {
   })
   async multipleUpdateTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() body: MultipleUpdateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto[]>> {
+    @Body() body: UpdateTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.tagSubscribeService.multipleUpdateTagSubscribe(req.user.userNo, body);
+    const result = await this.tagSubscribeService.multipleUpdateTagSubscribe(req.user.userNo, body);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_UPDATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_UPDATE_SUCCESS', result);
   }
 
   /**
@@ -241,12 +260,18 @@ export class TagSubscribeController {
   async deleteTagSubscribe(
     @Req() req: AuthRequest,
     @Param('tagSbcrNo', ParseIntPipe) tagSbcrNo: number
-  ): Promise<ResponseDto<MutationResponseDto>> {
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.tagSubscribeService.deleteTagSubscribe(req.user.userNo, tagSbcrNo);
+    const result = await this.tagSubscribeService.deleteTagSubscribe(req.user.userNo, tagSbcrNo);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result);
   }
 
   /**
@@ -277,12 +302,18 @@ export class TagSubscribeController {
   })
   async multipleDeleteTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() body: MultipleDeleteTagSubscribeDto
-  ): Promise<ResponseDto<MutationResponseDto>> {
+    @Body() body: DeleteTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.tagSubscribeService.multipleDeleteTagSubscribe(req.user.userNo, body);
+    const result = await this.tagSubscribeService.multipleDeleteTagSubscribe(req.user.userNo, body);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result);
   }
 }

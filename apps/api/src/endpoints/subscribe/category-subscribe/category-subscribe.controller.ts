@@ -8,7 +8,8 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CategorySubscribeDto, type ListDto, type CreateCategorySubscribeDto, type MultipleCreateCategorySubscribeDto, type MultipleDeleteCategorySubscribeDto, type MultipleUpdateCategorySubscribeDto, type MutationResponseDto } from '@/dto';
+import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CategorySubscribeDto, type ListDto, type CreateCategorySubscribeDto, type UpdateCategorySubscribeDto, type DeleteCategorySubscribeDto } from '@/dto';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
 
@@ -139,7 +140,13 @@ export class CategorySubscribeController {
       return req.errorResponse;
     }
 
-    return this.categorySubscribeService.createCategorySubscribe(req.user.userNo, { ...body, ctgryNo, });
+    const result = await this.categorySubscribeService.createCategorySubscribe(req.user.userNo, { ...body, ctgryNo, });
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result);
   }
 
   /**
@@ -170,13 +177,19 @@ export class CategorySubscribeController {
   })
   async multipleCreateCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() body: MultipleCreateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+    @Body() body: CreateCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.categorySubscribeService.multipleCreateCategorySubscribe(req.user.userNo, body);
+    const result = await this.categorySubscribeService.multipleCreateCategorySubscribe(req.user.userNo, body);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result);
   }
 
   /**
@@ -207,13 +220,19 @@ export class CategorySubscribeController {
   })
   async multipleUpdateCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() body: MultipleUpdateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto[]>> {
+    @Body() body: UpdateCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.categorySubscribeService.multipleUpdateCategorySubscribe(req.user.userNo, body);
+    const result = await this.categorySubscribeService.multipleUpdateCategorySubscribe(req.user.userNo, body);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_UPDATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS', result);
   }
 
   /**
@@ -244,12 +263,18 @@ export class CategorySubscribeController {
   async deleteCategorySubscribe(
     @Req() req: AuthRequest,
     @Param('ctgrySbcrNo', ParseIntPipe) ctgrySbcrNo: number
-  ): Promise<ResponseDto<MutationResponseDto>> {
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.categorySubscribeService.deleteCategorySubscribe(req.user.userNo, ctgrySbcrNo);
+    const result = await this.categorySubscribeService.deleteCategorySubscribe(req.user.userNo, ctgrySbcrNo);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result);
   }
 
   /**
@@ -280,12 +305,18 @@ export class CategorySubscribeController {
   })
   async multipleDeleteCategorySubscribe(
     @Req() req: AuthRequest,
-    @Body() body: MultipleDeleteCategorySubscribeDto
-  ): Promise<ResponseDto<MutationResponseDto>> {
+    @Body() body: DeleteCategorySubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return this.categorySubscribeService.multipleDeleteCategorySubscribe(req.user.userNo, body);
+    const result = await this.categorySubscribeService.multipleDeleteCategorySubscribe(req.user.userNo, body);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result);
   }
 }

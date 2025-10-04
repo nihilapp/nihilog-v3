@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import type { CtgrySbcrMpng } from '@prisma/client';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
-import { ResponseDto } from '@/dto/response.dto';
 import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
-import { createError, createResponse } from '@/utils';
-import type { CtgrySbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class CategorySubscribeService {
@@ -49,21 +47,8 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<CtgrySbcrMpng>> {
-    const createSubscribe = await this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
-
-    if (!createSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'CATEGORY_SUBSCRIBE_CREATE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-      createSubscribe
-    );
+  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<CtgrySbcrMpng | null> {
+    return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
   }
 
   /**
@@ -71,21 +56,8 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async multipleCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<ResponseDto<MultipleResultType>> {
-    const createSubscribe = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
-
-    if (!createSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'CATEGORY_SUBSCRIBE_CREATE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-      createSubscribe
-    );
+  async multipleCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<MultipleResultType | null> {
+    return this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
   }
 
   /**
@@ -93,21 +65,8 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param updateData 카테고리 구독 수정 데이터
    */
-  async multipleUpdateCategorySubscribe(userNo: number, updateData: UpdateCategorySubscribeDto): Promise<ResponseDto<MultipleResultType>> {
-    const updateSubscribe = await this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
-
-    if (!updateSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'CATEGORY_SUBSCRIBE_UPDATE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
-      updateSubscribe
-    );
+  async multipleUpdateCategorySubscribe(userNo: number, updateData: UpdateCategorySubscribeDto): Promise<MultipleResultType | null> {
+    return this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
   }
 
   /**
@@ -115,21 +74,8 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async deleteCategorySubscribe(userNo: number, ctgrySbcrNo: number): Promise<ResponseDto<boolean>> {
-    const deleteSubscribe = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, ctgrySbcrNo);
-
-    if (!deleteSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'CATEGORY_SUBSCRIBE_DELETE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'CATEGORY_SUBSCRIBE_DELETE_SUCCESS',
-      deleteSubscribe
-    );
+  async deleteCategorySubscribe(userNo: number, ctgrySbcrNo: number): Promise<boolean> {
+    return this.categorySubscribeRepository.deleteCategorySubscribe(userNo, ctgrySbcrNo);
   }
 
   /**
@@ -137,20 +83,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param deleteData 삭제할 카테고리 구독 데이터
    */
-  async multipleDeleteCategorySubscribe(userNo: number, deleteData: DeleteCategorySubscribeDto): Promise<ResponseDto<MultipleResultType>> {
-    const deleteSubscribe = await this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
-
-    if (!deleteSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'CATEGORY_SUBSCRIBE_DELETE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'CATEGORY_SUBSCRIBE_DELETE_SUCCESS',
-      deleteSubscribe
-    );
+  async multipleDeleteCategorySubscribe(userNo: number, deleteData: DeleteCategorySubscribeDto): Promise<MultipleResultType | null> {
+    return this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
   }
 }

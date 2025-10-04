@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import type { TagSbcrMpng } from '@prisma/client';
 
-import { ResponseDto } from '@/dto/response.dto';
 import type {
   CreateTagSubscribeDto,
   DeleteTagSubscribeDto,
@@ -11,8 +11,6 @@ import type {
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
-import { createError, createResponse } from '@/utils';
-import type { TagSbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class AdminTagSubscribeService {
@@ -52,22 +50,12 @@ export class AdminTagSubscribeService {
   async adminCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSbcrMpng>> {
+  ): Promise<TagSbcrMpng | null> {
     try {
-      const result = await this.tagSubscribeRepository
-        .createTagSubscribe(userNo, createData);
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_TAG_SUBSCRIBE_CREATE_SUCCESS',
-        result
-      );
+      return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_TAG_SUBSCRIBE_CREATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -79,21 +67,12 @@ export class AdminTagSubscribeService {
   async adminMultipleCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<MultipleResultType | null> {
     try {
-      const result = await this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-        result
-      );
+      return this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -105,31 +84,18 @@ export class AdminTagSubscribeService {
   async adminUpdateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<ResponseDto<TagSbcrMpng>> {
+  ): Promise<TagSbcrMpng | null> {
     try {
       const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
 
       if (!subscribe) {
-        return createError(
-          'NOT_FOUND',
-          'TAG_SUBSCRIBE_NOT_FOUND'
-        );
+        return null;
       }
 
-      const updateSubscribe = await this.tagSubscribeRepository
-        .updateTagSubscribe(userNo, updateData);
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_TAG_SUBSCRIBE_UPDATE_SUCCESS',
-        updateSubscribe
-      );
+      return this.tagSubscribeRepository.updateTagSubscribe(userNo, updateData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_TAG_SUBSCRIBE_UPDATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -141,28 +107,12 @@ export class AdminTagSubscribeService {
   async adminMultipleUpdateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<MultipleResultType | null> {
     try {
-      const result = await this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
-
-      if (!result || result.successCnt === 0) {
-        return createError(
-          'NOT_FOUND',
-          'TAG_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-        result
-      );
+      return this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -174,28 +124,12 @@ export class AdminTagSubscribeService {
   async adminDeleteTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<ResponseDto<null>> {
+  ): Promise<boolean> {
     try {
-      const result = await this.tagSubscribeRepository.deleteTagSubscribe(userNo, updateData.tagSbcrNo);
-
-      if (!result) {
-        return createError(
-          'NOT_FOUND',
-          'TAG_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_TAG_SUBSCRIBE_DELETE_SUCCESS',
-        null
-      );
+      return this.tagSubscribeRepository.deleteTagSubscribe(userNo, updateData.tagSbcrNo);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_TAG_SUBSCRIBE_DELETE_ERROR'
-      );
+      return false;
     }
   }
 
@@ -207,29 +141,12 @@ export class AdminTagSubscribeService {
   async adminMultipleDeleteTagSubscribe(
     userNo: number,
     deleteData: DeleteTagSubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<MultipleResultType | null> {
     try {
-      const result = await this.tagSubscribeRepository
-        .multipleDeleteTagSubscribe(userNo, deleteData);
-
-      if (!result) {
-        return createError(
-          'NOT_FOUND',
-          'TAG_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-        result
-      );
+      return this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
-      );
+      return null;
     }
   }
 }

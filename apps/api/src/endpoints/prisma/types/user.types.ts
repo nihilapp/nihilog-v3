@@ -1,4 +1,4 @@
-import type { UserInfo } from '~prisma/client';
+import type { UserInfo } from '@prisma/client';
 
 // 단일 사용자 조회
 export type SelectUserInfoType = UserInfo;

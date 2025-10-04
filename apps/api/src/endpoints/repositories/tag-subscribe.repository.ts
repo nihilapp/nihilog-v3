@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { PrismaClient, type TagSbcrMpng } from '@prisma/client';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -9,7 +10,6 @@ import type {
 } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
-import { PrismaClient, type TagSbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class TagSubscribeRepository {

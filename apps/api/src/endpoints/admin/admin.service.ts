@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import { ResponseDto } from '@/dto/response.dto';
-import { UpdateUserDto, UserInfoDto } from '@/dto/user.dto';
+import { UpdateUserDto } from '@/dto/user.dto';
 import { JwtPayload } from '@/endpoints/auth/jwt.strategy';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
-import { createError, createResponse } from '@/utils';
 
 @Injectable()
 export class AdminService {
@@ -18,14 +17,14 @@ export class AdminService {
   async updateProfile(
     authUser: JwtPayload,
     updateProfileData: UpdateUserDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<SelectUserInfoType | null> {
     const { userNm, proflImg, userBiogp, } = updateProfileData;
 
     // 현재 사용자 정보 조회
     const currentUser = await this.userRepository.getUserByNo(authUser.userNo);
 
     if (!currentUser) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+      return null;
     }
 
     // 사용자명 변경 시 중복 확인
@@ -33,12 +32,12 @@ export class AdminService {
       const existingUser = await this.userRepository.getUserByName(userNm);
 
       if (existingUser && existingUser.userNo !== authUser.userNo) {
-        return createError('CONFLICT', 'USER_NAME_EXISTS');
+        return null;
       }
     }
 
     // 프로필 업데이트
-    const updatedUser = await this.userRepository.updateUser(
+    return this.userRepository.updateUser(
       authUser.userNo,
       authUser.userNo,
       {
@@ -47,11 +46,5 @@ export class AdminService {
         userBiogp,
       }
     );
-
-    if (!updatedUser) {
-      return createError('INTERNAL_SERVER_ERROR', 'PROFILE_UPDATE_ERROR');
-    }
-
-    return createResponse('SUCCESS', 'PROFILE_UPDATE_SUCCESS', updatedUser);
   }
 }

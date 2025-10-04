@@ -2,14 +2,12 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
 import { CreateUserDto } from '@/dto/auth.dto';
-import { type MultipleResultDto, type ResponseDto } from '@/dto/response.dto';
 import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import { searchUserSchema } from '@/endpoints/prisma/schemas/user.schema';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoType, SelectUserInfoListItemType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
-import { createError, createResponse } from '@/utils';
 
 @Injectable()
 export class AdminUserService {
@@ -99,16 +97,13 @@ export class AdminUserService {
    * @param user 사용자 정보
    * @param createUserData 사용자 생성 정보
    */
-  async createUser(user: JwtPayload, createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
+  async createUser(user: JwtPayload, createUserData: CreateUserDto): Promise<SelectUserInfoType | null> {
     try {
       // 이메일 중복 확인
       const findUser = await this.userRepository.getUserByEmail(createUserData.emlAddr);
 
       if (findUser) {
-        return createError(
-          'CONFLICT',
-          'CONFLICT_EMAIL'
-        );
+        return null;
       }
 
       // 비밀번호 해시화
@@ -118,23 +113,14 @@ export class AdminUserService {
       );
 
       // 사용자 계정 생성
-      const newUser = await this.userRepository.createUser(
+      return this.userRepository.createUser(
         user.userNo,
         createUserData,
         hashedPassword
       );
-
-      if (!newUser) {
-        return createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
-      }
-
-      return createResponse('CREATED', 'USER_CREATE_SUCCESS', newUser);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'USER_CREATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -144,16 +130,13 @@ export class AdminUserService {
    * @param targetUserNo 대상 사용자 번호
    * @param updateUserData 사용자 수정 정보
    */
-  async updateUser(adminUserNo: number, targetUserNo: number, updateUserData: UpdateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
+  async updateUser(adminUserNo: number, targetUserNo: number, updateUserData: UpdateUserDto): Promise<SelectUserInfoType | null> {
     try {
       // 사용자 검색
       const findUser = await this.userRepository.getUserByNo(targetUserNo);
 
       if (!findUser) {
-        return createError(
-          'NOT_FOUND',
-          'USER_NOT_FOUND'
-        );
+        return null;
       }
 
       // 사용자명 변경 시 중복 확인
@@ -161,27 +144,18 @@ export class AdminUserService {
         const existingUser = await this.userRepository.getUserByName(updateUserData.userNm);
 
         if (existingUser && existingUser.userNo !== targetUserNo) {
-          return createError('CONFLICT', 'USER_NAME_EXISTS');
+          return null;
         }
       }
 
-      const result = await this.userRepository.updateUser(
+      return this.userRepository.updateUser(
         adminUserNo,
         targetUserNo,
         updateUserData
       );
-
-      if (!result) {
-        return createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
-      }
-
-      return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', result);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'USER_UPDATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -190,24 +164,12 @@ export class AdminUserService {
    * @param adminUserNo 관리자 번호
    * @param updateUserDto 사용자 수정 정보
    */
-  async multipleUpdateUser(adminUserNo: number, updateUserDto: UpdateUserDto): Promise<ResponseDto<MultipleResultDto>> {
+  async multipleUpdateUser(adminUserNo: number, updateUserDto: UpdateUserDto): Promise<MultipleResultType | null> {
     try {
-      const result = await this.userRepository.adminMultipleUpdateUser(adminUserNo, updateUserDto);
-
-      if (!result) {
-        return createError(
-          'INTERNAL_SERVER_ERROR',
-          'USER_UPDATE_ERROR'
-        );
-      }
-
-      return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', result);
+      return this.userRepository.adminMultipleUpdateUser(adminUserNo, updateUserDto);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'USER_UPDATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -216,31 +178,19 @@ export class AdminUserService {
    * @param adminUserNo 관리자 번호
    * @param targetUserNo 대상 사용자 번호
    */
-  async adminDeleteUser(adminUserNo: number, targetUserNo: number): Promise<ResponseDto<null>> {
+  async adminDeleteUser(adminUserNo: number, targetUserNo: number): Promise<boolean> {
     try {
       // 사용자 존재 확인
       const findUser = await this.userRepository.getUserByNo(targetUserNo);
 
       if (!findUser) {
-        return createError(
-          'NOT_FOUND',
-          'USER_NOT_FOUND'
-        );
+        return false;
       }
 
-      const result = await this.userRepository.deleteUser(adminUserNo, targetUserNo);
-
-      if (!result) {
-        return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');
-      }
-
-      return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', null);
+      return this.userRepository.deleteUser(adminUserNo, targetUserNo);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'USER_DELETE_ERROR'
-      );
+      return false;
     }
   }
 
@@ -249,25 +199,16 @@ export class AdminUserService {
    * @param adminUserNo 관리자 번호
    * @param userNoList 사용자 번호 목록
    */
-  async adminMultipleDeleteUser(adminUserNo: number, userNoList: number[]): Promise<ResponseDto<null>> {
+  async adminMultipleDeleteUser(adminUserNo: number, userNoList: number[]): Promise<MultipleResultType | null> {
     try {
       if (!userNoList || userNoList.length === 0) {
-        return createError('BAD_REQUEST', 'INVALID_REQUEST');
+        return null;
       }
 
-      const result = await this.userRepository.adminMultipleDeleteUser(adminUserNo, userNoList);
-
-      if (!result) {
-        return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');
-      }
-
-      return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', null);
+      return this.userRepository.adminMultipleDeleteUser(adminUserNo, userNoList);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'USER_DELETE_ERROR'
-      );
+      return null;
     }
   }
 }

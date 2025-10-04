@@ -9,9 +9,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
-import { UpdateUserDto, UserInfoDto } from '@/dto/user.dto';
+import { UpdateUserDto } from '@/dto/user.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import { createError } from '@/utils';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
 
 import { AdminService } from './admin.service';
@@ -69,7 +70,7 @@ export class AdminController {
   async updateProfile(
     @Req() req: AuthRequest,
     @Body() updateProfileData: UpdateUserDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -80,6 +81,14 @@ export class AdminController {
       return createError('UNAUTHORIZED', 'UNAUTHORIZED');
     }
 
-    return this.adminService.updateProfile(authUser, updateProfileData);
+    const result = await this.adminService.updateProfile(authUser, updateProfileData);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'PROFILE_UPDATE_ERROR');
+    }
+
+    const userToReturn = removeSensitiveInfo(result);
+
+    return createResponse('SUCCESS', 'PROFILE_UPDATE_SUCCESS', userToReturn);
   }
 }

@@ -1,4 +1,4 @@
-import type { Prisma } from '~prisma/client';
+import type { Prisma } from '@prisma/client';
 
 // 단일 태그 구독 조회 (tag 정보 포함)
 export type SelectTagSbcrMpngType = Prisma.TagSbcrMpngGetPayload<{

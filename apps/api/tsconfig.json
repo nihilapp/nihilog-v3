@@ -19,8 +19,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "~prisma/*": ["./prisma/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": [

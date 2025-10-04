@@ -1,4 +1,4 @@
-import type { Prisma } from '~prisma/client';
+import type { Prisma } from '@prisma/client';
 
 // 단일 구독 정보 조회
 export type SelectUserSbcrInfoType = Prisma.UserSbcrInfoGetPayload<{

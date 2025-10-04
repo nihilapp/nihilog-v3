@@ -6,8 +6,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AdminModule } from '@/endpoints/admin/admin.module';
 import { AuthModule } from '@/endpoints/auth/auth.module';
-import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { PostsModule } from '@/endpoints/posts/posts.module';
+import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 
 import config from './conf/conf';
 

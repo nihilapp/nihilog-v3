@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { MutationResponseDto } from '@/dto/response.dto';
@@ -9,8 +10,6 @@ import type {
   SelectPostInfoType
 } from '@/endpoints/prisma/types/post.types';
 import { pageHelper } from '@/utils/pageHelper';
-import { isEmptyString } from '@/utils/stringHelper';
-import { PrismaClient, type Prisma } from '~prisma/client';
 
 @Injectable()
 export class PostRepository {
@@ -267,6 +266,12 @@ export class PostRepository {
 
   // ===== 사용자 상호작용 기능 =====
 
+  /**
+   * @description 게시글 조회수 통계 조회
+   * @param pstNo 게시글 번호
+   * @param startDt 시작 날짜
+   * @param endDt 종료 날짜
+   */
   async getPostViewStats(
     pstNo: number,
     startDt: string,
@@ -283,6 +288,12 @@ export class PostRepository {
     }
   }
 
+  /**
+   * @description 게시글 공유 추적
+   * @param pstNo 게시글 번호
+   * @param platform 플랫폼
+   * @param url 공유 URL
+   */
   async trackPostShare(pstNo: number, platform: string, url: string): Promise<void> {
 
   }
@@ -313,92 +324,73 @@ export class PostRepository {
    */
   async getAdvancedPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
     try {
-      const {
-        page, strtRow, endRow, srchKywd, srchType, srchFields,
-        tagNoList, tagNmList, ctgryNoList,
-        dateRange, viewRange, orderBy,
-        pstStts, rlsYn, archYn, delYn,
-      } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, orderBy, tagNoList, ctgryNoList, pstStts, archYn, } = searchData;
 
-      const whereAND: Prisma.PstInfoWhereInput[] = [ { delYn: (delYn || 'N'), }, { rlsYn: (rlsYn || 'Y'), }, ];
-
-      if (pstStts) {
-        whereAND.push({ pstStts, });
-      }
-      if (archYn) {
-        whereAND.push({ archYn, });
-      }
-
-      if (!isEmptyString(srchKywd)) {
-        if (srchFields && srchFields.length > 0) {
-          whereAND.push({
-            OR: srchFields.map((field) => ({ [ field ]: { contains: srchKywd, }, })),
-          });
-        }
-        else if (srchType) {
-          whereAND.push({ [ srchType ]: { contains: srchKywd, }, });
-        }
-      }
-
-      if (ctgryNoList && ctgryNoList.length > 0) {
-        whereAND.push({ ctgryNo: { in: ctgryNoList, }, });
-      }
-
-      if (dateRange) {
-        const dateAND: Prisma.PstInfoWhereInput[] = [ ];
-        if (dateRange.startDt) {
-          dateAND.push({ crtDt: { gte: dateRange.startDt, }, });
-        }
-        if (dateRange.endDt) {
-          dateAND.push({ crtDt: { lte: dateRange.endDt, }, });
-        }
-        if (dateAND.length > 0) whereAND.push(...dateAND);
-      }
-
-      if (viewRange) {
-        if (viewRange.minViews !== undefined) {
-          whereAND.push({ pstView: { gte: viewRange.minViews, }, });
-        }
-        if (viewRange.maxViews !== undefined) {
-          whereAND.push({ pstView: { lte: viewRange.maxViews, }, });
-        }
-      }
-
-      if ((tagNoList && tagNoList.length > 0) || (tagNmList && tagNmList.length > 0)) {
-        whereAND.push({
-          tags: {
-            some: {
-              ...(tagNoList && tagNoList.length > 0 && { tagNo: { in: tagNoList, }, }),
-              ...(tagNmList && tagNmList.length > 0 && { tag: { tagNm: { in: tagNmList, }, }, }),
-            },
+      const where: Prisma.PstInfoWhereInput = {
+        // delYn 의 경우 관리자는 'y' 'n' 둘 다 볼 수 있어야 함.
+        delYn,
+        // rlsYn 의 경우 관리자는 'y' 'n' 둘 다 볼 수 있어야 함.
+        rlsYn,
+        // 검색은 둘 중 하나이므로 이렇게 둠.
+        ...(srchKywd && (srchType === 'pstTtl') && {
+          pstTtl: {
+            contains: srchKywd,
+            mode: 'insensitive',
           },
-        });
-      }
+        }),
+        ...(srchKywd && (srchType === 'pstSmry') && {
+          pstSmry: {
+            contains: srchKywd,
+            mode: 'insensitive',
+          },
+        }),
+        // 게시글 상태
+        ...(pstStts === 'EMPTY' && {
+          pstStts: 'EMPTY',
+        }),
+        ...(pstStts === 'WRITING' && {
+          pstStts: 'WRITING',
+        }),
+        ...(pstStts === 'FINISHED' && {
+          pstStts: 'FINISHED',
+        }),
+        // 보관 여부
+        ...(archYn && { archYn, }),
+        // 태그는 or
+        ...(tagNoList && { tags: { some: { tagNo: { in: tagNoList, }, }, }, }),
+        // 카테고리는 or
+        ...(ctgryNoList && { ctgryNo: { in: ctgryNoList, }, }),
+      };
 
-      const where: Prisma.PstInfoWhereInput = { AND: whereAND, };
-
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
-
-      const orderByClause: Prisma.PstInfoOrderByWithRelationInput | Prisma.PstInfoOrderByWithRelationInput[] = (() => {
-        switch (orderBy) {
-        case 'POPULAR':
-          return [ { pstView: 'desc' as const, }, { crtDt: 'desc' as const, }, ];
-        case 'RELEVANCE':
-          return [ { crtDt: 'desc' as const, }, ];
-        case 'LATEST':
-        default:
-          return [ { crtDt: 'desc' as const, }, ];
-        }
-      })();
+      const { offset: skip, limit: take, } = pageHelper(page, strtRow, endRow);
 
       const [ list, totalCnt, ] = await this.prisma.$transaction([
-        this.prisma.pstInfo.findMany({ where, orderBy: orderByClause, skip, take, }),
+        // 관리자 관점에서는 모든 게시글을 조회해야 하고 사용자 관점에서는 공개된 글만 조회 해야 함. 둘 다 기능해야 하므로 플래그로 조작하는 것으로 진행.
+        this.prisma.pstInfo.findMany({
+          where,
+          orderBy: {
+            ...(orderBy === 'LATEST') && {
+              publDt: 'desc',
+            },
+            ...(orderBy === 'OLDEST') && {
+              publDt: 'asc',
+            },
+            ...(orderBy === 'POPULAR') && {
+              pstView: 'desc',
+            },
+          },
+          skip,
+          take,
+        }),
         this.prisma.pstInfo.count({ where, }),
       ]);
 
       return {
-        list: list.map((item, index) => ({ ...item, totalCnt, rowNo: skip + index + 1, })),
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
         totalCnt,
       };
     }

@@ -1,5 +1,4 @@
 import {
-  Inject,
   Injectable
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -9,12 +8,11 @@ import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
-import { ResponseDto, type SignInResponseDto } from '@/dto/response.dto';
-import { UserInfoDto } from '@/dto/user.dto';
+import { type SignInResponseDto } from '@/dto/response.dto';
 import { AdminUserService } from '@/endpoints/admin/users/admin-users.service';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
-import { createError, createResponse } from '@/utils';
 import { timeToString } from '@/utils/timeHelper';
 
 // JWT Payload 타입 정의
@@ -39,43 +37,39 @@ export class AuthService {
    * @description 현재 세션 조회
    * @param userNo 사용자 번호
    */
-  async session(userNo: number): Promise<ResponseDto<UserInfoDto>> {
+  async session(userNo: number): Promise<SelectUserInfoType | null> {
     const user = await this.userRepository.getUserByNo(userNo);
 
     if (!user) {
-      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return null;
     }
 
     const userToReturn = cloneDeep(user);
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return createResponse(
-      'SUCCESS',
-      'SESSION_GET_SUCCESS',
-      userToReturn as UserInfoDto
-    );
+    return userToReturn;
   }
 
   /**
    * @description 사용자 로그인
    * @param signInData 로그인 정보
    */
-  async signIn(signInData: SignInDto): Promise<SignInResponseDto | ResponseDto<null | UserInfoDto>> {
+  async signIn(signInData: SignInDto): Promise<SignInResponseDto | null> {
     const { emlAddr, password, } = signInData;
 
     // 사용자 조회
     const user = await this.userRepository.getUserByEmail(emlAddr);
 
     if (!user) {
-      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return null;
     }
 
     // 비밀번호 검증
     const isPasswordMatching = await bcrypt.compare(password, user.encptPswd);
 
     if (!isPasswordMatching) {
-      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return null;
     }
 
     // JWT 페이로드 생성
@@ -117,7 +111,7 @@ export class AuthService {
     userToReturn.reshToken = null;
 
     return {
-      user: userToReturn as UserInfoDto,
+      user: userToReturn,
       acsToken,
       reshToken,
       accessTokenExpiresAt,
@@ -128,9 +122,9 @@ export class AuthService {
    * @description 액세스 토큰 재발급
    * @param token 리프레시 토큰
    */
-  async refresh(token: string): Promise<SignInResponseDto | ResponseDto<null | UserInfoDto>> {
+  async refresh(token: string): Promise<SignInResponseDto | null> {
     if (!token) {
-      return createError('UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND');
+      return null;
     }
 
     try {
@@ -141,7 +135,7 @@ export class AuthService {
       const user = await this.usersService.getUserByNo(payload.userNo);
 
       if (!user || user.reshToken !== token) {
-        return createError('UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
+        return null;
       }
 
       const newPayload: JwtPayload = {
@@ -182,7 +176,7 @@ export class AuthService {
       };
     }
     catch {
-      return createError('UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
+      return null;
     }
   }
 
@@ -190,30 +184,24 @@ export class AuthService {
    * @description 일반 사용자 회원가입
    * @param createUserData 회원가입 정보
    */
-  async signUp(user: null, createUserData: CreateUserDto): Promise<ResponseDto<UserInfoDto>> {
+  async signUp(user: null, createUserData: CreateUserDto): Promise<SelectUserInfoType | null> {
     const { emlAddr, password, } = createUserData;
 
     // 이메일 중복 체크
     const existingUser = await this.userRepository.getUserByEmail(emlAddr);
     if (existingUser) {
-      return createError('CONFLICT', 'EMAIL_IN_USE');
+      return null;
     }
 
     // 비밀번호 암호화
     const encptPswd = await bcrypt.hash(password, 10);
 
     // 사용자 생성
-    const newUser = await this.userRepository.createUser(
+    return this.userRepository.createUser(
       null,
       createUserData,
       encptPswd
     );
-
-    if (!newUser) {
-      return createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
-    }
-
-    return createResponse('CREATED', 'SIGN_UP_SUCCESS', newUser);
   }
 
   /**
@@ -224,13 +212,13 @@ export class AuthService {
   async changePassword(
     userNo: number,
     changePasswordData: ChangePasswordDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<SelectUserInfoType | null> {
     const { currentPassword, newPassword, } = changePasswordData;
 
     const user = await this.userRepository.getUserByNo(userNo);
 
     if (!user) {
-      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return null;
     }
 
     const isPasswordMatching = await bcrypt.compare(
@@ -239,7 +227,7 @@ export class AuthService {
     );
 
     if (!isPasswordMatching) {
-      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return null;
     }
 
     const newEncptPswd = await bcrypt.hash(newPassword, 10);
@@ -252,7 +240,7 @@ export class AuthService {
     );
 
     if (!updatedUser) {
-      return createError('INTERNAL_SERVER_ERROR', 'PASSWORD_CHANGE_ERROR');
+      return null;
     }
 
     // 민감정보 제거
@@ -260,18 +248,14 @@ export class AuthService {
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return createResponse(
-      'SUCCESS',
-      'PASSWORD_CHANGE_SUCCESS',
-      userToReturn
-    );
+    return userToReturn;
   }
 
   /**
    * @description 사용자 로그아웃
    * @param accessToken 액세스 토큰
    */
-  async signOut(accessToken: string): Promise<ResponseDto<null>> {
+  async signOut(accessToken: string): Promise<boolean> {
     try {
       // JWT 토큰에서 사용자 정보 추출
       const decoded = await this.extractUserFromToken(accessToken);
@@ -285,12 +269,11 @@ export class AuthService {
         );
       }
 
-      return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
+      return true;
     }
     catch {
       // 로그아웃은 토큰이 유효하지 않아도 성공으로 처리
-      // 사용자가 이미 로그아웃된 상태이거나 토큰이 만료된 경우
-      return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
+      return true;
     }
   }
 

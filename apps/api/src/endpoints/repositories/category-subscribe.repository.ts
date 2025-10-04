@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { PrismaClient, type CtgrySbcrMpng } from '@prisma/client';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -9,7 +10,6 @@ import type {
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
-import { PrismaClient, type CtgrySbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class CategorySubscribeRepository {

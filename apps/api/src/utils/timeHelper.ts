@@ -18,5 +18,6 @@ export function timeToString(date?: Date | DateTime | string | null): string {
     targetDateTime = DateTime.now();
   }
 
-  return targetDateTime.toFormat('yyyy-MM-dd HH:mm:ss');
+  // DB 기본 포맷과 일치: UTC, 초 단위, Z 접미사
+  return targetDateTime.toUTC().toFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
 }

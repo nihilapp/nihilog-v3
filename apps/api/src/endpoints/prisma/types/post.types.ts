@@ -1,4 +1,4 @@
-import type { PstInfo } from '~prisma/client';
+import type { PstInfo } from '@prisma/client';
 
 // 단일 게시글 조회
 export type SelectPostInfoType = PstInfo;

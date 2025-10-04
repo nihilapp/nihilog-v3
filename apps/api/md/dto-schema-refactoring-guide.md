@@ -229,7 +229,7 @@ export class DeleteMultipleUsersDto extends createZodDto(
 ### user.types.ts 생성
 
 ```typescript
-import type { UserInfo } from "~prisma/client";
+import type { UserInfo } from "@prisma/client";
 
 // 단일 사용자 조회
 export type SelectUserInfoType = UserInfo;
@@ -265,7 +265,7 @@ import type {
 } from "@/endpoints/prisma/types/user.types";
 import { pageHelper } from "@/utils/pageHelper";
 import { timeToString } from "@/utils/timeHelper";
-import { PrismaClient, type UserRole } from "~prisma/client";
+import { PrismaClient, type UserRole } from "@prisma/client";
 
 @Injectable()
 export class UserRepository {

@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
 
 import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto } from '@/dto/subscribe.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -6,7 +7,6 @@ import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/comm
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
-import { PrismaClient } from '~prisma/client';
 
 @Injectable()
 export class SubscribeRepository {

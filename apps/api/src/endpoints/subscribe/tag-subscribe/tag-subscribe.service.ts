@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import type { TagSbcrMpng } from '@prisma/client';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, TagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
-import { ResponseDto } from '@/dto/response.dto';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import type { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
-import { createError, createResponse } from '@/utils';
-import type { TagSbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class TagSubscribeService {
@@ -49,21 +47,8 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
    */
-  async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<TagSbcrMpng>> {
-    const createSubscribe = await this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
-
-    if (!createSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_CREATE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'TAG_SUBSCRIBE_CREATE_SUCCESS',
-      createSubscribe
-    );
+  async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<TagSbcrMpng | null> {
+    return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
   }
 
   /**
@@ -71,21 +56,8 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
    */
-  async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<ResponseDto<MultipleResultType>> {
-    const createSubscribe = await this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
-
-    if (!createSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_CREATE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'TAG_SUBSCRIBE_CREATE_SUCCESS',
-      createSubscribe
-    );
+  async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<MultipleResultType | null> {
+    return this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
   }
 
   /**
@@ -93,21 +65,8 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param updateData 태그 구독 수정 데이터
    */
-  async multipleUpdateTagSubscribe(userNo: number, updateData: UpdateTagSubscribeDto): Promise<ResponseDto<MultipleResultType>> {
-    const updateSubscribe = await this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
-
-    if (!updateSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_UPDATE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'TAG_SUBSCRIBE_UPDATE_SUCCESS',
-      updateSubscribe
-    );
+  async multipleUpdateTagSubscribe(userNo: number, updateData: UpdateTagSubscribeDto): Promise<MultipleResultType | null> {
+    return this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
   }
 
   /**
@@ -115,21 +74,8 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param tagSbcrNo 태그 구독 번호
    */
-  async deleteTagSubscribe(userNo: number, tagSbcrNo: number): Promise<ResponseDto<boolean>> {
-    const deleteSubscribe = await this.tagSubscribeRepository.deleteTagSubscribe(userNo, tagSbcrNo);
-
-    if (!deleteSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_DELETE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'TAG_SUBSCRIBE_DELETE_SUCCESS',
-      deleteSubscribe
-    );
+  async deleteTagSubscribe(userNo: number, tagSbcrNo: number): Promise<boolean> {
+    return this.tagSubscribeRepository.deleteTagSubscribe(userNo, tagSbcrNo);
   }
 
   /**
@@ -137,20 +83,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param deleteData 다수 태그 구독 삭제 데이터
    */
-  async multipleDeleteTagSubscribe(userNo: number, deleteData: DeleteTagSubscribeDto): Promise<ResponseDto<MultipleResultType>> {
-    const deleteSubscribe = await this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
-
-    if (!deleteSubscribe) {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_DELETE_ERROR'
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      'TAG_SUBSCRIBE_DELETE_SUCCESS',
-      deleteSubscribe
-    );
+  async multipleDeleteTagSubscribe(userNo: number, deleteData: DeleteTagSubscribeDto): Promise<MultipleResultType | null> {
+    return this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
   }
 }

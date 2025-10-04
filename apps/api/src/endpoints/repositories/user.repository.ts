@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { PrismaClient, type UserRole } from '@prisma/client';
 
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
@@ -11,7 +12,6 @@ import type {
 } from '@/endpoints/prisma/types/user.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { timeToString } from '@/utils/timeHelper';
-import { PrismaClient, type UserRole } from '~prisma/client';
 
 @Injectable()
 export class UserRepository {

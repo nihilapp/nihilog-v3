@@ -223,17 +223,11 @@ export const searchPostSchema = baseSearchSchema.extend({
     rlsYn: true,
     archYn: true,
   }).shape,
-  srchType: z.enum([ 'pstTtl', 'pstSmry', 'pstMtxt', ], {
-    error: '검색 타입은 pstTtl, pstSmry, pstMtxt 중 하나여야 합니다.',
+  srchType: z.enum([ 'pstTtl', 'pstSmry', ], {
+    error: '검색 타입은 pstTtl 또는 pstSmry 여야 합니다.',
   }).optional().openapi({
-    description: '검색 타입 (pstTtl: 제목, pstSmry: 요약, pstMtxt: 본문)',
+    description: '검색 타입 (pstTtl: 제목, pstSmry: 요약)',
     example: 'pstTtl',
-  }),
-
-  // 복합 검색 필드
-  srchFields: z.array(z.enum([ 'pstTtl', 'pstSmry', 'pstMtxt', ])).optional().openapi({
-    description: '복합 검색 필드 목록 (여러 필드에서 동시 검색)',
-    example: [ 'pstTtl', 'pstSmry', ],
   }),
 
   // 태그/카테고리 필터
@@ -241,48 +235,14 @@ export const searchPostSchema = baseSearchSchema.extend({
     description: '태그 번호 목록 (AND 조건)',
     example: [ 1, 2, 3, ],
   }),
-  tagNmList: z.array(z.string().min(1).max(128)).optional().openapi({
-    description: '태그 이름 목록 (AND 조건)',
-    example: [ 'JavaScript', 'TypeScript', ],
-  }),
   ctgryNoList: z.array(z.coerce.number().int().positive()).optional().openapi({
     description: '카테고리 번호 목록 (OR 조건)',
     example: [ 1, 2, ],
   }),
 
-  // 날짜 범위
-  dateRange: z.object({
-    startDt: z.string().max(50).optional().openapi({
-      description: '시작 날짜',
-      example: '2024-01-01',
-    }),
-    endDt: z.string().max(50).optional().openapi({
-      description: '종료 날짜',
-      example: '2024-12-31',
-    }),
-  }).optional().openapi({
-    description: '발행일 범위 필터',
-    example: { startDt: '2024-01-01', endDt: '2024-12-31', },
-  }),
-
-  // 조회수 범위
-  viewRange: z.object({
-    minViews: z.coerce.number().int().min(0).optional().openapi({
-      description: '최소 조회수',
-      example: 100,
-    }),
-    maxViews: z.coerce.number().int().min(0).optional().openapi({
-      description: '최대 조회수',
-      example: 1000,
-    }),
-  }).optional().openapi({
-    description: '조회수 범위 필터',
-    example: { minViews: 100, maxViews: 1000, },
-  }),
-
   // 정렬 옵션
-  orderBy: z.enum([ 'LATEST', 'POPULAR', 'RELEVANCE', ]).default('LATEST').openapi({
-    description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, RELEVANCE: 관련도순)',
+  orderBy: z.enum([ 'LATEST', 'POPULAR', 'OLDEST', ]).default('LATEST').openapi({
+    description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, OLDEST: 관련도순)',
     example: 'LATEST',
   }),
 }).partial();

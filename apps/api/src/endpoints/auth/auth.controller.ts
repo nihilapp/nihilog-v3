@@ -60,18 +60,13 @@ export class AuthController {
   ): Promise<ResponseDto<UserInfoDto>> {
     const result = await this.authService.signIn(signInData);
 
-    // 에러 응답인 경우 그대로 반환
-    if ('error' in result && result.error) {
-      return result;
+    // null인 경우 에러 반환
+    if (!result) {
+      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
     }
 
     // 성공 응답인 경우 쿠키 설정
-    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result as {
-      user: UserInfoDto;
-      acsToken: string;
-      reshToken: string;
-      accessTokenExpiresAt: number;
-    };
+    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result;
 
     setCookie(
       res,
@@ -150,18 +145,13 @@ export class AuthController {
 
     const result = await this.authService.refresh(refreshToken);
 
-    // 에러 응답인 경우 그대로 반환
-    if ('error' in result && result.error) {
-      return result;
+    // null인 경우 에러 반환
+    if (!result) {
+      return createError('UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
     }
 
     // 성공 응답인 경우 쿠키 설정
-    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result as {
-      user: UserInfoDto;
-      acsToken: string;
-      reshToken: string;
-      accessTokenExpiresAt: number;
-    };
+    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result;
 
     setCookie(
       res,
@@ -223,14 +213,14 @@ export class AuthController {
     const accessToken = req.cookies['accessToken'];
 
     // 서비스에서 로그아웃 처리
-    const result = await this.authService.signOut(accessToken);
+    await this.authService.signOut(accessToken);
 
     // 쿠키 정리
     clearCookie(res, 'accessToken');
     clearCookie(res, 'refreshToken');
     clearCookie(res, 'accessTokenExpiresAt');
 
-    return result;
+    return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
   }
 
   /**
@@ -265,7 +255,13 @@ export class AuthController {
       return createError('UNAUTHORIZED', 'UNAUTHORIZED');
     }
 
-    return this.authService.session(authUser.userNo);
+    const result = await this.authService.session(authUser.userNo);
+
+    if (!result) {
+      return createError('UNAUTHORIZED', 'SESSION_NOT_FOUND');
+    }
+
+    return createResponse('SUCCESS', 'SESSION_GET_SUCCESS', result);
   }
 
   /**
@@ -304,6 +300,13 @@ export class AuthController {
     if (!authUser) {
       return createError('UNAUTHORIZED', 'UNAUTHORIZED');
     }
-    return this.authService.changePassword(authUser.userNo, changePasswordData);
+
+    const result = await this.authService.changePassword(authUser.userNo, changePasswordData);
+
+    if (!result) {
+      return createError('UNAUTHORIZED', 'PASSWORD_CHANGE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'PASSWORD_CHANGE_SUCCESS', result);
   }
 }

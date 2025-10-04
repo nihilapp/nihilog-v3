@@ -19,7 +19,7 @@ import {
 } from '@/dto/subscribe.dto';
 import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import { createResponse } from '@/utils';
+import { createError, createResponse } from '@/utils';
 import { createExampleSubscribe } from '@/utils/createExampleSubscribe';
 
 @ApiTags('admin/subscribe')
@@ -133,7 +133,13 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.subscribeService.adminCreateUserSubscribe(req.user.userNo, createData);
+    const result = await this.subscribeService.adminCreateUserSubscribe(req.user.userNo, createData);
+
+    if (!result) {
+      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_CREATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_CREATE_SUCCESS', result);
   }
 
   /**
@@ -202,7 +208,13 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.subscribeService.adminMultipleUpdateUserSubscribe(req.user.userNo, updateData);
+    const result = await this.subscribeService.adminMultipleUpdateUserSubscribe(req.user.userNo, updateData);
+
+    if (!result) {
+      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result);
   }
 
   /**
@@ -269,7 +281,13 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.subscribeService.adminDeleteUserSubscribe(req.user.userNo, sbcrNo);
+    const result = await this.subscribeService.adminDeleteUserSubscribe(req.user.userNo, sbcrNo);
+
+    if (!result) {
+      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', null);
   }
 
   /**
@@ -334,6 +352,12 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.subscribeService.adminMultipleDeleteUserSubscribe(req.user.userNo, deleteData);
+    const result = await this.subscribeService.adminMultipleDeleteUserSubscribe(req.user.userNo, deleteData);
+
+    if (!result) {
+      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null);
   }
 }

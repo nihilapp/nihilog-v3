@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import type { CtgrySbcrMpng } from '@prisma/client';
 
 import type {
   CreateCategorySubscribeDto,
@@ -6,12 +7,9 @@ import type {
   SearchCategorySubscribeDto,
   UpdateCategorySubscribeDto
 } from '@/dto/category-subscribe.dto';
-import { ResponseDto } from '@/dto/response.dto';
 import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
-import { createError, createResponse } from '@/utils';
-import type { CtgrySbcrMpng } from '~prisma/client';
 
 @Injectable()
 export class AdminCategorySubscribeService {
@@ -51,22 +49,12 @@ export class AdminCategorySubscribeService {
   async adminCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<ResponseDto<CtgrySbcrMpng>> {
+  ): Promise<CtgrySbcrMpng | null> {
     try {
-      const result = await this.categorySubscribeRepository
-        .createCategorySubscribe(userNo, createData);
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-        result
-      );
+      return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_CATEGORY_SUBSCRIBE_CREATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -78,21 +66,12 @@ export class AdminCategorySubscribeService {
   async adminMultipleCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<MultipleResultType | null> {
     try {
-      const result = await this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-        result
-      );
+      return this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -104,31 +83,18 @@ export class AdminCategorySubscribeService {
   async adminUpdateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<CtgrySbcrMpng>> {
+  ): Promise<CtgrySbcrMpng | null> {
     try {
       const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
 
       if (!subscribe) {
-        return createError(
-          'NOT_FOUND',
-          'CATEGORY_SUBSCRIBE_NOT_FOUND'
-        );
+        return null;
       }
 
-      const updateSubscribe = await this.categorySubscribeRepository
-        .updateCategorySubscribe(userNo, updateData);
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
-        updateSubscribe
-      );
+      return this.categorySubscribeRepository.updateCategorySubscribe(userNo, updateData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -140,28 +106,12 @@ export class AdminCategorySubscribeService {
   async adminMultipleUpdateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<MultipleResultType | null> {
     try {
-      const result = await this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
-
-      if (!result || result.successCnt === 0) {
-        return createError(
-          'NOT_FOUND',
-          'CATEGORY_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-        result
-      );
+      return this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
-      );
+      return null;
     }
   }
 
@@ -173,28 +123,12 @@ export class AdminCategorySubscribeService {
   async adminDeleteCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<ResponseDto<boolean>> {
+  ): Promise<boolean> {
     try {
-      const result = await this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData.ctgrySbcrNo);
-
-      if (!result) {
-        return createError(
-          'NOT_FOUND',
-          'CATEGORY_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS',
-        result
-      );
+      return this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData.ctgrySbcrNo);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR'
-      );
+      return false;
     }
   }
 
@@ -206,29 +140,12 @@ export class AdminCategorySubscribeService {
   async adminMultipleDeleteCategorySubscribe(
     userNo: number,
     deleteData: DeleteCategorySubscribeDto
-  ): Promise<ResponseDto<MultipleResultType>> {
+  ): Promise<MultipleResultType | null> {
     try {
-      const result = await this.categorySubscribeRepository
-        .multipleDeleteCategorySubscribe(userNo, deleteData);
-
-      if (!result) {
-        return createError(
-          'NOT_FOUND',
-          'CATEGORY_SUBSCRIBE_NOT_FOUND'
-        );
-      }
-
-      return createResponse(
-        'SUCCESS',
-        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-        result
-      );
+      return this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
     }
     catch {
-      return createError(
-        'INTERNAL_SERVER_ERROR',
-        'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
-      );
+      return null;
     }
   }
 }

@@ -12,10 +12,12 @@ import {
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
-import { ListDto, ResponseDto, type MultipleResultDto } from '@/dto/response.dto';
-import { UserInfoDto, SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
+import { ResponseDto } from '@/dto/response.dto';
+import { SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import { createError, createResponse, removeSensitiveInfoFromResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { SelectUserInfoListItemType, SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import { createError, createResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
 
 import { AdminUserService } from './admin-users.service';
@@ -66,8 +68,8 @@ export class AdminUserController {
   })
   async adminGetUserList(
     @Req() req: AuthRequest,
-    @Body() body: SearchUserDto & Partial<UserInfoDto>
-  ): Promise<ResponseDto<ListDto<UserInfoDto>>> {
+    @Body() body: SearchUserDto
+  ): Promise<ResponseDto<ListType<SelectUserInfoListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -110,7 +112,7 @@ export class AdminUserController {
   async adminGetUserByUserNo(
     @Req() req: AuthRequest,
     @Param('userNo') userNo: number
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -162,7 +164,7 @@ export class AdminUserController {
   async adminGetUserByUserNm(
     @Req() req: AuthRequest,
     @Param('name') name: string
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -207,7 +209,7 @@ export class AdminUserController {
   async adminGetUserByEmlAddr(
     @Req() req: AuthRequest,
     @Param('email') email: string
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -259,13 +261,20 @@ export class AdminUserController {
   async adminCreateUser(
     @Req() req: AuthRequest,
     @Body() createUserData: CreateUserDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.usersService.createUser(req.user, createUserData);
-    return removeSensitiveInfoFromResponse(result);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
+    }
+
+    const userToReturn = removeSensitiveInfo(result);
+
+    return createResponse('CREATED', 'USER_CREATE_SUCCESS', userToReturn);
   }
 
   /**
@@ -311,13 +320,20 @@ export class AdminUserController {
     @Req() req: AuthRequest,
     @Param('userNo') userNo: number,
     @Body() updateUserData: UpdateUserDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.usersService.updateUser(req.user.userNo, userNo, updateUserData);
-    return removeSensitiveInfoFromResponse(result);
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+    }
+
+    const userToReturn = removeSensitiveInfo(result);
+
+    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', userToReturn);
   }
 
   // TODO: 여기서부터 다시 진행할 것
@@ -355,14 +371,18 @@ export class AdminUserController {
   async adminMultipleUpdateUser(
     @Req() req: AuthRequest,
     @Body() updateUserDto: UpdateUserDto
-  ): Promise<ResponseDto<MultipleResultDto>> {
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.usersService.multipleUpdateUser(req.user.userNo, updateUserDto);
 
-    return result;
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', result);
   }
 
   /**
@@ -404,7 +424,7 @@ export class AdminUserController {
   async adminDeleteUser(
     @Req() req: AuthRequest,
     @Param('userNo') userNo: number
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -414,7 +434,11 @@ export class AdminUserController {
       userNo
     );
 
-    return result;
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result);
   }
 
   /**
@@ -450,12 +474,17 @@ export class AdminUserController {
   async adminMultipleDeleteUser(
     @Req() req: AuthRequest,
     @Body() body: DeleteMultipleUsersDto
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.usersService.adminMultipleDeleteUser(req.user.userNo, body.userNoList);
-    return result;
+
+    if (!result) {
+      return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');
+    }
+
+    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result);
   }
 }

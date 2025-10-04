@@ -13,14 +13,13 @@ import { ResponseDto, ListDto } from '@/dto/response.dto';
 import {
   TagSubscribeDto,
   CreateTagSubscribeDto,
-  MultipleCreateTagSubscribeDto,
-  MultipleDeleteTagSubscribeDto,
-  MultipleUpdateTagSubscribeDto,
+  DeleteTagSubscribeDto,
   SearchTagSubscribeDto,
   UpdateTagSubscribeDto
 } from '@/dto/tag-subscribe.dto';
 import { AdminTagSubscribeService } from '@/endpoints/admin/tag-subscribe/admin-tag-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 import { createExampleTagSubscribe } from '@/utils/createExampleTagSubscribe';
 
@@ -200,7 +199,7 @@ export class AdminTagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 태그 구독 생성 정보', MultipleCreateTagSubscribeDto, ],
+      body: [ '다수 태그 구독 생성 정보', CreateTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 생성 성공',
@@ -220,8 +219,8 @@ export class AdminTagSubscribeController {
   })
   async adminMultipleCreateTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() createData: MultipleCreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto[]>> {
+    @Body() createData: CreateTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -293,7 +292,7 @@ export class AdminTagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 태그 구독 수정 정보', MultipleUpdateTagSubscribeDto, ],
+      body: [ '다수 태그 구독 수정 정보', UpdateTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 수정 성공',
@@ -317,8 +316,8 @@ export class AdminTagSubscribeController {
   })
   async adminMultipleUpdateTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() updateData: MultipleUpdateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto[]>> {
+    @Body() updateData: UpdateTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -384,7 +383,7 @@ export class AdminTagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 태그 구독 삭제 정보', MultipleDeleteTagSubscribeDto, ],
+      body: [ '다수 태그 구독 삭제 정보', DeleteTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 삭제 성공',
@@ -408,8 +407,8 @@ export class AdminTagSubscribeController {
   })
   async adminMultipleDeleteTagSubscribe(
     @Req() req: AuthRequest,
-    @Body() deleteData: MultipleDeleteTagSubscribeDto
-  ): Promise<ResponseDto<null>> {
+    @Body() deleteData: DeleteTagSubscribeDto
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }

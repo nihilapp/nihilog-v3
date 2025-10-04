@@ -2,8 +2,10 @@ import { Body, Controller, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { type ListDto, type PostDto, type ResponseDto, SearchPostDto } from '@/dto';
+import { type ResponseDto, SearchPostDto } from '@/dto';
 import { PostsService } from '@/endpoints/posts/posts.service';
+import type { ListType } from '@/endpoints/prisma/types/common.types';
+import type { SelectPostInfoListItemType, SelectPostInfoType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 import { createExamplePost } from '@/utils/createExamplePost';
 
@@ -37,7 +39,7 @@ export class PostsController {
       ],
     },
   })
-  async getPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListDto<PostDto>>> {
+  async getPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
     const list = await this.postsService.getPostList(searchData);
 
     if (!list) {
@@ -79,7 +81,7 @@ export class PostsController {
       ],
     },
   })
-  async getPostByPstNo(@Param('pstNo') pstNo: number): Promise<ResponseDto<PostDto>> {
+  async getPostByPstNo(@Param('pstNo') pstNo: number): Promise<ResponseDto<SelectPostInfoType>> {
     const post = await this.postsService.getPostByPstNo(pstNo);
 
     if (!post) {
@@ -121,7 +123,7 @@ export class PostsController {
       ],
     },
   })
-  async getPostByPstCd(@Param('pstCd') pstCd: string): Promise<ResponseDto<PostDto | null>> {
+  async getPostByPstCd(@Param('pstCd') pstCd: string): Promise<ResponseDto<SelectPostInfoType>> {
     const post = await this.postsService.getPostByPstCd(pstCd);
 
     if (!post) {
@@ -168,7 +170,7 @@ export class PostsController {
   async getPostListByTagNo(
     @Param('tagNo') tagNo: number,
     @Body() searchData: SearchPostDto
-  ): Promise<ResponseDto<ListDto<PostDto>>> {
+  ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
     const list = await this.postsService.getPostListByTagNo(tagNo, searchData);
 
     if (!list) {
@@ -215,7 +217,7 @@ export class PostsController {
   async getPostListByCtgryNo(
     @Param('ctgryNo') ctgryNo: number,
     @Body() searchData: SearchPostDto
-  ): Promise<ResponseDto<ListDto<PostDto>>> {
+  ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
     const list = await this.postsService.getPostListByCtgryNo(ctgryNo, searchData);
 
     if (!list) {
@@ -262,7 +264,7 @@ export class PostsController {
   async getPostListFromArchive(
     @Param('date') date: string,
     @Body() searchData: SearchPostDto
-  ): Promise<ResponseDto<ListDto<PostDto>>> {
+  ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
     const list = await this.postsService.getPostListFromArchive(date, searchData);
 
     if (!list) {
@@ -304,7 +306,7 @@ export class PostsController {
       ],
     },
   })
-  async getAdvancedPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListDto<PostDto>>> {
+  async getAdvancedPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
     const list = await this.postsService.getAdvancedPostList(searchData);
 
     if (!list) {
