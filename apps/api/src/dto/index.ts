@@ -25,7 +25,6 @@ export {
   ListDto,
   ListResponseDto,
   MultipleResultDto,
-  SignInResponseDto,
   MutationResponseDto
 } from './response.dto';
 

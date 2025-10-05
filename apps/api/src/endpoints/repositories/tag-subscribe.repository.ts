@@ -310,7 +310,7 @@ export class TagSubscribeRepository {
   async createTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<TagSbcrMpng | null> {
+  ): Promise<SelectTagSbcrMpngType | null> {
     try {
       const { tagNo, sbcrNo, } = createData;
 
@@ -324,6 +324,13 @@ export class TagSubscribeRepository {
           crtDt: timeToString(),
           updtNo: userNo,
           updtDt: timeToString(),
+        },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
         },
       });
 

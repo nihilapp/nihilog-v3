@@ -8,8 +8,9 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CategorySubscribeDto, type ListDto, type CreateCategorySubscribeDto, type UpdateCategorySubscribeDto, type DeleteCategorySubscribeDto } from '@/dto';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CategorySubscribeDto, type CreateCategorySubscribeDto, type UpdateCategorySubscribeDto, type DeleteCategorySubscribeDto } from '@/dto';
+import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
 
@@ -49,7 +50,7 @@ export class CategorySubscribeController {
   async getCategorySubscribeList(
     @Req() req: AuthRequest,
     @Body() body: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
-  ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
+  ): Promise<ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -92,7 +93,7 @@ export class CategorySubscribeController {
     @Req() req: AuthRequest,
     @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
     @Body() body: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
-  ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
+  ): Promise<ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -126,7 +127,7 @@ export class CategorySubscribeController {
         ],
         [
           '카테고리 구독 설정 실패',
-          [ true, 'BAD_REQUEST', 'CATEGORY_SUBSCRIBE_CREATE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR', null, ],
         ],
       ],
     },
@@ -135,7 +136,7 @@ export class CategorySubscribeController {
     @Req() req: AuthRequest,
     @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
     @Body() body: CreateCategorySubscribeDto
-  ): Promise<ResponseDto<CategorySubscribeDto>> {
+  ): Promise<ResponseDto<SelectCtgrySbcrMpngType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -170,7 +171,7 @@ export class CategorySubscribeController {
         ],
         [
           '다수 카테고리 구독 실패',
-          [ true, 'BAD_REQUEST', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR', null, ],
         ],
       ],
     },
@@ -213,7 +214,7 @@ export class CategorySubscribeController {
         ],
         [
           '다수 카테고리 구독 설정 변경 실패',
-          [ true, 'BAD_REQUEST', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR', null, ],
         ],
       ],
     },
@@ -298,7 +299,7 @@ export class CategorySubscribeController {
         ],
         [
           '다수 카테고리 구독 해제 실패',
-          [ true, 'BAD_REQUEST', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR', null, ],
         ],
       ],
     },

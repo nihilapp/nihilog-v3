@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import type { CtgrySbcrMpng } from '@prisma/client';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
-import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
+import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 
@@ -47,7 +46,7 @@ export class CategorySubscribeService {
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
    */
-  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<CtgrySbcrMpng | null> {
+  async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<SelectCtgrySbcrMpngType | null> {
     return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
   }
 

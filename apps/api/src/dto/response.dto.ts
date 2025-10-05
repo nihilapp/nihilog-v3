@@ -1,8 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { UserInfoDto } from '@/dto/user.dto';
-import { createExampleUser } from '@/utils';
-
 // 기본 응답 DTO
 export class ResponseDto<TData = any> {
   @ApiProperty({
@@ -111,33 +108,6 @@ export class ListResponseDto<TData = any> {
     list: TData[];
     totalCnt: number;
   };
-}
-
-export class SignInResponseDto {
-  @ApiProperty({
-    description: '사용자 정보',
-    type: UserInfoDto,
-    example: createExampleUser(),
-  })
-  declare user: UserInfoDto;
-
-  @ApiProperty({
-    description: '액세스 토큰',
-    example: 'access_token',
-  })
-  declare acsToken: string;
-
-  @ApiProperty({
-    description: '리프레시 토큰',
-    example: 'refresh_token',
-  })
-  declare reshToken: string;
-
-  @ApiProperty({
-    description: '액세스 토큰 만료 시간',
-    example: 1717000000,
-  })
-  declare accessTokenExpiresAt: number;
 }
 
 export class MutationResponseDto {

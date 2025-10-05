@@ -213,7 +213,7 @@ export class UserController {
     const result = await this.userService.updateUserSubscribe(req.user, updateData);
 
     if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'SUBSCRIBE_UPDATE_ERROR');
+      return createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND');
     }
 
     return createResponse('SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', result);

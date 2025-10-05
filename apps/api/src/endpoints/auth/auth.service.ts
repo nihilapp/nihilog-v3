@@ -8,7 +8,6 @@ import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
-import { type SignInResponseDto } from '@/dto/response.dto';
 import { AdminUserService } from '@/endpoints/admin/users/admin-users.service';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
@@ -21,6 +20,13 @@ interface JwtPayload {
   emlAddr: string;
   userNm: string;
   userRole: UserRoleType;
+}
+
+interface SignInResponseType {
+  user: SelectUserInfoType;
+  acsToken: string;
+  reshToken: string;
+  accessTokenExpiresAt: number;
 }
 
 @Injectable()
@@ -55,7 +61,7 @@ export class AuthService {
    * @description 사용자 로그인
    * @param signInData 로그인 정보
    */
-  async signIn(signInData: SignInDto): Promise<SignInResponseDto | null> {
+  async signIn(signInData: SignInDto): Promise<SignInResponseType | null> {
     const { emlAddr, password, } = signInData;
 
     // 사용자 조회
@@ -122,7 +128,7 @@ export class AuthService {
    * @description 액세스 토큰 재발급
    * @param token 리프레시 토큰
    */
-  async refresh(token: string): Promise<SignInResponseDto | null> {
+  async refresh(token: string): Promise<SignInResponseType | null> {
     if (!token) {
       return null;
     }

@@ -14,6 +14,7 @@ import type { AuthRequest } from '@/dto';
 import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse } from '@/utils';
 import { createExampleUser } from '@/utils/createExampleUser';
 import { clearCookie, setCookie } from '@/utils/setCookie';
@@ -57,7 +58,7 @@ export class AuthController {
     @Body() signInData: SignInDto,
     @Res({ passthrough: true, }) res: FastifyReply,
     @Req() req: FastifyRequest
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     const result = await this.authService.signIn(signInData);
 
     // null인 경우 에러 반환
@@ -140,7 +141,7 @@ export class AuthController {
   async refreshToken(
     @Req() req: FastifyRequest,
     @Res({ passthrough: true, }) res: FastifyReply
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     const refreshToken = req.cookies[ 'refreshToken' ];
 
     if (!refreshToken) {
@@ -311,7 +312,7 @@ export class AuthController {
   async changePassword(
     @Req() req: FastifyRequest & { user: JwtPayload | null },
     @Body() changePasswordData: ChangePasswordDto
-  ): Promise<ResponseDto<UserInfoDto>> {
+  ): Promise<ResponseDto<SelectUserInfoType>> {
     const authUser = req.user;
 
     if (!authUser) {

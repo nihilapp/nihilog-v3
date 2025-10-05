@@ -234,7 +234,7 @@ export class CategorySubscribeRepository {
   async createCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<CtgrySbcrMpng | null> {
+  ): Promise<SelectCtgrySbcrMpngType | null> {
     try {
       const { ctgryNo, sbcrNo, } = createData;
 
@@ -248,6 +248,13 @@ export class CategorySubscribeRepository {
           crtDt: timeToString(),
           updtNo: userNo,
           updtDt: timeToString(),
+        },
+        include: {
+          category: {
+            select: {
+              ctgryNm: true,
+            },
+          },
         },
       });
 

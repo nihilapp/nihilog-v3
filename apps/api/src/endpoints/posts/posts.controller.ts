@@ -9,9 +9,7 @@ import { PostsService } from '@/endpoints/posts/posts.service';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
 import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostInfoListItemType, SelectPostInfoType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
-import { createExamplePost } from '@/utils/createExamplePost';
-import { createExamplePostShareLog } from '@/utils/createExamplePostShareLog';
-import { createExamplePostViewLog } from '@/utils/createExamplePostViewLog';
+import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('posts')
 @Controller('posts')
@@ -33,7 +31,7 @@ export class PostsController {
         [
           '게시글 목록 조회 성공',
           [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [
-            createExamplePost('list'),
+            CreateExample.post('list'),
           ], ],
         ],
         [
@@ -76,7 +74,7 @@ export class PostsController {
       responses: [
         [
           '게시글 상세 조회 성공',
-          [ false, 'SUCCESS', 'POST_GET_SUCCESS', createExamplePost('detail'), ],
+          [ false, 'SUCCESS', 'POST_GET_SUCCESS', CreateExample.post('detail'), ],
         ],
         [
           '게시글 상세 조회 실패',
@@ -118,11 +116,11 @@ export class PostsController {
       responses: [
         [
           '게시글 상세 조회 성공',
-          [ false, 'SUCCESS', 'POST_GET_SUCCESS', createExamplePost('detail'), ],
+          [ false, 'SUCCESS', 'POST_GET_SUCCESS', CreateExample.post('detail'), ],
         ],
         [
           '게시글 상세 조회 실패',
-          [ true, 'NOT_FOUND', 'POST_GET_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'POST_GET_ERROR', null, ],
         ],
       ],
     },
@@ -162,7 +160,7 @@ export class PostsController {
       responses: [
         [
           '태그별 게시글 목록 조회 성공',
-          [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [ createExamplePost('list'), ], ],
+          [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ], ],
         ],
         [
           '태그별 게시글 목록 조회 실패',
@@ -209,7 +207,7 @@ export class PostsController {
       responses: [
         [
           '카테고리별 게시글 목록 조회 성공',
-          [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [ createExamplePost('list'), ], ],
+          [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ], ],
         ],
         [
           '카테고리별 게시글 목록 조회 실패',
@@ -256,7 +254,7 @@ export class PostsController {
       responses: [
         [
           '년월별 게시글 목록 조회 성공',
-          [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [ createExamplePost('list'), ], ],
+          [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ], ],
         ],
         [
           '년월별 게시글 목록 조회 실패',
@@ -300,7 +298,7 @@ export class PostsController {
         [
           '고급 검색 성공',
           [ false, 'SUCCESS', 'POST_SEARCH_SUCCESS', [
-            createExamplePost('list'),
+            CreateExample.post('list'),
           ], ],
         ],
         [
@@ -344,7 +342,7 @@ export class PostsController {
       responses: [
         [
           '게시글 조회 로그 기록 성공',
-          [ false, 'SUCCESS', 'POST_VIEW_LOG_SUCCESS', createExamplePostViewLog(), ],
+          [ false, 'SUCCESS', 'POST_VIEW_LOG_SUCCESS', CreateExample.postViewLog(), ],
         ],
         [
           '게시글 조회 로그 기록 실패',
@@ -387,7 +385,7 @@ export class PostsController {
       responses: [
         [
           '게시글 공유 로그 기록 성공',
-          [ false, 'SUCCESS', 'POST_SHARE_LOG_SUCCESS', createExamplePostShareLog(), ],
+          [ false, 'SUCCESS', 'POST_SHARE_LOG_SUCCESS', CreateExample.postShareLog(), ],
         ],
         [
           '게시글 공유 로그 기록 실패',
@@ -431,7 +429,7 @@ export class PostsController {
       responses: [
         [
           '게시글 북마크 생성 성공',
-          [ false, 'SUCCESS', 'POST_BOOKMARK_CREATE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'POST_BOOKMARK_CREATE_SUCCESS', CreateExample.postBookmark('detail'), ],
         ],
         [
           '게시글 북마크 생성 실패',
@@ -520,6 +518,16 @@ export class PostsController {
     options: {
       authGuard: 'JWT-auth',
       body: [ '검색 데이터', SearchPostBookmarkDto, ],
+      responses: [
+        [
+          '북마크한 게시글 목록 조회 성공',
+          [ false, 'SUCCESS', 'POST_BOOKMARK_SEARCH_SUCCESS', [ CreateExample.postBookmark('list'), ], ],
+        ],
+        [
+          '북마크한 게시글 목록 조회 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'POST_BOOKMARK_SEARCH_ERROR', null, ],
+        ],
+      ],
     },
   })
   async getBookmarkedPostListByUserNo(

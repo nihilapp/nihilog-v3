@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { TagSbcrMpng } from '@prisma/client';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, TagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
+import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import type { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 
 @Injectable()
@@ -47,7 +46,7 @@ export class TagSubscribeService {
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
    */
-  async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<TagSbcrMpng | null> {
+  async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<SelectTagSbcrMpngType | null> {
     return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
   }
 

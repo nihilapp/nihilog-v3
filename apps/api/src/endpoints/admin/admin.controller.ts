@@ -50,8 +50,8 @@ export class AdminController {
           '사용자를 찾을 수 없음',
           [
             true,
-            'NOT_FOUND',
-            'USER_NOT_FOUND',
+            'INTERNAL_SERVER_ERROR',
+            'PROFILE_UPDATE_ERROR',
             null,
           ],
         ],
@@ -59,8 +59,8 @@ export class AdminController {
           '사용자명 중복',
           [
             true,
-            'CONFLICT',
-            'USER_NAME_EXISTS',
+            'INTERNAL_SERVER_ERROR',
+            'PROFILE_UPDATE_ERROR',
             null,
           ],
         ],

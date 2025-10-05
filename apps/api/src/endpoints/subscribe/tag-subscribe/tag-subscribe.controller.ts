@@ -8,8 +8,9 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type ListDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
+import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { createError, createResponse } from '@/utils';
 import { createExampleTagSubscribe } from '@/utils/createExampleTagSubscribe';
 
@@ -41,7 +42,7 @@ export class TagSubscribeController {
         ],
         [
           '태그 구독 목록 조회 실패',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_SEARCH_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR', null, ],
         ],
       ],
     },
@@ -49,7 +50,7 @@ export class TagSubscribeController {
   async getTagSubscribeList(
     @Req() req: AuthRequest,
     @Body() body: SearchTagSubscribeDto & Partial<TagSubscribeDto>
-  ): Promise<ResponseDto<ListDto<TagSubscribeDto>>> {
+  ): Promise<ResponseDto<ListType<SelectTagSbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -83,7 +84,7 @@ export class TagSubscribeController {
         ],
         [
           '태그 구독 상태 조회 실패',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR', null, ],
         ],
       ],
     },
@@ -92,7 +93,7 @@ export class TagSubscribeController {
     @Req() req: AuthRequest,
     @Param('tagNo', ParseIntPipe) tagNo: number,
     @Body() body: SearchTagSubscribeDto & Partial<TagSubscribeDto>
-  ): Promise<ResponseDto<ListDto<TagSubscribeDto>>> {
+  ): Promise<ResponseDto<ListType<SelectTagSbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -126,7 +127,7 @@ export class TagSubscribeController {
         ],
         [
           '태그 구독 설정 실패',
-          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_CREATE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_CREATE_ERROR', null, ],
         ],
       ],
     },
@@ -135,7 +136,7 @@ export class TagSubscribeController {
     @Req() req: AuthRequest,
     @Param('tagNo', ParseIntPipe) tagNo: number,
     @Body() body: CreateTagSubscribeDto
-  ): Promise<ResponseDto<TagSubscribeDto>> {
+  ): Promise<ResponseDto<SelectTagSbcrMpngType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -170,7 +171,7 @@ export class TagSubscribeController {
         ],
         [
           '다수 태그 구독 실패',
-          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR', null, ],
         ],
       ],
     },
@@ -213,7 +214,7 @@ export class TagSubscribeController {
         ],
         [
           '다수 태그 구독 설정 변경 실패',
-          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR', null, ],
         ],
       ],
     },
@@ -298,7 +299,7 @@ export class TagSubscribeController {
         ],
         [
           '다수 태그 구독 해제 실패',
-          [ true, 'BAD_REQUEST', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR', null, ],
         ],
       ],
     },
