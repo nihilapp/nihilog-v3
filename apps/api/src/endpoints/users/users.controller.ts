@@ -234,7 +234,7 @@ export class UserController {
       responses: [
         [
           '프로필 삭제 성공',
-          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', true, ],
         ],
         [
           '프로필 삭제 실패',

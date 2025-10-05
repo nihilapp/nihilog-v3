@@ -1,4 +1,4 @@
-import type { PstInfo, PstShrnLog, PstViewLog } from '@prisma/client';
+import type { PstBkmrkMpng, PstInfo, PstShrnLog, PstViewLog } from '@prisma/client';
 
 // 단일 게시글 조회
 export type SelectPostInfoType = PstInfo;
@@ -23,6 +23,15 @@ export type SelectPostShareLogType = PstShrnLog;
 
 // 목록 조회 항목 (페이징 정보 포함)
 export type SelectPostShareLogListItemType = SelectPostShareLogType & {
+  totalCnt: number;
+  rowNo: number;
+};
+
+// 단일 게시글 북마크
+export type SelectPostBookmarkType = PstBkmrkMpng;
+
+// 목록 조회 항목 (페이징 정보 포함)
+export type SelectPostBookmarkListItemType = SelectPostBookmarkType & {
   totalCnt: number;
   rowNo: number;
 };

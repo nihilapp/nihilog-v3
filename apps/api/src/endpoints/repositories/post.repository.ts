@@ -1,14 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 
-import type { CreatePostBookmarkDto, CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
+import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
+import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import type { ViewStatDto } from '@/dto/post.dto';
 import type { MutationResponseDto } from '@/dto/response.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostBookmarkType } from '@/endpoints/prisma/types/post-bookmark.types';
 import type {
+  SelectPostBookmarkListItemType,
+  SelectPostBookmarkType,
   SelectPostInfoListItemType,
   SelectPostInfoType,
   SelectPostShareLogType,
@@ -68,7 +70,7 @@ export class PostRepository {
       };
     }
     catch {
-      return { list: [], totalCnt: 0, };
+      return null;
     }
   }
 
@@ -157,7 +159,7 @@ export class PostRepository {
       };
     }
     catch {
-      return { list: [], totalCnt: 0, };
+      return null;
     }
   }
 
@@ -210,7 +212,7 @@ export class PostRepository {
       };
     }
     catch {
-      return { list: [], totalCnt: 0, };
+      return null;
     }
   }
 
@@ -269,7 +271,7 @@ export class PostRepository {
       };
     }
     catch {
-      return { list: [], totalCnt: 0, };
+      return null;
     }
   }
 
@@ -428,7 +430,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 북마크
+   * @description 게시글 북마크 생성
    * @param createData 북마크 생성 데이터
    */
   async createPostBookmark(createData: CreatePostBookmarkDto): Promise<SelectPostBookmarkType | null> {
@@ -447,16 +449,70 @@ export class PostRepository {
     }
   }
 
-  // TODO: 여기서부터 시작.
+  /**
+   * @description 게시글 북마크 삭제
+   * @param deleteData 북마크 삭제 데이터
+   */
+  async deletePostBookmark(deleteData: DeletePostBookmarkDto): Promise<boolean> {
+    try {
+      await this.prisma.pstBkmrkMpng.delete({
+        where: {
+          bkmrkNo: deleteData.bkmrkNo,
+        },
+      });
+
+      return true;
+    }
+    catch {
+      return false;
+    }
+  }
 
   /**
    * @description 북마크한 게시글 목록 조회
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
-  getBookmarkedPostListByUserNo(_userNo: number, _searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
-    // TODO: 북마크한 게시글 목록 조회 구현
-    return Promise.resolve({ list: [], totalCnt: 0, });
+  async getBookmarkedPostListByUserNo(
+    userNo: number,
+    searchData: SearchPostBookmarkDto
+  ): Promise<ListType<SelectPostBookmarkListItemType>> {
+    try {
+      const { page, strtRow, endRow, delYn, pstNo, } = searchData;
+
+      const where: Prisma.PstBkmrkMpngWhereInput = {
+        userNo,
+        delYn: delYn || 'N',
+        // 특정 게시글의 번호로 조회를 한다.
+        post: {
+          is: {
+            pstNo: {
+              equals: pstNo,
+            },
+          },
+        },
+      };
+
+      const skip = pageHelper(page, strtRow, endRow).offset;
+      const take = pageHelper(page, strtRow, endRow).limit;
+
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.pstBkmrkMpng.findMany({ where, skip, take, }),
+        this.prisma.pstBkmrkMpng.count({ where, }),
+      ]);
+
+      return {
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: skip + index + 1,
+        })),
+        totalCnt,
+      };
+    }
+    catch {
+      return null;
+    }
   }
 
   /**
@@ -536,7 +592,7 @@ export class PostRepository {
       };
     }
     catch {
-      return { list: [], totalCnt: 0, };
+      return null;
     }
   }
 

@@ -49,7 +49,7 @@ export class AdminTagSubscribeController {
           [
             false,
             'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_LIST_SUCCESS',
+            'ADMIN_TAG_SUBSCRIBE_SEARCH_SUCCESS',
             [ createExampleTagSubscribe('list'), ],
           ],
         ],
@@ -73,13 +73,13 @@ export class AdminTagSubscribeController {
     if (!result) {
       return createError(
         'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_LIST_ERROR'
+        'TAG_SUBSCRIBE_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_SUBSCRIBE_LIST_SUCCESS',
+      'ADMIN_TAG_SUBSCRIBE_SEARCH_SUCCESS',
       result
     );
   }
@@ -345,7 +345,7 @@ export class AdminTagSubscribeController {
       responses: [
         [
           '태그 구독 삭제 성공',
-          [ false, 'SUCCESS', 'ADMIN_TAG_SUBSCRIBE_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'ADMIN_TAG_SUBSCRIBE_DELETE_SUCCESS', true, ],
         ],
         [
           '태그 구독을 찾을 수 없음',

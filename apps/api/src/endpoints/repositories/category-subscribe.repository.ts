@@ -409,7 +409,11 @@ export class CategorySubscribeRepository {
         },
       });
 
-      return result.count === 1;
+      if (result) {
+        return true;
+      }
+
+      return false;
     }
     catch {
       return false;

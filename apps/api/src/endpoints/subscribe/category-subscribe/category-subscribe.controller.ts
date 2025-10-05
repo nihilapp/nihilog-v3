@@ -35,13 +35,13 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 목록 조회 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', [
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', [
             createExampleCategorySubscribe('list'),
           ], ],
         ],
         [
           '카테고리 구독 목록 조회 실패',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_LIST_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR', null, ],
         ],
       ],
     },
@@ -56,10 +56,10 @@ export class CategorySubscribeController {
 
     try {
       const result = await this.categorySubscribeService.getCategorySubscribeList(body);
-      return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', result);
+      return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result);
     }
     catch {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_LIST_ERROR');
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
     }
   }
 
@@ -79,11 +79,11 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', createExampleCategorySubscribe('detail'), ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', createExampleCategorySubscribe('detail'), ],
         ],
         [
           '카테고리 구독 상태 조회 실패',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR', null, ],
         ],
       ],
     },
@@ -99,10 +99,10 @@ export class CategorySubscribeController {
 
     try {
       const result = await this.categorySubscribeService.getCategorySubscribeByCtgryNo(ctgryNo, body);
-      return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_LIST_SUCCESS', result);
+      return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result);
     }
     catch {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_LIST_ERROR');
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
     }
   }
 
@@ -251,11 +251,11 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 해제 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', true, ],
         ],
         [
           '카테고리 구독 해제 실패',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_DELETE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR', false, ],
         ],
       ],
     },

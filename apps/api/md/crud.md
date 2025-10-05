@@ -72,7 +72,13 @@
 - [x] POST /posts/:pstNo/bookmark **[USER]**
   - `createPostBookmark`
   - params: pstNo: number
+  - body: CreatePostBookmarkDto
   - 기능: 게시글 북마크, 북마크 목록 관리, 북마크 통계
+- [x] DELETE /posts/:pstNo/bookmark **[USER]**
+  - `deletePostBookmark`
+  - params: pstNo: number
+  - body: DeletePostBookmarkDto
+  - 기능: 게시글 북마크 삭제
 - [ ] GET /posts/bookmarked **[USER]**
   - `getBookmarkedPostListByUserNo`
   - query: page?, size?

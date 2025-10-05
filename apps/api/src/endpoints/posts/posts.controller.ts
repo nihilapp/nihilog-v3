@@ -1,12 +1,13 @@
-import { Body, Controller, Ip, Param } from '@nestjs/common';
+import { Body, Controller, Ip, Param, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { type ResponseDto, SearchPostDto } from '@/dto';
+import { type AuthRequest, CreatePostBookmarkDto, DeletePostBookmarkDto, type ResponseDto, SearchPostDto } from '@/dto';
 import { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
+import { SearchPostBookmarkDto } from '@/dto/post.dto';
 import { PostsService } from '@/endpoints/posts/posts.service';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostInfoListItemType, SelectPostInfoType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
+import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostInfoListItemType, SelectPostInfoType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 import { createExamplePost } from '@/utils/createExamplePost';
 import { createExamplePostShareLog } from '@/utils/createExamplePostShareLog';
@@ -409,6 +410,140 @@ export class PostsController {
       'SUCCESS',
       'POST_SHARE_LOG_SUCCESS',
       shareLog
+    );
+  }
+
+  /**
+   * @description 게시글 북마크 생성
+   * @param pstNo 게시글 번호
+   * @param createData 북마크 생성 데이터
+   */
+  @Endpoint({
+    endpoint: '/:pstNo/bookmark',
+    method: 'POST',
+    summary: '게시글 북마크 생성',
+    description: '게시글 북마크를 생성합니다.',
+    options: {
+      params: [
+        [ 'pstNo', '게시글 번호', 'number', true, ],
+      ],
+      body: [ '북마크 생성 데이터', CreatePostBookmarkDto, ],
+      responses: [
+        [
+          '게시글 북마크 생성 성공',
+          [ false, 'SUCCESS', 'POST_BOOKMARK_CREATE_SUCCESS', null, ],
+        ],
+        [
+          '게시글 북마크 생성 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'POST_BOOKMARK_CREATE_ERROR', null, ],
+        ],
+      ],
+    },
+  })
+  async createPostBookmark(
+    @Param('pstNo') pstNo: number,
+    @Body() createData: CreatePostBookmarkDto
+  ): Promise<ResponseDto<SelectPostBookmarkType>> {
+    const bookmark = await this.postsService.createPostBookmark(createData);
+
+    if (!bookmark) {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'POST_BOOKMARK_CREATE_ERROR'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      'POST_BOOKMARK_CREATE_SUCCESS',
+      bookmark
+    );
+  }
+
+  /**
+   * @description 게시글 북마크 삭제
+   * @param pstNo 게시글 번호
+   * @param deleteData 북마크 삭제 데이터
+   */
+  @Endpoint({
+    endpoint: '/:pstNo/bookmark',
+    method: 'DELETE',
+    summary: '게시글 북마크 삭제',
+    description: '게시글 북마크를 삭제합니다.',
+    options: {
+      params: [
+        [ 'pstNo', '게시글 번호', 'number', true, ],
+      ],
+      body: [ '북마크 삭제 데이터', DeletePostBookmarkDto, ],
+      responses: [
+        [
+          '게시글 북마크 삭제 성공',
+          [ false, 'SUCCESS', 'POST_BOOKMARK_DELETE_SUCCESS', true, ],
+        ],
+        [
+          '게시글 북마크 삭제 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'POST_BOOKMARK_DELETE_ERROR', false, ],
+        ],
+      ],
+    },
+  })
+  async deletePostBookmark(
+    @Param('pstNo') pstNo: number,
+    @Body() deleteData: DeletePostBookmarkDto
+  ): Promise<ResponseDto<boolean>> {
+    const result = await this.postsService.deletePostBookmark(deleteData);
+
+    if (!result) {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'POST_BOOKMARK_DELETE_ERROR'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      'POST_BOOKMARK_DELETE_SUCCESS',
+      result
+    );
+  }
+
+  /**
+   * @description 북마크한 게시글 목록 조회
+   * @param userNo 사용자 번호
+   * @param searchData 검색 데이터
+   */
+  @Endpoint({
+    endpoint: '/bookmarked',
+    method: 'POST',
+    summary: '북마크한 게시글 목록 조회',
+    description: '북마크한 게시글 목록을 조회합니다.',
+    options: {
+      authGuard: 'JWT-auth',
+      body: [ '검색 데이터', SearchPostBookmarkDto, ],
+    },
+  })
+  async getBookmarkedPostListByUserNo(
+    @Req() req: AuthRequest,
+    @Body() searchData: SearchPostBookmarkDto
+  ): Promise<ResponseDto<ListType<SelectPostBookmarkListItemType>>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const list = await this.postsService
+      .getBookmarkedPostListByUserNo(req.user.userNo, searchData);
+
+    if (!list) {
+      return createError(
+        'INTERNAL_SERVER_ERROR',
+        'POST_BOOKMARK_SEARCH_ERROR'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      'POST_BOOKMARK_SEARCH_SUCCESS',
+      list
     );
   }
 }

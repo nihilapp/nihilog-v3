@@ -49,7 +49,7 @@ export class AdminCategorySubscribeController {
           [
             false,
             'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_LIST_SUCCESS',
+            'ADMIN_CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
             [ createExampleCategorySubscribe('list'), ],
           ],
         ],
@@ -71,12 +71,12 @@ export class AdminCategorySubscribeController {
     const result = await this.categorySubscribeService.adminGetCategorySubscribeList(searchData);
 
     if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_LIST_ERROR');
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_CATEGORY_SUBSCRIBE_LIST_SUCCESS',
+      'ADMIN_CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
       result
     );
   }
@@ -131,7 +131,7 @@ export class AdminCategorySubscribeController {
     const result = await this.categorySubscribeService.adminGetCategorySubscribeByCtgryNo(ctgryNo, searchData);
 
     if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_LIST_ERROR');
+      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
     }
 
     return createResponse(
@@ -361,7 +361,7 @@ export class AdminCategorySubscribeController {
       responses: [
         [
           '카테고리 구독 삭제 성공',
-          [ false, 'SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', true, ],
         ],
         [
           '카테고리 구독을 찾을 수 없음',
@@ -370,6 +370,10 @@ export class AdminCategorySubscribeController {
         [
           '관리자 권한 없음',
           [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
+        ],
+        [
+          '카테고리 구독 삭제 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR', false, ],
         ],
       ],
     },

@@ -11,6 +11,7 @@ import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type ListDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
+import { createExampleTagSubscribe } from '@/utils/createExampleTagSubscribe';
 
 import { TagSubscribeService } from './tag-subscribe.service';
 
@@ -34,11 +35,13 @@ export class TagSubscribeController {
       responses: [
         [
           '태그 구독 목록 조회 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', [], ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', [
+            createExampleTagSubscribe('list'),
+          ], ],
         ],
         [
           '태그 구독 목록 조회 실패',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_LIST_ERROR', null, ],
+          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_SEARCH_ERROR', null, ],
         ],
       ],
     },
@@ -53,10 +56,10 @@ export class TagSubscribeController {
 
     try {
       const result = await this.tagSubscribeService.getTagSubscribeList(body);
-      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', result);
+      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result);
     }
     catch {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_LIST_ERROR');
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR');
     }
   }
 
@@ -76,7 +79,7 @@ export class TagSubscribeController {
       responses: [
         [
           '태그 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', createExampleTagSubscribe('detail'), ],
         ],
         [
           '태그 구독 상태 조회 실패',
@@ -96,10 +99,10 @@ export class TagSubscribeController {
 
     try {
       const result = await this.tagSubscribeService.getTagSubscribeByTagNo(tagNo, body);
-      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_LIST_SUCCESS', result);
+      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result);
     }
     catch {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_LIST_ERROR');
+      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR');
     }
   }
 
@@ -119,7 +122,7 @@ export class TagSubscribeController {
       responses: [
         [
           '태그 구독 설정 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', createExampleTagSubscribe('detail'), ],
         ],
         [
           '태그 구독 설정 실패',
@@ -163,7 +166,7 @@ export class TagSubscribeController {
       responses: [
         [
           '다수 태그 구독 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ createExampleTagSubscribe('detail'), ], ],
         ],
         [
           '다수 태그 구독 실패',
@@ -206,7 +209,7 @@ export class TagSubscribeController {
       responses: [
         [
           '다수 태그 구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ createExampleTagSubscribe('detail'), ], ],
         ],
         [
           '다수 태그 구독 설정 변경 실패',
@@ -248,11 +251,11 @@ export class TagSubscribeController {
       responses: [
         [
           '태그 구독 해제 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', true, ],
         ],
         [
           '태그 구독 해제 실패',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_DELETE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_DELETE_ERROR', false, ],
         ],
       ],
     },
@@ -291,7 +294,7 @@ export class TagSubscribeController {
       responses: [
         [
           '다수 태그 구독 해제 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', {}, ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', [ createExampleTagSubscribe('detail'), ], ],
         ],
         [
           '다수 태그 구독 해제 실패',

@@ -48,7 +48,7 @@ export class AdminUserController {
           [
             false,
             'SUCCESS',
-            'USER_LIST_SUCCESS',
+            'USER_SEARCH_SUCCESS',
             {
               list: [ createExampleUser('list'), ],
               totalCnt: 1,
@@ -61,7 +61,7 @@ export class AdminUserController {
         ],
         [
           '사용자 목록 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_LIST_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_SEARCH_ERROR', null, ],
         ],
       ],
     },
@@ -80,7 +80,7 @@ export class AdminUserController {
       return createError('BAD_REQUEST', 'INVALID_REQUEST');
     }
 
-    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', 'USER_LIST_SUCCESS', result));
+    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', 'USER_SEARCH_SUCCESS', result));
   }
 
   /**
@@ -404,7 +404,7 @@ export class AdminUserController {
       responses: [
         [
           '사용자 삭제 성공',
-          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', true, ],
         ],
         [
           '사용자를 찾을 수 없음',
@@ -412,7 +412,7 @@ export class AdminUserController {
         ],
         [
           '사용자 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', false, ],
         ],
         [
           '권한 부족',
@@ -458,11 +458,11 @@ export class AdminUserController {
       responses: [
         [
           '다수 사용자 삭제 성공',
-          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', null, ],
+          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', true, ],
         ],
         [
           '사용자 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', false, ],
         ],
         [
           '권한 부족',

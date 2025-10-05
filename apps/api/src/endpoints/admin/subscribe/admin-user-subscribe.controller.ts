@@ -45,7 +45,7 @@ export class AdminSubscribeController {
           [
             false,
             'SUCCESS',
-            'ADMIN_SUBSCRIBE_LIST_SUCCESS',
+            'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
             [ createExampleSubscribe('list'), ],
           ],
         ],
@@ -66,7 +66,7 @@ export class AdminSubscribeController {
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_SUBSCRIBE_LIST_SUCCESS',
+      'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
       result
     );
   }
@@ -240,7 +240,7 @@ export class AdminSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_SUBSCRIBE_DELETE_SUCCESS',
-            null,
+            true,
           ],
         ],
         [
@@ -287,7 +287,7 @@ export class AdminSubscribeController {
       return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_DELETE_ERROR');
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', null);
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', true);
   }
 
   /**
@@ -358,6 +358,6 @@ export class AdminSubscribeController {
       return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR');
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null);
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', true);
   }
 }

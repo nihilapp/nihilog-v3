@@ -62,14 +62,10 @@ export {
   CreatePostDto,
   UpdatePostDto,
   DeletePostDto,
-  SearchPostDto
-} from './post.dto';
-
-// Post Bookmark DTOs
-export {
+  SearchPostDto,
   CreatePostBookmarkDto,
   DeletePostBookmarkDto
-} from './post-bookmark.dto';
+} from './post.dto';
 
 // Post Share Log DTOs
 export {

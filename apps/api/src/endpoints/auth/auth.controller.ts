@@ -130,6 +130,10 @@ export class AuthController {
           '리프레시 토큰이 유효하지 않음',
           [ true, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN', null, ],
         ],
+        [
+          '리프레시 토큰이 없음',
+          [ true, 'UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND', null, ],
+        ],
       ],
     },
   })
@@ -209,18 +213,23 @@ export class AuthController {
     @Req() req: FastifyRequest,
     @Res({ passthrough: true, }) res: FastifyReply
   ): Promise<ResponseDto<null>> {
-    // 쿠키에서 accessToken을 가져와서 서비스에 전달
-    const accessToken = req.cookies['accessToken'];
+    try {
+      // 쿠키에서 accessToken을 가져와서 서비스에 전달
+      const accessToken = req.cookies['accessToken'];
 
-    // 서비스에서 로그아웃 처리
-    await this.authService.signOut(accessToken);
+      // 서비스에서 로그아웃 처리
+      await this.authService.signOut(accessToken);
 
-    // 쿠키 정리
-    clearCookie(res, 'accessToken');
-    clearCookie(res, 'refreshToken');
-    clearCookie(res, 'accessTokenExpiresAt');
+      // 쿠키 정리
+      clearCookie(res, 'accessToken');
+      clearCookie(res, 'refreshToken');
+      clearCookie(res, 'accessTokenExpiresAt');
 
-    return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
+      return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
+    }
+    catch {
+      return createError('INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR');
+    }
   }
 
   /**
@@ -240,6 +249,10 @@ export class AuthController {
         [
           '세션 조회 성공',
           [ false, 'SUCCESS', 'SESSION_GET_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '인증되지 않은 사용자',
+          [ true, 'UNAUTHORIZED', 'UNAUTHORIZED', null, ],
         ],
         [
           '세션 조회 실패',
@@ -283,6 +296,10 @@ export class AuthController {
         [
           '비밀번호 변경 성공',
           [ false, 'SUCCESS', 'PASSWORD_CHANGE_SUCCESS', createExampleUser(), ],
+        ],
+        [
+          '인증되지 않은 사용자',
+          [ true, 'UNAUTHORIZED', 'UNAUTHORIZED', null, ],
         ],
         [
           '비밀번호 변경 실패',

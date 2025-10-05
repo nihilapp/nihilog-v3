@@ -289,6 +289,50 @@ export const viewStatSchema = z.object({
     }),
 });
 
+// 게시글 북마크 스키마
+export const postBookmarkSchema = commonSchema.extend({
+  bkmrkNo: z.coerce
+    .number()
+    .int('북마크 번호는 정수여야 합니다.')
+    .positive('북마크 번호는 양수여야 합니다.')
+    .openapi({
+      description: '북마크 번호',
+      example: 1,
+    }),
+  userNo: z.coerce
+    .number()
+    .int('사용자 번호는 정수여야 합니다.')
+    .positive('사용자 번호는 양수여야 합니다.')
+    .openapi({
+      description: '사용자 번호',
+      example: 1,
+    }),
+  pstNo: z.coerce
+    .number()
+    .int('게시글 번호는 정수여야 합니다.')
+    .positive('게시글 번호는 양수여야 합니다.')
+    .openapi({
+      description: '게시글 번호',
+      example: 1,
+    }),
+});
+
+export const createPostBookmarkSchema = postBookmarkSchema.pick({
+  userNo: true,
+  pstNo: true,
+});
+
+export const deletePostBookmarkSchema = postBookmarkSchema.pick({
+  bkmrkNo: true,
+});
+
+export const searchPostBookmarkSchema = baseSearchSchema.extend({
+  ...postBookmarkSchema.pick({
+    pstNo: true,
+    delYn: true,
+  }).shape,
+}).partial();
+
 // 타입 추출
 export type PostType = z.infer<typeof postSchema>;
 export type PostInfoType = Partial<PostType>;
@@ -297,3 +341,6 @@ export type UpdatePostType = z.infer<typeof updatePostSchema>;
 export type DeletePostType = z.infer<typeof deletePostSchema>;
 export type SearchPostType = z.infer<typeof searchPostSchema>;
 export type ViewStatType = z.infer<typeof viewStatSchema>;
+export type CreatePostBookmarkType = z.infer<typeof createPostBookmarkSchema>;
+export type DeletePostBookmarkType = z.infer<typeof deletePostBookmarkSchema>;
+export type SearchPostBookmarkType = z.infer<typeof searchPostBookmarkSchema>;
