@@ -1,6 +1,6 @@
 # CRUD 메소드 명명 규칙 및 정의
 
-## 현재 구현 상태 (2025-10-05)
+## 현재 구현 상태 (2025-10-06)
 
 ### 🏗️ 기술 스택 상태
 
@@ -13,14 +13,13 @@
 
 #### 기본 CRUD
 
-- **Post**: 관리자 CRUD (생성, 수정, 삭제) - 조회 기능만 완료
 - **Category**: 카테고리 CRUD (완전 미구현)
 - **Tag**: 태그 CRUD (완전 미구현)
 - **Comment**: 댓글 CRUD (완전 미구현)
 
 #### 확장 기능
 
-- **포스트 상호작용**: 북마크, 공유 추적 (완전 미구현)
+- **포스트 상호작용**: 북마크, 공유 추적 (✅ 완료)
 - **검색 시스템**: 전문 검색, 자동완성, 인기 키워드 (완전 미구현)
 - **RSS/피드**: RSS 생성, 사이트맵, Atom 피드 (완전 미구현)
 - **통계/분석**: 포스트 분석, 방문자 통계, 성과 측정 (완전 미구현)
@@ -56,89 +55,7 @@
 
 - 삭제(소프트 딜리트) 는 PK 로 삭제합니다.
 
-## 1. Post 엔티티
-
-### 사용자 상호작용 기능
-
-- [x] POST /posts/:pstNo/view **[USER]**
-  - `createPostViewLog`
-  - params: pstNo: number
-  - 기능: 게시글 조회 로그 기록, IP 기반 중복 방지
-- [x] POST /posts/:pstNo/share **[USER]**
-  - `createPostShareLog`
-  - params: pstNo: number
-  - body: { platform: string }
-  - 기능: 게시글 공유 로그 기록 (플랫폼별)
-- [x] POST /posts/:pstNo/bookmark **[USER]**
-  - `createPostBookmark`
-  - params: pstNo: number
-  - body: CreatePostBookmarkDto
-  - 기능: 게시글 북마크, 북마크 목록 관리, 북마크 통계
-- [x] DELETE /posts/:pstNo/bookmark **[USER]**
-  - `deletePostBookmark`
-  - params: pstNo: number
-  - body: DeletePostBookmarkDto
-  - 기능: 게시글 북마크 삭제
-- [ ] GET /posts/bookmarked **[USER]**
-  - `getBookmarkedPostListByUserNo`
-  - query: page?, size?
-  - 기능: 북마크한 게시글 목록, 북마크 날짜별 정렬
-
-### 관리자 기능 (작성자)
-
-- [ ] POST /admin/posts **[ADMIN]**
-  - `adminCreatePost`
-  - body: CreatePostDto
-  - 기능: 새 게시글 작성, 마크다운 처리, 태그 연결, 썸네일 생성, 발행 상태 설정, 임시저장, 자동저장
-- [ ] PATCH /admin/posts/:pstNo **[ADMIN]**
-  - `adminUpdatePost`
-  - params: pstNo: number
-  - body: UpdatePostDto
-  - 기능: 게시글 수정, 발행/비공개 상태 변경, 태그 수정, 썸네일 업데이트, 수정 이력 관리
-- [ ] PATCH /admin/posts/multiple **[ADMIN]**
-  - `adminMultipleUpdatePost`
-  - body: UpdatePostDto (pstNoList 포함)
-  - 기능: 다수 게시글 일괄 수정, 카테고리 일괄 변경, 상태 일괄 변경, 일괄 발행
-- [ ] DELETE /admin/posts/:pstNo **[ADMIN]**
-  - `adminDeletePost`
-  - params: pstNo: number
-  - 기능: 게시글 삭제, 관련 댓글 처리, 태그 연결 해제, 이미지 파일 정리, 삭제 이력 관리
-- [ ] DELETE /admin/posts/multiple **[ADMIN]**
-  - `adminMultipleDeletePost`
-  - body: DeletePostDto (pstNoList 포함)
-  - 기능: 다수 게시글 일괄 삭제, 관련 데이터 정리, 일괄 삭제 확인
-- [ ] POST /admin/posts/search **[ADMIN]**
-  - `getPostList`
-  - body: SearchPostDto (searchData)
-  - 기능: 관리자용 게시글 목록, 모든 상태 조회, 작성자별/상태별 필터링, 통계 정보 (관리자 조회 기능 통합)
-- [ ] GET /admin/posts/statistics **[ADMIN]**
-  - `getPostStatistics`
-  - query: period?, category?
-  - 기능: 게시글 통계, 작성량/조회수 통계, 카테고리별 통계, 트렌드 분석
-- [ ] POST /admin/posts/:pstNo/feature **[ADMIN]**
-  - `featurePost`
-  - params: pstNo: number
-  - 기능: 게시글 추천 설정, 메인 노출, 우선순위 설정
-- [ ] POST /admin/posts/:pstNo/pin **[ADMIN]**
-  - `pinPost`
-  - params: pstNo: number
-  - 기능: 게시글 고정, 상단 노출, 중요도 설정
-- [x] POST /admin/posts/:pstNo/views **[ADMIN]**
-  - `adminGetPostViewStats`
-  - params: pstNo: number
-  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
-  - 기능: 게시글 조회수 통계 (일/주/월/연간)
-- [x] POST /admin/posts/:pstNo/shares **[ADMIN]**
-  - `adminGetPostShareStatsByPlatform`
-  - params: pstNo: number
-  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
-  - 기능: 특정 게시글 플랫폼별 공유 통계
-- [x] POST /admin/posts/shares **[ADMIN]**
-  - `adminGetAllPostShareStatsByPlatform`
-  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
-  - 기능: 전체 게시글 플랫폼별 공유 통계
-
-## 2. Category 엔티티
+## 1. Category 엔티티
 
 ### 일반 사용자 기능
 
@@ -182,7 +99,7 @@
   - body: UpdateCategorySubscribeDto (ctgryNoList 포함)
   - 기능: 다수 카테고리 일괄 삭제, 관련 데이터 정리
 
-## 3. Tag 엔티티
+## 2. Tag 엔티티
 
 ### 일반 사용자 기능
 
@@ -226,7 +143,7 @@
   - body: UpdateTagSubscribeDto (tagNoList 포함)
   - 기능: 다수 태그 일괄 삭제, 관련 연결 정보 정리
 
-## 4. Comment 엔티티
+## 3. Comment 엔티티
 
 ### 일반 사용자 기능
 
@@ -274,7 +191,7 @@
 
 ---
 
-## 5. 검색 및 필터링 확장 기능
+## 4. 검색 및 필터링 확장 기능
 
 ### 고급 검색 기능
 
@@ -302,7 +219,7 @@
   - query: period?, page?, size?
   - 기능: 사용자 검색 히스토리 분석, 검색 패턴 통계
 
-## 6. RSS 피드 및 사이트맵
+## 5. RSS 피드 및 사이트맵
 
 ### 공개 피드
 
@@ -335,7 +252,7 @@
   - `generateAtomFeed`
   - 기능: Atom 1.0 형식 피드 (RSS 대안)
 
-## 7. 통계 및 분석 대시보드
+## 6. 통계 및 분석 대시보드
 
 ### 포스트 분석
 
@@ -370,7 +287,7 @@
   - query: period?
   - 기능: 댓글율, 공유율, 구독 전환율
 
-## 8. 알림 및 구독 시스템
+## 7. 알림 및 구독 시스템
 
 ### 이메일 알림
 
@@ -405,7 +322,7 @@
   - body: TestWebhookDto
   - 기능: 웹훅 연결 테스트
 
-## 9. SEO 최적화 도구
+## 8. SEO 최적화 도구
 
 ### 메타 태그 관리
 
@@ -427,7 +344,7 @@
   - `getSEOAnalysis`
   - 기능: 사이트 전체 SEO 상태 분석, 개선 제안
 
-## 10. 백업 및 데이터 관리
+## 9. 백업 및 데이터 관리
 
 ### 콘텐츠 백업
 
@@ -461,7 +378,7 @@
   - body: CleanupOptionsDto
   - 기능: 미사용 파일 정리, 캐시 클리어, 로그 정리
 
-## 11. 개발자 도구
+## 10. 개발자 도구
 
 ### API 모니터링
 

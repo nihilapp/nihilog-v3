@@ -308,10 +308,6 @@ export class AuthController {
           [ false, 'SUCCESS', 'SESSION_GET_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
-          '인증되지 않은 사용자',
-          [ true, 'UNAUTHORIZED', 'UNAUTHORIZED', null, ],
-        ],
-        [
           '세션 조회 실패',
           [ true, 'UNAUTHORIZED', 'SESSION_NOT_FOUND', null, ],
         ],
@@ -358,10 +354,6 @@ export class AuthController {
           [ false, 'SUCCESS', 'PASSWORD_CHANGE_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
-          '인증되지 않은 사용자',
-          [ true, 'UNAUTHORIZED', 'UNAUTHORIZED', null, ],
-        ],
-        [
           '현재 비밀번호가 올바르지 않음',
           [ true, 'UNAUTHORIZED', 'INVALID_CREDENTIALS', null, ],
         ],
@@ -372,6 +364,10 @@ export class AuthController {
         [
           '비밀번호 업데이트 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
+        ],
+        [
+          '비밀번호 변경 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'PASSWORD_CHANGE_ERROR', null, ],
         ],
       ],
     },

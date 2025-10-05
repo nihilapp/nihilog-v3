@@ -35,6 +35,7 @@ export class AdminController {
     description: '현재 로그인된 관리자의 프로필을 업데이트합니다.',
     options: {
       authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
       body: [ '프로필 수정 정보', UpdateUserDto, ],
       responses: [
         [

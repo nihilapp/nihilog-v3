@@ -56,10 +56,6 @@ export class AdminUserController {
           ],
         ],
         [
-          '잘못된 요청',
-          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
-        ],
-        [
           '사용자 목록 조회 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'USER_SEARCH_ERROR', null, ],
         ],
@@ -105,10 +101,6 @@ export class AdminUserController {
         ],
         [ '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
-        ],
-        [
-          '사용자 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_FETCH_ERROR', null, ],
         ],
       ],
     },
@@ -162,10 +154,6 @@ export class AdminUserController {
           '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
         ],
-        [
-          '사용자 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_FETCH_ERROR', null, ],
-        ],
       ],
     },
   })
@@ -211,10 +199,6 @@ export class AdminUserController {
         [ '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
         ],
-        [
-          '사용자 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_FETCH_ERROR', null, ],
-        ],
       ],
     },
   })
@@ -254,10 +238,6 @@ export class AdminUserController {
       responses: [
         [ '사용자 생성 성공',
           [ false, 'CREATED', 'USER_CREATE_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '권한 부족',
-          [ true, 'PERMISSION_DENIED', 'PERMISSION_DENIED', null, ],
         ],
         [
           '이미 존재하는 이메일',
@@ -378,10 +358,6 @@ export class AdminUserController {
           }, ],
         ],
         [
-          '잘못된 요청',
-          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
-        ],
-        [
           '사용자 수정 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
         ],
@@ -434,10 +410,6 @@ export class AdminUserController {
           '사용자 삭제 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', false, ],
         ],
-        [
-          '권한 부족',
-          [ true, 'PERMISSION_DENIED', 'PERMISSION_DENIED', null, ],
-        ],
       ],
     },
   })
@@ -485,16 +457,8 @@ export class AdminUserController {
           }, ],
         ],
         [
-          '잘못된 요청',
-          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
-        ],
-        [
           '사용자 삭제 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
-        ],
-        [
-          '권한 부족',
-          [ true, 'PERMISSION_DENIED', 'PERMISSION_DENIED', null, ],
         ],
       ],
     },

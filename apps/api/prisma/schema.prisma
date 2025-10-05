@@ -172,6 +172,7 @@ model PstInfo {
   pstView     Int        @default(0) @map("pst_view")
   pstStts     PostStatus @default(EMPTY) @map("pst_stts")
   publDt      String?    @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("publ_dt")
+  pinYn       YnStatus   @default(N) @map("pin_yn")
   rlsYn       YnStatus   @default(Y) @map("rls_yn")
   archYn      YnStatus   @default(N) @map("arch_yn")
   secrYn      YnStatus?  @map("secr_yn")

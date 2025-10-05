@@ -92,8 +92,8 @@ export class PostsController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'POST_NOT_FOUND'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_GET_ERROR'
       );
     }
 
@@ -138,8 +138,8 @@ export class PostsController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'POST_NOT_FOUND'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_GET_ERROR'
       );
     }
 

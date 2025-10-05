@@ -51,11 +51,11 @@ export class AdminSubscribeController {
           ],
         ],
         [
-          '관리자 권한 없음',
+          '구독 설정 목록 조회 실패',
           [
             true,
-            'FORBIDDEN',
-            'ADMIN_UNAUTHORIZED',
+            'INTERNAL_SERVER_ERROR',
+            'ADMIN_SUBSCRIBE_SEARCH_ERROR',
             null,
           ],
         ],
@@ -118,15 +118,6 @@ export class AdminSubscribeController {
             true,
             'CONFLICT',
             'ADMIN_SUBSCRIBE_ALREADY_EXISTS',
-            null,
-          ],
-        ],
-        [
-          '관리자 권한 없음',
-          [
-            true,
-            'FORBIDDEN',
-            'ADMIN_UNAUTHORIZED',
             null,
           ],
         ],
@@ -199,15 +190,6 @@ export class AdminSubscribeController {
             null,
           ],
         ],
-        [
-          '관리자 권한 없음',
-          [
-            true,
-            'FORBIDDEN',
-            'ADMIN_UNAUTHORIZED',
-            null,
-          ],
-        ],
       ],
     },
   })
@@ -263,15 +245,6 @@ export class AdminSubscribeController {
             true,
             'NOT_FOUND',
             'SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
-        ],
-        [
-          '관리자 권한 없음',
-          [
-            true,
-            'FORBIDDEN',
-            'ADMIN_UNAUTHORIZED',
             null,
           ],
         ],
@@ -346,15 +319,6 @@ export class AdminSubscribeController {
             true,
             'NOT_FOUND',
             'SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
-        ],
-        [
-          '관리자 권한 없음',
-          [
-            true,
-            'FORBIDDEN',
-            'ADMIN_UNAUTHORIZED',
             null,
           ],
         ],

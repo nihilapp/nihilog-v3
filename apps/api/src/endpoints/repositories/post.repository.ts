@@ -6,7 +6,6 @@ import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from 
 import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import type { ViewStatDto } from '@/dto/post.dto';
-import type { MutationResponseDto } from '@/dto/response.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
@@ -606,9 +605,28 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param createData 게시글 생성 데이터
    */
-  createPost(_userNo: number, _createData: CreatePostDto): Promise<SelectPostInfoType | null> {
-    // TODO: 새 게시글 작성 구현
-    return Promise.resolve(null);
+  async createPost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostInfoType> | null> {
+    try {
+      const { pstTtl, pstMtxt, } = createData;
+
+      const newPost = await this.prisma.pstInfo.create({
+        data: {
+          userNo,
+          pstTtl: pstTtl || '새로운 포스트',
+          pstMtxt: pstMtxt || [],
+          pstStts: 'EMPTY',
+          crtNo: userNo,
+          crtDt: timeToString(),
+          updtNo: userNo,
+          updtDt: timeToString(),
+        },
+      });
+
+      return prismaResponse(true, newPost);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
   }
 
   /**
@@ -616,9 +634,24 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param updateData 게시글 수정 데이터
    */
-  updatePost(_userNo: number, _updateData: UpdatePostDto): Promise<SelectPostInfoType | null> {
-    // TODO: 게시글 수정 구현
-    return Promise.resolve(null);
+  async updatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostInfoType> | null> {
+    try {
+      const updatePost = await this.prisma.pstInfo.update({
+        where: {
+          pstNo: updateData.pstNo,
+        },
+        data: {
+          ...updateData,
+          updtNo: userNo,
+          updtDt: timeToString(),
+        },
+      });
+
+      return prismaResponse(true, updatePost);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
   }
 
   /**
@@ -626,9 +659,35 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param updateData 게시글 일괄 수정 데이터
    */
-  multipleUpdatePost(_userNo: number, _updateData: UpdatePostDto): Promise<MultipleResultType | null> {
-    // TODO: 다수 게시글 일괄 수정 구현
-    return Promise.resolve(null);
+  async multipleUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    try {
+      const updatePost = await this.prisma.pstInfo.updateManyAndReturn({
+        where: {
+          pstNo: {
+            in: updateData.pstNoList,
+          },
+        },
+        data: {
+          ...updateData,
+          updtNo: userNo,
+          updtDt: timeToString(),
+        },
+        select: {
+          pstNo: true,
+        },
+      });
+
+      const failNoList = updateData.pstNoList.filter((item) => !updatePost.some((updatePostItem) => updatePostItem.pstNo === item));
+
+      return prismaResponse(true, {
+        successCnt: updatePost.length,
+        failCnt: updateData.pstNoList.length - updatePost.length,
+        failNoList,
+      });
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
   }
 
   /**
@@ -636,9 +695,27 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param deleteData 게시글 삭제 데이터
    */
-  deletePost(_userNo: number, _deleteData: DeletePostDto): Promise<boolean> {
-    // TODO: 게시글 삭제 구현
-    return Promise.resolve(false);
+  async deletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<boolean> | null> {
+    try {
+      const deletePost = await this.prisma.pstInfo.update({
+        where: {
+          pstNo: deleteData.pstNo,
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
+          updtNo: userNo,
+          updtDt: timeToString(),
+          delNo: userNo,
+          delDt: timeToString(),
+        },
+      });
+
+      return prismaResponse(true, !!deletePost);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
   }
 
   /**
@@ -646,46 +723,37 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param deleteData 게시글 일괄 삭제 데이터
    */
-  multipleDeletePost(_userNo: number, _deleteData: DeletePostDto): Promise<MultipleResultType | null> {
-    // TODO: 다수 게시글 일괄 삭제 구현
-    return Promise.resolve(null);
-  }
+  async multipleDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    try {
+      const deletePost = await this.prisma.pstInfo.updateManyAndReturn({
+        where: {
+          pstNo: {
+            in: deleteData.pstNoList,
+          },
+        },
+        data: {
+          useYn: 'N',
+          delYn: 'Y',
+          updtNo: userNo,
+          updtDt: timeToString(),
+          delNo: userNo,
+          delDt: timeToString(),
+        },
+        select: {
+          pstNo: true,
+        },
+      });
 
-  /**
-   * @description 관리자용 게시글 목록 조회
-   * @param searchData 검색 데이터
-   */
-  adminGetPostList(_searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
-    // TODO: 관리자용 게시글 목록 조회 구현
-    return Promise.resolve({ list: [], totalCnt: 0, });
-  }
+      const failNoList = deleteData.pstNoList.filter((item) => !deletePost.some((deletePostItem) => deletePostItem.pstNo === item));
 
-  /**
-   * @description 게시글 통계 조회
-   * @param searchData 검색 데이터
-   */
-  getPostStatistics(_searchData: { period?: string; category?: number }): Promise<any> {
-    // TODO: 게시글 통계 조회 구현
-    return Promise.resolve(null);
-  }
-
-  /**
-   * @description 게시글 추천 설정
-   * @param userNo 사용자 번호
-   * @param updateData 게시글 수정 데이터
-   */
-  featurePost(_userNo: number, _updateData: UpdatePostDto): Promise<MutationResponseDto | null> {
-    // TODO: 게시글 추천 설정 구현
-    return Promise.resolve(null);
-  }
-
-  /**
-   * @description 게시글 고정 설정
-   * @param userNo 사용자 번호
-   * @param updateData 게시글 수정 데이터
-   */
-  pinPost(_userNo: number, _updateData: UpdatePostDto): Promise<MutationResponseDto | null> {
-    // TODO: 게시글 고정 설정 구현
-    return Promise.resolve(null);
+      return prismaResponse(true, {
+        successCnt: deletePost.length,
+        failCnt: deleteData.pstNoList.length - deletePost.length,
+        failNoList,
+      });
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
   }
 }

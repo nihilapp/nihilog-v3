@@ -237,7 +237,7 @@ export class UserController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'NOT_FOUND',
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
         result?.error?.message || 'SUBSCRIBE_NOT_FOUND'
       );
     }

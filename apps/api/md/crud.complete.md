@@ -1,6 +1,6 @@
 # 완료된 CRUD 기능 목록
 
-## 현재 구현 상태 (2025-10-05)
+## 현재 구현 상태 (2025-10-06)
 
 ### ✅ 완료된 기능
 
@@ -10,8 +10,10 @@
 - **Admin Subscribe 관리**: 구독 설정 조회, 생성, 수정, 삭제 (단건/다건)
 - **CategorySubscribe**: 일반 사용자 API 및 관리자 API 완료
 - **TagSubscribe**: 일반 사용자 API 및 관리자 API 완료
-- **Post 조회 기능**: 목록/상세/고급 검색 (Prisma 전환 완료)
-- **Admin 관리 기능**: 모든 관리자 CRUD 기능 완료 (User, Subscribe, CategorySubscribe, TagSubscribe)
+- **Post 조회 기능**: 목록/상세/고급 검색, 상호작용 (조회/공유/북마크) (Prisma 전환 완료)
+- **Post 관리자 CRUD**: 게시글 생성, 수정, 삭제 (단건/다건) 완료
+- **Admin 관리 기능**: 모든 관리자 CRUD 기능 완료 (User, Subscribe, CategorySubscribe, TagSubscribe, Post)
+- **Admin Post 통계**: 게시글 조회수/공유 통계 조회 기능
 
 ## 명명 규칙
 
@@ -328,18 +330,84 @@
   - `getPostByPstCd`
   - params: pstCd: string
   - 기능: SEO 친화적 URL로 게시글 조회, 메타 태그 정보 포함, 소셜 미디어 공유 정보
-- [x] GET /posts/tag/:tagNo **[USER]**
+- [x] POST /posts/tag/:tagNo **[USER]**
   - `getPostListByTagNo`
   - params: tagNo: number
   - body: SearchPostDto (searchData)
   - 기능: 특정 태그로 필터링된 게시글 목록, 태그별 게시글 수, 관련 태그 추천
-- [x] GET /posts/category/:ctgryNo **[USER]**
+- [x] POST /posts/category/:ctgryNo **[USER]**
   - `getPostListByCtgryNo`
   - params: ctgryNo: number
   - body: SearchPostDto (searchData)
   - 기능: 특정 카테고리로 필터링된 게시글 목록, 카테고리별 게시글 수, 하위 카테고리 포함
-- [x] GET /posts/archive/:date **[USER]**
+- [x] POST /posts/archive/:date **[USER]**
   - `getPostListFromArchive`
   - params: date: string (yyyyMM)
   - body: SearchPostDto (searchData)
   - 기능: 특정 년월에 발행된 게시글 목록, 날짜별 게시글 수, 이전/다음 날짜 네비게이션
+- [x] POST /posts/advanced-search **[USER]**
+  - `getAdvancedPostList`
+  - body: SearchPostDto (searchData)
+  - 기능: 복합 조건(태그, 카테고리, 날짜 범위, 조회수 등)을 통한 게시글 목록 조회
+- [x] POST /posts/:pstNo/view **[USER]**
+  - `createPostViewLog`
+  - params: pstNo: number
+  - 기능: 게시글 조회 로그 기록, IP 기반 중복 방지
+- [x] POST /posts/:pstNo/share **[USER]**
+  - `createPostShareLog`
+  - params: pstNo: number
+  - body: CreatePostShareLogDto
+  - 기능: 게시글 공유 로그 기록 (플랫폼별)
+- [x] POST /posts/:pstNo/bookmark **[USER]**
+  - `createPostBookmark`
+  - params: pstNo: number
+  - body: CreatePostBookmarkDto
+  - 기능: 게시글 북마크, 북마크 목록 관리, 북마크 통계
+- [x] DELETE /posts/:pstNo/bookmark **[USER]**
+  - `deletePostBookmark`
+  - params: pstNo: number
+  - body: DeletePostBookmarkDto
+  - 기능: 게시글 북마크 삭제
+- [x] POST /posts/bookmarked **[USER]**
+  - `getBookmarkedPostListByUserNo`
+  - body: SearchPostBookmarkDto
+  - 기능: 북마크한 게시글 목록, 북마크 날짜별 정렬
+
+### 관리자 기능
+
+- [x] POST /admin/posts **[ADMIN]**
+  - `adminCreatePost`
+  - body: CreatePostDto
+  - 기능: 새 게시글 작성, 마크다운 처리, 태그 연결, 썸네일 생성, 발행 상태 설정, 임시저장, 자동저장
+- [x] PUT /admin/posts/:pstNo **[ADMIN]**
+  - `adminUpdatePost`
+  - params: pstNo: number
+  - body: UpdatePostDto
+  - 기능: 게시글 수정, 발행/비공개 상태 변경, 태그 수정, 썸네일 업데이트, 수정 이력 관리
+- [x] PUT /admin/posts/multiple **[ADMIN]**
+  - `adminMultipleUpdatePost`
+  - body: UpdatePostDto (pstNoList 포함)
+  - 기능: 다수 게시글 일괄 수정, 카테고리 일괄 변경, 상태 일괄 변경, 일괄 발행
+- [x] DELETE /admin/posts/:pstNo **[ADMIN]**
+  - `adminDeletePost`
+  - params: pstNo: number
+  - body: DeletePostDto
+  - 기능: 게시글 삭제, 관련 댓글 처리, 태그 연결 해제, 이미지 파일 정리, 삭제 이력 관리
+- [x] DELETE /admin/posts/multiple **[ADMIN]**
+  - `adminMultipleDeletePost`
+  - body: DeletePostDto (pstNoList 포함)
+  - 기능: 다수 게시글 일괄 삭제, 관련 데이터 정리, 일괄 삭제 확인
+- [x] POST /admin/posts/:pstNo/views **[ADMIN]**
+  - `adminGetPostViewStats`
+  - params: pstNo: number
+  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
+  - 기능: 게시글 조회수 통계 (일/주/월/연간)
+- [x] POST /admin/posts/:pstNo/shares **[ADMIN]**
+  - `adminGetPostShareStatsByPlatform`
+  - params: pstNo: number
+  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
+  - 기능: 특정 게시글 플랫폼별 공유 통계
+- [x] POST /admin/posts/shares **[ADMIN]**
+  - `adminGetAllPostShareStatsByPlatform`
+  - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
+  - 기능: 전체 게시글 플랫폼별 공유 통계

@@ -53,10 +53,6 @@ export class AdminTagSubscribeController {
             [ CreateExample.tagSubscribe('list'), ],
           ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -115,10 +111,6 @@ export class AdminTagSubscribeController {
           '태그를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -175,10 +167,6 @@ export class AdminTagSubscribeController {
           '이미 구독 중인 태그',
           [ true, 'CONFLICT', 'TAG_SUBSCRIBE_ALREADY_EXISTS', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -225,10 +213,6 @@ export class AdminTagSubscribeController {
             'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
             [ CreateExample.tagSubscribe('detail'), ],
           ],
-        ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -285,10 +269,6 @@ export class AdminTagSubscribeController {
           '태그 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -341,10 +321,6 @@ export class AdminTagSubscribeController {
           '태그 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -393,10 +369,6 @@ export class AdminTagSubscribeController {
         [
           '태그 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -449,10 +421,6 @@ export class AdminTagSubscribeController {
         [
           '태그 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },

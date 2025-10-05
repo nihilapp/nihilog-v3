@@ -53,10 +53,6 @@ export class AdminCategorySubscribeController {
             [ CreateExample.categorySubscribe('list'), ],
           ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -115,10 +111,6 @@ export class AdminCategorySubscribeController {
           '카테고리를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -175,10 +167,6 @@ export class AdminCategorySubscribeController {
           '이미 구독 중인 카테고리',
           [ true, 'CONFLICT', 'CATEGORY_SUBSCRIBE_ALREADY_EXISTS', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -225,10 +213,6 @@ export class AdminCategorySubscribeController {
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
             [ CreateExample.categorySubscribe('detail'), ],
           ],
-        ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
@@ -281,10 +265,6 @@ export class AdminCategorySubscribeController {
           '카테고리 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -336,10 +316,6 @@ export class AdminCategorySubscribeController {
           '카테고리 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
         ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
-        ],
       ],
     },
   })
@@ -384,10 +360,6 @@ export class AdminCategorySubscribeController {
         [
           '카테고리 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
         [
           '카테고리 구독 삭제 실패',
@@ -444,10 +416,6 @@ export class AdminCategorySubscribeController {
           '카테고리 구독을 찾을 수 없음',
           [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null,
           ],
-        ],
-        [
-          '관리자 권한 없음',
-          [ true, 'FORBIDDEN', 'ADMIN_UNAUTHORIZED', null, ],
         ],
       ],
     },
