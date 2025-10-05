@@ -6,16 +6,16 @@
 
 #### ORM 전환 현황
 
-- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post (조회 기능)
-- ❌ **미구현**: Category, Tag, Comment
+- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post (조회 기능), Tag (조회 기능)
+- ❌ **미구현**: Category, Comment
 
 ### 🚧 미구현 기능
 
 #### 기본 CRUD
 
 - **Category**: 카테고리 CRUD (완전 미구현)
-- **Tag**: 태그 CRUD (완전 미구현)
 - **Comment**: 댓글 CRUD (완전 미구현)
+- **Tag**: 관리자용 태그 CRUD (일반 사용자용 조회 기능은 완료)
 
 #### 확장 기능
 

@@ -4,7 +4,7 @@ import { createZodDto } from 'nestjs-zod';
 import { createUserSchema, userRoleSchema, type UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 
 // 관리자 회원가입 DTO
-export class CreateAdminDto extends createZodDto(createUserSchema.omit({ passwordConfirm: true, })) {
+export class CreateAdminDto extends createZodDto(createUserSchema) {
   @ApiProperty({
     description: '관리자 이메일 주소',
     example: 'admin@example.com',

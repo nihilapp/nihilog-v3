@@ -8,7 +8,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
+import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, CreateTagSubscribeDto, UpdateTagSubscribeDto, DeleteTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { createError, createResponse } from '@/utils';
@@ -172,7 +172,7 @@ export class TagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독할 태그 목록 DTO', Object, ],
+      body: [ '구독할 태그 목록 DTO', CreateTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 성공',
@@ -218,7 +218,7 @@ export class TagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독 설정 변경 DTO', Object, ],
+      body: [ '구독 설정 변경 DTO', UpdateTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 설정 변경 성공',
@@ -309,7 +309,7 @@ export class TagSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독 해제할 태그 목록 DTO', Object, ],
+      body: [ '구독 해제할 태그 목록 DTO', DeleteTagSubscribeDto, ],
       responses: [
         [
           '다수 태그 구독 해제 성공',

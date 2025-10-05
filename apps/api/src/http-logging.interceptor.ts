@@ -40,80 +40,72 @@ export class HttpLoggingInterceptor implements NestInterceptor {
     const startTime = Date.now();
 
     // 요청 로깅 (Swagger 요청 표시 추가)
-    this.logger.log(
-      `📨 요청 [${method}] ${url} - IP: ${ip}${isSwaggerRequest
-        ? ' 🔧 Swagger'
-        : ''}`
-        + (Object.keys(query).length > 0
-          ? ` | Query: ${JSON.stringify(query)}`
-          : '')
-        + (Object.keys(params).length > 0
-          ? ` | Params: ${JSON.stringify(params)}`
-          : '')
-        + (method !== 'GET' && body && typeof body === 'object' && Object.keys(body).length > 0
-          ? ` | Body: ${JSON.stringify(body)}`
-          : '')
-        + (contentType
-          ? ` | Content-Type: ${contentType}`
-          : '')
-        + (userAgent
-          ? ` | User-Agent: ${userAgent.substring(0, 100)}${userAgent.length > 100
-            ? '...'
-            : ''}`
-          : '')
-        + (origin
-          ? ` | Origin: ${origin}`
-          : '')
-    );
+    this.logger.log(`📨 요청 [${method}] ${url} - IP: ${ip}${isSwaggerRequest
+      ? ' 🔧 Swagger'
+      : ''}`
+      + (Object.keys(query).length > 0
+        ? ` | Query: ${JSON.stringify(query)}`
+        : '')
+      + (Object.keys(params).length > 0
+        ? ` | Params: ${JSON.stringify(params)}`
+        : '')
+      + (method !== 'GET' && body && typeof body === 'object' && Object.keys(body).length > 0
+        ? ` | Body: ${JSON.stringify(body)}`
+        : '')
+      + (contentType
+        ? ` | Content-Type: ${contentType}`
+        : '')
+      + (userAgent
+        ? ` | User-Agent: ${userAgent.substring(0, 100)}${userAgent.length > 100
+          ? '...'
+          : ''}`
+        : '')
+      + (origin
+        ? ` | Origin: ${origin}`
+        : ''));
 
-    return next.handle().pipe(
-      tap({
-        next: (responseData) => {
-          const endTime = Date.now();
-          const duration = endTime - startTime;
+    return next.handle().pipe(tap({
+      next: (responseData) => {
+        const endTime = Date.now();
+        const duration = endTime - startTime;
 
-          // 응답 로깅 (Swagger 요청 표시 추가)
-          this.logger.log(
-            `📤 응답 [${method}] ${url} - Status: ${response.statusCode} | Duration: ${duration}ms${isSwaggerRequest
-              ? ' 🔧 Swagger'
+        // 응답 로깅 (Swagger 요청 표시 추가)
+        this.logger.log(`📤 응답 [${method}] ${url} - Status: ${response.statusCode} | Duration: ${duration}ms${isSwaggerRequest
+          ? ' 🔧 Swagger'
+          : ''}`
+          + (responseData && typeof responseData === 'object'
+            ? ` | Response: ${JSON.stringify(responseData).substring(0, 500)}${JSON.stringify(responseData).length > 500
+              ? '...'
               : ''}`
-              + (responseData && typeof responseData === 'object'
-                ? ` | Response: ${JSON.stringify(responseData).substring(0, 500)}${JSON.stringify(responseData).length > 500
-                  ? '...'
-                  : ''}`
-                : ''
-              )
-          );
-        },
-        error: (error: unknown) => {
-          const endTime = Date.now();
-          const duration = endTime - startTime;
+            : ''
+          ));
+      },
+      error: (error: unknown) => {
+        const endTime = Date.now();
+        const duration = endTime - startTime;
 
-          let status = 500;
-          let message = '알 수 없는 오류';
+        let status = 500;
+        let message = '알 수 없는 오류';
 
-          if (error instanceof HttpException) {
-            status = error.getStatus();
-          }
-          else if (error && typeof error === 'object' && 'status' in error) {
-            status = (error as { status: number }).status;
-          }
+        if (error instanceof HttpException) {
+          status = error.getStatus();
+        }
+        else if (error && typeof error === 'object' && 'status' in error) {
+          status = (error as { status: number }).status;
+        }
 
-          if (error instanceof Error) {
-            message = error.message;
-          }
-          else if (error && typeof error === 'object' && 'message' in error) {
-            message = (error as { message: string }).message;
-          }
+        if (error instanceof Error) {
+          message = error.message;
+        }
+        else if (error && typeof error === 'object' && 'message' in error) {
+          message = (error as { message: string }).message;
+        }
 
-          // 에러 로깅 (Swagger 요청 표시 추가)
-          this.logger.error(
-            `❌ 에러 [${method}] ${url} - Status: ${status} | Duration: ${duration}ms | Error: ${message}${isSwaggerRequest
-              ? ' 🔧 Swagger'
-              : ''}`
-          );
-        },
-      })
-    );
+        // 에러 로깅 (Swagger 요청 표시 추가)
+        this.logger.error(`❌ 에러 [${method}] ${url} - Status: ${status} | Duration: ${duration}ms | Error: ${message}${isSwaggerRequest
+          ? ' 🔧 Swagger'
+          : ''}`);
+      },
+    }));
   }
 }

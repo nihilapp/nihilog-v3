@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
-import type { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
+import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 
 @Injectable()
 export class TagSubscribeService {

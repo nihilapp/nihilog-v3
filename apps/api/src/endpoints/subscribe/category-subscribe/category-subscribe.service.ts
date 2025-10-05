@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
+import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 
 @Injectable()
 export class CategorySubscribeService {

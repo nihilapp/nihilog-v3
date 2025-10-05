@@ -126,6 +126,16 @@ export const userInfoSchema = commonSchema.extend({
     }),
 });
 
+export const selectUserInfoSchema = userInfoSchema.omit({
+  rowNo: true,
+  totalCnt: true,
+  userNoList: true,
+});
+
+export const selectUserInfoListSchema = userInfoSchema.omit({
+  userNoList: true,
+});
+
 // 커스텀 스키마 정의
 export const createUserSchema = userInfoSchema.pick({
   emlAddr: true,

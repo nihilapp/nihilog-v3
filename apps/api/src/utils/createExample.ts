@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 
 import { PostInfoType } from '@/endpoints/prisma/schemas/post.schema';
+import { TagInfoType } from '@/endpoints/prisma/schemas/tag.schema';
 import { UserInfoType } from '@/endpoints/prisma/schemas/user.schema';
 import { SelectPostBookmarkType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
 
@@ -122,6 +123,31 @@ export class CreateExample {
       delNo: null,
       delDt: null,
     };
+  }
+
+  static tag(type: 'list' | 'detail' = 'detail') {
+    const now = DateTime.now();
+
+    return {
+      ...(type === 'list'
+        ? {
+          rowNo: 1,
+          totalCnt: 1,
+        }
+        : {}),
+      tagNo: 1,
+      tagNm: 'JavaScript',
+      tagExpln: 'JavaScript 프로그래밍 언어',
+      tagColr: '#F7DF1E',
+      useYn: 'Y',
+      delYn: 'N',
+      crtNo: 1,
+      crtDt: timeToString(now),
+      updtNo: 1,
+      updtDt: timeToString(now),
+      delNo: null,
+      delDt: null,
+    } as TagInfoType;
   }
 
   static categorySubscribe(type: 'list' | 'detail' = 'detail') {

@@ -71,6 +71,16 @@ export {
   CreatePostShareLogDto
 } from './post-sharelog.dto';
 
+// Tag DTOs
+export {
+  CreateTagDto,
+  UpdateTagDto,
+  DeleteTagDto,
+  CreatePstTagMpngDto,
+  UpdatePstTagMpngDto,
+  DeletePstTagMpngDto
+} from './tag.dto';
+
 // Search DTOs
 export { SearchDto } from './search.dto';
 

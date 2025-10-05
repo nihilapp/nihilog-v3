@@ -1,0 +1,35 @@
+import { Injectable } from '@nestjs/common';
+
+import type { SearchTagDto } from '@/dto/tag.dto';
+import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import type { SelectTagInfoListItemType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import { TagRepository } from '@/endpoints/repositories/tag.repository';
+
+@Injectable()
+export class TagService {
+  constructor(private readonly tagRepository: TagRepository) { }
+
+  /**
+   * @description 태그 목록 조회
+   * @param searchData 검색 데이터
+   */
+  async getTagList(searchData: SearchTagDto): Promise<RepoResponseType<{ list: SelectTagInfoListItemType[]; totalCnt: number }> | null> {
+    return this.tagRepository.getTagList(searchData);
+  }
+
+  /**
+   * @description 태그 번호로 태그 조회
+   * @param tagNo 태그 번호
+   */
+  async getTagByTagNo(tagNo: number): Promise<RepoResponseType<SelectTagInfoType> | null> {
+    return this.tagRepository.getTagByTagNo(tagNo);
+  }
+
+  /**
+   * @description 태그명으로 태그 조회
+   * @param tagNm 태그명
+   */
+  async getTagByTagNm(tagNm: string): Promise<RepoResponseType<SelectTagInfoType> | null> {
+    return this.tagRepository.getTagByTagNm(tagNm);
+  }
+}

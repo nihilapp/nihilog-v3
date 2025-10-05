@@ -8,6 +8,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 import { UnifiedResponseInterceptor } from '@/interceptors/unified-response.interceptor';
+import { generateOpenApiDocument } from '@/openapi/generator';
 
 import { AppModule } from './app.module';
 import { HttpLoggingInterceptor } from './http-logging.interceptor';
@@ -58,27 +59,48 @@ async function bootstrap() {
   const host = configService.get<string>('server.host') ?? 'localhost';
   const port = configService.get<number>('server.port') ?? 8000;
 
-  const document = SwaggerModule.createDocument(
-    app,
-    createSwaggerConfig({
-      title: swaggerTitle,
-      description: [
-        swaggerDesc,
-        '',
-        '🔐 자동 인증 기능: 로그인 후 자동으로 JWT 토큰이 설정되어 별도의 인증 설정이 필요하지 않습니다.',
-        '',
-        '📌 사용 방법:',
-        '1. /auth/signin 엔드포인트로 로그인하세요',
-        '2. 로그인 성공 시 자동으로 쿠키에 토큰이 설정됩니다',
-        '3. 이후 모든 API 요청에서 자동으로 인증됩니다',
-        '',
-        '💡 Swagger UI에서는 쿠키가 자동으로 포함되어 인증된 요청을 테스트할 수 있습니다.',
-        '',
-        '🔧 모든 Swagger 요청은 서버 로그에 🔧 표시로 구분됩니다.',
-      ].join('\n'),
-      version: swaggerVersion,
-    })
-  );
+  // Zod 기반 OpenAPI 문서 생성
+  const zodOpenApiDocument = generateOpenApiDocument();
+
+  // NestJS Swagger 설정과 Zod OpenAPI 문서 병합
+  const nestSwaggerConfig = createSwaggerConfig({
+    title: swaggerTitle,
+    description: [
+      swaggerDesc,
+      '',
+      '🔐 자동 인증 기능: 로그인 후 자동으로 JWT 토큰이 설정되어 별도의 인증 설정이 필요하지 않습니다.',
+      '',
+      '📌 사용 방법:',
+      '1. /auth/signin 엔드포인트로 로그인하세요',
+      '2. 로그인 성공 시 자동으로 쿠키에 토큰이 설정됩니다',
+      '3. 이후 모든 API 요청에서 자동으로 인증됩니다',
+      '',
+      '💡 Swagger UI에서는 쿠키가 자동으로 포함되어 인증된 요청을 테스트할 수 있습니다.',
+      '',
+      '🔧 모든 Swagger 요청은 서버 로그에 🔧 표시로 구분됩니다.',
+    ].join('\n'),
+    version: swaggerVersion,
+  });
+
+  // NestJS Swagger 문서 생성 (주석처리 - Zod OpenAPI만 사용)
+  // const nestDocument = SwaggerModule.createDocument(app, nestSwaggerConfig);
+
+  // Zod OpenAPI 문서만 사용
+  const document = zodOpenApiDocument;
+
+  // NestJS 문서와 Zod OpenAPI 문서 병합 방식 (필요시 주석 해제)
+  // const document = {
+  //   ...nestDocument,
+  //   ...zodOpenApiDocument,
+  //   // 엔드포인트는 NestJS 유지, 스키마만 Zod로 교체
+  //   paths: nestDocument.paths, // NestJS 엔드포인트 유지
+  //   components: {
+  //     ...nestDocument.components,
+  //     schemas: {
+  //       ...zodOpenApiDocument.components?.schemas, // Zod 스키마만 사용
+  //     },
+  //   },
+  // };
 
   SwaggerModule.setup(
     swaggerPath,

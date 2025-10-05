@@ -69,12 +69,22 @@ const userSubscribeBaseSchema = commonSchema.extend({
     }),
 });
 
-export const userSubscribeRawSchema = userSubscribeBaseSchema;
+const rawUserSubscribeSchema = userSubscribeBaseSchema;
+
+export const selectUserSubscribeSchema = rawUserSubscribeSchema.omit({
+  rowNo: true,
+  totalCnt: true,
+  userNoList: true,
+});
+
+export const selectUserSubscribeListSchema = rawUserSubscribeSchema.omit({
+  userNoList: true,
+});
 
 // 커스텀 스키마 정의
 
 // 구독 설정 생성용 스키마
-export const createSubscribeSchema = userSubscribeRawSchema.pick({
+export const createSubscribeSchema = rawUserSubscribeSchema.pick({
   userNo: true,
   emlNtfyYn: true,
   newPstNtfyYn: true,
@@ -84,7 +94,7 @@ export const createSubscribeSchema = userSubscribeRawSchema.pick({
 });
 
 // 구독 설정 수정용 스키마
-export const updateSubscribeSchema = userSubscribeRawSchema.pick({
+export const updateSubscribeSchema = rawUserSubscribeSchema.pick({
   emlNtfyYn: true,
   newPstNtfyYn: true,
   cmntRplNtfyYn: true,
@@ -92,7 +102,7 @@ export const updateSubscribeSchema = userSubscribeRawSchema.pick({
 }).partial();
 
 // 구독 설정 조회용 스키마 (user 정보 포함)
-export const userSubscribeSchema = userSubscribeRawSchema.extend({
+export const userSubscribeSchema = selectUserSubscribeSchema.extend({
   user: z.object({
     userNm: z.string()
       .openapi({
@@ -110,7 +120,7 @@ export const userSubscribeSchema = userSubscribeRawSchema.extend({
 });
 
 // 구독 설정 기본값 스키마
-export const defaultSubscribeSchema = userSubscribeRawSchema.pick({
+export const defaultSubscribeSchema = rawUserSubscribeSchema.pick({
   emlNtfyYn: true,
   newPstNtfyYn: true,
   cmntRplNtfyYn: true,
@@ -119,10 +129,10 @@ export const defaultSubscribeSchema = userSubscribeRawSchema.pick({
 });
 
 // 모든 항목이 선택값인 스키마
-export const partialSubscribeSchema = userSubscribeRawSchema.partial();
+export const partialSubscribeSchema = rawUserSubscribeSchema.partial();
 
 export const searchSubscribeSchema = baseSearchSchema.extend({
-  ...userSubscribeRawSchema.pick({
+  ...rawUserSubscribeSchema.pick({
     delYn: true,
   }).shape,
   srchType: z.enum([ 'userNm', 'emlAddr', ], {

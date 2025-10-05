@@ -14,6 +14,7 @@
 - **Post 관리자 CRUD**: 게시글 생성, 수정, 삭제 (단건/다건) 완료
 - **Admin 관리 기능**: 모든 관리자 CRUD 기능 완료 (User, Subscribe, CategorySubscribe, TagSubscribe, Post)
 - **Admin Post 통계**: 게시글 조회수/공유 통계 조회 기능
+- **Tag 조회 기능**: 일반 사용자용 태그 목록/상세/검색 기능 (2025 0921 완료)
 
 ## 명명 규칙
 
@@ -411,3 +412,29 @@
   - `adminGetAllPostShareStatsByPlatform`
   - body: { mode: 'daily' | 'weekly' | 'monthly' | 'yearly', startDt: string, endDt: string }
   - 기능: 전체 게시글 플랫폼별 공유 통계
+
+## 6. Tag 엔티티
+
+### 일반 사용자 기능
+
+- [x] POST /tags **[USER]**
+  - `getTagList`
+  - body: SearchTagDto
+  - 기능: 태그 목록 조회, 검색 키워드, 정렬 옵션, 페이징, 인기도순/최신순/오래된순 정렬
+- [x] GET /tags/:tagNo **[USER]**
+  - `getTagByTagNo`
+  - params: tagNo: number
+  - 기능: 태그 번호로 태그 상세 조회, 태그된 게시글 목록, 관련 태그 추천
+- [x] GET /tags/name/:name **[USER]**
+  - `getTagByTagNm`
+  - params: name: string
+  - 기능: 태그명으로 태그 검색, 자동완성 기능, 유사 태그 제안
+
+### 🔄 향후 구현 예정
+
+#### Admin Tags Controller (관리자용)
+
+- 태그 생성, 수정, 삭제 기능
+- 태그 관리 대시보드
+- 태그 통계 및 분석
+- 대량 태그 처리

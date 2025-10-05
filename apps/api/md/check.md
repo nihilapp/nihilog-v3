@@ -5,13 +5,13 @@
 3. 실제와 예시가 다른 경우에도 추려냅니다.
 4. 여기서 말하는 응답 처리란, RepoResponseType 과 ResponseType 에 들어가는 error 유무, code 와 message, data 를 의미합니다.
 
-현재 존재하는 컨트롤러는 11개입니다.
+현재 존재하는 컨트롤러는 12개입니다.
 
 ## 점검 결과 (2025 0921)
 
 ### 요약
 
-- 총 11개 컨트롤러 점검 완료
+- 총 12개 컨트롤러 점검 완료
 - 대부분의 컨트롤러에서 실제 응답 처리와 Endpoint 데코레이터의 responses가 일치함
 - 일부 컨트롤러에서 누락된 응답 케이스 발견
 
@@ -41,6 +41,7 @@
 - Admin Tag Subscribe Controller ✅
 - Admin Users Controller ✅
 - Admin Category Subscribe Controller ✅
+- **Tags Controller ✅** (2025 0921 추가)
 
 ### 권장사항
 

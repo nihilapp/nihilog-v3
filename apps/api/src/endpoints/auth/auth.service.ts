@@ -8,7 +8,6 @@ import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
-import { AdminUserService } from '@/endpoints/admin/users/admin-users.service';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
@@ -34,7 +33,6 @@ interface SignInResponseType {
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: AdminUserService,
     private readonly jwtService: JwtService,
     private readonly mailerService: MailerService,
     private readonly userRepository: UserRepository,
@@ -146,7 +144,7 @@ export class AuthService {
         secret: this.env.get('jwt.refresh.secret'),
       });
 
-      const userResult = await this.usersService.getUserByNo(payload.userNo);
+      const userResult = await this.userRepository.getUserByNo(payload.userNo);
 
       if (!userResult?.success || userResult.data.reshToken !== token) {
         return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');

@@ -18,6 +18,8 @@ export {
   userInfoSchema,
   createUserSchema,
   updateUserSchema,
+  selectUserInfoSchema,
+  selectUserInfoListSchema,
   signInSchema,
   forgotPasswordSchema,
   changePasswordSchema,
@@ -63,6 +65,8 @@ export {
 
 export {
   userSubscribeSchema,
+  selectUserSubscribeSchema,
+  selectUserSubscribeListSchema,
   createSubscribeSchema,
   updateSubscribeSchema,
   defaultSubscribeSchema,
@@ -117,3 +121,26 @@ export {
   type PostShareLogSchemaType,
   type CreatePostShareLogSchemaType
 } from './post-sharelog.schema';
+
+export {
+  tagInfoSchema,
+  createTagSchema,
+  updateTagSchema,
+  searchTagSchema,
+  deleteTagSchema,
+  pstTagMpngSchema,
+  createPstTagMpngSchema,
+  updatePstTagMpngSchema,
+  searchPstTagMpngSchema,
+  deletePstTagMpngSchema,
+  type TagInfoType,
+  type CreateTagType,
+  type UpdateTagType,
+  type SearchTagType,
+  type DeleteTagType,
+  type PstTagMpngType,
+  type CreatePstTagMpngType,
+  type UpdatePstTagMpngType,
+  type SearchPstTagMpngType,
+  type DeletePstTagMpngType
+} from './tag.schema';

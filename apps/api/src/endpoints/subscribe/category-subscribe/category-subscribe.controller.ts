@@ -8,7 +8,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CreateCategorySubscribeDto, type UpdateCategorySubscribeDto, type DeleteCategorySubscribeDto } from '@/dto';
+import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, CreateCategorySubscribeDto, UpdateCategorySubscribeDto, DeleteCategorySubscribeDto } from '@/dto';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
@@ -172,7 +172,7 @@ export class CategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독할 카테고리 목록 DTO', Object, ],
+      body: [ '구독할 카테고리 목록 DTO', CreateCategorySubscribeDto, ],
       responses: [
         [
           '다수 카테고리 구독 성공',
@@ -218,7 +218,7 @@ export class CategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독 설정 변경 DTO', Object, ],
+      body: [ '구독 설정 변경 DTO', UpdateCategorySubscribeDto, ],
       responses: [
         [
           '다수 카테고리 구독 설정 변경 성공',
@@ -309,7 +309,7 @@ export class CategorySubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독 해제할 카테고리 목록 DTO', Object, ],
+      body: [ '구독 해제할 카테고리 목록 DTO', DeleteCategorySubscribeDto, ],
       responses: [
         [
           '다수 카테고리 구독 해제 성공',

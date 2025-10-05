@@ -1,0 +1,266 @@
+import { z } from 'zod';
+
+import {
+  createUserSchema,
+  signInSchema,
+  changePasswordSchema
+} from '@/endpoints/prisma/schemas';
+import { createError, createResponse } from '@/utils';
+import { CreateExample } from '@/utils/createExample';
+
+import { openApiRegistry } from '../registry';
+
+// 인증 엔드포인트 경로 등록
+export const registerAuthEndpoints = () => {
+  // 회원가입
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/auth/signup',
+    summary: '회원가입',
+    description: '새로운 사용자 계정을 생성합니다.',
+    tags: [ 'auth', ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: createUserSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '회원가입 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'SIGN_UP_SUCCESS',
+                  CreateExample.user('detail')
+                ),
+              },
+              emailInUse: {
+                summary: '이메일 중복',
+                value: createError('CONFLICT', 'EMAIL_IN_USE'),
+              },
+              signUpError: {
+                summary: '회원가입 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'SIGN_UP_ERROR'),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // 로그인
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/auth/signin',
+    summary: '로그인',
+    description: '사용자 인증을 처리하고 JWT 토큰을 발급합니다.',
+    tags: [ 'auth', ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: signInSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '로그인 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'SIGN_IN_SUCCESS',
+                  CreateExample.user('detail')
+                ),
+              },
+              invalidCredentials: {
+                summary: '인증 실패',
+                value: createError('UNAUTHORIZED', 'INVALID_CREDENTIALS'),
+              },
+              userUpdateError: {
+                summary: '사용자 정보 업데이트 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // 토큰 재발급
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/auth/refresh',
+    summary: '토큰 재발급',
+    description: '리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.',
+    tags: [ 'auth', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '토큰 재발급 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'TOKEN_REFRESH_SUCCESS',
+                  CreateExample.user('detail')
+                ),
+              },
+              invalidRefreshToken: {
+                summary: '리프레시 토큰이 유효하지 않음',
+                value: createError('UNAUTHORIZED', 'INVALID_REFRESH_TOKEN'),
+              },
+              refreshTokenNotFound: {
+                summary: '리프레시 토큰이 없음',
+                value: createError('UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND'),
+              },
+              userUpdateError: {
+                summary: '사용자 정보 업데이트 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // 로그아웃
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/auth/signout',
+    summary: '로그아웃',
+    description: '사용자 로그아웃을 처리하고 모든 인증 정보를 제거합니다.',
+    tags: [ 'auth', ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '로그아웃 성공',
+                value: createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null),
+              },
+              signOutError: {
+                summary: '로그아웃 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR'),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // 세션 조회
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/auth/session',
+    summary: '세션 조회',
+    description: '현재 로그인된 사용자의 세션 정보를 조회합니다.',
+    tags: [ 'auth', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '세션 조회 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'SESSION_GET_SUCCESS',
+                  CreateExample.user('detail')
+                ),
+              },
+              sessionNotFound: {
+                summary: '세션 조회 실패',
+                value: createError('UNAUTHORIZED', 'SESSION_NOT_FOUND'),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // 비밀번호 변경
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/auth/change-password',
+    summary: '비밀번호 변경',
+    description: '현재 로그인된 사용자의 비밀번호를 변경합니다.',
+    tags: [ 'auth', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: changePasswordSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '비밀번호 변경 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'PASSWORD_CHANGE_SUCCESS',
+                  CreateExample.user('detail')
+                ),
+              },
+              invalidCredentials: {
+                summary: '현재 비밀번호가 올바르지 않음',
+                value: createError('UNAUTHORIZED', 'INVALID_CREDENTIALS'),
+              },
+              authNotFound: {
+                summary: '사용자 정보 조회 실패',
+                value: createError('UNAUTHORIZED', 'AUTH_NOT_FOUND'),
+              },
+              userUpdateError: {
+                summary: '비밀번호 업데이트 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
+              },
+              passwordChangeError: {
+                summary: '비밀번호 변경 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'PASSWORD_CHANGE_ERROR'),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+};

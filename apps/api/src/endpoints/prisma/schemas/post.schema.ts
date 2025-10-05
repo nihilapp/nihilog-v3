@@ -263,7 +263,7 @@ export const searchPostSchema = baseSearchSchema.extend({
   orderBy: z.enum([ 'LATEST', 'POPULAR', 'OLDEST', ])
     .default('LATEST')
     .openapi({
-      description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, OLDEST: 관련도순)',
+      description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, OLDEST: 오래된 순)',
       example: 'LATEST',
     }),
 }).partial();
