@@ -19,6 +19,7 @@ export type ResponseType<TData = unknown> = {
   code: keyof typeof RESPONSE_CODE;
   message: keyof typeof MESSAGE_CODE;
   data: TData;
+  responseTime: string;
 };
 
 // 에러 타입
@@ -27,6 +28,7 @@ export type ErrorType = {
   code: keyof typeof RESPONSE_CODE;
   message: keyof typeof MESSAGE_CODE;
   data: null;
+  responseTime: string;
 };
 
 // 리포지토리 응답 타입

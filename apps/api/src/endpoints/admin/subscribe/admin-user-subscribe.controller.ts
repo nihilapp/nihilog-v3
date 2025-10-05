@@ -8,8 +8,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import type { AuthRequest, SearchSubscribeDto } from '@/dto';
-import { DeleteMultipleUsersDto } from '@/dto';
+import { AuthRequest, DeleteSubscribeDto, SearchSubscribeDto } from '@/dto';
 import type { ListDto } from '@/dto/response.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import {
@@ -293,7 +292,7 @@ export class AdminSubscribeController {
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '구독 설정 일괄 삭제 정보', DeleteMultipleUsersDto, ],
+      body: [ '구독 설정 일괄 삭제 정보', DeleteSubscribeDto, ],
       responses: [
         [
           '구독 설정 일괄 삭제 성공',
@@ -327,7 +326,7 @@ export class AdminSubscribeController {
   })
   async adminMultipleDeleteUserSubscribe(
     @Req() req: AuthRequest,
-    @Body() deleteData: DeleteMultipleUsersDto
+    @Body() deleteData: DeleteSubscribeDto
   ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;

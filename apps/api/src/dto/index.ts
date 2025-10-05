@@ -33,7 +33,8 @@ export {
   UserSubscribeDto,
   CreateSubscribeDto,
   UpdateSubscribeDto,
-  SearchSubscribeDto
+  SearchSubscribeDto,
+  DeleteSubscribeDto
 } from './subscribe.dto';
 
 // Category Subscribe DTOs

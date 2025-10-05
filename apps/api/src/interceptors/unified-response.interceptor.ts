@@ -1,9 +1,9 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { DateTime } from 'luxon';
 import { Observable, map } from 'rxjs';
 
 import { MESSAGE_CODE, RESPONSE_CODE } from '@/code';
 import { ResponseDto } from '@/dto/response.dto';
+import { timeToString } from '@/utils/timeHelper';
 
 interface RequestWithError {
   errorResponse?: ResponseDto<null>;
@@ -18,13 +18,13 @@ export class UnifiedResponseInterceptor implements NestInterceptor {
       try {
         // request에 errorResponse가 설정되어 있으면 해당 에러 반환
         if (request.errorResponse) {
-          request.errorResponse.responseTime = DateTime.now().toISO();
+          request.errorResponse.responseTime = timeToString();
           return request.errorResponse;
         }
 
         // 응답 데이터가 ResponseDto 형태인 경우 responseTime만 설정
         if (data && typeof data === 'object' && 'error' in data) {
-          (data as ResponseDto<unknown>).responseTime = DateTime.now().toISO();
+          (data as ResponseDto<unknown>).responseTime = timeToString();
           return data as ResponseDto<unknown>;
         }
 
@@ -34,7 +34,7 @@ export class UnifiedResponseInterceptor implements NestInterceptor {
           code: RESPONSE_CODE.SUCCESS,
           message: MESSAGE_CODE.SUCCESS,
           data,
-          responseTime: DateTime.now().toISO(),
+          responseTime: timeToString(),
         } as ResponseDto<unknown>;
       }
       catch {
@@ -44,7 +44,7 @@ export class UnifiedResponseInterceptor implements NestInterceptor {
           code: RESPONSE_CODE.INTERNAL_SERVER_ERROR,
           message: MESSAGE_CODE.INTERNAL_SERVER_ERROR,
           data: null,
-          responseTime: DateTime.now().toISO(),
+          responseTime: timeToString(),
         } as ResponseDto<null>;
       }
     }));

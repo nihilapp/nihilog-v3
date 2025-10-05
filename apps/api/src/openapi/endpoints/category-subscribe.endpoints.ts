@@ -10,6 +10,7 @@ import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 
 import { openApiRegistry } from '../registry';
+import { addGlobalResponses } from '../utils/global-responses';
 
 // 카테고리 구독 엔드포인트 경로 등록
 export const registerCategorySubscribeEndpoints = () => {
@@ -19,7 +20,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories',
     summary: '📋 카테고리 구독 목록 조회',
     description: '사용자가 구독한 카테고리 목록을 조회합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
@@ -36,7 +37,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '카테고리 구독 목록 조회 성공',
                 value: createResponse(
@@ -49,7 +50,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -62,7 +65,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories/{ctgryNo}',
     summary: '📋 특정 카테고리 구독 상태 조회',
     description: '특정 카테고리의 구독 상태를 조회합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       params: z.object({
@@ -85,7 +88,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '카테고리 구독 상태 조회 성공',
                 value: createResponse(
@@ -98,7 +101,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 상태 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -111,7 +116,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories/{ctgryNo}',
     summary: '➕ 카테고리 구독 설정',
     description: '특정 카테고리를 구독합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       params: z.object({
@@ -134,7 +139,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '카테고리 구독 설정 성공',
                 value: createResponse(
@@ -147,7 +152,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 설정 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -160,7 +167,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories/multiple',
     summary: '➕ 다수 카테고리 일괄 구독',
     description: '여러 카테고리를 한 번에 구독합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
@@ -177,7 +184,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 구독 성공',
                 value: createResponse(
@@ -190,7 +197,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '다수 카테고리 구독 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -203,7 +212,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories/multiple',
     summary: '✏️ 다수 카테고리 구독 설정 일괄 변경',
     description: '여러 카테고리의 구독 설정을 한 번에 변경합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
@@ -220,7 +229,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 구독 설정 변경 성공',
                 value: createResponse(
@@ -233,7 +242,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '다수 카테고리 구독 설정 변경 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -246,7 +257,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories/{ctgrySbcrNo}',
     summary: '➖ 카테고리 구독 해제',
     description: '특정 카테고리 구독을 해제합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       params: z.object({
@@ -262,7 +273,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '카테고리 구독 해제 성공',
                 value: createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', true),
@@ -271,7 +282,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 해제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -284,7 +297,7 @@ export const registerCategorySubscribeEndpoints = () => {
     path: '/users/subscribes/categories/multiple',
     summary: '➖ 다수 카테고리 구독 일괄 해제',
     description: '여러 카테고리 구독을 한 번에 해제합니다.',
-    tags: [ 'users/subscribes/categories', ],
+    tags: [ 'category-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
@@ -301,7 +314,7 @@ export const registerCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 구독 해제 성공',
                 value: createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null),
@@ -310,7 +323,9 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '다수 카테고리 구독 해제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },

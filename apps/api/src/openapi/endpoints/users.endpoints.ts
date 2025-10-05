@@ -9,6 +9,7 @@ import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 
 import { openApiRegistry } from '../registry';
+import { addGlobalResponses } from '../utils/global-responses';
 
 // 사용자 엔드포인트 경로 등록
 export const registerUserEndpoints = () => {
@@ -26,7 +27,7 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '프로필 조회 성공',
                 value: createResponse(
@@ -39,7 +40,9 @@ export const registerUserEndpoints = () => {
                 summary: '사용자를 찾을 수 없음 (Repository)',
                 value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -60,7 +63,7 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 조회 성공',
                 value: createResponse(
@@ -73,7 +76,9 @@ export const registerUserEndpoints = () => {
                 summary: '구독 설정을 찾을 수 없음 (Repository)',
                 value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -102,7 +107,7 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '사용자 생성 성공',
                 value: createResponse(
@@ -119,7 +124,7 @@ export const registerUserEndpoints = () => {
                 summary: '사용자 생성 실패 (Service)',
                 value: createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR'),
               },
-            },
+            }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
         },
       },
@@ -149,7 +154,7 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '프로필 수정 성공',
                 value: createResponse(
@@ -166,7 +171,9 @@ export const registerUserEndpoints = () => {
                 summary: '사용자명 중복 (Service)',
                 value: createError('CONFLICT', 'USER_NAME_EXISTS'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -196,7 +203,7 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 변경 성공',
                 value: createResponse(
@@ -213,7 +220,9 @@ export const registerUserEndpoints = () => {
                 summary: '구독 설정을 찾을 수 없음 (Repository)',
                 value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -234,7 +243,7 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '프로필 삭제 성공',
                 value: createResponse(
@@ -247,7 +256,9 @@ export const registerUserEndpoints = () => {
                 summary: '사용자를 찾을 수 없음 (Repository)',
                 value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },

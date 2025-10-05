@@ -71,11 +71,13 @@ export {
   updateSubscribeSchema,
   defaultSubscribeSchema,
   partialSubscribeSchema,
+  deleteSubscribeSchema,
   type UserSubscribeType,
   type CreateSubscribeType,
   type UpdateSubscribeType,
   type DefaultSubscribeType,
-  type PartialSubscribeType
+  type PartialSubscribeType,
+  type DeleteSubscribeType
 } from './subscribe.schema';
 
 export {

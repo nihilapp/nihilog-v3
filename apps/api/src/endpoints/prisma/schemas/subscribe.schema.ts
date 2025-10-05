@@ -59,12 +59,12 @@ const userSubscribeBaseSchema = commonSchema.extend({
       description: '총 개수',
       example: 100,
     }),
-  userNoList: z.array(z.number()
-    .int('사용자 번호는 정수여야 합니다.')
-    .positive('사용자 번호는 양수여야 합니다.'))
+  sbcrNoList: z.array(z.number()
+    .int('구독 번호는 정수여야 합니다.')
+    .positive('구독 번호는 양수여야 합니다.'))
     .optional()
     .openapi({
-      description: '사용자 번호 목록',
+      description: '구독 번호 목록',
       example: [ 1, 2, 3, ],
     }),
 });
@@ -74,11 +74,11 @@ const rawUserSubscribeSchema = userSubscribeBaseSchema;
 export const selectUserSubscribeSchema = rawUserSubscribeSchema.omit({
   rowNo: true,
   totalCnt: true,
-  userNoList: true,
+  sbcrNoList: true,
 });
 
 export const selectUserSubscribeListSchema = rawUserSubscribeSchema.omit({
-  userNoList: true,
+  sbcrNoList: true,
 });
 
 // 커스텀 스키마 정의
@@ -98,8 +98,15 @@ export const updateSubscribeSchema = rawUserSubscribeSchema.pick({
   emlNtfyYn: true,
   newPstNtfyYn: true,
   cmntRplNtfyYn: true,
-  userNoList: true,
+  sbcrNoList: true,
 }).partial();
+
+export const deleteSubscribeSchema = rawUserSubscribeSchema.pick({
+  sbcrNo: true,
+  sbcrNoList: true,
+}).refine((data) => data.sbcrNo || data.sbcrNoList, {
+  message: '구독 번호 또는 구독 번호 목록 중 하나는 필수입니다.',
+});
 
 // 구독 설정 조회용 스키마 (user 정보 포함)
 export const userSubscribeSchema = selectUserSubscribeSchema.extend({
@@ -151,6 +158,8 @@ export type CreateSubscribeType = z
   .infer<typeof createSubscribeSchema>;
 export type UpdateSubscribeType = z
   .infer<typeof updateSubscribeSchema>;
+export type DeleteSubscribeType = z
+  .infer<typeof deleteSubscribeSchema>;
 export type DefaultSubscribeType = z
   .infer<typeof defaultSubscribeSchema>;
 export type PartialSubscribeType = z

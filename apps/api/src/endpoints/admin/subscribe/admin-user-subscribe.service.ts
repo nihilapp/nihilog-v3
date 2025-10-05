@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import type { DeleteMultipleUsersDto } from '@/dto';
+import type { DeleteSubscribeDto } from '@/dto';
 import type { ListDto } from '@/dto/response.dto';
 import {
   CreateSubscribeDto,
@@ -59,12 +59,12 @@ export class AdminSubscribeService {
    */
   async adminMultipleDeleteUserSubscribe(
     adminNo: number,
-    deleteData: DeleteMultipleUsersDto
+    deleteData: DeleteSubscribeDto
   ): Promise<RepoResponseType<MultipleResultType> | null> {
-    if (!deleteData.userNoList) {
+    if (!deleteData.sbcrNoList) {
       return null;
     }
 
-    return this.subscribeRepository.multipleDeleteUserSubscribe(adminNo, deleteData.userNoList);
+    return this.subscribeRepository.multipleDeleteUserSubscribe(adminNo, deleteData.sbcrNoList);
   }
 }

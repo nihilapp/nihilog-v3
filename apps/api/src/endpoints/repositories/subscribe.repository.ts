@@ -201,16 +201,16 @@ export class SubscribeRepository {
     updateData: UpdateSubscribeDto
   ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
-      const { userNoList, ...updateDataWithoutUserNoList } = updateData;
+      const { sbcrNoList, ...updateDataWithoutUserNoList } = updateData;
 
-      if (!userNoList || userNoList.length === 0) {
+      if (!sbcrNoList || sbcrNoList.length === 0) {
         return null;
       }
 
       const result = await this.prisma.userSbcrInfo.updateManyAndReturn({
         where: {
-          userNo: {
-            in: userNoList,
+          sbcrNo: {
+            in: sbcrNoList,
           },
         },
         data: {
@@ -219,12 +219,12 @@ export class SubscribeRepository {
           updtDt: timeToString(),
         },
         select: {
-          userNo: true,
+          sbcrNo: true,
         },
       });
 
-      const failNoList = userNoList
-        .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
+      const failNoList = sbcrNoList
+        .filter((item) => !result.some((resultItem) => resultItem.sbcrNo === item));
 
       return prismaResponse(true, {
         successCnt: result.length,
@@ -271,21 +271,21 @@ export class SubscribeRepository {
   /**
    * @description 관리자가 다수 사용자 구독 설정 일괄 삭제
    * @param adminNo 관리자 번호
-   * @param userNoList 사용자 번호 목록
+   * @param sbcrNoList 구독 번호 목록
    */
   async multipleDeleteUserSubscribe(
     adminNo: number,
-    userNoList: number[]
+    sbcrNoList: number[]
   ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
-      if (!userNoList || userNoList.length === 0) {
+      if (!sbcrNoList || sbcrNoList.length === 0) {
         return null;
       }
 
       const result = await this.prisma.userSbcrInfo.updateManyAndReturn({
         where: {
-          userNo: {
-            in: userNoList,
+          sbcrNo: {
+            in: sbcrNoList,
           },
         },
         data: {
@@ -297,12 +297,12 @@ export class SubscribeRepository {
           delDt: timeToString(),
         },
         select: {
-          userNo: true,
+          sbcrNo: true,
         },
       });
 
-      const failNoList = userNoList
-        .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
+      const failNoList = sbcrNoList
+        .filter((item) => !result.some((resultItem) => resultItem.sbcrNo === item));
 
       return prismaResponse(true, {
         successCnt: result.length,

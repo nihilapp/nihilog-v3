@@ -4,7 +4,8 @@ import {
   userSubscribeSchema,
   createSubscribeSchema,
   updateSubscribeSchema,
-  searchSubscribeSchema
+  searchSubscribeSchema,
+  deleteSubscribeSchema
 } from '@/endpoints/prisma/schemas/subscribe.schema';
 
 // 구독 정보 조회 DTO
@@ -18,3 +19,6 @@ export class UpdateSubscribeDto extends createZodDto(updateSubscribeSchema) {}
 
 // 구독 설정 검색 DTO
 export class SearchSubscribeDto extends createZodDto(searchSubscribeSchema) {}
+
+// 구독 설정 삭제 DTO
+export class DeleteSubscribeDto extends createZodDto(deleteSubscribeSchema) {}

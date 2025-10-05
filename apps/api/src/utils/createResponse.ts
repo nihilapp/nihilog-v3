@@ -1,6 +1,7 @@
 import { MESSAGE_CODE } from '@/code/message.code';
 import { RESPONSE_CODE } from '@/code/response.code';
 import type { ResponseType } from '@/endpoints/prisma/types/common.types';
+import { timeToString } from '@/utils/timeHelper';
 
 export function createResponse<TData = any>(
   code: keyof typeof RESPONSE_CODE,
@@ -12,5 +13,6 @@ export function createResponse<TData = any>(
     code: RESPONSE_CODE[code] as string,
     message: MESSAGE_CODE[message] as string,
     data,
+    responseTime: timeToString(),
   } as ResponseType<TData>;
 }

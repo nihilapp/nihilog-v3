@@ -9,6 +9,7 @@ import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 
 import { openApiRegistry } from '../registry';
+import { addGlobalResponses } from '../utils/global-responses';
 
 // 인증 엔드포인트 경로 등록
 export const registerAuthEndpoints = () => {
@@ -34,7 +35,7 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '회원가입 성공',
                 value: createResponse(
@@ -51,7 +52,7 @@ export const registerAuthEndpoints = () => {
                 summary: '회원가입 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'SIGN_UP_ERROR'),
               },
-            },
+            }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
         },
       },
@@ -80,7 +81,7 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '로그인 성공',
                 value: createResponse(
@@ -97,7 +98,7 @@ export const registerAuthEndpoints = () => {
                 summary: '사용자 정보 업데이트 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
               },
-            },
+            }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
         },
       },
@@ -118,7 +119,7 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '토큰 재발급 성공',
                 value: createResponse(
@@ -139,7 +140,7 @@ export const registerAuthEndpoints = () => {
                 summary: '사용자 정보 업데이트 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
               },
-            },
+            }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
         },
       },
@@ -159,7 +160,7 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '로그아웃 성공',
                 value: createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null),
@@ -168,7 +169,7 @@ export const registerAuthEndpoints = () => {
                 summary: '로그아웃 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR'),
               },
-            },
+            }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
         },
       },
@@ -189,7 +190,7 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '세션 조회 성공',
                 value: createResponse(
@@ -202,7 +203,9 @@ export const registerAuthEndpoints = () => {
                 summary: '세션 조회 실패',
                 value: createError('UNAUTHORIZED', 'SESSION_NOT_FOUND'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
@@ -232,7 +235,7 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: {
+            examples: addGlobalResponses({
               success: {
                 summary: '비밀번호 변경 성공',
                 value: createResponse(
@@ -257,7 +260,9 @@ export const registerAuthEndpoints = () => {
                 summary: '비밀번호 변경 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'PASSWORD_CHANGE_ERROR'),
               },
-            },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
           },
         },
       },
