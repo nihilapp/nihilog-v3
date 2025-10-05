@@ -11,12 +11,12 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
-import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
+import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse } from '@/utils';
-import { createExampleUser } from '@/utils/createExampleUser';
+import { CreateExample } from '@/utils/createExample';
 import { clearCookie, setCookie } from '@/utils/setCookie';
 
 import { AuthService } from './auth.service';
@@ -26,6 +26,48 @@ import { JwtPayload } from './jwt.strategy';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
+
+  /**
+   * @description 사용자 회원가입
+   * @param createUserData 회원가입 정보
+   */
+  @Endpoint({
+    endpoint: '/signup',
+    method: 'POST',
+    summary: '회원가입',
+    description: '새로운 사용자 계정을 생성합니다.',
+    options: {
+      throttle: [ 3, 60000, ],
+      serialize: true,
+      body: [ '회원가입 DTO', CreateUserDto, ],
+      responses: [
+        [
+          '회원가입 성공',
+          [ false, 'SUCCESS', 'SIGN_UP_SUCCESS', CreateExample.user('detail'), ],
+        ],
+        [
+          '이메일 중복',
+          [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
+        ],
+        [
+          '회원가입 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'SIGN_UP_ERROR', null, ],
+        ],
+      ],
+    },
+  })
+  async signUp(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
+    const result = await this.authService.signUp(null, createUserData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'SIGN_UP_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'SIGN_UP_SUCCESS', result.data);
+  }
 
   /**
    * @description 사용자 로그인
@@ -45,11 +87,15 @@ export class AuthController {
       responses: [
         [
           '로그인 성공',
-          [ false, 'SUCCESS', 'SIGN_IN_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'SIGN_IN_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
           '인증 실패',
           [ true, 'UNAUTHORIZED', 'INVALID_CREDENTIALS', null, ],
+        ],
+        [
+          '사용자 정보 업데이트 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
         ],
       ],
     },
@@ -61,13 +107,15 @@ export class AuthController {
   ): Promise<ResponseDto<SelectUserInfoType>> {
     const result = await this.authService.signIn(signInData);
 
-    // null인 경우 에러 반환
-    if (!result) {
-      return createError('UNAUTHORIZED', 'INVALID_CREDENTIALS');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'UNAUTHORIZED',
+        result?.error?.message || 'INVALID_CREDENTIALS'
+      );
     }
 
     // 성공 응답인 경우 쿠키 설정
-    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result;
+    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result.data;
 
     setCookie(
       res,
@@ -125,7 +173,7 @@ export class AuthController {
       responses: [
         [
           '토큰 재발급 성공',
-          [ false, 'SUCCESS', 'TOKEN_REFRESH_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'TOKEN_REFRESH_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
           '리프레시 토큰이 유효하지 않음',
@@ -134,6 +182,10 @@ export class AuthController {
         [
           '리프레시 토큰이 없음',
           [ true, 'UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자 정보 업데이트 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
         ],
       ],
     },
@@ -150,13 +202,15 @@ export class AuthController {
 
     const result = await this.authService.refresh(refreshToken);
 
-    // null인 경우 에러 반환
-    if (!result) {
-      return createError('UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'UNAUTHORIZED',
+        result?.error?.message || 'INVALID_REFRESH_TOKEN'
+      );
     }
 
     // 성공 응답인 경우 쿠키 설정
-    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result;
+    const { user, acsToken, reshToken, accessTokenExpiresAt, } = result.data;
 
     setCookie(
       res,
@@ -214,23 +268,25 @@ export class AuthController {
     @Req() req: FastifyRequest,
     @Res({ passthrough: true, }) res: FastifyReply
   ): Promise<ResponseDto<null>> {
-    try {
-      // 쿠키에서 accessToken을 가져와서 서비스에 전달
-      const accessToken = req.cookies['accessToken'];
+    // 쿠키에서 accessToken을 가져와서 서비스에 전달
+    const accessToken = req.cookies['accessToken'];
 
-      // 서비스에서 로그아웃 처리
-      await this.authService.signOut(accessToken);
+    // 서비스에서 로그아웃 처리
+    const result = await this.authService.signOut(accessToken);
 
-      // 쿠키 정리
-      clearCookie(res, 'accessToken');
-      clearCookie(res, 'refreshToken');
-      clearCookie(res, 'accessTokenExpiresAt');
-
-      return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'SIGN_OUT_ERROR'
+      );
     }
-    catch {
-      return createError('INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR');
-    }
+
+    // 쿠키 정리
+    clearCookie(res, 'accessToken');
+    clearCookie(res, 'refreshToken');
+    clearCookie(res, 'accessTokenExpiresAt');
+
+    return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
   }
 
   /**
@@ -249,7 +305,7 @@ export class AuthController {
       responses: [
         [
           '세션 조회 성공',
-          [ false, 'SUCCESS', 'SESSION_GET_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'SESSION_GET_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
           '인증되지 않은 사용자',
@@ -271,11 +327,14 @@ export class AuthController {
 
     const result = await this.authService.session(authUser.userNo);
 
-    if (!result) {
-      return createError('UNAUTHORIZED', 'SESSION_NOT_FOUND');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'UNAUTHORIZED',
+        result?.error?.message || 'SESSION_NOT_FOUND'
+      );
     }
 
-    return createResponse('SUCCESS', 'SESSION_GET_SUCCESS', result);
+    return createResponse('SUCCESS', 'SESSION_GET_SUCCESS', result.data);
   }
 
   /**
@@ -296,15 +355,23 @@ export class AuthController {
       responses: [
         [
           '비밀번호 변경 성공',
-          [ false, 'SUCCESS', 'PASSWORD_CHANGE_SUCCESS', createExampleUser(), ],
+          [ false, 'SUCCESS', 'PASSWORD_CHANGE_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
           '인증되지 않은 사용자',
           [ true, 'UNAUTHORIZED', 'UNAUTHORIZED', null, ],
         ],
         [
-          '비밀번호 변경 실패',
-          [ true, 'UNAUTHORIZED', 'PASSWORD_CHANGE_ERROR', null, ],
+          '현재 비밀번호가 올바르지 않음',
+          [ true, 'UNAUTHORIZED', 'INVALID_CREDENTIALS', null, ],
+        ],
+        [
+          '사용자 정보 조회 실패',
+          [ true, 'UNAUTHORIZED', 'AUTH_NOT_FOUND', null, ],
+        ],
+        [
+          '비밀번호 업데이트 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
         ],
       ],
     },
@@ -321,10 +388,13 @@ export class AuthController {
 
     const result = await this.authService.changePassword(authUser.userNo, changePasswordData);
 
-    if (!result) {
-      return createError('UNAUTHORIZED', 'PASSWORD_CHANGE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'UNAUTHORIZED',
+        result?.error?.message || 'PASSWORD_CHANGE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'PASSWORD_CHANGE_SUCCESS', result);
+    return createResponse('SUCCESS', 'PASSWORD_CHANGE_SUCCESS', result.data);
   }
 }

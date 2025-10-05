@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 
 import { UpdateUserDto } from '@/dto/user.dto';
 import { JwtPayload } from '@/endpoints/auth/jwt.strategy';
+import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminService {
@@ -17,22 +19,23 @@ export class AdminService {
   async updateProfile(
     authUser: JwtPayload,
     updateProfileData: UpdateUserDto
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const { userNm, proflImg, userBiogp, } = updateProfileData;
 
     // 현재 사용자 정보 조회
     const currentUser = await this.userRepository.getUserByNo(authUser.userNo);
 
-    if (!currentUser) {
-      return null;
+    if (!currentUser?.success) {
+      return currentUser; // Repository 에러를 그대로 전달
     }
 
     // 사용자명 변경 시 중복 확인
     if (userNm) {
       const existingUser = await this.userRepository.getUserByName(userNm);
 
-      if (existingUser && existingUser.userNo !== authUser.userNo) {
-        return null;
+      if (existingUser?.success && existingUser.data && existingUser.data.userNo !== authUser.userNo) {
+        // 중복된 사용자명 - prismaResponse 사용
+        return prismaResponse(false, null, 'CONFLICT', 'USER_NAME_EXISTS');
       }
     }
 

@@ -19,8 +19,9 @@ import {
 } from '@/dto/subscribe.dto';
 import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
+import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { createExampleSubscribe } from '@/utils/createExampleSubscribe';
+import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/subscribe')
 @Controller('admin/subscribes')
@@ -46,7 +47,7 @@ export class AdminSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
-            [ createExampleSubscribe('list'), ],
+            [ CreateExample.subscribe('list'), ],
           ],
         ],
         [
@@ -61,13 +62,20 @@ export class AdminSubscribeController {
       ],
     },
   })
-  async adminGetUserSubscribeList(@Body() searchData: SearchSubscribeDto & Partial<UserSubscribeDto>): Promise<ResponseDto<ListDto<UserSubscribeDto>>> {
+  async adminGetUserSubscribeList(@Body() searchData: SearchSubscribeDto): Promise<ResponseDto<ListDto<UserSubscribeDto>>> {
     const result = await this.subscribeService.adminGetUserSubscribeList(searchData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_SUBSCRIBE_SEARCH_ERROR'
+      );
+    }
 
     return createResponse(
       'SUCCESS',
       'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
-      result
+      result.data
     );
   }
 
@@ -92,7 +100,7 @@ export class AdminSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_SUBSCRIBE_CREATE_SUCCESS',
-            createExampleSubscribe('detail'),
+            CreateExample.subscribe('detail'),
           ],
         ],
         [
@@ -135,11 +143,14 @@ export class AdminSubscribeController {
 
     const result = await this.subscribeService.adminCreateUserSubscribe(req.user.userNo, createData);
 
-    if (!result) {
-      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.message || 'ADMIN_SUBSCRIBE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -166,7 +177,7 @@ export class AdminSubscribeController {
             {
               successCount: 3,
               failureCount: 1,
-              updatedSubscribes: [ createExampleSubscribe('detail'), ],
+              updatedSubscribes: [ CreateExample.subscribe('detail'), ],
             },
           ],
         ],
@@ -210,11 +221,14 @@ export class AdminSubscribeController {
 
     const result = await this.subscribeService.adminMultipleUpdateUserSubscribe(req.user.userNo, updateData);
 
-    if (!result) {
-      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.message || 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -276,18 +290,21 @@ export class AdminSubscribeController {
   async adminDeleteUserSubscribe(
     @Req() req: AuthRequest,
     @Param('sbcrNo') sbcrNo: number
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.subscribeService.adminDeleteUserSubscribe(req.user.userNo, sbcrNo);
 
-    if (!result) {
-      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.message || 'ADMIN_SUBSCRIBE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', true);
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', result.data);
   }
 
   /**
@@ -347,17 +364,20 @@ export class AdminSubscribeController {
   async adminMultipleDeleteUserSubscribe(
     @Req() req: AuthRequest,
     @Body() deleteData: DeleteMultipleUsersDto
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.subscribeService.adminMultipleDeleteUserSubscribe(req.user.userNo, deleteData);
 
-    if (!result) {
-      return createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.message || 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', true);
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
   }
 }

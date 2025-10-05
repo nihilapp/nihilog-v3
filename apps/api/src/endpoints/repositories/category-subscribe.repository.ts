@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, type CtgrySbcrMpng } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -7,8 +8,10 @@ import type {
   SelectCtgrySbcrMpngListItemType,
   SelectCtgrySbcrMpngType
 } from '@/endpoints/prisma/types/category-subscribe.types';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { pageHelper } from '@/utils/pageHelper';
+import { prismaError } from '@/utils/prismaError';
+import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -20,7 +23,7 @@ export class CategorySubscribeRepository {
    * @description 카테고리 구독 전체 이력 조회
    * @param searchData 검색 데이터
    */
-  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
+  async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -60,17 +63,17 @@ export class CategorySubscribeRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -78,7 +81,7 @@ export class CategorySubscribeRepository {
    * @description 카테고리 구독 번호로 카테고리 구독 조회
    * @param ctgrySbcrNo 카테고리 구독 번호
    */
-  async getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo: number): Promise<SelectCtgrySbcrMpngType | null> {
+  async getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo: number): Promise<RepoResponseType<SelectCtgrySbcrMpngType> | null> {
     try {
       const subscribe = await this.prisma.ctgrySbcrMpng.findUnique({
         where: {
@@ -93,10 +96,10 @@ export class CategorySubscribeRepository {
         },
       });
 
-      return subscribe;
+      return prismaResponse(true, subscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -108,7 +111,7 @@ export class CategorySubscribeRepository {
   async getCategorySubscribeByUserNo(
     userNo: number,
     searchData: SearchCategorySubscribeDto
-  ): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -149,17 +152,17 @@ export class CategorySubscribeRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -171,7 +174,7 @@ export class CategorySubscribeRepository {
   async getCategorySubscribeByCtgryNo(
     ctgryNo: number,
     searchData: SearchCategorySubscribeDto
-  ): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -212,17 +215,17 @@ export class CategorySubscribeRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -234,7 +237,7 @@ export class CategorySubscribeRepository {
   async createCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<SelectCtgrySbcrMpngType | null> {
+  ): Promise<RepoResponseType<SelectCtgrySbcrMpngType> | null> {
     try {
       const { ctgryNo, sbcrNo, } = createData;
 
@@ -258,10 +261,10 @@ export class CategorySubscribeRepository {
         },
       });
 
-      return createSubscribe;
+      return prismaResponse(true, createSubscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -273,7 +276,7 @@ export class CategorySubscribeRepository {
   async multipleCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { ctgryNoList, sbcrNo, } = createData;
 
@@ -306,14 +309,14 @@ export class CategorySubscribeRepository {
           },
         })));
 
-      return {
+      return prismaResponse(true, {
         successCnt: subscribeList.length,
         failCnt: ctgryNoList.length - subscribeList.length,
         failNoList: [],
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -325,7 +328,7 @@ export class CategorySubscribeRepository {
   async updateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<CtgrySbcrMpng | null> {
+  ): Promise<RepoResponseType<CtgrySbcrMpng> | null> {
     try {
       const { ctgrySbcrNo, useYn, delYn, } = updateData;
 
@@ -341,10 +344,10 @@ export class CategorySubscribeRepository {
         },
       });
 
-      return updateSubscribe;
+      return prismaResponse(true, updateSubscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -356,7 +359,7 @@ export class CategorySubscribeRepository {
   async multipleUpdateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { useYn, delYn, ctgrySbcrNoList, } = updateData;
 
@@ -379,14 +382,14 @@ export class CategorySubscribeRepository {
         },
       });
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.count,
         failCnt: ctgrySbcrNoList.length - result.count,
         failNoList: [],
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -398,7 +401,7 @@ export class CategorySubscribeRepository {
   async deleteCategorySubscribe(
     userNo: number,
     ctgrySbcrNo: number
-  ): Promise<boolean> {
+  ): Promise<RepoResponseType<boolean> | null> {
     try {
       const result = await this.prisma.ctgrySbcrMpng.updateMany({
         where: {
@@ -416,14 +419,10 @@ export class CategorySubscribeRepository {
         },
       });
 
-      if (result) {
-        return true;
-      }
-
-      return false;
+      return prismaResponse(true, !!result);
     }
-    catch {
-      return false;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -435,7 +434,7 @@ export class CategorySubscribeRepository {
   async multipleDeleteCategorySubscribe(
     userNo: number,
     updateData: DeleteCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { ctgrySbcrNoList, } = updateData;
 
@@ -460,14 +459,14 @@ export class CategorySubscribeRepository {
 
       const failNoList = ctgrySbcrNoList.filter((item) => !result.some((resultItem) => resultItem.ctgrySbcrNo === item));
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.length,
         failCnt: ctgrySbcrNoList.length - result.length,
         failNoList,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

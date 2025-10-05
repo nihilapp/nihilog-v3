@@ -42,19 +42,19 @@ export class PostsController {
     },
   })
   async getPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
-    const list = await this.postsService.getPostList(searchData);
+    const result = await this.postsService.getPostList(searchData);
 
-    if (!list) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SEARCH_SUCCESS',
-      list
+      result.data
     );
   }
 
@@ -77,6 +77,10 @@ export class PostsController {
           [ false, 'SUCCESS', 'POST_GET_SUCCESS', CreateExample.post('detail'), ],
         ],
         [
+          '게시글을 찾을 수 없음',
+          [ true, 'NOT_FOUND', 'POST_NOT_FOUND', null, ],
+        ],
+        [
           '게시글 상세 조회 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'POST_GET_ERROR', null, ],
         ],
@@ -84,19 +88,19 @@ export class PostsController {
     },
   })
   async getPostByPstNo(@Param('pstNo') pstNo: number): Promise<ResponseDto<SelectPostInfoType>> {
-    const post = await this.postsService.getPostByPstNo(pstNo);
+    const result = await this.postsService.getPostByPstNo(pstNo);
 
-    if (!post) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_GET_ERROR'
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'POST_NOT_FOUND'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_GET_SUCCESS',
-      post
+      result.data
     );
   }
 
@@ -119,6 +123,10 @@ export class PostsController {
           [ false, 'SUCCESS', 'POST_GET_SUCCESS', CreateExample.post('detail'), ],
         ],
         [
+          '게시글을 찾을 수 없음',
+          [ true, 'NOT_FOUND', 'POST_NOT_FOUND', null, ],
+        ],
+        [
           '게시글 상세 조회 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'POST_GET_ERROR', null, ],
         ],
@@ -126,19 +134,19 @@ export class PostsController {
     },
   })
   async getPostByPstCd(@Param('pstCd') pstCd: string): Promise<ResponseDto<SelectPostInfoType>> {
-    const post = await this.postsService.getPostByPstCd(pstCd);
+    const result = await this.postsService.getPostByPstCd(pstCd);
 
-    if (!post) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_GET_ERROR'
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'POST_NOT_FOUND'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_GET_SUCCESS',
-      post
+      result.data
     );
   }
 
@@ -173,19 +181,19 @@ export class PostsController {
     @Param('tagNo') tagNo: number,
     @Body() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
-    const list = await this.postsService.getPostListByTagNo(tagNo, searchData);
+    const result = await this.postsService.getPostListByTagNo(tagNo, searchData);
 
-    if (!list) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SEARCH_SUCCESS',
-      list
+      result.data
     );
   }
 
@@ -220,19 +228,19 @@ export class PostsController {
     @Param('ctgryNo') ctgryNo: number,
     @Body() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
-    const list = await this.postsService.getPostListByCtgryNo(ctgryNo, searchData);
+    const result = await this.postsService.getPostListByCtgryNo(ctgryNo, searchData);
 
-    if (!list) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SEARCH_SUCCESS',
-      list
+      result.data
     );
   }
 
@@ -267,19 +275,19 @@ export class PostsController {
     @Param('date') date: string,
     @Body() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
-    const list = await this.postsService.getPostListFromArchive(date, searchData);
+    const result = await this.postsService.getPostListFromArchive(date, searchData);
 
-    if (!list) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SEARCH_SUCCESS',
-      list
+      result.data
     );
   }
 
@@ -309,19 +317,19 @@ export class PostsController {
     },
   })
   async getAdvancedPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
-    const list = await this.postsService.getAdvancedPostList(searchData);
+    const result = await this.postsService.getAdvancedPostList(searchData);
 
-    if (!list) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SEARCH_SUCCESS',
-      list
+      result.data
     );
   }
 
@@ -355,19 +363,19 @@ export class PostsController {
     @Param('pstNo') pstNo: number,
     @Ip() ip: string
   ): Promise<ResponseDto<SelectPostViewLogType>> {
-    const viewLog = await this.postsService.createPostViewLog(pstNo, ip);
+    const result = await this.postsService.createPostViewLog(pstNo, ip);
 
-    if (!viewLog) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_VIEW_LOG_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_VIEW_LOG_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_VIEW_LOG_SUCCESS',
-      viewLog
+      result.data
     );
   }
 
@@ -395,19 +403,19 @@ export class PostsController {
     },
   })
   async createPostShareLog(@Body() createData: CreatePostShareLogDto): Promise<ResponseDto<SelectPostShareLogType>> {
-    const shareLog = await this.postsService.createPostShareLog(createData);
+    const result = await this.postsService.createPostShareLog(createData);
 
-    if (!shareLog) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SHARE_LOG_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SHARE_LOG_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SHARE_LOG_SUCCESS',
-      shareLog
+      result.data
     );
   }
 
@@ -442,19 +450,19 @@ export class PostsController {
     @Param('pstNo') pstNo: number,
     @Body() createData: CreatePostBookmarkDto
   ): Promise<ResponseDto<SelectPostBookmarkType>> {
-    const bookmark = await this.postsService.createPostBookmark(createData);
+    const result = await this.postsService.createPostBookmark(createData);
 
-    if (!bookmark) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_BOOKMARK_CREATE_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_BOOKMARK_CREATE_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_BOOKMARK_CREATE_SUCCESS',
-      bookmark
+      result.data
     );
   }
 
@@ -491,17 +499,17 @@ export class PostsController {
   ): Promise<ResponseDto<boolean>> {
     const result = await this.postsService.deletePostBookmark(deleteData);
 
-    if (!result) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_BOOKMARK_DELETE_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_BOOKMARK_DELETE_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_BOOKMARK_DELETE_SUCCESS',
-      result
+      result.data
     );
   }
 
@@ -538,20 +546,20 @@ export class PostsController {
       return req.errorResponse;
     }
 
-    const list = await this.postsService
+    const result = await this.postsService
       .getBookmarkedPostListByUserNo(req.user.userNo, searchData);
 
-    if (!list) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_BOOKMARK_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_BOOKMARK_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_BOOKMARK_SEARCH_SUCCESS',
-      list
+      result.data
     );
   }
 }

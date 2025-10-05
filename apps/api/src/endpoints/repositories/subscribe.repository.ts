@@ -1,11 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto } from '@/dto/subscribe.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
+import { prismaError } from '@/utils/prismaError';
+import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -17,7 +20,7 @@ export class SubscribeRepository {
    * @description 사용자 구독 정보 조회 (include 사용)
    * @param userNo 사용자 번호
    */
-  async getUserSubscribeByUserNo(userNo: number): Promise<SelectUserSbcrInfoType | null> {
+  async getUserSubscribeByUserNo(userNo: number): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
     try {
       const subscribe = await this.prisma.userSbcrInfo.findUnique({
         where: {
@@ -33,10 +36,10 @@ export class SubscribeRepository {
         },
       });
 
-      return subscribe;
+      return prismaResponse(true, subscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -48,7 +51,7 @@ export class SubscribeRepository {
   async updateUserSubscribe(
     userNo: number,
     updateData: UpdateSubscribeDto
-  ): Promise<SelectUserSbcrInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
     try {
       const updateSubscribe = await this.prisma.userSbcrInfo.update({
         where: {
@@ -69,10 +72,10 @@ export class SubscribeRepository {
         },
       });
 
-      return updateSubscribe;
+      return prismaResponse(true, updateSubscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -82,7 +85,7 @@ export class SubscribeRepository {
    * @description 전체 사용자 구독 설정 목록 조회
    * @param searchData 검색 조건
    */
-  async getSubscribeList(searchData: SearchSubscribeDto): Promise<ListType<SelectUserSbcrInfoListItemType>> {
+  async getSubscribeList(searchData: SearchSubscribeDto): Promise<RepoResponseType<ListType<SelectUserSbcrInfoListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -136,20 +139,17 @@ export class SubscribeRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return {
-        list: [],
-        totalCnt: 0,
-      };
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -161,7 +161,7 @@ export class SubscribeRepository {
   async createUserSubscribe(
     adminNo: number,
     createData: CreateSubscribeDto
-  ): Promise<SelectUserSbcrInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
     try {
       const result = await this.prisma.userSbcrInfo.create({
         data: {
@@ -184,10 +184,10 @@ export class SubscribeRepository {
         },
       });
 
-      return result;
+      return prismaResponse(true, result);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -199,7 +199,7 @@ export class SubscribeRepository {
   async multipleUpdateUserSubscribe(
     adminNo: number,
     updateData: UpdateSubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { userNoList, ...updateDataWithoutUserNoList } = updateData;
 
@@ -226,14 +226,14 @@ export class SubscribeRepository {
       const failNoList = userNoList
         .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.length,
         failCnt: failNoList.length,
         failNoList,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -245,7 +245,7 @@ export class SubscribeRepository {
   async deleteUserSubscribe(
     adminNo: number,
     sbcrNo: number
-  ): Promise<boolean> {
+  ): Promise<RepoResponseType<boolean> | null> {
     try {
       const result = await this.prisma.userSbcrInfo.update({
         where: {
@@ -261,14 +261,10 @@ export class SubscribeRepository {
         },
       });
 
-      if (result) {
-        return true;
-      }
-
-      return false;
+      return prismaResponse(true, !!result);
     }
-    catch {
-      return false;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -280,7 +276,7 @@ export class SubscribeRepository {
   async multipleDeleteUserSubscribe(
     adminNo: number,
     userNoList: number[]
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       if (!userNoList || userNoList.length === 0) {
         return null;
@@ -308,14 +304,14 @@ export class SubscribeRepository {
       const failNoList = userNoList
         .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.length,
         failCnt: failNoList.length,
         failNoList,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

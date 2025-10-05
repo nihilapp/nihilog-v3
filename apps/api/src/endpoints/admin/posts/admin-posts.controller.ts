@@ -38,6 +38,10 @@ export class AdminPostsController {
           ], ],
         ],
         [
+          '잘못된 요청',
+          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
+        ],
+        [
           '게시글 조회수 통계 조회 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'POST_VIEW_STATS_ERROR', null, ],
         ],
@@ -48,19 +52,19 @@ export class AdminPostsController {
     @Param('pstNo') pstNo: number,
     @Body() viewStatData: ViewStatDto
   ): Promise<ResponseDto<ViewStatItemType[]>> {
-    const stats = await this.postsService.getPostViewStats(pstNo, viewStatData);
+    const result = await this.postsService.getPostViewStats(pstNo, viewStatData);
 
-    if (!stats) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_VIEW_STATS_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_VIEW_STATS_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_VIEW_STATS_SUCCESS',
-      stats
+      result.data
     );
   }
 
@@ -87,6 +91,10 @@ export class AdminPostsController {
           ], ],
         ],
         [
+          '잘못된 요청',
+          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
+        ],
+        [
           '게시글 공유 통계 조회 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'POST_SHARE_STATS_ERROR', null, ],
         ],
@@ -97,19 +105,19 @@ export class AdminPostsController {
     @Param('pstNo') pstNo: number,
     @Body() viewStatData: ViewStatDto
   ): Promise<ResponseDto<SharePlatformStatItemType[]>> {
-    const stats = await this.postsService.getPostShareStatsByPlatform(pstNo, viewStatData);
+    const result = await this.postsService.getPostShareStatsByPlatform(pstNo, viewStatData);
 
-    if (!stats) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SHARE_STATS_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SHARE_STATS_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SHARE_STATS_SUCCESS',
-      stats
+      result.data
     );
   }
 
@@ -132,6 +140,10 @@ export class AdminPostsController {
           ], ],
         ],
         [
+          '잘못된 요청',
+          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
+        ],
+        [
           '전체 게시글 공유 통계 조회 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'POST_SHARE_STATS_ERROR', null, ],
         ],
@@ -139,19 +151,19 @@ export class AdminPostsController {
     },
   })
   async adminGetAllPostShareStatsByPlatform(@Body() viewStatData: ViewStatDto): Promise<ResponseDto<SharePlatformStatItemType[]>> {
-    const stats = await this.postsService.getAllPostShareStatsByPlatform(viewStatData);
+    const result = await this.postsService.getAllPostShareStatsByPlatform(viewStatData);
 
-    if (!stats) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'POST_SHARE_STATS_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'POST_SHARE_STATS_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'POST_SHARE_STATS_SUCCESS',
-      stats
+      result.data
     );
   }
 }

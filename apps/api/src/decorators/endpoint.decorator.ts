@@ -208,7 +208,42 @@ export function Endpoint({
 
   // 응답 추가 - 튜플 형식 처리
   if (options?.responses && options.responses.length > 0) {
-    const responseExamples = options.responses.reduce((acc, response) => {
+    // 기본 응답 설정 시작
+    const allResponses: ResponseConfig[] = [ ...options.responses, ];
+
+    // 인증 가드 사용 시 UNAUTHORIZED 에러 자동 추가
+    if (options?.authGuard) {
+      const hasUnauthorized = allResponses.some((r) => r[1][1] === 'UNAUTHORIZED');
+      if (!hasUnauthorized) {
+        allResponses.push([
+          '인증 실패 (Guard)',
+          [ true, 'UNAUTHORIZED', 'UNAUTHORIZED', null, ],
+        ]);
+      }
+    }
+
+    // roles 사용 시 FORBIDDEN 에러 자동 추가
+    if (options?.roles && options.roles.length > 0) {
+      const hasForbidden = allResponses.some((r) => r[1][1] === 'FORBIDDEN');
+      if (!hasForbidden) {
+        allResponses.push([
+          '권한 없음 (Guard)',
+          [ true, 'FORBIDDEN', 'PERMISSION_DENIED', null, ],
+        ]);
+      }
+    }
+
+    // DB 에러는 항상 추가 (모든 엔드포인트에서 발생 가능)
+    const hasDBError = allResponses.some((r) =>
+      r[1][2] === 'DB_CONNECTION_ERROR' || r[1][2] === 'DB_QUERY_ERROR');
+    if (!hasDBError) {
+      allResponses.push([
+        'DB 연결 에러 (Repository)',
+        [ true, 'INTERNAL_SERVER_ERROR', 'DB_CONNECTION_ERROR', null, ],
+      ]);
+    }
+
+    const responseExamples = allResponses.reduce((acc, response) => {
       const [ responseDescription, exampleArray, ] = response; // 튜플 구조분해할당
       const [ error, code, message, data, ] = exampleArray; // example 배열 구조분해할당
 

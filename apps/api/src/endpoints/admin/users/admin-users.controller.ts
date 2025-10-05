@@ -18,7 +18,7 @@ import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoListItemType, SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
-import { createExampleUser } from '@/utils/createExampleUser';
+import { CreateExample } from '@/utils/createExample';
 
 import { AdminUserService } from './admin-users.service';
 
@@ -50,7 +50,7 @@ export class AdminUserController {
             'SUCCESS',
             'USER_SEARCH_SUCCESS',
             {
-              list: [ createExampleUser('list'), ],
+              list: [ CreateExample.user('list'), ],
               totalCnt: 1,
             },
           ],
@@ -76,11 +76,11 @@ export class AdminUserController {
 
     const result = await this.usersService.getUserList(body);
 
-    if (!result) {
-      return createError('BAD_REQUEST', 'INVALID_REQUEST');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_SEARCH_ERROR');
     }
 
-    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', 'USER_SEARCH_SUCCESS', result));
+    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', 'USER_SEARCH_SUCCESS', result.data));
   }
 
   /**
@@ -101,10 +101,14 @@ export class AdminUserController {
       ],
       responses: [
         [ '사용자 조회 성공',
-          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', createExampleUser('detail'), ],
+          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user('detail'), ],
         ],
         [ '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자 조회 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_FETCH_ERROR', null, ],
         ],
       ],
     },
@@ -119,11 +123,11 @@ export class AdminUserController {
 
     const result = await this.usersService.getUserByNo(userNo);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || 'USER_NOT_FOUND');
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
 
     return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
   }
@@ -151,12 +155,16 @@ export class AdminUserController {
             false,
             'SUCCESS',
             'USER_FETCH_SUCCESS',
-            createExampleUser(),
+            CreateExample.user(),
           ],
         ],
         [
           '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자 조회 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_FETCH_ERROR', null, ],
         ],
       ],
     },
@@ -171,11 +179,11 @@ export class AdminUserController {
 
     const result = await this.usersService.getUserByNm(name);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || 'USER_NOT_FOUND');
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
 
     return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
   }
@@ -198,10 +206,14 @@ export class AdminUserController {
       ],
       responses: [
         [ '사용자 조회 성공',
-          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', createExampleUser('detail'), ],
+          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user('detail'), ],
         ],
         [ '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자 조회 실패',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_FETCH_ERROR', null, ],
         ],
       ],
     },
@@ -216,11 +228,11 @@ export class AdminUserController {
 
     const result = await this.usersService.getUserByEmail(email);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || 'USER_NOT_FOUND');
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
 
     return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
   }
@@ -241,7 +253,7 @@ export class AdminUserController {
       body: [ '사용자 생성 DTO', CreateUserDto, ],
       responses: [
         [ '사용자 생성 성공',
-          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser('detail'), ],
+          [ false, 'CREATED', 'USER_CREATE_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
           '권한 부족',
@@ -249,7 +261,7 @@ export class AdminUserController {
         ],
         [
           '이미 존재하는 이메일',
-          [ true, 'CONFLICT', 'CONFLICT_EMAIL', null, ],
+          [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
         ],
         [
           '사용자 생성 실패',
@@ -268,11 +280,11 @@ export class AdminUserController {
 
     const result = await this.usersService.createUser(req.user, createUserData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_CREATE_ERROR');
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
 
     return createResponse('CREATED', 'USER_CREATE_SUCCESS', userToReturn);
   }
@@ -302,12 +314,16 @@ export class AdminUserController {
             false,
             'SUCCESS',
             'USER_UPDATE_SUCCESS',
-            createExampleUser('detail'),
+            CreateExample.user('detail'),
           ],
         ],
         [
           '사용자를 찾을 수 없음',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자명 중복',
+          [ true, 'CONFLICT', 'USER_NAME_EXISTS', null, ],
         ],
         [
           '사용자 수정 실패',
@@ -327,11 +343,11 @@ export class AdminUserController {
 
     const result = await this.usersService.updateUser(req.user.userNo, userNo, updateUserData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_UPDATE_ERROR');
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
 
     return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', userToReturn);
   }
@@ -362,6 +378,10 @@ export class AdminUserController {
           }, ],
         ],
         [
+          '잘못된 요청',
+          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
+        ],
+        [
           '사용자 수정 실패',
           [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
         ],
@@ -378,11 +398,11 @@ export class AdminUserController {
 
     const result = await this.usersService.multipleUpdateUser(req.user.userNo, updateUserDto);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_UPDATE_ERROR');
     }
 
-    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -434,11 +454,11 @@ export class AdminUserController {
       userNo
     );
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_DELETE_ERROR');
     }
 
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result.data);
   }
 
   /**
@@ -458,11 +478,19 @@ export class AdminUserController {
       responses: [
         [
           '다수 사용자 삭제 성공',
-          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', true, ],
+          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', {
+            successCnt: 1,
+            failCnt: 0,
+            failNoList: [],
+          }, ],
+        ],
+        [
+          '잘못된 요청',
+          [ true, 'BAD_REQUEST', 'INVALID_REQUEST', null, ],
         ],
         [
           '사용자 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', false, ],
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
         ],
         [
           '권한 부족',
@@ -481,10 +509,10 @@ export class AdminUserController {
 
     const result = await this.usersService.adminMultipleDeleteUser(req.user.userNo, body.userNoList);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_DELETE_ERROR');
     }
 
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result.data);
   }
 }

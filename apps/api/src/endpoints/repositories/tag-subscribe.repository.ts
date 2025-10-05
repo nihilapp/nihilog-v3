@@ -1,14 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, type TagSbcrMpng } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectTagSbcrMpngListItemType,
   SelectTagSbcrMpngType
 } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
+import { prismaError } from '@/utils/prismaError';
+import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -20,7 +23,7 @@ export class TagSubscribeRepository {
    * @description 태그 구독 전체 이력 조회
    * @param searchData 검색 데이터
    */
-  async getTagSubscribeList(searchData: SearchTagSubscribeDto): Promise<ListType<SelectTagSbcrMpngListItemType>> {
+  async getTagSubscribeList(searchData: SearchTagSubscribeDto): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -71,17 +74,17 @@ export class TagSubscribeRepository {
         this.prisma.tagSbcrMpng.count({ where, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -89,7 +92,7 @@ export class TagSubscribeRepository {
    * @description 태그 구독 번호로 태그 구독 조회
    * @param tagSbcrNo 태그 구독 번호
    */
-  async getTagSubscribeByTagSbcrNo(tagSbcrNo: number): Promise<SelectTagSbcrMpngType | null> {
+  async getTagSubscribeByTagSbcrNo(tagSbcrNo: number): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
     try {
       const subscribe = await this.prisma.tagSbcrMpng.findUnique({
         where: {
@@ -104,10 +107,10 @@ export class TagSubscribeRepository {
         },
       });
 
-      return subscribe;
+      return prismaResponse(true, subscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -115,7 +118,7 @@ export class TagSubscribeRepository {
    * @description 구독 태그 목록 조회
    * @param sbcrNo 구독 번호
    */
-  async getTagSubscribeItemListBySbcrNo(sbcrNo: number): Promise<SelectTagSbcrMpngType[]> {
+  async getTagSubscribeItemListBySbcrNo(sbcrNo: number): Promise<RepoResponseType<SelectTagSbcrMpngType[]> | null> {
     try {
       const itemList = await this.prisma.tagSbcrMpng.findMany({
         where: {
@@ -139,10 +142,10 @@ export class TagSubscribeRepository {
         },
       });
 
-      return itemList;
+      return prismaResponse(true, itemList);
     }
-    catch {
-      return [];
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -154,7 +157,7 @@ export class TagSubscribeRepository {
   async getTagSubscribeByUserNo(
     userNo: number,
     searchData: SearchTagSubscribeDto
-  ): Promise<ListType<SelectTagSbcrMpngListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -214,17 +217,17 @@ export class TagSubscribeRepository {
         this.prisma.tagSbcrMpng.count({ where, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -236,7 +239,7 @@ export class TagSubscribeRepository {
   async getTagSubscribeByTagNo(
     tagNo: number,
     searchData: SearchTagSubscribeDto
-  ): Promise<ListType<SelectTagSbcrMpngListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
@@ -288,17 +291,17 @@ export class TagSubscribeRepository {
         this.prisma.tagSbcrMpng.count({ where, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -310,7 +313,7 @@ export class TagSubscribeRepository {
   async createTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<SelectTagSbcrMpngType | null> {
+  ): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
     try {
       const { tagNo, sbcrNo, } = createData;
 
@@ -334,10 +337,10 @@ export class TagSubscribeRepository {
         },
       });
 
-      return createSubscribe;
+      return prismaResponse(true, createSubscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -349,7 +352,7 @@ export class TagSubscribeRepository {
   async multipleCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { tagNoList, sbcrNo, } = createData;
 
@@ -382,14 +385,14 @@ export class TagSubscribeRepository {
           },
         })));
 
-      return {
+      return prismaResponse(true, {
         successCnt: subscribeList.length,
         failCnt: tagNoList.length - subscribeList.length,
         failNoList: [],
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -401,7 +404,7 @@ export class TagSubscribeRepository {
   async updateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<TagSbcrMpng | null> {
+  ): Promise<RepoResponseType<TagSbcrMpng> | null> {
     try {
       const { tagSbcrNo, useYn, delYn, } = updateData;
 
@@ -417,10 +420,10 @@ export class TagSubscribeRepository {
         },
       });
 
-      return updateSubscribe;
+      return prismaResponse(true, updateSubscribe);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -432,7 +435,7 @@ export class TagSubscribeRepository {
   async multipleUpdateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { useYn, delYn, tagSbcrNoList, sbcrNo, } = updateData;
 
@@ -456,14 +459,14 @@ export class TagSubscribeRepository {
         },
       });
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.count,
         failCnt: tagSbcrNoList.length - result.count,
         failNoList: [],
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -475,7 +478,7 @@ export class TagSubscribeRepository {
   async deleteTagSubscribe(
     userNo: number,
     tagSbcrNo: number
-  ): Promise<boolean> {
+  ): Promise<RepoResponseType<boolean> | null> {
     try {
       const result = await this.prisma.tagSbcrMpng.updateMany({
         where: {
@@ -493,14 +496,10 @@ export class TagSubscribeRepository {
         },
       });
 
-      if (result) {
-        return true;
-      }
-
-      return false;
+      return prismaResponse(true, !!result);
     }
-    catch {
-      return false;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -512,7 +511,7 @@ export class TagSubscribeRepository {
   async multipleDeleteTagSubscribe(
     userNo: number,
     updateData: DeleteTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
       const { tagSbcrNoList, } = updateData;
 
@@ -537,14 +536,14 @@ export class TagSubscribeRepository {
 
       const failNoList = tagSbcrNoList.filter((item) => !result.some((resultItem) => resultItem.tagSbcrNo === item));
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.length,
         failCnt: tagSbcrNoList.length - result.length,
         failNoList,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

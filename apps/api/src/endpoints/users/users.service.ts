@@ -5,10 +5,12 @@ import type { CreateUserDto } from '@/dto';
 import type { UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
+import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType } from '@/endpoints/prisma/types/subscribe.types';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class UserService {
@@ -21,46 +23,36 @@ export class UserService {
    * @description 현재 로그인한 사용자의 프로필 정보를 조회합니다.
    * @param user 현재 로그인한 사용자의 정보
    */
-  async getUserProfile(user: JwtPayload): Promise<SelectUserInfoType | null> {
-    try {
-      return this.userRepository.getUserByNo(user.userNo);
-    }
-    catch {
-      return null;
-    }
+  async getUserProfile(user: JwtPayload): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    return this.userRepository.getUserByNo(user.userNo);
   }
 
   /**
    * @description 현재 로그인한 사용자의 구독 정보를 조회합니다.
    * @param user 현재 로그인한 사용자의 정보
    */
-  async getUserSubscribeByUserNo(user: JwtPayload): Promise<SelectUserSbcrInfoType | null> {
-    try {
-      return this.subscribeRepository.getUserSubscribeByUserNo(user.userNo);
-    }
-    catch {
-      return null;
-    }
+  async getUserSubscribeByUserNo(user: JwtPayload): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
+    return this.subscribeRepository.getUserSubscribeByUserNo(user.userNo);
   }
 
   /**
    * @description 사용자 계정 생성
    * @param createUserDto 사용자 계정 생성 정보
    */
-  async createUser(createUserDto: CreateUserDto): Promise<SelectUserInfoType | null> {
+  async createUser(createUserDto: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
+
+    if (findUser?.data) {
+      return prismaResponse(false, null, 'CONFLICT', 'EMAIL_IN_USE');
+    }
+
     try {
-      const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
-
-      if (findUser) {
-        return null;
-      }
-
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
       return this.userRepository.createUser(null, createUserDto, hashedPassword);
     }
     catch {
-      return null;
+      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
     }
   }
 
@@ -69,28 +61,26 @@ export class UserService {
    * @param user 현재 로그인한 사용자의 정보
    * @param updateData 수정할 프로필 정보
    */
-  async updateUserProfile(user: JwtPayload, updateData: UpdateUserDto): Promise<SelectUserInfoType | null> {
-    try {
-      const findUser = await this.userRepository.getUserByNo(user.userNo);
+  async updateUserProfile(
+    user: JwtPayload,
+    updateData: UpdateUserDto
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
 
-      if (!findUser) {
-        return null;
-      }
-
-      // 사용자명 변경 시 중복 확인
-      if (updateData.userNm) {
-        const existingUser = await this.userRepository.getUserByName(updateData.userNm);
-
-        if (existingUser && existingUser.userNo !== user.userNo) {
-          return null;
-        }
-      }
-
-      return this.userRepository.updateUser(user.userNo, user.userNo, updateData);
+    if (!findUser?.success) {
+      return findUser; // Repository 에러를 그대로 전달
     }
-    catch {
-      return null;
+
+    // 사용자명 변경 시 중복 확인
+    if (updateData.userNm) {
+      const existingUser = await this.userRepository.getUserByName(updateData.userNm);
+
+      if (existingUser?.success && existingUser.data && existingUser.data.userNo !== user.userNo) {
+        return prismaResponse(false, null, 'CONFLICT', 'USER_NAME_EXISTS');
+      }
     }
+
+    return this.userRepository.updateUser(user.userNo, user.userNo, updateData);
   }
 
   /**
@@ -101,38 +91,28 @@ export class UserService {
   async updateUserSubscribe(
     user: JwtPayload,
     updateData: UpdateSubscribeDto
-  ): Promise<SelectUserSbcrInfoType | null> {
-    try {
-      const findUser = await this.userRepository.getUserByNo(user.userNo);
+  ): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
 
-      // 사용자가 존재하지 않으면 에러
-      if (!findUser) {
-        return null;
-      }
+    // 사용자가 존재하지 않으면 에러
+    if (!findUser?.success) {
+      return prismaResponse(false, null, findUser?.error?.code, findUser?.error?.message);
+    }
 
-      return this.subscribeRepository.updateUserSubscribe(user.userNo, updateData);
-    }
-    catch {
-      return null;
-    }
+    return this.subscribeRepository.updateUserSubscribe(user.userNo, updateData);
   }
 
   /**
    * @description 현재 로그인한 사용자의 프로필 정보를 삭제합니다.
    * @param user 현재 로그인한 사용자의 정보
    */
-  async deleteUserProfile(user: JwtPayload): Promise<boolean> {
-    try {
-      const findUser = await this.userRepository.getUserByNo(user.userNo);
+  async deleteUserProfile(user: JwtPayload): Promise<RepoResponseType<boolean> | null> {
+    const findUser = await this.userRepository.getUserByNo(user.userNo);
 
-      if (!findUser) {
-        return false;
-      }
+    if (!findUser?.success) {
+      return prismaResponse(false, null, findUser?.error?.code, findUser?.error?.message);
+    }
 
-      return this.userRepository.deleteUser(user.userNo, user.userNo);
-    }
-    catch {
-      return false;
-    }
+    return this.userRepository.deleteUser(user.userNo, user.userNo);
   }
 }

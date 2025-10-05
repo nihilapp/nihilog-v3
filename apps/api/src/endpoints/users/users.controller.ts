@@ -14,8 +14,7 @@ import type { SelectUserSbcrInfoType } from '@/endpoints/prisma/types/subscribe.
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserService } from '@/endpoints/users/users.service';
 import { createError, createResponse, removeSensitiveInfo } from '@/utils';
-import { createExampleSubscribe } from '@/utils/createExampleSubscribe';
-import { createExampleUser } from '@/utils/createExampleUser';
+import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('users')
 @Controller('users')
@@ -37,10 +36,10 @@ export class UserController {
       responses: [
         [
           '프로필 조회 성공',
-          [ false, 'SUCCESS', 'PROFILE_GET_SUCCESS', createExampleUser('detail'), ],
+          [ false, 'SUCCESS', 'PROFILE_GET_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
-          '프로필 조회 실패',
+          '사용자를 찾을 수 없음 (Repository)',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
         ],
       ],
@@ -53,11 +52,14 @@ export class UserController {
 
     const result = await this.userService.getUserProfile(req.user);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'USER_NOT_FOUND'
+      );
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
     return createResponse('SUCCESS', 'PROFILE_GET_SUCCESS', userToReturn);
   }
 
@@ -75,10 +77,10 @@ export class UserController {
       responses: [
         [
           '구독 설정 조회 성공',
-          [ false, 'SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', createExampleSubscribe('detail'), ],
+          [ false, 'SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', CreateExample.subscribe('detail'), ],
         ],
         [
-          '구독 설정 조회 실패',
+          '구독 설정을 찾을 수 없음 (Repository)',
           [ true, 'NOT_FOUND', 'SUBSCRIBE_NOT_FOUND', null, ],
         ],
       ],
@@ -91,11 +93,14 @@ export class UserController {
 
     const result = await this.userService.getUserSubscribeByUserNo(req.user);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'SUBSCRIBE_NOT_FOUND'
+      );
     }
 
-    return createResponse('SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', result);
+    return createResponse('SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', result.data);
   }
 
   /**
@@ -114,11 +119,15 @@ export class UserController {
       responses: [
         [
           '사용자 생성 성공',
-          [ false, 'CREATED', 'USER_CREATE_SUCCESS', createExampleUser('detail'), ],
+          [ false, 'CREATED', 'USER_CREATE_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
-          '이메일 중복',
+          '이메일 중복 (Service)',
           [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
+        ],
+        [
+          '사용자 생성 실패 (Service)',
+          [ true, 'INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR', null, ],
         ],
       ],
     },
@@ -126,11 +135,14 @@ export class UserController {
   async createUser(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     const result = await this.userService.createUser(createUserData);
 
-    if (!result) {
-      return createError('CONFLICT', 'EMAIL_IN_USE');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'CONFLICT',
+        result?.error?.message || 'EMAIL_IN_USE'
+      );
     }
 
-    return createResponse('CREATED', 'USER_CREATE_SUCCESS', result);
+    return createResponse('CREATED', 'USER_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -149,11 +161,15 @@ export class UserController {
       responses: [
         [
           '프로필 수정 성공',
-          [ false, 'SUCCESS', 'USER_UPDATE_SUCCESS', createExampleUser('detail'), ],
+          [ false, 'SUCCESS', 'USER_UPDATE_SUCCESS', CreateExample.user('detail'), ],
         ],
         [
-          '프로필 수정 실패',
+          '사용자를 찾을 수 없음 (Repository)',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '사용자명 중복 (Service)',
+          [ true, 'CONFLICT', 'USER_NAME_EXISTS', null, ],
         ],
       ],
     },
@@ -168,11 +184,14 @@ export class UserController {
 
     const result = await this.userService.updateUserProfile(req.user, updateData);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'USER_NOT_FOUND'
+      );
     }
 
-    const userToReturn = removeSensitiveInfo(result);
+    const userToReturn = removeSensitiveInfo(result.data);
     return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', userToReturn);
   }
 
@@ -193,10 +212,14 @@ export class UserController {
       responses: [
         [
           '구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', createExampleSubscribe('detail'), ],
+          [ false, 'SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', CreateExample.subscribe('detail'), ],
         ],
         [
-          '구독 설정을 찾을 수 없음',
+          '사용자를 찾을 수 없음 (Repository)',
+          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
+        ],
+        [
+          '구독 설정을 찾을 수 없음 (Repository)',
           [ true, 'NOT_FOUND', 'SUBSCRIBE_NOT_FOUND', null, ],
         ],
       ],
@@ -212,11 +235,14 @@ export class UserController {
 
     const result = await this.userService.updateUserSubscribe(req.user, updateData);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'SUBSCRIBE_NOT_FOUND'
+      );
     }
 
-    return createResponse('SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -237,7 +263,7 @@ export class UserController {
           [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', true, ],
         ],
         [
-          '프로필 삭제 실패',
+          '사용자를 찾을 수 없음 (Repository)',
           [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
         ],
       ],
@@ -250,10 +276,13 @@ export class UserController {
 
     const result = await this.userService.deleteUserProfile(req.user);
 
-    if (!result) {
-      return createError('NOT_FOUND', 'USER_NOT_FOUND');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || 'USER_NOT_FOUND'
+      );
     }
 
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result.data);
   }
 }

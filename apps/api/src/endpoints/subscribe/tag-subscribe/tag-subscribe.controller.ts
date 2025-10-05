@@ -8,11 +8,11 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type TagSubscribeDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
+import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, type CreateTagSubscribeDto, type UpdateTagSubscribeDto, type DeleteTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { createError, createResponse } from '@/utils';
-import { createExampleTagSubscribe } from '@/utils/createExampleTagSubscribe';
+import { CreateExample } from '@/utils/createExample';
 
 import { TagSubscribeService } from './tag-subscribe.service';
 
@@ -37,7 +37,7 @@ export class TagSubscribeController {
         [
           '태그 구독 목록 조회 성공',
           [ false, 'SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', [
-            createExampleTagSubscribe('list'),
+            CreateExample.tagSubscribe('list'),
           ], ],
         ],
         [
@@ -49,19 +49,22 @@ export class TagSubscribeController {
   })
   async getTagSubscribeList(
     @Req() req: AuthRequest,
-    @Body() body: SearchTagSubscribeDto & Partial<TagSubscribeDto>
+    @Body() body: SearchTagSubscribeDto
   ): Promise<ResponseDto<ListType<SelectTagSbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    try {
-      const result = await this.tagSubscribeService.getTagSubscribeList(body);
-      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result);
+    const result = await this.tagSubscribeService.getTagSubscribeList(body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_SEARCH_ERROR'
+      );
     }
-    catch {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR');
-    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result.data);
   }
 
   /**
@@ -80,7 +83,7 @@ export class TagSubscribeController {
       responses: [
         [
           '태그 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', createExampleTagSubscribe('detail'), ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', CreateExample.tagSubscribe('detail'), ],
         ],
         [
           '태그 구독 상태 조회 실패',
@@ -92,19 +95,22 @@ export class TagSubscribeController {
   async getTagSubscribeByTagNo(
     @Req() req: AuthRequest,
     @Param('tagNo', ParseIntPipe) tagNo: number,
-    @Body() body: SearchTagSubscribeDto & Partial<TagSubscribeDto>
+    @Body() body: SearchTagSubscribeDto
   ): Promise<ResponseDto<ListType<SelectTagSbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    try {
-      const result = await this.tagSubscribeService.getTagSubscribeByTagNo(tagNo, body);
-      return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result);
+    const result = await this.tagSubscribeService.getTagSubscribeByTagNo(tagNo, body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_SEARCH_ERROR'
+      );
     }
-    catch {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR');
-    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result.data);
   }
 
   /**
@@ -123,7 +129,7 @@ export class TagSubscribeController {
       responses: [
         [
           '태그 구독 설정 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', createExampleTagSubscribe('detail'), ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', CreateExample.tagSubscribe('detail'), ],
         ],
         [
           '태그 구독 설정 실패',
@@ -143,11 +149,14 @@ export class TagSubscribeController {
 
     const result = await this.tagSubscribeService.createTagSubscribe(req.user.userNo, { ...body, tagNo, });
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -167,7 +176,7 @@ export class TagSubscribeController {
       responses: [
         [
           '다수 태그 구독 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ createExampleTagSubscribe('detail'), ], ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ CreateExample.tagSubscribe('detail'), ], ],
         ],
         [
           '다수 태그 구독 실패',
@@ -186,11 +195,14 @@ export class TagSubscribeController {
 
     const result = await this.tagSubscribeService.multipleCreateTagSubscribe(req.user.userNo, body);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -210,7 +222,7 @@ export class TagSubscribeController {
       responses: [
         [
           '다수 태그 구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ createExampleTagSubscribe('detail'), ], ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ CreateExample.tagSubscribe('detail'), ], ],
         ],
         [
           '다수 태그 구독 설정 변경 실패',
@@ -229,11 +241,14 @@ export class TagSubscribeController {
 
     const result = await this.tagSubscribeService.multipleUpdateTagSubscribe(req.user.userNo, body);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -271,11 +286,14 @@ export class TagSubscribeController {
 
     const result = await this.tagSubscribeService.deleteTagSubscribe(req.user.userNo, tagSbcrNo);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result.data);
   }
 
   /**
@@ -295,7 +313,7 @@ export class TagSubscribeController {
       responses: [
         [
           '다수 태그 구독 해제 성공',
-          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', [ createExampleTagSubscribe('detail'), ], ],
+          [ false, 'SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', [ CreateExample.tagSubscribe('detail'), ], ],
         ],
         [
           '다수 태그 구독 해제 실패',
@@ -314,10 +332,13 @@ export class TagSubscribeController {
 
     const result = await this.tagSubscribeService.multipleDeleteTagSubscribe(req.user.userNo, body);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
   }
 }

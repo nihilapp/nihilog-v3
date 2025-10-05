@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { SearchPostDto } from '@/dto';
 import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectPostBookmarkListItemType,
   SelectPostBookmarkType,
@@ -22,7 +22,7 @@ export class PostsService {
    * @description 게시글 목록 조회
    * @param searchData 검색 조건
    */
-  async getPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     return this.postRepository.getPostList(searchData);
   }
 
@@ -30,7 +30,7 @@ export class PostsService {
    * @description 게시글 상세 조회
    * @param pstNo 게시글 번호
    */
-  async getPostByPstNo(pstNo: number): Promise<SelectPostInfoType | null> {
+  async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostInfoType> | null> {
     return this.postRepository.getPostByPstNo(pstNo);
   }
 
@@ -38,7 +38,7 @@ export class PostsService {
    * @description 게시글 상세 조회
    * @param pstCd 게시글 슬러그
    */
-  async getPostByPstCd(pstCd: string): Promise<SelectPostInfoType | null> {
+  async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostInfoType> | null> {
     return this.postRepository.getPostByPstCd(pstCd);
   }
 
@@ -47,7 +47,7 @@ export class PostsService {
    * @param tagNo 태그 번호
    * @param searchData 검색 조건
    */
-  async getPostListByTagNo(tagNo: number, searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getPostListByTagNo(tagNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     return this.postRepository.getPostListByTagNo(tagNo, searchData);
   }
 
@@ -56,7 +56,7 @@ export class PostsService {
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 조건
    */
-  async getPostListByCtgryNo(ctgryNo: number, searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getPostListByCtgryNo(ctgryNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     return this.postRepository.getPostListByCtgryNo(ctgryNo, searchData);
   }
 
@@ -65,7 +65,7 @@ export class PostsService {
    * @param date 날짜(yyyyMM)
    * @param searchData 검색 조건
    */
-  async getPostListFromArchive(date: string, searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getPostListFromArchive(date: string, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     return this.postRepository.getPostListFromArchive(date, searchData);
   }
 
@@ -73,7 +73,7 @@ export class PostsService {
    * @description 고급 검색을 통한 게시글 목록 조회
    * @param searchData 고급 검색 조건
    */
-  async getAdvancedPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     return this.postRepository.getAdvancedPostList(searchData);
   }
 
@@ -82,7 +82,7 @@ export class PostsService {
    * @param pstNo 게시글 번호
    * @param ip 사용자 IP
    */
-  async createPostViewLog(pstNo: number, ip: string): Promise<SelectPostViewLogType | null> {
+  async createPostViewLog(pstNo: number, ip: string): Promise<RepoResponseType<SelectPostViewLogType> | null> {
     return this.postRepository.createPostViewLog(pstNo, ip);
   }
 
@@ -90,7 +90,7 @@ export class PostsService {
    * @description 게시글 공유 로그 기록
    * @param createData 공유 로그 생성 데이터
    */
-  async createPostShareLog(createData: CreatePostShareLogDto): Promise<SelectPostShareLogType | null> {
+  async createPostShareLog(createData: CreatePostShareLogDto): Promise<RepoResponseType<SelectPostShareLogType> | null> {
     return this.postRepository.createPostShareLog(createData);
   }
 
@@ -98,7 +98,7 @@ export class PostsService {
    * @description 게시글 북마크 생성
    * @param createData 북마크 생성 데이터
    */
-  async createPostBookmark(createData: CreatePostBookmarkDto): Promise<SelectPostBookmarkType | null> {
+  async createPostBookmark(createData: CreatePostBookmarkDto): Promise<RepoResponseType<SelectPostBookmarkType> | null> {
     return this.postRepository.createPostBookmark(createData);
   }
 
@@ -106,7 +106,7 @@ export class PostsService {
    * @description 게시글 북마크 삭제
    * @param deleteData 북마크 삭제 데이터
    */
-  async deletePostBookmark(deleteData: DeletePostBookmarkDto): Promise<boolean> {
+  async deletePostBookmark(deleteData: DeletePostBookmarkDto): Promise<RepoResponseType<boolean> | null> {
     return this.postRepository.deletePostBookmark(deleteData);
   }
 
@@ -118,7 +118,7 @@ export class PostsService {
   async getBookmarkedPostListByUserNo(
     userNo: number,
     searchData: SearchPostBookmarkDto
-  ): Promise<ListType<SelectPostBookmarkListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectPostBookmarkListItemType>> | null> {
     return this.postRepository.getBookmarkedPostListByUserNo(userNo, searchData);
   }
 }

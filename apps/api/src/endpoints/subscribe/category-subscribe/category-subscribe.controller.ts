@@ -8,11 +8,11 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CategorySubscribeDto, type CreateCategorySubscribeDto, type UpdateCategorySubscribeDto, type DeleteCategorySubscribeDto } from '@/dto';
+import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, type CreateCategorySubscribeDto, type UpdateCategorySubscribeDto, type DeleteCategorySubscribeDto } from '@/dto';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
+import { CreateExample } from '@/utils/createExample';
 
 import { CategorySubscribeService } from './category-subscribe.service';
 
@@ -37,7 +37,7 @@ export class CategorySubscribeController {
         [
           '카테고리 구독 목록 조회 성공',
           [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', [
-            createExampleCategorySubscribe('list'),
+            CreateExample.categorySubscribe('list'),
           ], ],
         ],
         [
@@ -49,19 +49,22 @@ export class CategorySubscribeController {
   })
   async getCategorySubscribeList(
     @Req() req: AuthRequest,
-    @Body() body: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
+    @Body() body: SearchCategorySubscribeDto
   ): Promise<ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    try {
-      const result = await this.categorySubscribeService.getCategorySubscribeList(body);
-      return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result);
+    const result = await this.categorySubscribeService.getCategorySubscribeList(body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'
+      );
     }
-    catch {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
-    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result.data);
   }
 
   /**
@@ -80,7 +83,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', createExampleCategorySubscribe('detail'), ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', CreateExample.categorySubscribe('detail'), ],
         ],
         [
           '카테고리 구독 상태 조회 실패',
@@ -92,19 +95,22 @@ export class CategorySubscribeController {
   async getCategorySubscribeByCtgryNo(
     @Req() req: AuthRequest,
     @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
-    @Body() body: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
+    @Body() body: SearchCategorySubscribeDto
   ): Promise<ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    try {
-      const result = await this.categorySubscribeService.getCategorySubscribeByCtgryNo(ctgryNo, body);
-      return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result);
+    const result = await this.categorySubscribeService.getCategorySubscribeByCtgryNo(ctgryNo, body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'
+      );
     }
-    catch {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
-    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result.data);
   }
 
   /**
@@ -123,7 +129,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '카테고리 구독 설정 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', createExampleCategorySubscribe('detail'), ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', CreateExample.categorySubscribe('detail'), ],
         ],
         [
           '카테고리 구독 설정 실패',
@@ -143,11 +149,14 @@ export class CategorySubscribeController {
 
     const result = await this.categorySubscribeService.createCategorySubscribe(req.user.userNo, { ...body, ctgryNo, });
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -167,7 +176,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '다수 카테고리 구독 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ createExampleCategorySubscribe('detail'), ], ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ CreateExample.categorySubscribe('detail'), ], ],
         ],
         [
           '다수 카테고리 구독 실패',
@@ -186,11 +195,14 @@ export class CategorySubscribeController {
 
     const result = await this.categorySubscribeService.multipleCreateCategorySubscribe(req.user.userNo, body);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -210,7 +222,7 @@ export class CategorySubscribeController {
       responses: [
         [
           '다수 카테고리 구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ createExampleCategorySubscribe('detail'), ], ],
+          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ CreateExample.categorySubscribe('detail'), ], ],
         ],
         [
           '다수 카테고리 구독 설정 변경 실패',
@@ -229,11 +241,14 @@ export class CategorySubscribeController {
 
     const result = await this.categorySubscribeService.multipleUpdateCategorySubscribe(req.user.userNo, body);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -271,11 +286,14 @@ export class CategorySubscribeController {
 
     const result = await this.categorySubscribeService.deleteCategorySubscribe(req.user.userNo, ctgrySbcrNo);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result.data);
   }
 
   /**
@@ -314,10 +332,13 @@ export class CategorySubscribeController {
 
     const result = await this.categorySubscribeService.multipleDeleteCategorySubscribe(req.user.userNo, body);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
   }
 }

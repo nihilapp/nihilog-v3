@@ -8,7 +8,7 @@ import type {
   UpdateCategorySubscribeDto
 } from '@/dto/category-subscribe.dto';
 import type { SelectCtgrySbcrMpngListItemType } from '@/endpoints/prisma/types/category-subscribe.types';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 
 @Injectable()
@@ -19,11 +19,8 @@ export class AdminCategorySubscribeService {
    * @description 카테고리 구독 전체 목록 조회
    * @param searchData 검색 데이터
    */
-  async adminGetCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
-    const result = await this.categorySubscribeRepository
-      .getCategorySubscribeList(searchData);
-
-    return result;
+  async adminGetCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
+    return this.categorySubscribeRepository.getCategorySubscribeList(searchData);
   }
 
   /**
@@ -34,11 +31,8 @@ export class AdminCategorySubscribeService {
   async adminGetCategorySubscribeByCtgryNo(
     ctgryNo: number,
     searchData: SearchCategorySubscribeDto
-  ): Promise<ListType<SelectCtgrySbcrMpngListItemType>> {
-    const result = await this.categorySubscribeRepository
-      .getCategorySubscribeByCtgryNo(ctgryNo, searchData);
-
-    return result;
+  ): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
+    return this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, searchData);
   }
 
   /**
@@ -49,13 +43,8 @@ export class AdminCategorySubscribeService {
   async adminCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<CtgrySbcrMpng | null> {
-    try {
-      return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<CtgrySbcrMpng> | null> {
+    return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
   }
 
   /**
@@ -66,13 +55,8 @@ export class AdminCategorySubscribeService {
   async adminMultipleCreateCategorySubscribe(
     userNo: number,
     createData: CreateCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      return this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
   }
 
   /**
@@ -83,19 +67,14 @@ export class AdminCategorySubscribeService {
   async adminUpdateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<CtgrySbcrMpng | null> {
-    try {
-      const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
+  ): Promise<RepoResponseType<CtgrySbcrMpng> | null> {
+    const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
 
-      if (!subscribe) {
-        return null;
-      }
+    if (!subscribe?.success) {
+      return subscribe;
+    }
 
-      return this.categorySubscribeRepository.updateCategorySubscribe(userNo, updateData);
-    }
-    catch {
-      return null;
-    }
+    return this.categorySubscribeRepository.updateCategorySubscribe(userNo, updateData);
   }
 
   /**
@@ -106,13 +85,8 @@ export class AdminCategorySubscribeService {
   async adminMultipleUpdateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      return this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
   }
 
   /**
@@ -123,13 +97,8 @@ export class AdminCategorySubscribeService {
   async adminDeleteCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<boolean> {
-    try {
-      return this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData.ctgrySbcrNo);
-    }
-    catch {
-      return false;
-    }
+  ): Promise<RepoResponseType<boolean> | null> {
+    return this.categorySubscribeRepository.deleteCategorySubscribe(userNo, updateData.ctgrySbcrNo);
   }
 
   /**
@@ -140,12 +109,7 @@ export class AdminCategorySubscribeService {
   async adminMultipleDeleteCategorySubscribe(
     userNo: number,
     deleteData: DeleteCategorySubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      return this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
   }
 }

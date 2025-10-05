@@ -10,8 +10,10 @@ import cloneDeep from 'lodash/cloneDeep';
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { AdminUserService } from '@/endpoints/admin/users/admin-users.service';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
+import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
 
 // JWT Payload 타입 정의
@@ -43,39 +45,41 @@ export class AuthService {
    * @description 현재 세션 조회
    * @param userNo 사용자 번호
    */
-  async session(userNo: number): Promise<SelectUserInfoType | null> {
-    const user = await this.userRepository.getUserByNo(userNo);
+  async session(userNo: number): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    const result = await this.userRepository.getUserByNo(userNo);
 
-    if (!user) {
-      return null;
+    if (!result?.success) {
+      return prismaResponse(false, null, 'UNAUTHORIZED', 'AUTH_NOT_FOUND');
     }
 
-    const userToReturn = cloneDeep(user);
+    const userToReturn = cloneDeep(result.data);
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return userToReturn;
+    return prismaResponse(true, userToReturn);
   }
 
   /**
    * @description 사용자 로그인
    * @param signInData 로그인 정보
    */
-  async signIn(signInData: SignInDto): Promise<SignInResponseType | null> {
+  async signIn(signInData: SignInDto): Promise<RepoResponseType<SignInResponseType> | null> {
     const { emlAddr, password, } = signInData;
 
     // 사용자 조회
-    const user = await this.userRepository.getUserByEmail(emlAddr);
+    const userResult = await this.userRepository.getUserByEmail(emlAddr);
 
-    if (!user) {
-      return null;
+    if (!userResult?.success) {
+      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_CREDENTIALS');
     }
+
+    const user = userResult.data;
 
     // 비밀번호 검증
     const isPasswordMatching = await bcrypt.compare(password, user.encptPswd);
 
     if (!isPasswordMatching) {
-      return null;
+      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_CREDENTIALS');
     }
 
     // JWT 페이로드 생성
@@ -99,7 +103,7 @@ export class AuthService {
     ]);
 
     // 리프레시 토큰과 마지막 로그인 시간 업데이트
-    await this.userRepository.updateUser(
+    const updateResult = await this.userRepository.updateUser(
       user.userNo,
       user.userNo,
       {
@@ -107,6 +111,10 @@ export class AuthService {
         lastLgnDt: timeToString(),
       }
     );
+
+    if (!updateResult?.success) {
+      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+    }
 
     // AccessToken 만료시간 계산
     const accessTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000).getTime();
@@ -116,21 +124,21 @@ export class AuthService {
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return {
+    return prismaResponse(true, {
       user: userToReturn,
       acsToken,
       reshToken,
       accessTokenExpiresAt,
-    };
+    });
   }
 
   /**
    * @description 액세스 토큰 재발급
    * @param token 리프레시 토큰
    */
-  async refresh(token: string): Promise<SignInResponseType | null> {
+  async refresh(token: string): Promise<RepoResponseType<SignInResponseType> | null> {
     if (!token) {
-      return null;
+      return prismaResponse(false, null, 'UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND');
     }
 
     try {
@@ -138,12 +146,13 @@ export class AuthService {
         secret: this.env.get('jwt.refresh.secret'),
       });
 
-      const user = await this.usersService.getUserByNo(payload.userNo);
+      const userResult = await this.usersService.getUserByNo(payload.userNo);
 
-      if (!user || user.reshToken !== token) {
-        return null;
+      if (!userResult?.success || userResult.data.reshToken !== token) {
+        return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
       }
 
+      const user = userResult.data;
       const newPayload: JwtPayload = {
         userNo: user.userNo,
         emlAddr: user.emlAddr,
@@ -161,11 +170,15 @@ export class AuthService {
         }),
       ]);
 
-      await this.userRepository.updateUser(
+      const updateResult = await this.userRepository.updateUser(
         user.userNo,
         user.userNo,
         { reshToken: newReshToken, }
       );
+
+      if (!updateResult?.success) {
+        return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+      }
 
       // AccessToken 만료시간 계산
       const accessTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000).getTime();
@@ -174,15 +187,15 @@ export class AuthService {
       userToReturn.encptPswd = null;
       userToReturn.reshToken = null;
 
-      return {
+      return prismaResponse(true, {
         user: userToReturn,
         acsToken: newAcsToken,
         reshToken: newReshToken,
         accessTokenExpiresAt,
-      };
+      });
     }
     catch {
-      return null;
+      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
     }
   }
 
@@ -190,13 +203,13 @@ export class AuthService {
    * @description 일반 사용자 회원가입
    * @param createUserData 회원가입 정보
    */
-  async signUp(user: null, createUserData: CreateUserDto): Promise<SelectUserInfoType | null> {
+  async signUp(user: null, createUserData: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const { emlAddr, password, } = createUserData;
 
     // 이메일 중복 체크
     const existingUser = await this.userRepository.getUserByEmail(emlAddr);
-    if (existingUser) {
-      return null;
+    if (existingUser?.success) {
+      return prismaResponse(false, null, 'CONFLICT', 'EMAIL_IN_USE');
     }
 
     // 비밀번호 암호화
@@ -218,68 +231,73 @@ export class AuthService {
   async changePassword(
     userNo: number,
     changePasswordData: ChangePasswordDto
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const { currentPassword, newPassword, } = changePasswordData;
 
-    const user = await this.userRepository.getUserByNo(userNo);
+    const userResult = await this.userRepository.getUserByNo(userNo);
 
-    if (!user) {
-      return null;
+    if (!userResult?.success) {
+      return userResult;
     }
 
+    const user = userResult.data;
     const isPasswordMatching = await bcrypt.compare(
       currentPassword,
       user.encptPswd
     );
 
     if (!isPasswordMatching) {
-      return null;
+      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_CREDENTIALS');
     }
 
     const newEncptPswd = await bcrypt.hash(newPassword, 10);
 
     // 하나의 쿼리로 업데이트 + 조회
-    const updatedUser = await this.userRepository.updateUser(
+    const updatedUserResult = await this.userRepository.updateUser(
       userNo,
       userNo,
       { encptPswd: newEncptPswd, }
     );
 
-    if (!updatedUser) {
-      return null;
+    if (!updatedUserResult?.success) {
+      return updatedUserResult;
     }
 
     // 민감정보 제거
-    const userToReturn = cloneDeep(updatedUser);
+    const userToReturn = cloneDeep(updatedUserResult.data);
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return userToReturn;
+    return prismaResponse(true, userToReturn);
   }
 
   /**
    * @description 사용자 로그아웃
    * @param accessToken 액세스 토큰
    */
-  async signOut(accessToken: string): Promise<boolean> {
+  async signOut(accessToken: string): Promise<RepoResponseType<boolean> | null> {
     try {
       // JWT 토큰에서 사용자 정보 추출
       const decoded = await this.extractUserFromToken(accessToken);
 
       if (decoded?.userNo) {
         // 리프레시 토큰 삭제
-        await this.userRepository.updateUser(
+        const updateResult = await this.userRepository.updateUser(
           decoded.userNo,
           decoded.userNo,
           { reshToken: null, }
         );
+
+        if (!updateResult?.success) {
+          return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR');
+        }
       }
 
-      return true;
+      return prismaResponse(true, true);
     }
     catch {
       // 로그아웃은 토큰이 유효하지 않아도 성공으로 처리
-      return true;
+      return prismaResponse(true, true);
     }
   }
 

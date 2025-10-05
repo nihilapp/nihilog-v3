@@ -21,7 +21,7 @@ import { AdminTagSubscribeService } from '@/endpoints/admin/tag-subscribe/admin-
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { createExampleTagSubscribe } from '@/utils/createExampleTagSubscribe';
+import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/tag-subscribe')
 @Controller('admin/subscribes/tags')
@@ -50,7 +50,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_SEARCH_SUCCESS',
-            [ createExampleTagSubscribe('list'), ],
+            [ CreateExample.tagSubscribe('list'), ],
           ],
         ],
         [
@@ -62,7 +62,7 @@ export class AdminTagSubscribeController {
   })
   async adminGetTagSubscribeList(
     @Req() req: AuthRequest,
-    @Body() searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>
+    @Body() searchData: SearchTagSubscribeDto
   ): Promise<ResponseDto<ListDto<TagSubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -70,17 +70,17 @@ export class AdminTagSubscribeController {
 
     const result = await this.tagSubscribeService.adminGetTagSubscribeList(searchData);
 
-    if (!result) {
+    if (!result?.success) {
       return createError(
-        'INTERNAL_SERVER_ERROR',
-        'TAG_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_SEARCH_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
       'ADMIN_TAG_SUBSCRIBE_SEARCH_SUCCESS',
-      result
+      result.data
     );
   }
 
@@ -108,7 +108,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_BY_TAG_SUCCESS',
-            [ createExampleTagSubscribe('list'), ],
+            [ CreateExample.tagSubscribe('list'), ],
           ],
         ],
         [
@@ -125,7 +125,7 @@ export class AdminTagSubscribeController {
   async adminGetTagSubscribeByTagNo(
     @Req() req: AuthRequest,
     @Param('tagNo') tagNo: number,
-    @Body() searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>
+    @Body() searchData: SearchTagSubscribeDto
   ): Promise<ResponseDto<ListDto<TagSubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -133,10 +133,17 @@ export class AdminTagSubscribeController {
 
     const result = await this.tagSubscribeService.adminGetTagSubscribeByTagNo(tagNo, searchData);
 
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_SEARCH_ERROR'
+      );
+    }
+
     return createResponse(
       'SUCCESS',
       'ADMIN_TAG_SUBSCRIBE_BY_TAG_SUCCESS',
-      result
+      result.data
     );
   }
 
@@ -161,7 +168,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_CREATE_SUCCESS',
-            createExampleTagSubscribe('detail'),
+            CreateExample.tagSubscribe('detail'),
           ],
         ],
         [
@@ -183,7 +190,16 @@ export class AdminTagSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.tagSubscribeService.adminCreateTagSubscribe(req.user.userNo, createData);
+    const result = await this.tagSubscribeService.adminCreateTagSubscribe(req.user.userNo, createData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_TAG_SUBSCRIBE_CREATE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_TAG_SUBSCRIBE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -207,7 +223,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [ createExampleTagSubscribe('detail'), ],
+            [ CreateExample.tagSubscribe('detail'), ],
           ],
         ],
         [
@@ -225,7 +241,16 @@ export class AdminTagSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.tagSubscribeService.adminMultipleCreateTagSubscribe(req.user.userNo, createData);
+    const result = await this.tagSubscribeService.adminMultipleCreateTagSubscribe(req.user.userNo, createData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -253,7 +278,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_UPDATE_SUCCESS',
-            createExampleTagSubscribe('detail'),
+            CreateExample.tagSubscribe('detail'),
           ],
         ],
         [
@@ -276,7 +301,16 @@ export class AdminTagSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.tagSubscribeService.adminUpdateTagSubscribe(req.user.userNo, { ...updateData, tagSbcrNo, });
+    const result = await this.tagSubscribeService.adminUpdateTagSubscribe(req.user.userNo, { ...updateData, tagSbcrNo, });
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_TAG_SUBSCRIBE_UPDATE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_TAG_SUBSCRIBE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -300,7 +334,7 @@ export class AdminTagSubscribeController {
             false,
             'SUCCESS',
             'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            [ createExampleTagSubscribe('detail'), ],
+            [ CreateExample.tagSubscribe('detail'), ],
           ],
         ],
         [
@@ -322,7 +356,16 @@ export class AdminTagSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.tagSubscribeService.adminMultipleUpdateTagSubscribe(req.user.userNo, updateData);
+    const result = await this.tagSubscribeService.adminMultipleUpdateTagSubscribe(req.user.userNo, updateData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -362,12 +405,21 @@ export class AdminTagSubscribeController {
     @Req() req: AuthRequest,
     @Param('tagSbcrNo') tagSbcrNo: number,
     @Body() updateData: UpdateTagSubscribeDto
-  ): Promise<ResponseDto<null>> {
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    return await this.tagSubscribeService.adminDeleteTagSubscribe(req.user.userNo, { ...updateData, tagSbcrNo, });
+    const result = await this.tagSubscribeService.adminDeleteTagSubscribe(req.user.userNo, { ...updateData, tagSbcrNo, });
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_TAG_SUBSCRIBE_DELETE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_TAG_SUBSCRIBE_DELETE_SUCCESS', result.data);
   }
 
   /**
@@ -413,6 +465,15 @@ export class AdminTagSubscribeController {
       return req.errorResponse;
     }
 
-    return await this.tagSubscribeService.adminMultipleDeleteTagSubscribe(req.user.userNo, deleteData);
+    const result = await this.tagSubscribeService.adminMultipleDeleteTagSubscribe(req.user.userNo, deleteData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
   }
 }

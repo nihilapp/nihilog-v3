@@ -1,16 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient, type UserRole } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import { CreateAdminDto } from '@/dto/admin.dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectUserInfoListItemType,
   SelectUserInfoType
 } from '@/endpoints/prisma/types/user.types';
 import { pageHelper } from '@/utils/pageHelper';
+import { prismaError } from '@/utils/prismaError';
+import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -26,7 +29,7 @@ export class UserRepository {
   async getUserByNo(
     userNo: number,
     delYn: 'Y' | 'N' = 'N'
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     try {
       const user = await this.prisma.userInfo.findFirst({
         where: {
@@ -35,10 +38,11 @@ export class UserRepository {
         },
       });
 
-      return user;
+      return prismaResponse(true, user);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+      // return null;
     }
   }
 
@@ -52,7 +56,7 @@ export class UserRepository {
     userNo: number | null,
     signUpData: CreateUserDto | CreateAdminDto,
     hashedPassword: string
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const currentTime = timeToString();
 
     try {
@@ -67,10 +71,10 @@ export class UserRepository {
         },
       });
 
-      return newUser;
+      return prismaResponse(true, newUser);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -84,7 +88,7 @@ export class UserRepository {
     userNo: number,
     targetUserNo: number,
     updateData: UpdateUserDto
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     try {
       const updateUser = await this.prisma.userInfo.update({
         where: {
@@ -97,10 +101,10 @@ export class UserRepository {
         },
       });
 
-      return updateUser;
+      return prismaResponse(true, updateUser);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -112,7 +116,7 @@ export class UserRepository {
   async deleteUser(
     userNo: number,
     targetUserNo: number
-  ): Promise<boolean> {
+  ): Promise<RepoResponseType<boolean> | null> {
     const currentTime = timeToString();
 
     try {
@@ -130,14 +134,10 @@ export class UserRepository {
         },
       });
 
-      if (result) {
-        return true;
-      }
-
-      return false;
+      return prismaResponse(true, !!result);
     }
-    catch {
-      return false;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -145,7 +145,7 @@ export class UserRepository {
    * @description 사용자 목록 조회
    * @param searchData 검색 조건
    */
-  async getUserList(searchData: SearchUserDto): Promise<ListType<SelectUserInfoListItemType>> {
+  async getUserList(searchData: SearchUserDto): Promise<RepoResponseType<ListType<SelectUserInfoListItemType>> | null> {
     const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
     const where = {
@@ -181,17 +181,17 @@ export class UserRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((user, index) => ({
           ...user,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -203,7 +203,7 @@ export class UserRepository {
   async getUserByEmail(
     emlAddr: string,
     delYn: 'Y' | 'N' = 'N'
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     try {
       const user = await this.prisma.userInfo.findFirst({
         where: {
@@ -212,10 +212,10 @@ export class UserRepository {
         },
       });
 
-      return user;
+      return prismaResponse(true, user);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -227,7 +227,7 @@ export class UserRepository {
   async getUserByName(
     userNm: string,
     delYn: 'Y' | 'N' = 'N'
-  ): Promise<SelectUserInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     try {
       const user = await this.prisma.userInfo.findFirst({
         where: {
@@ -236,10 +236,10 @@ export class UserRepository {
         },
       });
 
-      return user;
+      return prismaResponse(true, user);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -251,7 +251,7 @@ export class UserRepository {
   async adminMultipleUpdateUser(
     userNo: number,
     updateUserDto: UpdateUserDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     const { userNoList, ...restData } = updateUserDto;
 
     if (!userNoList || userNoList.length === 0) {
@@ -283,14 +283,14 @@ export class UserRepository {
       const failNoList = userNoList
         .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.length,
         failCnt: userNoList.length - result.length,
         failNoList,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -302,7 +302,7 @@ export class UserRepository {
   async adminMultipleDeleteUser(
     userNo: number,
     userNoList: number[]
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     if (!userNoList || userNoList.length === 0) {
       return null;
     }
@@ -330,14 +330,14 @@ export class UserRepository {
       const failNoList = userNoList
         .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
-      return {
+      return prismaResponse(true, {
         successCnt: result.length,
         failCnt: userNoList.length - result.length,
         failNoList,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 }

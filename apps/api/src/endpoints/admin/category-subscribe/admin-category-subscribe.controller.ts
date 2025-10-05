@@ -21,7 +21,7 @@ import { AdminCategorySubscribeService } from '@/endpoints/admin/category-subscr
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { createExampleCategorySubscribe } from '@/utils/createExampleCategorySubscribe';
+import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/category-subscribe')
 @Controller('admin/subscribes/categories')
@@ -50,7 +50,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
-            [ createExampleCategorySubscribe('list'), ],
+            [ CreateExample.categorySubscribe('list'), ],
           ],
         ],
         [
@@ -62,7 +62,7 @@ export class AdminCategorySubscribeController {
   })
   async adminGetCategorySubscribeList(
     @Req() req: AuthRequest,
-    @Body() searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
+    @Body() searchData: SearchCategorySubscribeDto
   ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -70,14 +70,17 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminGetCategorySubscribeList(searchData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'
+      );
     }
 
     return createResponse(
       'SUCCESS',
       'ADMIN_CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
-      result
+      result.data
     );
   }
 
@@ -105,7 +108,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS',
-            [ createExampleCategorySubscribe('list'), ],
+            [ CreateExample.categorySubscribe('list'), ],
           ],
         ],
         [
@@ -122,7 +125,7 @@ export class AdminCategorySubscribeController {
   async adminGetCategorySubscribeByCtgryNo(
     @Req() req: AuthRequest,
     @Param('ctgryNo') ctgryNo: number,
-    @Body() searchData: SearchCategorySubscribeDto & Partial<CategorySubscribeDto>
+    @Body() searchData: SearchCategorySubscribeDto
   ): Promise<ResponseDto<ListDto<CategorySubscribeDto>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -130,14 +133,17 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminGetCategorySubscribeByCtgryNo(ctgryNo, searchData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'
+      );
     }
 
     return createResponse(
       'SUCCESS',
       'ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS',
-      result
+      result.data
     );
   }
 
@@ -162,7 +168,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-            createExampleCategorySubscribe('detail'),
+            CreateExample.categorySubscribe('detail'),
           ],
         ],
         [
@@ -186,11 +192,14 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminCreateCategorySubscribe(req.user.userNo, createData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -214,7 +223,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [ createExampleCategorySubscribe('detail'), ],
+            [ CreateExample.categorySubscribe('detail'), ],
           ],
         ],
         [
@@ -234,11 +243,14 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminMultipleCreateCategorySubscribe(req.user.userNo, createData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
   }
 
   /**
@@ -262,7 +274,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
-            createExampleCategorySubscribe('detail'),
+            CreateExample.categorySubscribe('detail'),
           ],
         ],
         [
@@ -286,11 +298,14 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminUpdateCategorySubscribe(req.user.userNo, updateData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -314,7 +329,7 @@ export class AdminCategorySubscribeController {
             false,
             'SUCCESS',
             'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            [ createExampleCategorySubscribe('detail'), ],
+            [ CreateExample.categorySubscribe('detail'), ],
           ],
         ],
         [
@@ -338,11 +353,14 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminMultipleUpdateCategorySubscribe(req.user.userNo, updateData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
   }
 
   /**
@@ -388,11 +406,14 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminDeleteCategorySubscribe(req.user.userNo, updateData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result.data);
   }
 
   /**
@@ -441,10 +462,13 @@ export class AdminCategorySubscribeController {
 
     const result = await this.categorySubscribeService.adminMultipleDeleteCategorySubscribe(req.user.userNo, deleteData);
 
-    if (!result) {
-      return createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR');
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+      );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result);
+    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
   }
 }

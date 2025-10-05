@@ -7,7 +7,7 @@ import {
   UpdateSubscribeDto,
   type SearchSubscribeDto
 } from '@/dto/subscribe.dto';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 
@@ -18,10 +18,8 @@ export class AdminSubscribeService {
   /**
    * @description 전체 사용자 구독 설정 목록 조회
    */
-  async adminGetUserSubscribeList(searchData: SearchSubscribeDto): Promise<ListDto<SelectUserSbcrInfoListItemType>> {
-    const subscribeList = await this.subscribeRepository.getSubscribeList(searchData);
-
-    return subscribeList;
+  async adminGetUserSubscribeList(searchData: SearchSubscribeDto): Promise<RepoResponseType<ListDto<SelectUserSbcrInfoListItemType>> | null> {
+    return this.subscribeRepository.getSubscribeList(searchData);
   }
 
   /**
@@ -32,7 +30,7 @@ export class AdminSubscribeService {
   async adminCreateUserSubscribe(
     adminNo: number,
     createData: CreateSubscribeDto
-  ): Promise<SelectUserSbcrInfoType | null> {
+  ): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
     return this.subscribeRepository.createUserSubscribe(adminNo, createData);
   }
 
@@ -41,7 +39,7 @@ export class AdminSubscribeService {
    * @param adminNo 관리자 번호
    * @param updateData 구독 설정 일괄 수정 데이터
    */
-  async adminMultipleUpdateUserSubscribe(adminNo: number, updateData: UpdateSubscribeDto): Promise<MultipleResultType | null> {
+  async adminMultipleUpdateUserSubscribe(adminNo: number, updateData: UpdateSubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.subscribeRepository.multipleUpdateUserSubscribe(adminNo, updateData);
   }
 
@@ -50,7 +48,7 @@ export class AdminSubscribeService {
    * @param adminNo 관리자 번호
    * @param sbcrNo 구독 번호
    */
-  async adminDeleteUserSubscribe(adminNo: number, sbcrNo: number): Promise<boolean> {
+  async adminDeleteUserSubscribe(adminNo: number, sbcrNo: number): Promise<RepoResponseType<boolean> | null> {
     return this.subscribeRepository.deleteUserSubscribe(adminNo, sbcrNo);
   }
 
@@ -62,7 +60,7 @@ export class AdminSubscribeService {
   async adminMultipleDeleteUserSubscribe(
     adminNo: number,
     deleteData: DeleteMultipleUsersDto
-  ): Promise<MultipleResultType | null> {
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
     if (!deleteData.userNoList) {
       return null;
     }

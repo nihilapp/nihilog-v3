@@ -5,10 +5,9 @@ import type {
   CreateTagSubscribeDto,
   DeleteTagSubscribeDto,
   SearchTagSubscribeDto,
-  TagSubscribeDto,
   UpdateTagSubscribeDto
 } from '@/dto/tag-subscribe.dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 
@@ -20,11 +19,8 @@ export class AdminTagSubscribeService {
    * @description 태그 구독 전체 목록 조회
    * @param searchData 검색 데이터
    */
-  async adminGetTagSubscribeList(searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>): Promise<ListType<SelectTagSbcrMpngListItemType>> {
-    const result = await this.tagSubscribeRepository
-      .getTagSubscribeList(searchData);
-
-    return result;
+  async adminGetTagSubscribeList(searchData: SearchTagSubscribeDto): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
+    return this.tagSubscribeRepository.getTagSubscribeList(searchData);
   }
 
   /**
@@ -34,12 +30,9 @@ export class AdminTagSubscribeService {
    */
   async adminGetTagSubscribeByTagNo(
     tagNo: number,
-    searchData: SearchTagSubscribeDto & Partial<TagSubscribeDto>
-  ): Promise<ListType<SelectTagSbcrMpngListItemType>> {
-    const result = await this.tagSubscribeRepository
-      .getTagSubscribeByTagNo(tagNo, searchData);
-
-    return result;
+    searchData: SearchTagSubscribeDto
+  ): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
+    return this.tagSubscribeRepository.getTagSubscribeByTagNo(tagNo, searchData);
   }
 
   /**
@@ -50,13 +43,8 @@ export class AdminTagSubscribeService {
   async adminCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<TagSbcrMpng | null> {
-    try {
-      return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<TagSbcrMpng> | null> {
+    return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
   }
 
   /**
@@ -67,13 +55,8 @@ export class AdminTagSubscribeService {
   async adminMultipleCreateTagSubscribe(
     userNo: number,
     createData: CreateTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      return this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
   }
 
   /**
@@ -84,19 +67,14 @@ export class AdminTagSubscribeService {
   async adminUpdateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<TagSbcrMpng | null> {
-    try {
-      const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
+  ): Promise<RepoResponseType<TagSbcrMpng> | null> {
+    const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
 
-      if (!subscribe) {
-        return null;
-      }
+    if (!subscribe?.success) {
+      return subscribe;
+    }
 
-      return this.tagSubscribeRepository.updateTagSubscribe(userNo, updateData);
-    }
-    catch {
-      return null;
-    }
+    return this.tagSubscribeRepository.updateTagSubscribe(userNo, updateData);
   }
 
   /**
@@ -107,13 +85,8 @@ export class AdminTagSubscribeService {
   async adminMultipleUpdateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      return this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
   }
 
   /**
@@ -124,13 +97,8 @@ export class AdminTagSubscribeService {
   async adminDeleteTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<boolean> {
-    try {
-      return this.tagSubscribeRepository.deleteTagSubscribe(userNo, updateData.tagSbcrNo);
-    }
-    catch {
-      return false;
-    }
+  ): Promise<RepoResponseType<boolean> | null> {
+    return this.tagSubscribeRepository.deleteTagSubscribe(userNo, updateData.tagSbcrNo);
   }
 
   /**
@@ -141,12 +109,7 @@ export class AdminTagSubscribeService {
   async adminMultipleDeleteTagSubscribe(
     userNo: number,
     deleteData: DeleteTagSubscribeDto
-  ): Promise<MultipleResultType | null> {
-    try {
-      return this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
-    }
-    catch {
-      return null;
-    }
+  ): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
   }
 }

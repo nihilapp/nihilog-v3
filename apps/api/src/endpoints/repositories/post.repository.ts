@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
@@ -7,7 +8,7 @@ import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDt
 import type { ViewStatDto } from '@/dto/post.dto';
 import type { MutationResponseDto } from '@/dto/response.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectPostBookmarkListItemType,
   SelectPostBookmarkType,
@@ -20,6 +21,8 @@ import type {
   ViewStatModeType
 } from '@/endpoints/prisma/types/post.types';
 import { pageHelper } from '@/utils/pageHelper';
+import { prismaError } from '@/utils/prismaError';
+import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -33,7 +36,7 @@ export class PostRepository {
    * @description 공개 게시글 목록 조회 (통합 검색)
    * @param searchData 검색 데이터
    */
-  async getPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -60,17 +63,17 @@ export class PostRepository {
         this.prisma.pstInfo.count({ where, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -78,16 +81,16 @@ export class PostRepository {
    * @description 특정 게시글 상세 조회
    * @param pstNo 게시글 번호
    */
-  async getPostByPstNo(pstNo: number): Promise<SelectPostInfoType | null> {
+  async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostInfoType> | null> {
     try {
       const post = await this.prisma.pstInfo.findUnique({
         where: { pstNo, },
       });
 
-      return post;
+      return prismaResponse(true, post);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -95,16 +98,16 @@ export class PostRepository {
    * @description SEO 친화적 URL로 게시글 조회
    * @param pstCd 게시글 슬러그
    */
-  async getPostByPstCd(pstCd: string): Promise<SelectPostInfoType | null> {
+  async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostInfoType> | null> {
     try {
       const post = await this.prisma.pstInfo.findFirst({
         where: { pstCd, },
       });
 
-      return post;
+      return prismaResponse(true, post);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -116,7 +119,7 @@ export class PostRepository {
   async getPostListByTagNo(
     tagNo: number,
     searchData: SearchPostDto
-  ): Promise<ListType<SelectPostInfoListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -149,17 +152,17 @@ export class PostRepository {
         this.prisma.pstInfo.count({ where, orderBy: { pstNo: 'desc', }, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -171,7 +174,7 @@ export class PostRepository {
   async getPostListByCtgryNo(
     ctgryNo: number,
     searchData: SearchPostDto
-  ): Promise<ListType<SelectPostInfoListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -202,17 +205,17 @@ export class PostRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -224,7 +227,7 @@ export class PostRepository {
   async getPostListFromArchive(
     date: string,
     searchData: SearchPostDto
-  ): Promise<ListType<SelectPostInfoListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -261,17 +264,17 @@ export class PostRepository {
         }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -285,7 +288,7 @@ export class PostRepository {
   async getPostViewStats(
     pstNo: number,
     viewStatData: ViewStatDto
-  ): Promise<ViewStatItemType[]> {
+  ): Promise<RepoResponseType<ViewStatItemType[]> | null> {
     try {
       const { mode, startDt, endDt, } = viewStatData;
 
@@ -314,10 +317,10 @@ export class PostRepository {
           date_trunc(${truncUnit}, view_dt::timestamptz)::date
       `;
 
-      return stats;
+      return prismaResponse(true, stats);
     }
-    catch {
-      return [];
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -329,7 +332,7 @@ export class PostRepository {
   async getPostShareStatsByPlatform(
     pstNo: number,
     viewStatData: ViewStatDto
-  ): Promise<SharePlatformStatItemType[]> {
+  ): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
     try {
       const { startDt, endDt, } = viewStatData;
 
@@ -349,10 +352,10 @@ export class PostRepository {
           count DESC, platform
       `;
 
-      return stats;
+      return prismaResponse(true, stats);
     }
-    catch {
-      return [];
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -360,7 +363,7 @@ export class PostRepository {
    * @description 전체 게시글의 플랫폼별 공유 통계
    * @param viewStatData 조회 통계 데이터
    */
-  async getAllPostShareStatsByPlatform(viewStatData: ViewStatDto): Promise<SharePlatformStatItemType[]> {
+  async getAllPostShareStatsByPlatform(viewStatData: ViewStatDto): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
     try {
       const { startDt, endDt, } = viewStatData;
 
@@ -379,10 +382,10 @@ export class PostRepository {
           count DESC, platform
       `;
 
-      return stats;
+      return prismaResponse(true, stats);
     }
-    catch {
-      return [];
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -391,7 +394,7 @@ export class PostRepository {
    * @param pstNo 게시글 번호
    * @param ip 사용자 IP
    */
-  async createPostViewLog(pstNo: number, ip: string): Promise<SelectPostViewLogType | null> {
+  async createPostViewLog(pstNo: number, ip: string): Promise<RepoResponseType<SelectPostViewLogType> | null> {
     try {
       const viewLog = await this.prisma.pstViewLog.create({
         data: {
@@ -401,10 +404,10 @@ export class PostRepository {
         },
       });
 
-      return viewLog;
+      return prismaResponse(true, viewLog);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -412,7 +415,7 @@ export class PostRepository {
    * @description 게시글 공유 로그 기록
    * @param createData 공유 로그 생성 데이터
    */
-  async createPostShareLog(createData: CreatePostShareLogDto): Promise<SelectPostShareLogType | null> {
+  async createPostShareLog(createData: CreatePostShareLogDto): Promise<RepoResponseType<SelectPostShareLogType> | null> {
     try {
       const shareLog = await this.prisma.pstShrnLog.create({
         data: {
@@ -422,10 +425,10 @@ export class PostRepository {
         },
       });
 
-      return shareLog;
+      return prismaResponse(true, shareLog);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -433,7 +436,7 @@ export class PostRepository {
    * @description 게시글 북마크 생성
    * @param createData 북마크 생성 데이터
    */
-  async createPostBookmark(createData: CreatePostBookmarkDto): Promise<SelectPostBookmarkType | null> {
+  async createPostBookmark(createData: CreatePostBookmarkDto): Promise<RepoResponseType<SelectPostBookmarkType> | null> {
     try {
       const bookmark = await this.prisma.pstBkmrkMpng.create({
         data: {
@@ -442,10 +445,10 @@ export class PostRepository {
         },
       });
 
-      return bookmark;
+      return prismaResponse(true, bookmark);
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -453,7 +456,7 @@ export class PostRepository {
    * @description 게시글 북마크 삭제
    * @param deleteData 북마크 삭제 데이터
    */
-  async deletePostBookmark(deleteData: DeletePostBookmarkDto): Promise<boolean> {
+  async deletePostBookmark(deleteData: DeletePostBookmarkDto): Promise<RepoResponseType<boolean> | null> {
     try {
       await this.prisma.pstBkmrkMpng.delete({
         where: {
@@ -461,10 +464,10 @@ export class PostRepository {
         },
       });
 
-      return true;
+      return prismaResponse(true, true);
     }
-    catch {
-      return false;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -476,7 +479,7 @@ export class PostRepository {
   async getBookmarkedPostListByUserNo(
     userNo: number,
     searchData: SearchPostBookmarkDto
-  ): Promise<ListType<SelectPostBookmarkListItemType>> {
+  ): Promise<RepoResponseType<ListType<SelectPostBookmarkListItemType>> | null> {
     try {
       const { page, strtRow, endRow, delYn, pstNo, } = searchData;
 
@@ -501,17 +504,17 @@ export class PostRepository {
         this.prisma.pstBkmrkMpng.count({ where, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
@@ -519,7 +522,7 @@ export class PostRepository {
    * @description 고급 검색을 통한 게시글 목록 조회
    * @param searchData 고급 검색 데이터
    */
-  async getAdvancedPostList(searchData: SearchPostDto): Promise<ListType<SelectPostInfoListItemType>> {
+  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, orderBy, tagNoList, ctgryNoList, pstStts, archYn, } = searchData;
 
@@ -582,17 +585,17 @@ export class PostRepository {
         this.prisma.pstInfo.count({ where, }),
       ]);
 
-      return {
+      return prismaResponse(true, {
         list: list.map((item, index) => ({
           ...item,
           totalCnt,
           rowNo: skip + index + 1,
         })),
         totalCnt,
-      };
+      });
     }
-    catch {
-      return null;
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
     }
   }
 
