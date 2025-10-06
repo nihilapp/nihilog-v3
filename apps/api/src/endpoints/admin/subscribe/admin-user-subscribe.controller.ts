@@ -20,7 +20,6 @@ import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-su
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/subscribe')
 @Controller('admin/subscribes')
@@ -34,31 +33,9 @@ export class AdminSubscribeController {
   @Endpoint({
     endpoint: '',
     method: 'GET',
-    summary: '📋 구독 설정 목록 조회',
-    description: '전체 사용자의 구독 설정 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      responses: [
-        [
-          '구독 설정 목록 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
-            [ CreateExample.subscribe('list'), ],
-          ],
-        ],
-        [
-          '구독 설정 목록 조회 실패',
-          [
-            true,
-            'INTERNAL_SERVER_ERROR',
-            'ADMIN_SUBSCRIBE_SEARCH_ERROR',
-            null,
-          ],
-        ],
-      ],
     },
   })
   async adminGetUserSubscribeList(@Body() searchData: SearchSubscribeDto): Promise<ResponseDto<ListDto<UserSubscribeDto>>> {
@@ -86,41 +63,9 @@ export class AdminSubscribeController {
   @Endpoint({
     endpoint: '',
     method: 'POST',
-    summary: '✏️ 구독 설정 생성',
-    description: '관리자가 특정 사용자의 구독 설정을 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '구독 설정 생성 정보', CreateSubscribeDto, ],
-      responses: [
-        [
-          '구독 설정 생성 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_SUBSCRIBE_CREATE_SUCCESS',
-            CreateExample.subscribe('detail'),
-          ],
-        ],
-        [
-          '사용자를 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'USER_NOT_FOUND',
-            null,
-          ],
-        ],
-        [
-          '이미 구독 설정이 존재함',
-          [
-            true,
-            'CONFLICT',
-            'ADMIN_SUBSCRIBE_ALREADY_EXISTS',
-            null,
-          ],
-        ],
-      ],
     },
   })
   async adminCreateUserSubscribe(
@@ -151,45 +96,9 @@ export class AdminSubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '🔄 구독 설정 일괄 변경',
-    description: '다수 사용자의 구독 설정을 일괄 변경합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '구독 설정 일괄 변경 정보', UpdateSubscribeDto, ],
-      responses: [
-        [
-          '구독 설정 일괄 변경 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            {
-              successCount: 3,
-              failureCount: 1,
-              updatedSubscribes: [ CreateExample.subscribe('detail'), ],
-            },
-          ],
-        ],
-        [
-          '유효하지 않은 사용자 목록',
-          [
-            true,
-            'BAD_REQUEST',
-            'ADMIN_SUBSCRIBE_INVALID_USER_LIST',
-            null,
-          ],
-        ],
-        [
-          '구독 설정을 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
-        ],
-      ],
     },
   })
   async adminMultipleUpdateUserSubscribe(
@@ -220,43 +129,9 @@ export class AdminSubscribeController {
   @Endpoint({
     endpoint: '/:sbcrNo',
     method: 'DELETE',
-    summary: '🗑️ 구독 설정 삭제',
-    description: '특정 사용자의 구독 설정을 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'sbcrNo', '구독 번호', 'number', true, ],
-      ],
-      responses: [
-        [
-          '구독 설정 삭제 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_SUBSCRIBE_DELETE_SUCCESS',
-            true,
-          ],
-        ],
-        [
-          '구독 설정을 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
-        ],
-        [
-          '이미 삭제된 구독 설정',
-          [
-            true,
-            'CONFLICT',
-            'ADMIN_SUBSCRIBE_ALREADY_DELETED',
-            null,
-          ],
-        ],
-      ],
     },
   })
   async adminDeleteUserSubscribe(
@@ -287,41 +162,9 @@ export class AdminSubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '🗑️ 구독 설정 일괄 삭제',
-    description: '다수 사용자의 구독 설정을 일괄 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '구독 설정 일괄 삭제 정보', DeleteSubscribeDto, ],
-      responses: [
-        [
-          '구독 설정 일괄 삭제 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-            null,
-          ],
-        ],
-        [
-          '유효하지 않은 사용자 목록',
-          [
-            true,
-            'BAD_REQUEST',
-            'ADMIN_SUBSCRIBE_INVALID_USER_LIST',
-            null,
-          ],
-        ],
-        [
-          '구독 설정을 찾을 수 없음',
-          [
-            true,
-            'NOT_FOUND',
-            'SUBSCRIBE_NOT_FOUND',
-            null,
-          ],
-        ],
-      ],
     },
   })
   async adminMultipleDeleteUserSubscribe(

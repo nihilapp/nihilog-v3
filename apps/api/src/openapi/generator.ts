@@ -5,6 +5,7 @@ import { registerAdminCategorySubscribeEndpoints } from './endpoints/admin-categ
 import { registerAdminPostsEndpoints } from './endpoints/admin-posts.endpoints';
 import { registerAdminSubscribeEndpoints } from './endpoints/admin-subscribe.endpoints';
 import { registerAdminTagSubscribeEndpoints } from './endpoints/admin-tag-subscribe.endpoints';
+import { registerAdminTagsEndpoints } from './endpoints/admin-tags.endpoints';
 import { registerAdminUsersEndpoints } from './endpoints/admin-users.endpoints';
 import { registerAdminEndpoints } from './endpoints/admin.endpoints';
 import { registerAuthEndpoints } from './endpoints/auth.endpoints';
@@ -30,6 +31,7 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
   registerAdminEndpoints();
   registerAdminUsersEndpoints();
   registerAdminPostsEndpoints();
+  registerAdminTagsEndpoints();
   registerAdminSubscribeEndpoints();
   registerAdminTagSubscribeEndpoints();
   registerAdminCategorySubscribeEndpoints();

@@ -13,7 +13,6 @@ import { UpdateUserDto } from '@/dto/user.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse, removeSensitiveInfo } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 import { AdminService } from './admin.service';
 
@@ -31,30 +30,9 @@ export class AdminController {
   @Endpoint({
     endpoint: 'profile',
     method: 'PUT',
-    summary: '✏️ 프로필 정보 수정',
-    description: '현재 로그인된 관리자의 프로필을 업데이트합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '프로필 수정 정보', UpdateUserDto, ],
-      responses: [
-        [
-          '프로필 수정 성공',
-          [ false, 'SUCCESS', 'PROFILE_UPDATE_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '관리자를 찾을 수 없음 (Repository)',
-          [ true, 'NOT_FOUND', 'ADMIN_NOT_FOUND', null, ],
-        ],
-        [
-          '사용자명 중복 (Service)',
-          [ true, 'CONFLICT', 'USER_NAME_EXISTS', null, ],
-        ],
-        [
-          '프로필 업데이트 실패 (Repository)',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async updateProfile(

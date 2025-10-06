@@ -195,7 +195,7 @@ export const registerAdminUsersEndpoints = () => {
       },
     },
     responses: {
-      201: {
+      200: {
         description: '응답',
         content: {
           'application/json': {

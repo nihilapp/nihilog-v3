@@ -21,7 +21,6 @@ import { AdminCategorySubscribeService } from '@/endpoints/admin/category-subscr
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/category-subscribe')
 @Controller('admin/subscribes/categories')
@@ -37,23 +36,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/search',
     method: 'POST',
-    summary: '📋 카테고리 구독 목록 조회',
-    description: '전체 카테고리 구독 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '카테고리 구독 검색 정보', SearchCategorySubscribeDto, ],
-      responses: [
-        [
-          '카테고리 구독 목록 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
-            [ CreateExample.categorySubscribe('list'), ],
-          ],
-        ],
-      ],
     },
   })
   async adminGetCategorySubscribeList(
@@ -89,29 +74,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/:ctgryNo',
     method: 'GET',
-    summary: '📋 카테고리별 구독자 조회',
-    description: '특정 카테고리의 구독자 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'ctgryNo', '카테고리 번호', 'number', true, ],
-      ],
-      responses: [
-        [
-          '카테고리별 구독자 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_BY_CATEGORY_SUCCESS',
-            [ CreateExample.categorySubscribe('list'), ],
-          ],
-        ],
-        [
-          '카테고리를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminGetCategorySubscribeByCtgryNo(
@@ -147,27 +112,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '',
     method: 'POST',
-    summary: '✏️ 카테고리 구독 생성',
-    description: '새로운 카테고리 구독을 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '카테고리 구독 생성 정보', CreateCategorySubscribeDto, ],
-      responses: [
-        [
-          '카테고리 구독 생성 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
-            CreateExample.categorySubscribe('detail'),
-          ],
-        ],
-        [
-          '이미 구독 중인 카테고리',
-          [ true, 'CONFLICT', 'CATEGORY_SUBSCRIBE_ALREADY_EXISTS', null, ],
-        ],
-      ],
     },
   })
   async adminCreateCategorySubscribe(
@@ -198,23 +145,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'POST',
-    summary: '✏️ 다수 카테고리 구독 생성',
-    description: '다수 카테고리 구독을 일괄 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 카테고리 구독 생성 정보', CreateCategorySubscribeDto, ],
-      responses: [
-        [
-          '다수 카테고리 구독 생성 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [ CreateExample.categorySubscribe('detail'), ],
-          ],
-        ],
-      ],
     },
   })
   async adminMultipleCreateCategorySubscribe(
@@ -245,27 +178,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
     method: 'PUT',
-    summary: '🔄 카테고리 구독 수정',
-    description: '카테고리 구독 정보를 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '카테고리 구독 수정 정보', UpdateCategorySubscribeDto, ],
-      responses: [
-        [
-          '카테고리 구독 수정 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
-            CreateExample.categorySubscribe('detail'),
-          ],
-        ],
-        [
-          '카테고리 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminUpdateCategorySubscribe(
@@ -296,27 +211,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '🔄 다수 카테고리 구독 수정',
-    description: '다수 카테고리 구독을 일괄 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 카테고리 구독 수정 정보', UpdateCategorySubscribeDto, ],
-      responses: [
-        [
-          '다수 카테고리 구독 수정 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            [ CreateExample.categorySubscribe('detail'), ],
-          ],
-        ],
-        [
-          '카테고리 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminMultipleUpdateCategorySubscribe(
@@ -347,25 +244,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
     method: 'DELETE',
-    summary: '🗑️ 카테고리 구독 삭제',
-    description: '카테고리 구독을 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      responses: [
-        [
-          '카테고리 구독 삭제 성공',
-          [ false, 'SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_SUCCESS', true, ],
-        ],
-        [
-          '카테고리 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-        [
-          '카테고리 구독 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SUBSCRIBE_DELETE_ERROR', false, ],
-        ],
-      ],
     },
   })
   async adminDeleteCategorySubscribe(
@@ -396,28 +277,9 @@ export class AdminCategorySubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '🗑️ 다수 카테고리 구독 삭제',
-    description: '다수 카테고리 구독을 일괄 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 카테고리 구독 삭제 정보', DeleteCategorySubscribeDto, ],
-      responses: [
-        [
-          '다수 카테고리 구독 삭제 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-            null,
-          ],
-        ],
-        [
-          '카테고리 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND', null,
-          ],
-        ],
-      ],
     },
   })
   async adminMultipleDeleteCategorySubscribe(

@@ -134,6 +134,15 @@ export const MESSAGE_CODE = {
   ADMIN_DELETE_SUCCESS: '관리자 계정이 성공적으로 삭제되었습니다.',
   ADMIN_WITHDRAW_SUCCESS: '관리자 계정이 성공적으로 탈퇴되었습니다.',
 
+  // 관리자 태그 관련 성공 메시지
+  ADMIN_TAG_CREATE_SUCCESS: '태그가 생성되었습니다.',
+  ADMIN_TAG_MULTIPLE_CREATE_SUCCESS: '다수 태그가 생성되었습니다.',
+  ADMIN_TAG_UPDATE_SUCCESS: '태그가 수정되었습니다.',
+  ADMIN_TAG_MULTIPLE_UPDATE_SUCCESS: '다수 태그가 수정되었습니다.',
+  ADMIN_TAG_DELETE_SUCCESS: '태그가 삭제되었습니다.',
+  ADMIN_TAG_MULTIPLE_DELETE_SUCCESS: '다수 태그가 삭제되었습니다.',
+  ADMIN_TAG_SEARCH_SUCCESS: '태그 검색을 완료했습니다.',
+
   // 에러 메시지
   ADMIN_SIGN_UP_ERROR: '관리자 계정 생성 중 오류가 발생했습니다.',
   ADMIN_SIGN_IN_ERROR: '관리자 로그인 중 오류가 발생했습니다.',
@@ -164,6 +173,20 @@ export const MESSAGE_CODE = {
   ADMIN_PASSWORD_VALIDATION_FAILED: '관리자 비밀번호가 유효하지 않습니다.',
   ADMIN_PASSWORD_MISMATCH: '새 비밀번호와 확인 비밀번호가 일치하지 않습니다.',
   ADMIN_CURRENT_PASSWORD_INCORRECT: '현재 비밀번호가 올바르지 않습니다.',
+
+  // 관리자 태그 관련 에러 메시지
+  ADMIN_TAG_CREATE_ERROR: '태그 생성 중 오류가 발생했습니다.',
+  ADMIN_TAG_MULTIPLE_CREATE_ERROR: '다수 태그 생성 중 오류가 발생했습니다.',
+  ADMIN_TAG_UPDATE_ERROR: '태그 수정 중 오류가 발생했습니다.',
+  ADMIN_TAG_MULTIPLE_UPDATE_ERROR: '다수 태그 수정 중 오류가 발생했습니다.',
+  ADMIN_TAG_DELETE_ERROR: '태그 삭제 중 오류가 발생했습니다.',
+  ADMIN_TAG_MULTIPLE_DELETE_ERROR: '다수 태그 삭제 중 오류가 발생했습니다.',
+  ADMIN_TAG_SEARCH_ERROR: '태그 검색 중 오류가 발생했습니다.',
+  ADMIN_TAG_NOT_FOUND: '태그를 찾을 수 없습니다.',
+  ADMIN_TAG_ALREADY_EXISTS: '이미 존재하는 태그입니다.',
+  ADMIN_TAG_NAME_IN_USE: '이미 사용 중인 태그 이름입니다.',
+  ADMIN_TAG_NAME_REQUIRED: '태그 이름은 필수 입력 항목입니다.',
+  ADMIN_TAG_SLUG_DUPLICATE: '이미 사용 중인 태그 슬러그입니다.',
 
   // ===== 구독 관련 메시지 =====
   // 성공 메시지

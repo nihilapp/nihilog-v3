@@ -21,7 +21,6 @@ import { AdminTagSubscribeService } from '@/endpoints/admin/tag-subscribe/admin-
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/tag-subscribe')
 @Controller('admin/subscribes/tags')
@@ -37,23 +36,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/search',
     method: 'POST',
-    summary: '📋 태그 구독 목록 조회',
-    description: '전체 태그 구독 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '태그 구독 검색 정보', SearchTagSubscribeDto, ],
-      responses: [
-        [
-          '태그 구독 목록 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_SEARCH_SUCCESS',
-            [ CreateExample.tagSubscribe('list'), ],
-          ],
-        ],
-      ],
     },
   })
   async adminGetTagSubscribeList(
@@ -89,29 +74,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/:tagNo',
     method: 'GET',
-    summary: '📋 태그별 구독자 조회',
-    description: '특정 태그의 구독자 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'tagNo', '태그 번호', 'number', true, ],
-      ],
-      responses: [
-        [
-          '태그별 구독자 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_BY_TAG_SUCCESS',
-            [ CreateExample.tagSubscribe('list'), ],
-          ],
-        ],
-        [
-          '태그를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminGetTagSubscribeByTagNo(
@@ -147,27 +112,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '',
     method: 'POST',
-    summary: '✏️ 태그 구독 생성',
-    description: '새로운 태그 구독을 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '태그 구독 생성 정보', CreateTagSubscribeDto, ],
-      responses: [
-        [
-          '태그 구독 생성 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_CREATE_SUCCESS',
-            CreateExample.tagSubscribe('detail'),
-          ],
-        ],
-        [
-          '이미 구독 중인 태그',
-          [ true, 'CONFLICT', 'TAG_SUBSCRIBE_ALREADY_EXISTS', null, ],
-        ],
-      ],
     },
   })
   async adminCreateTagSubscribe(
@@ -198,23 +145,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'POST',
-    summary: '✏️ 다수 태그 구독 생성',
-    description: '다수 태그 구독을 일괄 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 태그 구독 생성 정보', CreateTagSubscribeDto, ],
-      responses: [
-        [
-          '다수 태그 구독 생성 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
-            [ CreateExample.tagSubscribe('detail'), ],
-          ],
-        ],
-      ],
     },
   })
   async adminMultipleCreateTagSubscribe(
@@ -246,30 +179,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/:tagSbcrNo',
     method: 'PUT',
-    summary: '🔄 태그 구독 수정',
-    description: '태그 구독 정보를 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'tagSbcrNo', '태그 구독 번호', 'number', true, ],
-      ],
-      body: [ '태그 구독 수정 정보', UpdateTagSubscribeDto, ],
-      responses: [
-        [
-          '태그 구독 수정 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_UPDATE_SUCCESS',
-            CreateExample.tagSubscribe('detail'),
-          ],
-        ],
-        [
-          '태그 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminUpdateTagSubscribe(
@@ -301,27 +213,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '🔄 다수 태그 구독 수정',
-    description: '다수 태그 구독을 일괄 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 태그 구독 수정 정보', UpdateTagSubscribeDto, ],
-      responses: [
-        [
-          '다수 태그 구독 수정 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
-            [ CreateExample.tagSubscribe('detail'), ],
-          ],
-        ],
-        [
-          '태그 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminMultipleUpdateTagSubscribe(
@@ -353,24 +247,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/:tagSbcrNo',
     method: 'DELETE',
-    summary: '🗑️ 태그 구독 삭제',
-    description: '태그 구독을 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'tagSbcrNo', '태그 구독 번호', 'number', true, ],
-      ],
-      responses: [
-        [
-          '태그 구독 삭제 성공',
-          [ false, 'SUCCESS', 'ADMIN_TAG_SUBSCRIBE_DELETE_SUCCESS', true, ],
-        ],
-        [
-          '태그 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminDeleteTagSubscribe(
@@ -402,27 +281,9 @@ export class AdminTagSubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '🗑️ 다수 태그 구독 삭제',
-    description: '다수 태그 구독을 일괄 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '다수 태그 구독 삭제 정보', DeleteTagSubscribeDto, ],
-      responses: [
-        [
-          '다수 태그 구독 삭제 성공',
-          [
-            false,
-            'SUCCESS',
-            'ADMIN_TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-            null,
-          ],
-        ],
-        [
-          '태그 구독을 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminMultipleDeleteTagSubscribe(

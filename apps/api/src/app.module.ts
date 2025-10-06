@@ -9,8 +9,10 @@ import { AdminCategorySubscribeModule } from '@/endpoints/admin/category-subscri
 import { AdminPostsModule } from '@/endpoints/admin/posts/admin-posts.module';
 import { AdminSubscribeModule } from '@/endpoints/admin/subscribe/admin-user-subscribe.module';
 import { AdminTagSubscribeModule } from '@/endpoints/admin/tag-subscribe/admin-tag-subscribe.module';
+import { AdminTagsModule } from '@/endpoints/admin/tags/admin-tags.module';
 import { AdminUserModule } from '@/endpoints/admin/users/admin-users.module';
 import { AuthModule } from '@/endpoints/auth/auth.module';
+import { CategoriesModule } from '@/endpoints/categories/categories.module';
 import { PostsModule } from '@/endpoints/posts/posts.module';
 import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { RepositoryModule } from '@/endpoints/repositories/repository.module';
@@ -37,6 +39,7 @@ import config from './conf/conf';
     UserModule,
     PostsModule,
     TagModule,
+    CategoriesModule,
     CategorySubscribeModule,
     TagSubscribeModule,
     AdminModule,
@@ -45,6 +48,7 @@ import config from './conf/conf';
     AdminSubscribeModule,
     AdminCategorySubscribeModule,
     AdminTagSubscribeModule,
+    AdminTagsModule,
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         transport: {

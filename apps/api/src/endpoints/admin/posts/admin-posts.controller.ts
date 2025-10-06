@@ -9,7 +9,6 @@ import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectPostInfoType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 @ApiTags('admin/posts')
 @Controller('admin/posts')
@@ -25,27 +24,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/:pstNo/views',
     method: 'POST',
-    summary: '[관리자] 게시글 조회수 통계 조회',
-    description: '관리자가 게시글 조회수 통계를 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'pstNo', '게시글 번호', 'number', true, ],
-      ],
-      body: [ '조회수 통계 데이터', ViewStatDto, ],
-      responses: [
-        [
-          '게시글 조회수 통계 조회 성공',
-          [ false, 'SUCCESS', 'POST_VIEW_STATS_SUCCESS', [
-            { date: '2024-01-01', count: 100, },
-          ], ],
-        ],
-        [
-          '게시글 조회수 통계 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'POST_VIEW_STATS_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminGetPostViewStats(
@@ -81,27 +62,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/:pstNo/shares',
     method: 'POST',
-    summary: '[관리자] 게시글 공유 통계 조회',
-    description: '관리자가 게시글 공유 통계를 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'pstNo', '게시글 번호', 'number', true, ],
-      ],
-      body: [ '공유 통계 데이터', ViewStatDto, ],
-      responses: [
-        [
-          '게시글 공유 통계 조회 성공',
-          [ false, 'SUCCESS', 'POST_SHARE_STATS_SUCCESS', [
-            { platform: 'facebook', count: 100, },
-          ], ],
-        ],
-        [
-          '게시글 공유 통계 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'POST_SHARE_STATS_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminGetPostShareStatsByPlatform(
@@ -136,24 +99,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/shares',
     method: 'POST',
-    summary: '[관리자] 전체 게시글 공유 통계 조회',
-    description: '관리자가 전체 게시글 공유 통계를 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '공유 통계 데이터', ViewStatDto, ],
-      responses: [
-        [
-          '전체 게시글 공유 통계 조회 성공',
-          [ false, 'SUCCESS', 'POST_SHARE_STATS_SUCCESS', [
-            { platform: 'facebook', count: 100, },
-          ], ],
-        ],
-        [
-          '전체 게시글 공유 통계 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'POST_SHARE_STATS_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminGetAllPostShareStatsByPlatform(@Req() req: AuthRequest, @Body() viewStatData: ViewStatDto): Promise<ResponseDto<SharePlatformStatItemType[]>> {
@@ -184,24 +132,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/',
     method: 'POST',
-    summary: '[관리자] 새 게시글 작성',
-    description: '관리자가 새 게시글을 작성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '게시글 생성 데이터', CreatePostDto, ],
-      responses: [
-        [
-          '새 게시글 작성 성공',
-          [ false, 'SUCCESS', 'ADMIN_POST_CREATE_SUCCESS', [
-            CreateExample.post('detail'),
-          ], ],
-        ],
-        [
-          '새 게시글 작성 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_POST_CREATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminCreatePost(
@@ -231,25 +164,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/:pstNo',
     method: 'PUT',
-    summary: '[관리자] 게시글 수정',
-    description: '관리자가 게시글을 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'pstNo', '게시글 번호', 'number', true, ],
-      ],
-      body: [ '게시글 수정 데이터', UpdatePostDto, ],
-      responses: [
-        [
-          '게시글 수정 성공',
-          [ false, 'SUCCESS', 'ADMIN_POST_UPDATE_SUCCESS', CreateExample.post('detail'), ],
-        ],
-        [
-          '게시글 수정 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_POST_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminUpdatePost(
@@ -279,26 +196,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '[관리자] 다수 게시글 일괄 수정',
-    description: '관리자가 다수 게시글을 일괄 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '게시글 일괄 수정 데이터', UpdatePostDto, ],
-      responses: [
-        [
-          '다수 게시글 일괄 수정 성공',
-          [ false, 'SUCCESS', 'ADMIN_POST_UPDATE_SUCCESS', {
-            successCnt: 1,
-            failCnt: 0,
-            failNoList: [],
-          }, ],
-        ],
-        [
-          '다수 게시글 일괄 수정 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_POST_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminMultipleUpdatePost(@Req() req: AuthRequest, @Body() updateData: UpdatePostDto): Promise<ResponseDto<MultipleResultType>> {
@@ -325,25 +225,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/:pstNo',
     method: 'DELETE',
-    summary: '[관리자] 게시글 삭제',
-    description: '관리자가 게시글을 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'pstNo', '게시글 번호', 'number', true, ],
-      ],
-      body: [ '게시글 삭제 데이터', DeletePostDto, ],
-      responses: [
-        [
-          '게시글 삭제 성공',
-          [ false, 'SUCCESS', 'ADMIN_POST_DELETE_SUCCESS', true, ],
-        ],
-        [
-          '게시글 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_POST_DELETE_ERROR', false, ],
-        ],
-      ],
     },
   })
   async adminDeletePost(@Req() req: AuthRequest, @Body() deleteData: DeletePostDto): Promise<ResponseDto<boolean>> {
@@ -370,28 +254,9 @@ export class AdminPostsController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '[관리자] 다수 게시글 일괄 삭제',
-    description: '관리자가 다수 게시글을 일괄 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '게시글 일괄 삭제 데이터', DeletePostDto, ],
-      responses: [
-        [
-          '다수 게시글 일괄 삭제 성공',
-          [ false, 'SUCCESS', 'ADMIN_POST_DELETE_SUCCESS', [
-            { successCnt: 1, failCnt: 0, failNoList: [], },
-          ], ],
-        ],
-        [
-          '다수 게시글 일괄 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'ADMIN_POST_DELETE_ERROR', {
-            successCnt: 1,
-            failCnt: 0,
-            failNoList: [],
-          }, ],
-        ],
-      ],
     },
   })
   async adminMultipleDeletePost(@Req() req: AuthRequest, @Body() deleteData: DeletePostDto): Promise<ResponseDto<MultipleResultType>> {

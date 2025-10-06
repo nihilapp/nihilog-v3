@@ -18,7 +18,6 @@ import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoListItemType, SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 import { AdminUserService } from './admin-users.service';
 
@@ -36,30 +35,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/search',
     method: 'POST',
-    summary: '🔎 사용자 목록 검색',
-    description: '부분 일치(ILIKE) 기반으로 사용자 목록을 검색합니다. delYn이 제공되지 않으면 기본값 N으로 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '검색 조건 DTO', SearchUserDto, ],
-      responses: [
-        [
-          '사용자 목록 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'USER_SEARCH_SUCCESS',
-            {
-              list: [ CreateExample.user('list'), ],
-              totalCnt: 1,
-            },
-          ],
-        ],
-        [
-          '사용자 목록 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_SEARCH_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminGetUserList(
@@ -87,22 +65,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/:userNo',
     method: 'GET',
-    summary: '🔍 사용자 단건 조회 (번호)',
-    description: '사용자 번호로 단건 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'userNo', '사용자 번호', 'number', true, ],
-      ],
-      responses: [
-        [ '사용자 조회 성공',
-          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [ '사용자를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminGetUserByUserNo(
@@ -132,29 +97,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/name/:name',
     method: 'GET',
-    summary: '🔍 사용자 단건 조회 (이름)',
-    description: '사용자명을 기준으로 단건 조회합니다(완전 일치).',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'name', '사용자명', 'string', true, ],
-      ],
-      responses: [
-        [
-          '사용자 조회 성공',
-          [
-            false,
-            'SUCCESS',
-            'USER_FETCH_SUCCESS',
-            CreateExample.user(),
-          ],
-        ],
-        [
-          '사용자를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminGetUserByUserNm(
@@ -184,22 +129,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/email/:email',
     method: 'GET',
-    summary: '🔍 사용자 단건 조회 (이메일)',
-    description: '이메일 주소를 기준으로 단건 조회합니다(완전 일치).',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'email', '이메일 주소', 'string', true, ],
-      ],
-      responses: [
-        [ '사용자 조회 성공',
-          [ false, 'SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [ '사용자를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async adminGetUserByEmlAddr(
@@ -229,25 +161,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '',
     method: 'POST',
-    summary: '👤 새 사용자 생성',
-    description: 'ADMIN 권한으로 새로운 사용자 계정을 생성합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '사용자 생성 DTO', CreateUserDto, ],
-      responses: [
-        [ '사용자 생성 성공',
-          [ false, 'CREATED', 'USER_CREATE_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '이미 존재하는 이메일',
-          [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
-        ],
-        [
-          '사용자 생성 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminCreateUser(
@@ -278,38 +194,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/:userNo',
     method: 'PUT',
-    summary: '✏️ 사용자 정보 수정',
-    description: 'ADMIN 권한으로 특정 사용자의 정보를 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'userNo', '사용자 번호', 'number', true, ],
-      ],
-      body: [ '사용자 수정 DTO', UpdateUserDto, ],
-      responses: [
-        [
-          '사용자 수정 성공',
-          [
-            false,
-            'SUCCESS',
-            'USER_UPDATE_SUCCESS',
-            CreateExample.user('detail'),
-          ],
-        ],
-        [
-          '사용자를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
-        ],
-        [
-          '사용자명 중복',
-          [ true, 'CONFLICT', 'USER_NAME_EXISTS', null, ],
-        ],
-        [
-          '사용자 수정 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminUpdateUser(
@@ -342,26 +229,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '✏️ 다수 사용자 일괄 수정',
-    description: 'ADMIN 권한으로 다수 사용자 정보를 일괄 수정합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '사용자 수정 DTO', UpdateUserDto, ],
-      responses: [
-        [
-          '다수 사용자 수정 성공',
-          [ false, 'SUCCESS', 'USER_UPDATE_SUCCESS', {
-            successCnt: 1,
-            failCnt: 0,
-            failNoList: [],
-          }, ],
-        ],
-        [
-          '사용자 수정 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminMultipleUpdateUser(
@@ -389,28 +259,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/:userNo',
     method: 'DELETE',
-    summary: '🗑️ 사용자 삭제',
-    description: 'ADMIN 권한으로 특정 사용자를 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      params: [
-        [ 'userNo', '사용자 번호', 'number', true, ],
-      ],
-      responses: [
-        [
-          '사용자 삭제 성공',
-          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', true, ],
-        ],
-        [
-          '사용자를 찾을 수 없음',
-          [ true, 'NOT_FOUND', 'USER_NOT_FOUND', null, ],
-        ],
-        [
-          '사용자 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', false, ],
-        ],
-      ],
     },
   })
   async adminDeleteUser(
@@ -441,26 +292,9 @@ export class AdminUserController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '🗑️ 다수 사용자 일괄 삭제',
-    description: 'ADMIN 권한으로 다수 사용자를 일괄 삭제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
-      body: [ '사용자 번호 목록', DeleteMultipleUsersDto, ],
-      responses: [
-        [
-          '다수 사용자 삭제 성공',
-          [ false, 'SUCCESS', 'USER_DELETE_SUCCESS', {
-            successCnt: 1,
-            failCnt: 0,
-            failNoList: [],
-          }, ],
-        ],
-        [
-          '사용자 삭제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async adminMultipleDeleteUser(

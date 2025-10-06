@@ -16,7 +16,6 @@ import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 import { clearCookie, setCookie } from '@/utils/setCookie';
 
 import { AuthService } from './auth.service';
@@ -34,26 +33,9 @@ export class AuthController {
   @Endpoint({
     endpoint: '/signup',
     method: 'POST',
-    summary: '회원가입',
-    description: '새로운 사용자 계정을 생성합니다.',
     options: {
       throttle: [ 3, 60000, ],
       serialize: true,
-      body: [ '회원가입 DTO', CreateUserDto, ],
-      responses: [
-        [
-          '회원가입 성공',
-          [ false, 'SUCCESS', 'SIGN_UP_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '이메일 중복',
-          [ true, 'CONFLICT', 'EMAIL_IN_USE', null, ],
-        ],
-        [
-          '회원가입 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'SIGN_UP_ERROR', null, ],
-        ],
-      ],
     },
   })
   async signUp(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
@@ -78,26 +60,9 @@ export class AuthController {
   @Endpoint({
     endpoint: '/signin',
     method: 'POST',
-    summary: '로그인',
-    description: '사용자 인증을 처리하고 JWT 토큰을 발급합니다.',
     options: {
       throttle: [ 5, 60000, ],
       serialize: true,
-      body: [ '로그인 DTO', SignInDto, ],
-      responses: [
-        [
-          '로그인 성공',
-          [ false, 'SUCCESS', 'SIGN_IN_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '인증 실패',
-          [ true, 'UNAUTHORIZED', 'INVALID_CREDENTIALS', null, ],
-        ],
-        [
-          '사용자 정보 업데이트 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async signIn(
@@ -164,30 +129,10 @@ export class AuthController {
   @Endpoint({
     endpoint: '/refresh',
     method: 'POST',
-    summary: '토큰 재발급',
-    description: '리프레시 토큰을 사용하여 새로운 액세스 토큰을 발급합니다.',
     options: {
       throttle: [ 5, 60000, ],
       serialize: true,
       roles: [ 'USER', 'ADMIN', ],
-      responses: [
-        [
-          '토큰 재발급 성공',
-          [ false, 'SUCCESS', 'TOKEN_REFRESH_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '리프레시 토큰이 유효하지 않음',
-          [ true, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN', null, ],
-        ],
-        [
-          '리프레시 토큰이 없음',
-          [ true, 'UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND', null, ],
-        ],
-        [
-          '사용자 정보 업데이트 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async refreshToken(
@@ -249,20 +194,6 @@ export class AuthController {
   @Endpoint({
     endpoint: '/signout',
     method: 'POST',
-    summary: '로그아웃',
-    description: '사용자 로그아웃을 처리하고 모든 인증 정보를 제거합니다.',
-    options: {
-      responses: [
-        [
-          '로그아웃 성공',
-          [ false, 'SUCCESS', 'SIGN_OUT_SUCCESS', null, ],
-        ],
-        [
-          '로그아웃 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR', null, ],
-        ],
-      ],
-    },
   })
   async signOut(
     @Req() req: FastifyRequest,
@@ -296,22 +227,10 @@ export class AuthController {
   @Endpoint({
     endpoint: '/session',
     method: 'GET',
-    summary: '세션 조회',
-    description: '현재 로그인된 사용자의 세션 정보를 조회합니다.',
     options: {
       serialize: true,
       roles: [ 'USER', 'ADMIN', ],
       authGuard: 'JWT-auth',
-      responses: [
-        [
-          '세션 조회 성공',
-          [ false, 'SUCCESS', 'SESSION_GET_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '세션 조회 실패',
-          [ true, 'UNAUTHORIZED', 'SESSION_NOT_FOUND', null, ],
-        ],
-      ],
     },
   })
   async getSession(@Req() req: AuthRequest): Promise<ResponseDto<UserInfoDto>> {
@@ -341,35 +260,10 @@ export class AuthController {
   @Endpoint({
     endpoint: '/change-password',
     method: 'POST',
-    summary: '비밀번호 변경',
-    description: '현재 로그인된 사용자의 비밀번호를 변경합니다.',
     options: {
       serialize: true,
       roles: [ 'USER', 'ADMIN', ],
       authGuard: 'JWT-auth',
-      body: [ '비밀번호 변경 DTO', ChangePasswordDto, ],
-      responses: [
-        [
-          '비밀번호 변경 성공',
-          [ false, 'SUCCESS', 'PASSWORD_CHANGE_SUCCESS', CreateExample.user('detail'), ],
-        ],
-        [
-          '현재 비밀번호가 올바르지 않음',
-          [ true, 'UNAUTHORIZED', 'INVALID_CREDENTIALS', null, ],
-        ],
-        [
-          '사용자 정보 조회 실패',
-          [ true, 'UNAUTHORIZED', 'AUTH_NOT_FOUND', null, ],
-        ],
-        [
-          '비밀번호 업데이트 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR', null, ],
-        ],
-        [
-          '비밀번호 변경 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'PASSWORD_CHANGE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async changePassword(

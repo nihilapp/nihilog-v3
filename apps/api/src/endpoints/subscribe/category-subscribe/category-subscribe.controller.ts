@@ -12,7 +12,6 @@ import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, CreateCatego
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
 
 import { CategorySubscribeService } from './category-subscribe.service';
 
@@ -28,23 +27,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/',
     method: 'GET',
-    summary: '📋 카테고리 구독 목록 조회',
-    description: '사용자가 구독한 카테고리 목록을 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      responses: [
-        [
-          '카테고리 구독 목록 조회 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', [
-            CreateExample.categorySubscribe('list'),
-          ], ],
-        ],
-        [
-          '카테고리 구독 목록 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR', null, ],
-        ],
-      ],
     },
   })
   async getCategorySubscribeList(
@@ -75,21 +60,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/:ctgryNo',
     method: 'GET',
-    summary: '📋 특정 카테고리 구독 상태 조회',
-    description: '특정 카테고리의 구독 상태를 조회합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      responses: [
-        [
-          '카테고리 구독 상태 조회 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', CreateExample.categorySubscribe('detail'), ],
-        ],
-        [
-          '카테고리 구독 상태 조회 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR', null, ],
-        ],
-      ],
     },
   })
   async getCategorySubscribeByCtgryNo(
@@ -121,21 +94,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/:ctgryNo',
     method: 'POST',
-    summary: '➕ 카테고리 구독 설정',
-    description: '특정 카테고리를 구독합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      responses: [
-        [
-          '카테고리 구독 설정 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', CreateExample.categorySubscribe('detail'), ],
-        ],
-        [
-          '카테고리 구독 설정 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async createCategorySubscribe(
@@ -167,22 +128,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'POST',
-    summary: '➕ 다수 카테고리 일괄 구독',
-    description: '여러 카테고리를 한 번에 구독합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독할 카테고리 목록 DTO', CreateCategorySubscribeDto, ],
-      responses: [
-        [
-          '다수 카테고리 구독 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', [ CreateExample.categorySubscribe('detail'), ], ],
-        ],
-        [
-          '다수 카테고리 구독 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async multipleCreateCategorySubscribe(
@@ -213,22 +161,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'PUT',
-    summary: '✏️ 다수 카테고리 구독 설정 일괄 변경',
-    description: '여러 카테고리의 구독 설정을 한 번에 변경합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독 설정 변경 DTO', UpdateCategorySubscribeDto, ],
-      responses: [
-        [
-          '다수 카테고리 구독 설정 변경 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', [ CreateExample.categorySubscribe('detail'), ], ],
-        ],
-        [
-          '다수 카테고리 구독 설정 변경 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async multipleUpdateCategorySubscribe(
@@ -259,21 +194,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/:ctgrySbcrNo',
     method: 'DELETE',
-    summary: '➖ 카테고리 구독 해제',
-    description: '특정 카테고리 구독을 해제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      responses: [
-        [
-          '카테고리 구독 해제 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', true, ],
-        ],
-        [
-          '카테고리 구독 해제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR', false, ],
-        ],
-      ],
     },
   })
   async deleteCategorySubscribe(
@@ -304,22 +227,9 @@ export class CategorySubscribeController {
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
-    summary: '➖ 다수 카테고리 구독 일괄 해제',
-    description: '여러 카테고리 구독을 한 번에 해제합니다.',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
-      body: [ '구독 해제할 카테고리 목록 DTO', DeleteCategorySubscribeDto, ],
-      responses: [
-        [
-          '다수 카테고리 구독 해제 성공',
-          [ false, 'SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null, ],
-        ],
-        [
-          '다수 카테고리 구독 해제 실패',
-          [ true, 'INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR', null, ],
-        ],
-      ],
     },
   })
   async multipleDeleteCategorySubscribe(
