@@ -146,3 +146,25 @@ export {
   type SearchPstTagMpngType,
   type DeletePstTagMpngType
 } from './tag.schema';
+
+export {
+  createCategorySchema,
+  updateCategorySchema,
+  deleteCategorySchema,
+  searchCategorySchema,
+  type CreateCategoryType,
+  type UpdateCategoryType,
+  type DeleteCategoryType,
+  type SearchCategoryType
+} from './category.schema';
+
+export {
+  createCommentSchema,
+  updateCommentSchema,
+  deleteCommentSchema,
+  searchCommentSchema,
+  type CreateCommentType,
+  type UpdateCommentType,
+  type DeleteCommentType,
+  type SearchCommentType
+} from './comment.schema';

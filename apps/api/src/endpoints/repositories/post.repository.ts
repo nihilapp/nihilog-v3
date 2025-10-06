@@ -11,8 +11,8 @@ import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints
 import type {
   SelectPostBookmarkListItemType,
   SelectPostBookmarkType,
-  SelectPostInfoListItemType,
-  SelectPostInfoType,
+  SelectPostListItemType,
+  SelectPostType,
   SelectPostShareLogType,
   SelectPostViewLogType,
   SharePlatformStatItemType,
@@ -35,7 +35,7 @@ export class PostRepository {
    * @description 공개 게시글 목록 조회 (통합 검색)
    * @param searchData 검색 데이터
    */
-  async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -80,7 +80,7 @@ export class PostRepository {
    * @description 특정 게시글 상세 조회
    * @param pstNo 게시글 번호
    */
-  async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostType> | null> {
     try {
       const post = await this.prisma.pstInfo.findUnique({
         where: { pstNo, },
@@ -97,7 +97,7 @@ export class PostRepository {
    * @description SEO 친화적 URL로 게시글 조회
    * @param pstCd 게시글 슬러그
    */
-  async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostType> | null> {
     try {
       const post = await this.prisma.pstInfo.findFirst({
         where: { pstCd, },
@@ -118,7 +118,7 @@ export class PostRepository {
   async getPostListByTagNo(
     tagNo: number,
     searchData: SearchPostDto
-  ): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  ): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -173,7 +173,7 @@ export class PostRepository {
   async getPostListByCtgryNo(
     ctgryNo: number,
     searchData: SearchPostDto
-  ): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  ): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -226,7 +226,7 @@ export class PostRepository {
   async getPostListFromArchive(
     date: string,
     searchData: SearchPostDto
-  ): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  ): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
@@ -521,7 +521,7 @@ export class PostRepository {
    * @description 고급 검색을 통한 게시글 목록 조회
    * @param searchData 고급 검색 데이터
    */
-  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, orderBy, tagNoList, ctgryNoList, pstStts, archYn, } = searchData;
 
@@ -605,7 +605,7 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param createData 게시글 생성 데이터
    */
-  async createPost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async createPost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     try {
       const { pstTtl, pstMtxt, } = createData;
 
@@ -634,7 +634,7 @@ export class PostRepository {
    * @param userNo 사용자 번호
    * @param updateData 게시글 수정 데이터
    */
-  async updatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async updatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     try {
       const updatePost = await this.prisma.pstInfo.update({
         where: {

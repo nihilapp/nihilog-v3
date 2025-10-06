@@ -6,16 +6,16 @@
 
 #### ORM 전환 현황
 
-- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post (조회 기능), Tag (조회 기능)
-- ❌ **미구현**: Category, Comment
+- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post (조회 기능), Tag (조회 기능), Admin Tag (관리자 기능), Category (조회 기능), Admin Category (관리자 기능)
+- ❌ **미구현**: Comment
 
 ### 🚧 미구현 기능
 
 #### 기본 CRUD
 
-- **Category**: 카테고리 CRUD (완전 미구현)
+- **Category**: 카테고리 CRUD (✅ 완료)
 - **Comment**: 댓글 CRUD (완전 미구현)
-- **Tag**: 관리자용 태그 CRUD (일반 사용자용 조회 기능은 완료)
+- **Tag**: 관리자용 태그 CRUD (✅ 완료)
 
 #### 확장 기능
 
@@ -57,91 +57,13 @@
 
 ## 1. Category 엔티티
 
-### 일반 사용자 기능
-
-- [ ] GET /categories **[USER]**
-  - `getCategoryList`
-  - 기능: 전체 카테고리 목록 조회, 계층 구조 표시, 게시글 수 포함, 정렬순 적용
-- [ ] GET /categories/:ctgryNo **[USER]**
-  - `getCategoryByCtgryNo`
-  - params: ctgryNo: number
-  - 기능: 특정 카테고리 상세 정보 조회, 하위 카테고리 포함, 게시글 목록
-- [ ] GET /categories/name/:name **[USER]**
-  - `getCategoryByCtgryNm`
-  - params: name: string
-  - 기능: 카테고리명으로 검색, 유사 이름 카테고리 제안
-
-### 관리자 기능
-
-- [ ] POST /admin/categories **[ADMIN]**
-  - `adminCreateCategory`
-  - body: CreateCategoryDto
-  - 기능: 새 카테고리 생성, 부모 카테고리 설정, 정렬 순서 지정, URL 슬러그 생성
-- [ ] POST /admin/categories/multiple **[ADMIN]**
-  - `adminMultipleCreateCategory`
-  - body: CreateCategoryDto (ctgryNoList 포함)
-  - 기능: 다수 카테고리 일괄 생성, 계층 구조 일괄 설정
-- [ ] PATCH /admin/categories/:ctgryNo **[ADMIN]**
-  - `adminUpdateCategory`
-  - params: ctgryNo: number
-  - body: UpdateCategoryDto
-  - 기능: 카테고리 정보 수정, 부모 변경, 정렬 순서 변경, 활성/비활성 상태 변경
-- [ ] PATCH /admin/categories/multiple **[ADMIN]**
-  - `adminMultipleUpdateCategory`
-  - body: UpdateCategoryDto (ctgryNoList 포함)
-  - 기능: 다수 카테고리 일괄 수정, 정렬 순서 일괄 변경, 상태 일괄 변경
-- [ ] DELETE /admin/categories/:ctgryNo **[ADMIN]**
-  - `adminDeleteCategory`
-  - params: ctgryNo: number
-  - 기능: 카테고리 삭제, 하위 카테고리 처리, 관련 게시글 미분류 처리
-- [ ] DELETE /admin/categories/multiple **[ADMIN]**
-  - `adminMultipleDeleteCategory`
-  - body: UpdateCategorySubscribeDto (ctgryNoList 포함)
-  - 기능: 다수 카테고리 일괄 삭제, 관련 데이터 정리
+> **✅ 완료**: 일반 사용자용 카테고리 조회 기능 및 관리자용 카테고리 CRUD 기능이 모두 구현되었습니다.
+> **📋 상세 내용**: [crud.complete.md](./crud.complete.md)의 "8. Category 엔티티" 및 "9. Admin Category 엔티티" 섹션을 참조하세요.
 
 ## 2. Tag 엔티티
 
-### 일반 사용자 기능
-
-- [ ] GET /tags **[USER]**
-  - `getTagList`
-  - 기능: 전체 태그 목록 조회, 인기도순/알파벳순 정렬, 사용 횟수 포함
-- [ ] GET /tags/:tagNo **[USER]**
-  - `getTagByTagNo`
-  - params: tagNo: number
-  - 기능: 특정 태그 상세 정보 조회, 태그된 게시글 목록, 관련 태그 추천
-- [ ] GET /tags/name/:name **[USER]**
-  - `getTagByTagNm`
-  - params: name: string
-  - 기능: 태그명으로 검색, 자동완성 기능, 유사 태그 제안
-
-### 관리자 기능
-
-- [ ] POST /admin/tags **[ADMIN]**
-  - `adminCreateTag`
-  - body: CreateTagDto
-  - 기능: 새 태그 생성, 태그명 중복 검증, URL 슬러그 생성, 색상 설정
-- [ ] POST /admin/tags/multiple **[ADMIN]**
-  - `adminMultipleCreateTag`
-  - body: CreateTagDto (tagNoList 포함)
-  - 기능: 다수 태그 일괄 생성, 게시글에서 태그 추출 시 사용
-- [ ] PATCH /admin/tags/:tagNo **[ADMIN]**
-  - `adminUpdateTag`
-  - params: tagNo: number
-  - body: UpdateTagDto
-  - 기능: 태그 정보 수정, 태그명 변경, 색상 변경, 활성/비활성 상태 변경
-- [ ] PATCH /admin/tags/multiple **[ADMIN]**
-  - `adminMultipleUpdateTag`
-  - body: UpdateTagDto (tagNoList 포함)
-  - 기능: 다수 태그 일괄 수정, 태그 분류 일괄 변경, 상태 일괄 변경
-- [ ] DELETE /admin/tags/:tagNo **[ADMIN]**
-  - `adminDeleteTag`
-  - params: tagNo: number
-  - 기능: 태그 삭제, 게시글에서 태그 연결 해제, 구독 정보 정리
-- [ ] DELETE /admin/tags/multiple **[ADMIN]**
-  - `adminMultipleDeleteTag`
-  - body: UpdateTagSubscribeDto (tagNoList 포함)
-  - 기능: 다수 태그 일괄 삭제, 관련 연결 정보 정리
+> **✅ 완료**: 일반 사용자용 태그 조회 기능 및 관리자용 태그 CRUD 기능이 모두 구현되었습니다.
+> **📋 상세 내용**: [crud.complete.md](./crud.complete.md)의 "6. Tag 엔티티" 및 "7. Admin Tag 엔티티" 섹션을 참조하세요.
 
 ## 3. Comment 엔티티
 

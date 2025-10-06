@@ -6,6 +6,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AdminModule } from '@/endpoints/admin/admin.module';
 import { AdminCategorySubscribeModule } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.module';
+import { AdminCommentsModule } from '@/endpoints/admin/comments/admin-comments.module';
 import { AdminPostsModule } from '@/endpoints/admin/posts/admin-posts.module';
 import { AdminSubscribeModule } from '@/endpoints/admin/subscribe/admin-user-subscribe.module';
 import { AdminTagSubscribeModule } from '@/endpoints/admin/tag-subscribe/admin-tag-subscribe.module';
@@ -13,6 +14,7 @@ import { AdminTagsModule } from '@/endpoints/admin/tags/admin-tags.module';
 import { AdminUserModule } from '@/endpoints/admin/users/admin-users.module';
 import { AuthModule } from '@/endpoints/auth/auth.module';
 import { CategoriesModule } from '@/endpoints/categories/categories.module';
+import { CommentsModule } from '@/endpoints/comments/comments.module';
 import { PostsModule } from '@/endpoints/posts/posts.module';
 import { PrismaModule } from '@/endpoints/prisma/prisma.module';
 import { RepositoryModule } from '@/endpoints/repositories/repository.module';
@@ -39,6 +41,7 @@ import config from './conf/conf';
     UserModule,
     PostsModule,
     TagModule,
+    CommentsModule,
     CategoriesModule,
     CategorySubscribeModule,
     TagSubscribeModule,
@@ -49,6 +52,7 @@ import config from './conf/conf';
     AdminCategorySubscribeModule,
     AdminTagSubscribeModule,
     AdminTagsModule,
+    AdminCommentsModule,
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         transport: {

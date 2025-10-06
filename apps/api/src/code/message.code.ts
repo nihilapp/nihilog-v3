@@ -185,6 +185,59 @@ export const MESSAGE_CODE = {
   ADMIN_TAG_MAPPING_CREATE_ERROR: '태그 매핑 생성에 실패했습니다.',
   ADMIN_TAG_MAPPING_DELETE_ERROR: '태그 매핑 삭제에 실패했습니다.',
 
+  // ===== 카테고리 관련 메시지 =====
+  // 성공 메시지
+  CATEGORY_SEARCH_SUCCESS: '카테고리 목록을 조회했습니다.',
+  CATEGORY_GET_SUCCESS: '카테고리 정보를 조회했습니다.',
+  CATEGORY_GET_BY_NAME_SUCCESS: '카테고리명으로 카테고리를 조회했습니다.',
+
+  // 에러 메시지
+  CATEGORY_SEARCH_ERROR: '카테고리 목록 조회에 실패했습니다.',
+  CATEGORY_GET_ERROR: '카테고리 정보 조회에 실패했습니다.',
+  CATEGORY_GET_BY_NAME_ERROR: '카테고리명으로 카테고리 조회에 실패했습니다.',
+  CATEGORY_NOT_FOUND: '카테고리를 찾을 수 없습니다.',
+  CATEGORY_NAME_NOT_FOUND: '해당 이름의 카테고리를 찾을 수 없습니다.',
+
+  // ===== 태그 관련 메시지 =====
+  // 성공 메시지
+  TAG_SEARCH_SUCCESS: '태그 목록을 조회했습니다.',
+  TAG_GET_SUCCESS: '태그 정보를 조회했습니다.',
+  TAG_GET_BY_NAME_SUCCESS: '태그명으로 태그를 조회했습니다.',
+
+  // 에러 메시지
+  TAG_SEARCH_ERROR: '태그 목록 조회에 실패했습니다.',
+  TAG_GET_ERROR: '태그 정보 조회에 실패했습니다.',
+  TAG_GET_BY_NAME_ERROR: '태그명으로 태그 조회에 실패했습니다.',
+  TAG_NOT_FOUND: '태그를 찾을 수 없습니다.',
+  TAG_NAME_NOT_FOUND: '해당 이름의 태그를 찾을 수 없습니다.',
+
+  // ===== 관리자 카테고리 관련 메시지 =====
+  // 성공 메시지
+  ADMIN_CATEGORY_SEARCH_SUCCESS: '관리자 카테고리 목록을 조회했습니다.',
+  ADMIN_CATEGORY_GET_SUCCESS: '관리자 카테고리 정보를 조회했습니다.',
+  ADMIN_CATEGORY_GET_BY_NAME_SUCCESS: '관리자 카테고리명으로 카테고리를 조회했습니다.',
+  ADMIN_CATEGORY_CREATE_SUCCESS: '카테고리가 생성되었습니다.',
+  ADMIN_CATEGORY_MULTIPLE_CREATE_SUCCESS: '다수 카테고리가 생성되었습니다.',
+  ADMIN_CATEGORY_UPDATE_SUCCESS: '카테고리가 수정되었습니다.',
+  ADMIN_CATEGORY_MULTIPLE_UPDATE_SUCCESS: '다수 카테고리가 수정되었습니다.',
+  ADMIN_CATEGORY_DELETE_SUCCESS: '카테고리가 삭제되었습니다.',
+  ADMIN_CATEGORY_MULTIPLE_DELETE_SUCCESS: '다수 카테고리가 삭제되었습니다.',
+
+  // 에러 메시지
+  ADMIN_CATEGORY_SEARCH_ERROR: '관리자 카테고리 목록 조회에 실패했습니다.',
+  ADMIN_CATEGORY_GET_ERROR: '관리자 카테고리 정보 조회에 실패했습니다.',
+  ADMIN_CATEGORY_GET_BY_NAME_ERROR: '관리자 카테고리명으로 카테고리 조회에 실패했습니다.',
+  ADMIN_CATEGORY_CREATE_ERROR: '카테고리 생성에 실패했습니다.',
+  ADMIN_CATEGORY_MULTIPLE_CREATE_ERROR: '다수 카테고리 생성에 실패했습니다.',
+  ADMIN_CATEGORY_UPDATE_ERROR: '카테고리 수정에 실패했습니다.',
+  ADMIN_CATEGORY_MULTIPLE_UPDATE_ERROR: '다수 카테고리 수정에 실패했습니다.',
+  ADMIN_CATEGORY_DELETE_ERROR: '카테고리 삭제에 실패했습니다.',
+  ADMIN_CATEGORY_MULTIPLE_DELETE_ERROR: '다수 카테고리 삭제에 실패했습니다.',
+  ADMIN_CATEGORY_NOT_FOUND: '관리할 카테고리를 찾을 수 없습니다.',
+  ADMIN_CATEGORY_NAME_NOT_FOUND: '해당 이름의 관리자 카테고리를 찾을 수 없습니다.',
+  ADMIN_CATEGORY_NAME_IN_USE: '이미 사용 중인 카테고리 이름입니다.',
+  ADMIN_CATEGORY_NAME_REQUIRED: '카테고리 이름은 필수 입력 항목입니다.',
+
   // ===== 구독 관련 메시지 =====
   // 성공 메시지
   SUBSCRIBE_FETCH_SUCCESS: '구독 설정을 조회했습니다.',

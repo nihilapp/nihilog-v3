@@ -33,11 +33,11 @@ export class TagController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'INTERNAL_SERVER_ERROR'
+        result?.error?.message || 'TAG_SEARCH_ERROR'
       );
     }
 
-    return createResponse('SUCCESS', 'SUCCESS', result.data);
+    return createResponse('SUCCESS', 'TAG_SEARCH_SUCCESS', result.data);
   }
 
   /**
@@ -54,11 +54,11 @@ export class TagController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'NOT_FOUND'
+        result?.error?.message || 'TAG_NOT_FOUND'
       );
     }
 
-    return createResponse('SUCCESS', 'SUCCESS', result.data);
+    return createResponse('SUCCESS', 'TAG_GET_SUCCESS', result.data);
   }
 
   /**
@@ -75,10 +75,10 @@ export class TagController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'NOT_FOUND'
+        result?.error?.message || 'TAG_NAME_NOT_FOUND'
       );
     }
 
-    return createResponse('SUCCESS', 'SUCCESS', result.data);
+    return createResponse('SUCCESS', 'TAG_GET_BY_NAME_SUCCESS', result.data);
   }
 }

@@ -7,7 +7,7 @@ import { CreatePostDto, DeletePostDto, UpdatePostDto, ViewStatDto } from '@/dto/
 import { AdminPostsService } from '@/endpoints/admin/posts/admin-posts.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostInfoType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
+import type { SelectPostType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 
 @ApiTags('admin/posts')
@@ -140,7 +140,7 @@ export class AdminPostsController {
   async adminCreatePost(
     @Req() req: AuthRequest,
     @Body() createData: CreatePostDto
-  ): Promise<ResponseDto<SelectPostInfoType>> {
+  ): Promise<ResponseDto<SelectPostType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
@@ -172,7 +172,7 @@ export class AdminPostsController {
   async adminUpdatePost(
     @Req() req: AuthRequest,
     @Body() updateData: UpdatePostDto
-  ): Promise<ResponseDto<SelectPostInfoType>> {
+  ): Promise<ResponseDto<SelectPostType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }

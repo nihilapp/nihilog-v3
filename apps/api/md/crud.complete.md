@@ -15,6 +15,9 @@
 - **Admin 관리 기능**: 모든 관리자 CRUD 기능 완료 (User, Subscribe, CategorySubscribe, TagSubscribe, Post)
 - **Admin Post 통계**: 게시글 조회수/공유 통계 조회 기능
 - **Tag 조회 기능**: 일반 사용자용 태그 목록/상세/검색 기능 (2025 0921 완료)
+- **Admin Tag 관리**: 관리자용 태그 CRUD 및 태그 매핑 기능 (2025 1006 완료)
+- **Category 조회 기능**: 일반 사용자용 카테고리 목록/상세/검색 기능 (2025 1006 완료)
+- **Admin Category 관리**: 관리자용 카테고리 CRUD 기능 (2025 1006 완료)
 
 ## 명명 규칙
 
@@ -430,11 +433,117 @@
   - params: name: string
   - 기능: 태그명으로 태그 검색, 자동완성 기능, 유사 태그 제안
 
-### 🔄 향후 구현 예정
+## 7. Admin Tag 엔티티
 
-#### Admin Tags Controller (관리자용)
+### 관리자 기능
 
-- 태그 생성, 수정, 삭제 기능
-- 태그 관리 대시보드
-- 태그 통계 및 분석
-- 대량 태그 처리
+- [x] POST /admin/tags **[ADMIN]**
+  - `adminCreateTag`
+  - body: CreateTagDto
+  - 기능: 새 태그 생성, 태그명 중복 검증, URL 슬러그 생성, 색상 설정
+- [x] POST /admin/tags/multiple **[ADMIN]**
+  - `adminMultipleCreateTag`
+  - body: CreateTagDto[]
+  - 기능: 다수 태그 일괄 생성, 게시글에서 태그 추출 시 사용
+- [x] PUT /admin/tags **[ADMIN]**
+  - `adminUpdateTag`
+  - body: UpdateTagDto
+  - 기능: 태그 정보 수정, 태그명 변경, 색상 변경, 활성/비활성 상태 변경
+- [x] PUT /admin/tags/multiple **[ADMIN]**
+  - `adminMultipleUpdateTag`
+  - body: UpdateTagDto
+  - 기능: 다수 태그 일괄 수정, 태그 분류 일괄 변경, 상태 일괄 변경
+- [x] DELETE /admin/tags **[ADMIN]**
+  - `adminDeleteTag`
+  - body: DeleteTagDto
+  - 기능: 태그 삭제, 게시글에서 태그 연결 해제, 구독 정보 정리
+- [x] DELETE /admin/tags/multiple **[ADMIN]**
+  - `adminMultipleDeleteTag`
+  - body: DeleteTagDto
+  - 기능: 다수 태그 일괄 삭제, 관련 연결 정보 정리
+
+### 태그 매핑 관리
+
+- [x] POST /admin/tags/mapping **[ADMIN]**
+  - `adminGetTagMapping`
+  - body: SearchPstTagMpngDto
+  - 기능: 태그 매핑 목록 조회, 포스트-태그 연결 현황 분석
+- [x] GET /admin/tags/mapping/:pstNo/:tagNo **[ADMIN]**
+  - `adminGetTagMappingByTagNo`
+  - params: pstNo: number, tagNo: number
+  - 기능: 특정 포스트-태그 매핑 조회
+- [x] POST /admin/tags/mapping **[ADMIN]**
+  - `adminAddTagMapping`
+  - body: CreatePstTagMpngDto
+  - 기능: 포스트에 태그 매핑 추가, 중복 검증
+- [x] POST /admin/tags/mapping/multiple **[ADMIN]**
+  - `adminMultipleAddTagMapping`
+  - body: CreatePstTagMpngDto[]
+  - 기능: 다수 포스트-태그 매핑 일괄 추가
+- [x] DELETE /admin/tags/mapping **[ADMIN]**
+  - `adminDeleteTagMapping`
+  - body: DeletePstTagMpngDto
+  - 기능: 포스트-태그 매핑 삭제
+- [x] DELETE /admin/tags/mapping/multiple **[ADMIN]**
+  - `adminMultipleDeleteTagMapping`
+  - body: DeletePstTagMpngDto
+  - 기능: 다수 포스트-태그 매핑 일괄 삭제
+
+## 8. Category 엔티티
+
+### 일반 사용자 기능
+
+- [x] POST /categories **[USER]**
+  - `getCategoryList`
+  - body: SearchCategoryDto
+  - 기능: 카테고리 목록 조회, 계층 구조 표시, 게시글 수 포함, 정렬순 적용
+- [x] GET /categories/:ctgryNo **[USER]**
+  - `getCategoryByCtgryNo`
+  - params: ctgryNo: number
+  - 기능: 특정 카테고리 상세 정보 조회, 하위 카테고리 포함, 게시글 목록
+- [x] GET /categories/name/:name **[USER]**
+  - `getCategoryByCtgryNm`
+  - params: name: string
+  - 기능: 카테고리명으로 검색, 유사 이름 카테고리 제안
+
+## 9. Admin Category 엔티티
+
+### 관리자 기능
+
+- [x] POST /admin/categories **[ADMIN]**
+  - `adminGetCategoryList`
+  - body: SearchCategoryDto
+  - 기능: 관리자 카테고리 목록 조회, 계층 구조 표시, 게시글 수 포함, 정렬순 적용
+- [x] GET /admin/categories/:ctgryNo **[ADMIN]**
+  - `adminGetCategoryByCtgryNo`
+  - params: ctgryNo: number
+  - 기능: 특정 카테고리 상세 정보 조회, 하위 카테고리 포함, 게시글 목록
+- [x] GET /admin/categories/name/:name **[ADMIN]**
+  - `adminGetCategoryByCtgryNm`
+  - params: name: string
+  - 기능: 카테고리명으로 검색, 유사 이름 카테고리 제안
+- [x] POST /admin/categories **[ADMIN]**
+  - `adminCreateCategory`
+  - body: CreateCategoryDto
+  - 기능: 새 카테고리 생성, 부모 카테고리 설정, 정렬 순서 지정, URL 슬러그 생성
+- [x] POST /admin/categories/multiple **[ADMIN]**
+  - `adminMultipleCreateCategory`
+  - body: CreateCategoryDto[]
+  - 기능: 다수 카테고리 일괄 생성, 계층 구조 일괄 설정
+- [x] PATCH /admin/categories/:ctgryNo **[ADMIN]**
+  - `adminUpdateCategory`
+  - params: ctgryNo: number
+  - body: UpdateCategoryDto
+  - 기능: 카테고리 정보 수정, 부모 변경, 정렬 순서 변경, 활성/비활성 상태 변경
+- [x] PATCH /admin/categories/multiple **[ADMIN]**
+  - `adminMultipleUpdateCategory`
+  - body: UpdateCategoryDto & { ctgryNoList: number[] }
+  - 기능: 다수 카테고리 일괄 수정, 정렬 순서 일괄 변경, 상태 일괄 변경
+- [x] DELETE /admin/categories/:ctgryNo **[ADMIN]**
+  - `adminDeleteCategory`
+  - params: ctgryNo: number
+  - 기능: 카테고리 삭제, 하위 카테고리 처리, 관련 게시글 미분류 처리
+- [x] DELETE /admin/categories/multiple **[ADMIN]**
+  - `adminMultipleDeleteCategory`
+  - body: DeleteCategoryDto
+  - 기능: 다수 카테고리 일괄 삭제, 관련 데이터 정리

@@ -7,8 +7,8 @@ import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common
 import type {
   SelectPostBookmarkListItemType,
   SelectPostBookmarkType,
-  SelectPostInfoListItemType,
-  SelectPostInfoType,
+  SelectPostListItemType,
+  SelectPostType,
   SelectPostShareLogType,
   SelectPostViewLogType
 } from '@/endpoints/prisma/types/post.types';
@@ -22,7 +22,7 @@ export class PostsService {
    * @description 게시글 목록 조회
    * @param searchData 검색 조건
    */
-  async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     return this.postRepository.getPostList(searchData);
   }
 
@@ -30,7 +30,7 @@ export class PostsService {
    * @description 게시글 상세 조회
    * @param pstNo 게시글 번호
    */
-  async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.getPostByPstNo(pstNo);
   }
 
@@ -38,7 +38,7 @@ export class PostsService {
    * @description 게시글 상세 조회
    * @param pstCd 게시글 슬러그
    */
-  async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.getPostByPstCd(pstCd);
   }
 
@@ -47,7 +47,7 @@ export class PostsService {
    * @param tagNo 태그 번호
    * @param searchData 검색 조건
    */
-  async getPostListByTagNo(tagNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getPostListByTagNo(tagNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     return this.postRepository.getPostListByTagNo(tagNo, searchData);
   }
 
@@ -56,7 +56,7 @@ export class PostsService {
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 조건
    */
-  async getPostListByCtgryNo(ctgryNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getPostListByCtgryNo(ctgryNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     return this.postRepository.getPostListByCtgryNo(ctgryNo, searchData);
   }
 
@@ -65,7 +65,7 @@ export class PostsService {
    * @param date 날짜(yyyyMM)
    * @param searchData 검색 조건
    */
-  async getPostListFromArchive(date: string, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getPostListFromArchive(date: string, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     return this.postRepository.getPostListFromArchive(date, searchData);
   }
 
@@ -73,7 +73,7 @@ export class PostsService {
    * @description 고급 검색을 통한 게시글 목록 조회
    * @param searchData 고급 검색 조건
    */
-  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostInfoListItemType>> | null> {
+  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
     return this.postRepository.getAdvancedPostList(searchData);
   }
 

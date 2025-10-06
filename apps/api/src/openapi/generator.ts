@@ -1,6 +1,7 @@
 import { OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 import type { OpenAPIObject } from '@nestjs/swagger';
 
+import { registerAdminCategoriesEndpoints } from './endpoints/admin-categories.endpoints';
 import { registerAdminCategorySubscribeEndpoints } from './endpoints/admin-category-subscribe.endpoints';
 import { registerAdminPostsEndpoints } from './endpoints/admin-posts.endpoints';
 import { registerAdminSubscribeEndpoints } from './endpoints/admin-subscribe.endpoints';
@@ -31,6 +32,7 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
   registerAdminEndpoints();
   registerAdminUsersEndpoints();
   registerAdminPostsEndpoints();
+  registerAdminCategoriesEndpoints();
   registerAdminTagsEndpoints();
   registerAdminSubscribeEndpoints();
   registerAdminTagSubscribeEndpoints();

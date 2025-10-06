@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { ViewStatDto, type CreatePostDto, type DeletePostDto, type UpdatePostDto } from '@/dto/post.dto';
 import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostInfoType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
+import type { SelectPostType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class AdminPostsService {
    * @param userNo 사용자 번호
    * @param createData 게시글 생성 데이터
    */
-  async adminCreatePost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async adminCreatePost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.createPost(userNo, createData);
   }
 
@@ -52,7 +52,7 @@ export class AdminPostsService {
    * @param userNo 사용자 번호
    * @param updateData 게시글 수정 데이터
    */
-  async adminUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostInfoType> | null> {
+  async adminUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.updatePost(userNo, updateData);
   }
 

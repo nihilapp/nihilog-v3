@@ -7,7 +7,7 @@ import { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import { SearchPostBookmarkDto } from '@/dto/post.dto';
 import { PostsService } from '@/endpoints/posts/posts.service';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostInfoListItemType, SelectPostInfoType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
+import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostListItemType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 
 @ApiTags('posts')
@@ -23,7 +23,7 @@ export class PostsController {
     endpoint: '/search',
     method: 'POST',
   })
-  async getPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
+  async getPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostList(searchData);
 
     if (!result?.success) {
@@ -48,7 +48,7 @@ export class PostsController {
     endpoint: '/:pstNo',
     method: 'GET',
   })
-  async getPostByPstNo(@Param('pstNo') pstNo: number): Promise<ResponseDto<SelectPostInfoType>> {
+  async getPostByPstNo(@Param('pstNo') pstNo: number): Promise<ResponseDto<SelectPostType>> {
     const result = await this.postsService.getPostByPstNo(pstNo);
 
     if (!result?.success) {
@@ -73,7 +73,7 @@ export class PostsController {
     endpoint: '/slug/:pstCd',
     method: 'GET',
   })
-  async getPostByPstCd(@Param('pstCd') pstCd: string): Promise<ResponseDto<SelectPostInfoType>> {
+  async getPostByPstCd(@Param('pstCd') pstCd: string): Promise<ResponseDto<SelectPostType>> {
     const result = await this.postsService.getPostByPstCd(pstCd);
 
     if (!result?.success) {
@@ -102,7 +102,7 @@ export class PostsController {
   async getPostListByTagNo(
     @Param('tagNo') tagNo: number,
     @Body() searchData: SearchPostDto
-  ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
+  ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostListByTagNo(tagNo, searchData);
 
     if (!result?.success) {
@@ -131,7 +131,7 @@ export class PostsController {
   async getPostListByCtgryNo(
     @Param('ctgryNo') ctgryNo: number,
     @Body() searchData: SearchPostDto
-  ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
+  ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostListByCtgryNo(ctgryNo, searchData);
 
     if (!result?.success) {
@@ -160,7 +160,7 @@ export class PostsController {
   async getPostListFromArchive(
     @Param('date') date: string,
     @Body() searchData: SearchPostDto
-  ): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
+  ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostListFromArchive(date, searchData);
 
     if (!result?.success) {
@@ -185,7 +185,7 @@ export class PostsController {
     endpoint: '/advanced-search',
     method: 'POST',
   })
-  async getAdvancedPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostInfoListItemType>>> {
+  async getAdvancedPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getAdvancedPostList(searchData);
 
     if (!result?.success) {

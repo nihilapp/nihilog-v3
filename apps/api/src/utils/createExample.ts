@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
 
-import { PostInfoType } from '@/endpoints/prisma/schemas/post.schema';
-import { TagInfoType } from '@/endpoints/prisma/schemas/tag.schema';
-import { UserInfoType } from '@/endpoints/prisma/schemas/user.schema';
-import { SelectPostBookmarkType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
+import type { SelectCategoryType } from '@/endpoints/prisma/types/category.types';
+import type { SelectCommentType } from '@/endpoints/prisma/types/comment.types';
+import { SelectPostBookmarkType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
+import type { SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 
 import { timeToString } from './timeHelper';
 
@@ -51,6 +52,7 @@ export class CreateExample {
       pstView: 0,
       pstStts: 'FINISHED',
       publDt: timeToString(now),
+      pinYn: 'N',
       rlsYn: 'Y',
       archYn: 'N',
       secrYn: 'N',
@@ -63,7 +65,7 @@ export class CreateExample {
       updtDt: timeToString(now),
       delNo: null,
       delDt: null,
-    } as PostInfoType;
+    } as SelectPostType;
   }
 
   static user(type: 'list' | 'detail' = 'detail') {
@@ -94,7 +96,7 @@ export class CreateExample {
       updtDt: timeToString(now),
       delNo: null,
       delDt: null,
-    } as UserInfoType;
+    } as SelectUserInfoType;
   }
 
   static subscribe(type: 'list' | 'detail' = 'detail') {
@@ -147,7 +149,36 @@ export class CreateExample {
       updtDt: timeToString(now),
       delNo: null,
       delDt: null,
-    } as TagInfoType;
+    } as SelectTagInfoType;
+  }
+
+  static category(type: 'list' | 'detail' = 'detail') {
+    const now = DateTime.now();
+
+    return {
+      ...(type === 'list'
+        ? {
+          rowNo: 1,
+          totalCnt: 1,
+        }
+        : {}),
+      ctgryNo: 1,
+      ctgryNm: 'JavaScript',
+      ctgryExpln: 'JavaScript 프로그래밍 언어 카테고리',
+      ctgryColr: '#F7DF1E',
+      ctgryStp: 1,
+      upCtgryNo: null,
+      parentCategory: null,
+      childCategories: [],
+      useYn: 'Y',
+      delYn: 'N',
+      crtNo: 1,
+      crtDt: timeToString(now),
+      updtNo: 1,
+      updtDt: timeToString(now),
+      delNo: null,
+      delDt: null,
+    } as SelectCategoryType;
   }
 
   static categorySubscribe(type: 'list' | 'detail' = 'detail') {
@@ -242,5 +273,39 @@ export class CreateExample {
       delNo: null,
       delDt: null,
     } as SelectPostBookmarkType;
+  }
+
+  static comment(type: 'list' | 'detail' = 'detail') {
+    const now = DateTime.now();
+
+    return {
+      ...(type === 'list'
+        ? {
+          rowNo: 1,
+          totalCnt: 1,
+        }
+        : {}),
+      cmntNo: 1,
+      pstNo: 1,
+      cmntCntnt: '정말 유용한 정보네요! 감사합니다.',
+      cmntSts: 'ACTIVE',
+      prntCmntNo: null,
+      useYn: 'Y',
+      delYn: 'N',
+      crtNo: 1,
+      crtDt: now.toISO(),
+      updtNo: 1,
+      updtDt: now.toISO(),
+      delNo: null,
+      delDt: null,
+      post: {
+        pstNo: 1,
+      },
+      parentComment: null,
+      replies: [],
+      creator: {
+        userNo: 1,
+      },
+    } as SelectCommentType;
   }
 }

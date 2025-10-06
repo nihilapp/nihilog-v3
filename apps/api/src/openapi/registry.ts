@@ -69,7 +69,13 @@ import {
   createPstTagMpngSchema,
   updatePstTagMpngSchema,
   searchPstTagMpngSchema,
-  deletePstTagMpngSchema
+  deletePstTagMpngSchema,
+
+  // 카테고리 관련 스키마
+  createCategorySchema,
+  updateCategorySchema,
+  deleteCategorySchema,
+  searchCategorySchema
 } from '@/endpoints/prisma/schemas';
 
 // 전역 OpenAPI 레지스트리 생성
@@ -145,4 +151,10 @@ export const registerAllSchemas = () => {
   openApiRegistry.register('UpdatePstTagMpng', updatePstTagMpngSchema);
   openApiRegistry.register('SearchPstTagMpng', searchPstTagMpngSchema);
   openApiRegistry.register('DeletePstTagMpng', deletePstTagMpngSchema);
+
+  // 카테고리 관련 스키마 등록
+  openApiRegistry.register('CreateCategory', createCategorySchema);
+  openApiRegistry.register('UpdateCategory', updateCategorySchema);
+  openApiRegistry.register('DeleteCategory', deleteCategorySchema);
+  openApiRegistry.register('SearchCategory', searchCategorySchema);
 };

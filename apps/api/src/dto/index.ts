@@ -82,6 +82,14 @@ export {
   DeletePstTagMpngDto
 } from './tag.dto';
 
+// Comment DTOs
+export {
+  CreateCommentDto,
+  UpdateCommentDto,
+  DeleteCommentDto,
+  SearchCommentDto
+} from './comment.dto';
+
 // Search DTOs
 export { SearchDto } from './search.dto';
 
