@@ -261,7 +261,6 @@ export const updatePstTagMpngSchema = pstTagMpngSchema.partial().pick({
 export const searchPstTagMpngSchema = baseSearchSchema.extend({
   ...pstTagMpngSchema.pick({
     pstNo: true,
-    tagNo: true,
     delYn: true,
   }).shape,
 }).partial();

@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import type { CreateTagDto, DeleteTagDto, UpdateTagDto } from '@/dto';
-import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
+import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import type { SelectPstTagMpngListItemType, SelectPstTagMpngType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
 import { TagRepository } from '@/endpoints/repositories/tag.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 
@@ -81,5 +82,72 @@ export class AdminTagsService {
    */
   async adminMultipleDeleteTag(userNo: number, deleteData: DeleteTagDto): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.tagRepository.multipleDeleteTag(userNo, deleteData);
+  }
+
+  /**
+   * @description 태그 매핑 조회
+   * @param searchData 검색 데이터
+   */
+  async adminGetTagMapping(searchData: SearchPstTagMpngDto): Promise<RepoResponseType<ListType<SelectPstTagMpngListItemType>> | null> {
+    return this.tagRepository.getPostTagMapping(searchData);
+  }
+
+  /**
+   * @description 태그 매핑 조회
+   * @param tagNo 태그 번호
+   * @param pstNo 포스트 번호
+   */
+  async adminGetTagMappingByTagNo(tagNo: number, pstNo: number): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
+    return this.tagRepository.getPostTagMappingByTagNo(tagNo, pstNo);
+  }
+
+  /**
+   * @description 태그 매핑 추가
+   * @param userNo 사용자 번호
+   * @param createData 태그 매핑 추가 데이터
+   */
+  async adminAddTagMapping(userNo: number, createData: CreatePstTagMpngDto): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
+    // 태그 중복
+    const findTag = await this.tagRepository
+      .getPostTagMappingByTagNo(createData.tagNo, createData.pstNo);
+    if (findTag?.success) {
+      return prismaResponse(false, null, 'CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS');
+    }
+
+    return this.tagRepository.addTagToPost(userNo, createData);
+  }
+
+  /**
+   * @description 다수 태그 매핑 추가
+   * @param userNo 사용자 번호
+   * @param createData 다수 태그 매핑 추가 데이터
+   */
+  async adminMultipleAddTagMapping(userNo: number, createData: CreatePstTagMpngDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
+    for (const item of createData) {
+      const findTag = await this.tagRepository
+        .getPostTagMappingByTagNo(item.tagNo, item.pstNo);
+      if (findTag?.success) {
+        return prismaResponse(false, null, 'CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS');
+      }
+    }
+    return this.tagRepository.multipleAddTagToPost(userNo, createData);
+  }
+
+  /**
+   * @description 태그 매핑 삭제
+   * @param userNo 사용자 번호
+   * @param deleteData 태그 매핑 삭제 데이터
+   */
+  async adminDeleteTagMapping(userNo: number, deleteData: DeletePstTagMpngDto): Promise<RepoResponseType<boolean> | null> {
+    return this.tagRepository.removeTagFromPost(userNo, deleteData);
+  }
+
+  /**
+   * @description 다수 태그 매핑 삭제
+   * @param userNo 사용자 번호
+   * @param deleteData 다수 태그 매핑 삭제 데이터
+   */
+  async adminMultipleDeleteTagMapping(userNo: number, deleteData: DeletePstTagMpngDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    return this.tagRepository.multipleRemoveTagFromPost(userNo, deleteData);
   }
 }

@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { Prisma, PrismaClient } from '@prisma/client';
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import type { CreateTagDto, DeleteTagDto, SearchTagDto, UpdateTagDto } from '@/dto/tag.dto';
+import type { CreatePstTagMpngDto, CreateTagDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto, SearchTagDto, UpdateTagDto } from '@/dto/tag.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagInfoListItemType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type { SelectPstTagMpngListItemType, SelectPstTagMpngType, SelectTagInfoListItemType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -339,6 +339,196 @@ export class TagRepository {
       return prismaResponse(true, {
         successCnt: deletedTags.count,
         failCnt: deleteData.tagNoList.length - deletedTags.count,
+        failNoList: [],
+      });
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  // ========================================================
+  // 포스트 태그 매핑
+  // ========================================================
+
+  /**
+   * @description 포스트 태그 매핑 조회
+   * @param searchData 검색 데이터
+   */
+  async getPostTagMapping(searchData: SearchPstTagMpngDto): Promise<RepoResponseType<ListType<SelectPstTagMpngListItemType>> | null> {
+    try {
+      const { pstNo, delYn, } = searchData;
+
+      const [ list, totalCnt, ] = await this.prisma.$transaction([
+        this.prisma.pstTagMpng.findMany({
+          where: {
+            delYn: delYn || 'N',
+            post: {
+              is: {
+                pstNo,
+              },
+            },
+          },
+          include: {
+            tag: {
+              select: {
+                tagNm: true,
+              },
+            },
+          },
+        }),
+        this.prisma.pstTagMpng.count({
+          where: {
+            delYn: delYn || 'N',
+            post: {
+              is: {
+                pstNo,
+              },
+            },
+          },
+        }),
+      ]);
+
+      return prismaResponse(true, {
+        list: list.map((item, index) => ({
+          ...item,
+          totalCnt,
+          rowNo: index + 1,
+        })),
+        totalCnt,
+      });
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그 번호와 포스트 번호로 포스트 태그 매핑 조회
+   * @param tagNo 태그 번호
+   * @param pstNo 포스트 번호
+   */
+  async getPostTagMappingByTagNo(tagNo: number, pstNo: number): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
+    try {
+      const tag = await this.prisma.pstTagMpng.findUnique({
+        where: { pstNo_tagNo: { tagNo, pstNo, }, },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
+        },
+      });
+
+      return prismaResponse(true, tag);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 포스트 태그 매핑 추가
+   * @param userNo 사용자 번호
+   * @param createData 포스트 태그 매핑 추가 데이터
+   */
+  async addTagToPost(userNo: number, createData: CreatePstTagMpngDto): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
+    try {
+      const newTag = await this.prisma.pstTagMpng.create({
+        data: {
+          ...createData,
+          crtNo: userNo,
+          crtDt: timeToString(),
+          updtNo: userNo,
+          updtDt: timeToString(),
+        },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
+        },
+      });
+
+      return prismaResponse(true, newTag);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 다수 포스트 태그 매핑 추가
+   * @param userNo 사용자 번호
+   * @param createData 포스트 태그 매핑 추가 데이터
+   */
+  async multipleAddTagToPost(userNo: number, createData: CreatePstTagMpngDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
+    try {
+      const newTags = await this.prisma.pstTagMpng.createMany({
+        data: createData.map((item) => ({
+          ...item,
+          crtNo: userNo,
+          crtDt: timeToString(),
+          updtNo: userNo,
+          updtDt: timeToString(),
+        })),
+      });
+
+      return prismaResponse(true, {
+        successCnt: newTags.count,
+        failCnt: createData.length - newTags.count,
+        failNoList: [],
+      });
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 포스트 태그 매핑 삭제
+   * @param userNo 사용자 번호
+   * @param deleteData 포스트 태그 매핑 삭제 데이터
+   */
+  async removeTagFromPost(userNo: number, deleteData: DeletePstTagMpngDto): Promise<RepoResponseType<boolean> | null> {
+    try {
+      const deletedTag = await this.prisma.pstTagMpng.update({
+        where: { tagMapNo: deleteData.tagMapNo, },
+        data: {
+          delYn: 'Y',
+          updtNo: userNo,
+          updtDt: timeToString(),
+        },
+      });
+
+      return prismaResponse(true, !!deletedTag);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 다수 포스트 태그 매핑 삭제
+   * @param userNo 사용자 번호
+   * @param deleteData 포스트 태그 매핑 삭제 데이터
+   */
+  async multipleRemoveTagFromPost(userNo: number, deleteData: DeletePstTagMpngDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    try {
+      const deletedTags = await this.prisma.pstTagMpng.updateMany({
+        where: { tagMapNo: { in: deleteData.tagMapNoList, }, },
+        data: {
+          delYn: 'Y',
+          updtNo: userNo,
+          updtDt: timeToString(),
+        },
+      });
+
+      return prismaResponse(true, {
+        successCnt: deletedTags.count,
+        failCnt: deleteData.tagMapNoList.length - deletedTags.count,
         failNoList: [],
       });
     }

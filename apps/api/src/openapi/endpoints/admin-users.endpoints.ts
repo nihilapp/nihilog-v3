@@ -146,7 +146,7 @@ export const registerAdminUsersEndpoints = () => {
     security: [ { 'JWT-auth': [], }, ],
     request: {
       params: z.object({
-        email: z.string().email().openapi({
+        email: z.email().openapi({
           description: '이메일 주소',
           example: 'user@example.com',
         }),
