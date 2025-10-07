@@ -46,7 +46,7 @@ export const registerAdminEndpoints = () => {
               },
               error: {
                 summary: '프로필 업데이트 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', 'PROFILE_UPDATE_ERROR'),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

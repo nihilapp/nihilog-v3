@@ -107,7 +107,7 @@ export const registerCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', 'CATEGORY_GET_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', 'CATEGORY_GET_BY_NAME_SUCCESS', CreateExample.category('detail')),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',

@@ -13,12 +13,9 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --config eslint.config.mjs",
     "lint:fix": "eslint \"{src,apps,libs}/**/*.ts\" --config eslint.config.mjs --fix",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
-    "prisma:generate": "pnpm dlx prisma generate",
-    "prisma:migrate": "pnpm dlx prisma migrate dev",
-    "prisma:studio": "pnpm dlx prisma studio"
+    "db:generate": "pnpm prisma generate",
+    "db:migrate": "pnpm prisma migrate dev",
+    "db:studio": "pnpm prisma studio"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^8.1.0",

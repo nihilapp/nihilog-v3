@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 
 import { AdminCategorySubscribeController } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.controller';
-import { AdminCategorySubscribeService } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.service';
+import { CategorySubscribeModule } from '@/endpoints/subscribe/category-subscribe/category-subscribe.module';
 
 @Module({
+  imports: [ CategorySubscribeModule, ],
   controllers: [ AdminCategorySubscribeController, ],
-  providers: [ AdminCategorySubscribeService, ],
-  exports: [ AdminCategorySubscribeService, ],
 })
 export class AdminCategorySubscribeModule {}

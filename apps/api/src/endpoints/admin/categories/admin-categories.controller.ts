@@ -3,7 +3,6 @@ import {
   Body,
   Param
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
@@ -13,7 +12,6 @@ import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 
-@ApiTags('admin-categories')
 @Controller('admin/categories')
 export class AdminCategoriesController {
   constructor(private readonly adminCategoriesService: AdminCategoriesService) { }
@@ -52,8 +50,8 @@ export class AdminCategoriesController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'ADMIN_CATEGORY_NOT_FOUND'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_GET_ERROR'
       );
     }
 
@@ -73,8 +71,8 @@ export class AdminCategoriesController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'ADMIN_CATEGORY_NAME_NOT_FOUND'
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_CATEGORY_GET_BY_NAME_ERROR'
       );
     }
 

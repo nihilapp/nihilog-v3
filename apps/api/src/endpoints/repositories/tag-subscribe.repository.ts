@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, type TagSbcrMpng } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
@@ -306,6 +306,36 @@ export class TagSubscribeRepository {
   }
 
   /**
+   * @description 구독 번호와 태그 번호로 태그 구독 조회
+   * @param sbcrNo 구독 번호
+   * @param tagNo 태그 번호
+   */
+  async getTagSubscribeBySbcrNoAndTagNo(sbcrNo: number, tagNo: number): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
+    try {
+      const subscribe = await this.prisma.tagSbcrMpng.findUnique({
+        where: {
+          sbcrNo_tagNo: {
+            sbcrNo,
+            tagNo,
+          },
+        },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
+        },
+      });
+
+      return prismaResponse(true, subscribe);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
    * @description 태그 구독 생성
    * @param userNo 사용자 번호
    * @param createData 태그 구독 생성 데이터
@@ -404,7 +434,7 @@ export class TagSubscribeRepository {
   async updateTagSubscribe(
     userNo: number,
     updateData: UpdateTagSubscribeDto
-  ): Promise<RepoResponseType<TagSbcrMpng> | null> {
+  ): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
     try {
       const { tagSbcrNo, useYn, delYn, } = updateData;
 
@@ -417,6 +447,13 @@ export class TagSubscribeRepository {
           delYn,
           updtNo: userNo,
           updtDt: timeToString(),
+        },
+        include: {
+          tag: {
+            select: {
+              tagNm: true,
+            },
+          },
         },
       });
 

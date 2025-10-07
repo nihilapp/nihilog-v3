@@ -4,6 +4,7 @@ import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDt
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class TagSubscribeService {
@@ -41,6 +42,13 @@ export class TagSubscribeService {
    * @param createData 태그 구독 생성 데이터
    */
   async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
+    // 태그 구독 중복 체크
+    const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, createData.tagNo);
+
+    if (existingSubscribe.data) {
+      return prismaResponse(false, null, 'CONFLICT', 'TAG_SUBSCRIBE_ALREADY_EXISTS');
+    }
+
     return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
   }
 
@@ -50,15 +58,49 @@ export class TagSubscribeService {
    * @param createData 태그 구독 생성 데이터
    */
   async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    // 각 태그별로 중복 체크
+    for (const tagNo of createData.tagNoList) {
+      const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, tagNo);
+
+      if (existingSubscribe.data) {
+        return prismaResponse(false, null, 'CONFLICT', 'TAG_SUBSCRIBE_ALREADY_EXISTS');
+      }
+    }
+
     return this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
   }
 
   /**
-   * @description 태그 구독 목록 수정
+   * @description 태그 구독 수정 (일반/관리자 공통)
+   * @param userNo 사용자 번호
+   * @param updateData 태그 구독 수정 데이터
+   */
+  async updateTagSubscribe(userNo: number, updateData: UpdateTagSubscribeDto): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
+    // 구독 정보 존재 확인
+    const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
+
+    if (!subscribe.data) {
+      return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+    }
+
+    return this.tagSubscribeRepository.updateTagSubscribe(userNo, updateData);
+  }
+
+  /**
+   * @description 태그 구독 목록 수정 (일반/관리자 공통)
    * @param userNo 사용자 번호
    * @param updateData 태그 구독 수정 데이터
    */
   async multipleUpdateTagSubscribe(userNo: number, updateData: UpdateTagSubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    // 각 구독 정보 존재 확인
+    for (const tagSbcrNo of updateData.tagSbcrNoList) {
+      const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
+
+      if (!subscribe.data) {
+        return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+      }
+    }
+
     return this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
   }
 
@@ -68,6 +110,13 @@ export class TagSubscribeService {
    * @param tagSbcrNo 태그 구독 번호
    */
   async deleteTagSubscribe(userNo: number, tagSbcrNo: number): Promise<RepoResponseType<boolean> | null> {
+    // 구독 정보 존재 확인
+    const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
+
+    if (!subscribe.data) {
+      return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+    }
+
     return this.tagSubscribeRepository.deleteTagSubscribe(userNo, tagSbcrNo);
   }
 
@@ -77,6 +126,15 @@ export class TagSubscribeService {
    * @param deleteData 다수 태그 구독 삭제 데이터
    */
   async multipleDeleteTagSubscribe(userNo: number, deleteData: DeleteTagSubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    // 각 구독 정보 존재 확인
+    for (const tagSbcrNo of deleteData.tagSbcrNoList) {
+      const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
+
+      if (!subscribe.data) {
+        return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+      }
+    }
+
     return this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
   }
 }

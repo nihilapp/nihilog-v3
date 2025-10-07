@@ -5,7 +5,6 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, DeleteSubscribeDto, SearchSubscribeDto } from '@/dto';
@@ -21,7 +20,6 @@ import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 
-@ApiTags('admin/subscribe')
 @Controller('admin/subscribes')
 @UseGuards(AdminAuthGuard)
 export class AdminSubscribeController {
@@ -31,8 +29,8 @@ export class AdminSubscribeController {
    * @description 전체 사용자 구독 설정 목록 조회
    */
   @Endpoint({
-    endpoint: '',
-    method: 'GET',
+    endpoint: '/search',
+    method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -53,6 +51,39 @@ export class AdminSubscribeController {
       'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
       result.data
     );
+  }
+
+  /**
+   * @description 특정 사용자 구독 설정 조회
+   * @param req 인증 요청 객체
+   * @param userNo 사용자 번호
+   */
+  @Endpoint({
+    endpoint: '/:userNo',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getUserSubscribeByUserNo(
+    @Req() req: AuthRequest,
+    @Param('userNo') userNo: number
+  ): Promise<ResponseDto<UserSubscribeDto>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.subscribeService.getUserSubscribeByUserNo(userNo);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'ADMIN_SUBSCRIBE_SEARCH_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_SEARCH_SUCCESS', result.data);
   }
 
   /**
@@ -80,7 +111,7 @@ export class AdminSubscribeController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
         result?.error?.message || 'ADMIN_SUBSCRIBE_CREATE_ERROR'
       );
     }
@@ -113,7 +144,7 @@ export class AdminSubscribeController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
         result?.error?.message || 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
       );
     }
@@ -146,7 +177,7 @@ export class AdminSubscribeController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
         result?.error?.message || 'ADMIN_SUBSCRIBE_DELETE_ERROR'
       );
     }
@@ -179,7 +210,7 @@ export class AdminSubscribeController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'BAD_REQUEST',
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
         result?.error?.message || 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
       );
     }

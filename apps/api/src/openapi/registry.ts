@@ -75,7 +75,13 @@ import {
   createCategorySchema,
   updateCategorySchema,
   deleteCategorySchema,
-  searchCategorySchema
+  searchCategorySchema,
+
+  // 댓글 관련 스키마
+  createCommentSchema,
+  updateCommentSchema,
+  deleteCommentSchema,
+  searchCommentSchema
 } from '@/endpoints/prisma/schemas';
 
 // 전역 OpenAPI 레지스트리 생성
@@ -157,4 +163,10 @@ export const registerAllSchemas = () => {
   openApiRegistry.register('UpdateCategory', updateCategorySchema);
   openApiRegistry.register('DeleteCategory', deleteCategorySchema);
   openApiRegistry.register('SearchCategory', searchCategorySchema);
+
+  // 댓글 관련 스키마 등록
+  openApiRegistry.register('CreateComment', createCommentSchema);
+  openApiRegistry.register('UpdateComment', updateCommentSchema);
+  openApiRegistry.register('DeleteComment', deleteCommentSchema);
+  openApiRegistry.register('SearchComment', searchCommentSchema);
 };

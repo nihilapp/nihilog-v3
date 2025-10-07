@@ -39,9 +39,14 @@ enum PostStatus {
 
 // 댓글 상태 enum
 enum CommentStatus {
-  ACTIVE
-  HIDDEN
-  DELETED
+  // 댓글 대기
+  PENDING
+  // 댓글 승인
+  APPROVED
+  // 댓글 거부
+  REJECTED
+  // 댓글 스팸
+  SPAM
 
   @@schema("nihilog")
 }
@@ -208,7 +213,7 @@ model CmntInfo {
   cmntNo     Int           @id @default(autoincrement()) @map("cmnt_no")
   pstNo      Int           @map("pst_no")
   cmntCntnt  String        @map("cmnt_cntnt") @db.Text
-  cmntSts    CommentStatus @default(ACTIVE) @map("cmnt_sts")
+  cmntSts    CommentStatus @default(PENDING) @map("cmnt_sts")
   prntCmntNo Int?          @map("prnt_cmnt_no")
   useYn      YnStatus      @default(Y) @map("use_yn")
   delYn      YnStatus      @default(N) @map("del_yn")

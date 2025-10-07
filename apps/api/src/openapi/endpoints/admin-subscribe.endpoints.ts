@@ -50,6 +50,47 @@ export const registerAdminSubscribeEndpoints = () => {
     },
   });
 
+  // GET /admin/subscribes/{userNo} - 특정 사용자 구독 설정 조회
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/subscribes/{userNo}',
+    summary: '👤 특정 사용자 구독 설정 조회',
+    description: '특정 사용자의 구독 설정을 조회합니다.',
+    tags: [ 'admin-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      params: z.object({
+        userNo: z.coerce.number().int().positive().openapi({
+          description: '사용자 번호',
+          example: 1,
+        }),
+      }),
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '구독 설정 조회 성공',
+                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_SEARCH_SUCCESS', CreateExample.subscribe('detail')),
+              },
+              notFound: {
+                summary: '구독 설정을 찾을 수 없음',
+                value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
   // POST /admin/subscribes/create - 구독 설정 생성
   openApiRegistry.registerPath({
     method: 'post',

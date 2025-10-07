@@ -27,12 +27,12 @@ const commentSchema = commonSchema.extend({
       description: '댓글 내용',
       example: '댓글 내용입니다.',
     }),
-  cmntSts: z.enum([ 'ACTIVE', 'SPAM', 'REJECTED', ])
-    .default('ACTIVE')
+  cmntSts: z.enum([ 'PENDING', 'APPROVED', 'SPAM', 'REJECTED', ])
+    .default('PENDING')
     .optional()
     .openapi({
       description: '댓글 상태',
-      example: 'ACTIVE',
+      example: 'PENDING',
     }),
   prntCmntNo: z.coerce
     .number()
@@ -109,12 +109,15 @@ export const searchCommentSchema = baseSearchSchema.partial().extend({
     cmntSts: true,
     delYn: true,
   }).shape,
-  srchType: z.enum([ 'cmntSts', ], {
-    error: '검색 타입은 cmntSts 중 하나여야 합니다.',
-  }).optional().openapi({
-    description: '검색 타입',
-    example: 'cmntSts',
-  }),
+  srchType: z.enum([ 'userEmlAddr', ], {
+    error: '검색 타입은 userEmlAddr 중 하나여야 합니다.',
+  })
+    .default('userEmlAddr')
+    .optional()
+    .openapi({
+      description: '검색 타입 (userEmlAddr: 사용자 이메일 주소)',
+      example: 'userEmlAddr',
+    }),
 }).partial();
 
 export type CreateCommentType = z.infer<typeof createCommentSchema>;

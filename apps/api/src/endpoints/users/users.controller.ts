@@ -3,7 +3,6 @@ import {
   Body,
   Req
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest } from '@/dto';
@@ -15,7 +14,6 @@ import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserService } from '@/endpoints/users/users.service';
 import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 
-@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) { }
@@ -162,7 +160,7 @@ export class UserController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.code || 'NOT_FOUND',
         result?.error?.message || 'SUBSCRIBE_NOT_FOUND'
       );
     }

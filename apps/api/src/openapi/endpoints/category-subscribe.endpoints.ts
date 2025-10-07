@@ -206,6 +206,57 @@ export const registerCategorySubscribeEndpoints = () => {
     },
   });
 
+  // 특정 카테고리 구독 설정 변경
+  openApiRegistry.registerPath({
+    method: 'put',
+    path: '/users/subscribes/categories/{ctgrySbcrNo}',
+    summary: '✏️ 특정 카테고리 구독 설정 변경',
+    description: '특정 카테고리의 구독 설정을 변경합니다.',
+    tags: [ 'category-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      params: z.object({
+        ctgrySbcrNo: z.coerce.number().int().positive().openapi({
+          description: '카테고리 구독 번호',
+          example: 1,
+        }),
+      }),
+      body: {
+        content: {
+          'application/json': {
+            schema: updateCategorySubscribeSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '카테고리 구독 설정 변경 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
+                  CreateExample.categorySubscribe('detail')
+                ),
+              },
+              error: {
+                summary: '카테고리 구독 설정 변경 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_UPDATE_ERROR'),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
   // 다수 카테고리 구독 설정 일괄 변경
   openApiRegistry.registerPath({
     method: 'put',

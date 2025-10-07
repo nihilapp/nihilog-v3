@@ -1,5 +1,4 @@
 import { Body, Controller, Param, Req, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, ResponseDto } from '@/dto';
@@ -10,7 +9,6 @@ import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type { SelectPostType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 
-@ApiTags('admin/posts')
 @Controller('admin/posts')
 @UseGuards(AdminAuthGuard)
 export class AdminPostsController {

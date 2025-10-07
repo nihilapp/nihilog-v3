@@ -1,20 +1,19 @@
 # CRUD 메소드 명명 규칙 및 정의
 
-## 현재 구현 상태 (2025-10-06)
+## 현재 구현 상태 (2025-10-07)
 
 ### 🏗️ 기술 스택 상태
 
 #### ORM 전환 현황
 
-- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post (조회 기능), Tag (조회 기능), Admin Tag (관리자 기능), Category (조회 기능), Admin Category (관리자 기능)
-- ❌ **미구현**: Comment
+- ✅ **Prisma 전환 완료**: User, UserSubscribe, CategorySubscribe, TagSubscribe, Post, Tag, Category, Comment
 
 ### 🚧 미구현 기능
 
 #### 기본 CRUD
 
 - **Category**: 카테고리 CRUD (✅ 완료)
-- **Comment**: 댓글 CRUD (완전 미구현)
+- **Comment**: 댓글 CRUD (✅ 완료)
 - **Tag**: 관리자용 태그 CRUD (✅ 완료)
 
 #### 확장 기능
@@ -51,9 +50,29 @@
 - **피드**: `get<Entity>Feed`
 - **아카이브**: `get<Entity>Archive`
 
+## 아키텍처 패턴
+
+### 통합 컨트롤러 패턴 (2025-10-07 도입)
+
+일반 사용자와 관리자 기능이 유사한 경우, 별도 컨트롤러를 두지 않고 통합합니다:
+
+- **적용 대상**: Comment 엔티티 (향후 다른 엔티티로 확대 예정)
+- **권한 제어**: Service 레이어에서 userNo 비교 및 역할 체크
+- **일괄 처리**: 관리자 전용 기능은 `/admin/<entity>/multiple` 엔드포인트로 분리
+- **장점**: 코드 중복 제거, 일관된 API 구조, 유지보수 용이
+
+### 분리 컨트롤러 패턴 (기존)
+
+관리자 전용 기능이 많거나 로직이 크게 다른 경우 분리합니다:
+
+- **적용 대상**: User, Post, Category, Tag, Subscribe 엔티티
+- **구조**: `/admin/<entity>` 경로에 AdminAuthGuard 적용
+- **특징**: 명확한 권한 분리, 관리자 전용 복잡한 로직 처리
+
 ## 주의사항
 
 - 삭제(소프트 딜리트) 는 PK 로 삭제합니다.
+- 통합 컨트롤러 사용 시 Service 레이어에서 반드시 권한 검증을 수행합니다.
 
 ## 1. Category 엔티티
 
@@ -67,49 +86,13 @@
 
 ## 3. Comment 엔티티
 
-### 일반 사용자 기능
-
-- [ ] GET /comments **[USER]**
-  - `getCommentList`
-  - query: pstNo?, page?, size?
-  - 기능: 댓글 목록 조회, 게시글별 필터링, 계층형 댓글 구조, 승인된 댓글만 조회
-- [ ] GET /comments/:cmntNo **[USER]**
-  - `getCommentByCommentNo`
-  - params: cmntNo: number
-  - 기능: 특정 댓글 상세 조회, 대댓글 포함, 작성자 정보
-- [ ] POST /comments **[USER]**
-  - `createComment`
-  - body: CreateCommentDto
-  - 기능: 새 댓글 작성, 대댓글 작성, 스팸 필터링, 승인 대기 상태 설정
-- [ ] PATCH /comments/:cmntNo **[USER]**
-  - `updateComment`
-  - params: cmntNo: number
-  - body: UpdateCommentDto
-  - 기능: 댓글 수정(본인), 신고 처리
-- [ ] DELETE /comments/:cmntNo **[USER]**
-  - `deleteComment`
-  - params: cmntNo: number
-  - 기능: 댓글 삭제(본인), 대댓글 처리, 삭제 표시 또는 완전 삭제
-
-### 관리자 기능
-
-- [ ] PATCH /admin/comments/:cmntNo **[ADMIN]**
-  - `adminUpdateComment`
-  - params: cmntNo: number
-  - body: UpdateCommentDto
-  - 기능: 댓글 승인/거부 상태 변경(관리자), 신고 처리
-- [ ] PATCH /admin/comments/multiple **[ADMIN]**
-  - `adminMultipleUpdateComment`
-  - body: UpdateCommentDto (cmntNoList 포함)
-  - 기능: 다수 댓글 일괄 수정, 상태 일괄 변경, 스팸 일괄 처리
-- [ ] DELETE /admin/comments/:cmntNo **[ADMIN]**
-  - `adminDeleteComment`
-  - params: cmntNo: number
-  - 기능: 댓글 삭제(관리자), 대댓글 처리, 삭제 표시 또는 완전 삭제
-- [ ] DELETE /admin/comments/multiple **[ADMIN]**
-  - `adminMultipleDeleteComment`
-  - body: UpdateCommentDto (cmntNoList 포함)
-  - 기능: 다수 댓글 일괄 삭제, 스팸 댓글 일괄 정리
+> **✅ 완료**: 댓글 CRUD 기능이 모두 구현되었습니다. (2025-10-07)
+> **📋 상세 내용**: [crud.complete.md](./crud.complete.md)의 "10. Comment 엔티티" 섹션을 참조하세요.
+>
+> **🔄 아키텍처 변경**: 일반 사용자와 관리자가 동일한 엔드포인트를 공유합니다.
+> - 권한은 Guard 및 Service 레이어에서 제어
+> - 관리자는 모든 댓글 수정/삭제 가능, 일반 사용자는 본인 댓글만 가능
+> - 일괄 처리 기능은 관리자 전용 엔드포인트로 분리
 
 ---
 

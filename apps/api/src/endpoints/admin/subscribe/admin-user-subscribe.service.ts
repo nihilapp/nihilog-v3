@@ -10,6 +10,7 @@ import {
 import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminSubscribeService {
@@ -17,9 +18,18 @@ export class AdminSubscribeService {
 
   /**
    * @description 전체 사용자 구독 설정 목록 조회
+   * @param searchData 검색 조건
    */
   async adminGetUserSubscribeList(searchData: SearchSubscribeDto): Promise<RepoResponseType<ListDto<SelectUserSbcrInfoListItemType>> | null> {
     return this.subscribeRepository.getSubscribeList(searchData);
+  }
+
+  /**
+   * @description 특정 사용자 구독 설정 조회
+   * @param userNo 사용자 번호
+   */
+  async getUserSubscribeByUserNo(userNo: number): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
+    return this.subscribeRepository.getUserSubscribeByUserNo(userNo);
   }
 
   /**
@@ -31,6 +41,12 @@ export class AdminSubscribeService {
     adminNo: number,
     createData: CreateSubscribeDto
   ): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
+    const findSubscribe = await this.getUserSubscribeByUserNo(createData.userNo);
+
+    if (findSubscribe?.success) {
+      return prismaResponse(false, null, 'CONFLICT', 'ADMIN_SUBSCRIBE_ALREADY_EXISTS');
+    }
+
     return this.subscribeRepository.createUserSubscribe(adminNo, createData);
   }
 

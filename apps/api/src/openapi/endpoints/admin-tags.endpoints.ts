@@ -44,11 +44,11 @@ export const registerAdminTagsEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_TAG_CREATE_SUCCESS', CreateExample.tag('detail')),
               },
               conflict: {
-                summary: '태그 이름 중복 (Service)',
+                summary: '태그 이름 중복',
                 value: createError('CONFLICT', 'ADMIN_TAG_NAME_IN_USE'),
               },
               error: {
-                summary: '태그 생성 실패 (Service)',
+                summary: '태그 생성 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_CREATE_ERROR'),
               },
             }, {
@@ -94,11 +94,11 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               conflict: {
-                summary: '태그 이름 중복 (Service)',
+                summary: '태그 이름 중복',
                 value: createError('CONFLICT', 'ADMIN_TAG_NAME_IN_USE'),
               },
               error: {
-                summary: '다수 태그 생성 실패 (Service)',
+                summary: '다수 태그 생성 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MULTIPLE_CREATE_ERROR'),
               },
             }, {
@@ -144,7 +144,7 @@ export const registerAdminTagsEndpoints = () => {
                 value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
               },
               error: {
-                summary: '태그 수정 실패 (Service)',
+                summary: '태그 수정 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_UPDATE_ERROR'),
               },
             }, {
@@ -190,7 +190,7 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               error: {
-                summary: '다수 태그 수정 실패 (Service)',
+                summary: '다수 태그 수정 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MULTIPLE_UPDATE_ERROR'),
               },
             }, {
@@ -236,7 +236,7 @@ export const registerAdminTagsEndpoints = () => {
                 value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
               },
               error: {
-                summary: '태그 삭제 실패 (Service)',
+                summary: '태그 삭제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_DELETE_ERROR'),
               },
             }, {
@@ -282,7 +282,7 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               error: {
-                summary: '다수 태그 삭제 실패 (Service)',
+                summary: '다수 태그 삭제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MULTIPLE_DELETE_ERROR'),
               },
             }, {
@@ -337,7 +337,7 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               error: {
-                summary: '태그 매핑 조회 실패 (Service)',
+                summary: '태그 매핑 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_SEARCH_ERROR'),
               },
             }, {
@@ -392,7 +392,7 @@ export const registerAdminTagsEndpoints = () => {
                 value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
               },
               error: {
-                summary: '태그 매핑 조회 실패 (Service)',
+                summary: '태그 매핑 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_SEARCH_ERROR'),
               },
             }, {
@@ -440,11 +440,11 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               conflict: {
-                summary: '이미 존재하는 태그 매핑 (Service)',
+                summary: '이미 존재하는 태그 매핑',
                 value: createError('CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS'),
               },
               error: {
-                summary: '태그 매핑 추가 실패 (Service)',
+                summary: '태그 매핑 추가 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_CREATE_ERROR'),
               },
             }, {
@@ -490,11 +490,11 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               conflict: {
-                summary: '이미 존재하는 태그 매핑 (Service)',
+                summary: '이미 존재하는 태그 매핑',
                 value: createError('CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS'),
               },
               error: {
-                summary: '다수 태그 매핑 추가 실패 (Service)',
+                summary: '다수 태그 매핑 추가 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_CREATE_ERROR'),
               },
             }, {
@@ -540,7 +540,7 @@ export const registerAdminTagsEndpoints = () => {
                 value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
               },
               error: {
-                summary: '태그 매핑 삭제 실패 (Service)',
+                summary: '태그 매핑 삭제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_DELETE_ERROR'),
               },
             }, {
@@ -586,7 +586,7 @@ export const registerAdminTagsEndpoints = () => {
                 }),
               },
               error: {
-                summary: '다수 태그 매핑 삭제 실패 (Service)',
+                summary: '다수 태그 매핑 삭제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_DELETE_ERROR'),
               },
             }, {

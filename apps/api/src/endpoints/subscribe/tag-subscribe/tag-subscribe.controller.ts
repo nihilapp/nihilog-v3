@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, CreateTagSubscribeDto, UpdateTagSubscribeDto, DeleteTagSubscribeDto } from '@/dto';
@@ -15,7 +14,6 @@ import { createError, createResponse } from '@/utils';
 
 import { TagSubscribeService } from './tag-subscribe.service';
 
-@ApiTags('users/subscribes/tags')
 @Controller('users/subscribes/tags')
 export class TagSubscribeController {
   constructor(private readonly tagSubscribeService: TagSubscribeService) {}
@@ -151,6 +149,44 @@ export class TagSubscribeController {
     }
 
     return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
+  }
+
+  /**
+   * @description 특정 태그 구독 설정 변경
+   * @param req 요청 객체
+   * @param tagSbcrNo 태그 구독 번호
+   * @param body 변경할 구독 설정
+   */
+  @Endpoint({
+    endpoint: '/:tagSbcrNo',
+    method: 'PUT',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'USER', 'ADMIN', ],
+    },
+  })
+  async updateTagSubscribe(
+    @Req() req: AuthRequest,
+    @Param('tagSbcrNo', ParseIntPipe) tagSbcrNo: number,
+    @Body() body: UpdateTagSubscribeDto
+  ): Promise<ResponseDto<SelectTagSbcrMpngType>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.tagSubscribeService.updateTagSubscribe(
+      req.user.userNo,
+      { ...body, tagSbcrNo, }
+    );
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'TAG_SUBSCRIBE_UPDATE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_UPDATE_SUCCESS', result.data);
   }
 
   /**

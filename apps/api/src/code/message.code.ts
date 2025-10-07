@@ -458,6 +458,57 @@ export const MESSAGE_CODE = {
   ADMIN_POST_SLUG_INVALID: '유효하지 않은 게시글 슬러그입니다.',
   ADMIN_POST_SLUG_DUPLICATE: '이미 존재하는 게시글 슬러그입니다.',
 
+  // ===== 댓글 관련 메시지 =====
+  // 일반 사용자 성공 메시지
+  COMMENT_SEARCH_SUCCESS: '댓글 목록을 조회했습니다.',
+  COMMENT_GET_SUCCESS: '댓글 정보를 조회했습니다.',
+  COMMENT_CREATE_SUCCESS: '댓글이 작성되었습니다.',
+  COMMENT_UPDATE_SUCCESS: '댓글이 수정되었습니다.',
+  COMMENT_DELETE_SUCCESS: '댓글이 삭제되었습니다.',
+
+  // 일반 사용자 에러 메시지
+  COMMENT_SEARCH_ERROR: '댓글 목록 조회에 실패했습니다.',
+  COMMENT_GET_ERROR: '댓글 정보 조회에 실패했습니다.',
+  COMMENT_CREATE_ERROR: '댓글 작성에 실패했습니다.',
+  COMMENT_UPDATE_ERROR: '댓글 수정에 실패했습니다.',
+  COMMENT_DELETE_ERROR: '댓글 삭제에 실패했습니다.',
+  COMMENT_NOT_FOUND: '댓글을 찾을 수 없습니다.',
+  COMMENT_ALREADY_DELETED: '이미 삭제된 댓글입니다.',
+  COMMENT_INVALID_STATUS: '유효하지 않은 댓글 상태입니다.',
+  COMMENT_CONTENT_REQUIRED: '댓글 내용은 필수 입력 항목입니다.',
+  COMMENT_CONTENT_TOO_LONG: '댓글 내용이 너무 깁니다. (최대 1000자)',
+  COMMENT_POST_NOT_FOUND: '댓글을 작성할 게시글을 찾을 수 없습니다.',
+  COMMENT_PARENT_NOT_FOUND: '답글을 작성할 댓글을 찾을 수 없습니다.',
+  COMMENT_UNAUTHORIZED: '댓글을 수정/삭제할 권한이 없습니다.',
+
+  // 관리자 성공 메시지
+  ADMIN_COMMENT_SEARCH_SUCCESS: '관리자 댓글 검색을 완료했습니다.',
+  ADMIN_COMMENT_GET_SUCCESS: '관리자 댓글 정보를 조회했습니다.',
+  ADMIN_COMMENT_UPDATE_SUCCESS: '댓글이 수정되었습니다.',
+  ADMIN_COMMENT_MULTIPLE_UPDATE_SUCCESS: '다수 댓글이 수정되었습니다.',
+  ADMIN_COMMENT_DELETE_SUCCESS: '댓글이 삭제되었습니다.',
+  ADMIN_COMMENT_MULTIPLE_DELETE_SUCCESS: '다수 댓글이 삭제되었습니다.',
+  ADMIN_COMMENT_APPROVE_SUCCESS: '댓글이 승인되었습니다.',
+  ADMIN_COMMENT_REJECT_SUCCESS: '댓글이 거부되었습니다.',
+  ADMIN_COMMENT_SPAM_SUCCESS: '댓글이 스팸으로 처리되었습니다.',
+
+  // 관리자 에러 메시지
+  ADMIN_COMMENT_SEARCH_ERROR: '관리자 댓글 검색에 실패했습니다.',
+  ADMIN_COMMENT_GET_ERROR: '관리자 댓글 정보 조회에 실패했습니다.',
+  ADMIN_COMMENT_UPDATE_ERROR: '댓글 수정에 실패했습니다.',
+  ADMIN_COMMENT_MULTIPLE_UPDATE_ERROR: '다수 댓글 수정에 실패했습니다.',
+  ADMIN_COMMENT_DELETE_ERROR: '댓글 삭제에 실패했습니다.',
+  ADMIN_COMMENT_MULTIPLE_DELETE_ERROR: '다수 댓글 삭제에 실패했습니다.',
+  ADMIN_COMMENT_APPROVE_ERROR: '댓글 승인에 실패했습니다.',
+  ADMIN_COMMENT_REJECT_ERROR: '댓글 거부에 실패했습니다.',
+  ADMIN_COMMENT_SPAM_ERROR: '댓글 스팸 처리에 실패했습니다.',
+  ADMIN_COMMENT_NOT_FOUND: '관리할 댓글을 찾을 수 없습니다.',
+  ADMIN_COMMENT_ALREADY_APPROVED: '이미 승인된 댓글입니다.',
+  ADMIN_COMMENT_ALREADY_REJECTED: '이미 거부된 댓글입니다.',
+  ADMIN_COMMENT_ALREADY_SPAM: '이미 스팸으로 처리된 댓글입니다.',
+  ADMIN_COMMENT_INVALID_STATUS: '유효하지 않은 댓글 상태입니다.',
+  ADMIN_COMMENT_STATUS_REQUIRED: '댓글 상태는 필수 입력 항목입니다.',
+
   // ===== 데이터베이스 관련 메시지 =====
   // 성공/정보 메시지
   DB_CONNECTED: '데이터베이스에 연결되었습니다.',

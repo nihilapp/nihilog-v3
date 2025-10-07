@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, CreateCategorySubscribeDto, UpdateCategorySubscribeDto, DeleteCategorySubscribeDto } from '@/dto';
@@ -15,7 +14,6 @@ import { createError, createResponse } from '@/utils';
 
 import { CategorySubscribeService } from './category-subscribe.service';
 
-@ApiTags('users/subscribes/categories')
 @Controller('users/subscribes/categories')
 export class CategorySubscribeController {
   constructor(private readonly categorySubscribeService: CategorySubscribeService) { }
@@ -151,6 +149,44 @@ export class CategorySubscribeController {
     }
 
     return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
+  }
+
+  /**
+   * @description 특정 카테고리 구독 설정 변경
+   * @param req 요청 객체
+   * @param ctgrySbcrNo 카테고리 구독 번호
+   * @param body 변경할 구독 설정
+   */
+  @Endpoint({
+    endpoint: '/:ctgrySbcrNo',
+    method: 'PUT',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'USER', 'ADMIN', ],
+    },
+  })
+  async updateCategorySubscribe(
+    @Req() req: AuthRequest,
+    @Param('ctgrySbcrNo', ParseIntPipe) ctgrySbcrNo: number,
+    @Body() body: UpdateCategorySubscribeDto
+  ): Promise<ResponseDto<SelectCtgrySbcrMpngType>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.categorySubscribeService.updateCategorySubscribe(
+      req.user.userNo,
+      { ...body, ctgrySbcrNo, }
+    );
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || 'CATEGORY_SUBSCRIBE_UPDATE_ERROR'
+      );
+    }
+
+    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS', result.data);
   }
 
   /**

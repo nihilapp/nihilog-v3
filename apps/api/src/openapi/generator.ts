@@ -3,6 +3,7 @@ import type { OpenAPIObject } from '@nestjs/swagger';
 
 import { registerAdminCategoriesEndpoints } from './endpoints/admin-categories.endpoints';
 import { registerAdminCategorySubscribeEndpoints } from './endpoints/admin-category-subscribe.endpoints';
+import { registerAdminCommentsEndpoints } from './endpoints/admin-comments.endpoints';
 import { registerAdminPostsEndpoints } from './endpoints/admin-posts.endpoints';
 import { registerAdminSubscribeEndpoints } from './endpoints/admin-subscribe.endpoints';
 import { registerAdminTagSubscribeEndpoints } from './endpoints/admin-tag-subscribe.endpoints';
@@ -11,6 +12,7 @@ import { registerAdminUsersEndpoints } from './endpoints/admin-users.endpoints';
 import { registerAdminEndpoints } from './endpoints/admin.endpoints';
 import { registerAuthEndpoints } from './endpoints/auth.endpoints';
 import { registerCategorySubscribeEndpoints } from './endpoints/category-subscribe.endpoints';
+import { registerCommentsEndpoints } from './endpoints/comments.endpoints';
 import { registerPostsEndpoints } from './endpoints/posts.endpoints';
 import { registerTagSubscribeEndpoints } from './endpoints/tag-subscribe.endpoints';
 import { registerTagsEndpoints } from './endpoints/tags.endpoints';
@@ -25,12 +27,14 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
   // 엔드포인트 등록
   registerAuthEndpoints();
   registerUserEndpoints();
+  registerCommentsEndpoints();
   registerTagSubscribeEndpoints();
   registerCategorySubscribeEndpoints();
   registerPostsEndpoints();
   registerTagsEndpoints();
   registerAdminEndpoints();
   registerAdminUsersEndpoints();
+  registerAdminCommentsEndpoints();
   registerAdminPostsEndpoints();
   registerAdminCategoriesEndpoints();
   registerAdminTagsEndpoints();
@@ -47,7 +51,7 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
       description: 'Nihilog 블로그 API 문서',
       version: '1.0.0',
       contact: {
-        name: 'Development Team',
+        name: 'Nihilog',
         url: 'https://github.com/nihilncunia/nihilog',
         email: 'nihil_ncunia@naver.com',
       },
@@ -82,6 +86,10 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
       {
         name: 'comments',
         description: '💬 댓글 공개 API - 조회/작성/수정/삭제',
+      },
+      {
+        name: 'admin-comments',
+        description: '🛠️ 댓글 관리자 API - 생성/수정/삭제',
       },
       {
         name: 'tag-subscribe',

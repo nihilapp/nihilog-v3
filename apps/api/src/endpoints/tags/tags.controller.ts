@@ -3,7 +3,6 @@ import {
   Body,
   Param
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
@@ -14,7 +13,6 @@ import { createError, createResponse } from '@/utils';
 
 import { TagService } from './tags.service';
 
-@ApiTags('tags')
 @Controller('tags')
 export class TagController {
   constructor(private readonly tagService: TagService) { }

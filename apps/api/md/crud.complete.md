@@ -1,6 +1,6 @@
 # 완료된 CRUD 기능 목록
 
-## 현재 구현 상태 (2025-10-06)
+## 현재 구현 상태 (2025-10-07)
 
 ### ✅ 완료된 기능
 
@@ -18,6 +18,7 @@
 - **Admin Tag 관리**: 관리자용 태그 CRUD 및 태그 매핑 기능 (2025 1006 완료)
 - **Category 조회 기능**: 일반 사용자용 카테고리 목록/상세/검색 기능 (2025 1006 완료)
 - **Admin Category 관리**: 관리자용 카테고리 CRUD 기능 (2025 1006 완료)
+- **Comment CRUD**: 댓글 조회/작성/수정/삭제, 관리자 일괄 처리 기능 (2025 1007 완료)
 
 ## 명명 규칙
 
@@ -30,9 +31,29 @@
 - **삭제**: `delete<Entity>`
 - **다건 삭제**: `multipleDelete<Entity>`
 
+## 아키텍처 패턴
+
+### 통합 컨트롤러 패턴 (2025-10-07 도입)
+
+일반 사용자와 관리자 기능이 유사한 경우, 별도 컨트롤러를 두지 않고 통합합니다:
+
+- **적용 대상**: Comment 엔티티 (향후 다른 엔티티로 확대 예정)
+- **권한 제어**: Service 레이어에서 userNo 비교 및 역할 체크
+- **일괄 처리**: 관리자 전용 기능은 `/admin/<entity>/multiple` 엔드포인트로 분리
+- **장점**: 코드 중복 제거, 일관된 API 구조, 유지보수 용이
+
+### 분리 컨트롤러 패턴 (기존)
+
+관리자 전용 기능이 많거나 로직이 크게 다른 경우 분리합니다:
+
+- **적용 대상**: User, Post, Category, Tag, Subscribe 엔티티
+- **구조**: `/admin/<entity>` 경로에 AdminAuthGuard 적용
+- **특징**: 명확한 권한 분리, 관리자 전용 복잡한 로직 처리
+
 ## 주의사항
 
 - 삭제(소프트 딜리트)는 PK로 삭제합니다.
+- 통합 컨트롤러 사용 시 Service 레이어에서 반드시 권한 검증을 수행합니다.
 
 ## 1. User 엔티티
 
@@ -547,3 +568,62 @@
   - `adminMultipleDeleteCategory`
   - body: DeleteCategoryDto
   - 기능: 다수 카테고리 일괄 삭제, 관련 데이터 정리
+
+## 10. Comment 엔티티
+
+> **🔄 아키텍처 변경 (2025-10-07)**: 일반 사용자와 관리자가 동일한 엔드포인트를 공유하는 통합 구조로 구현되었습니다.
+> - 권한 제어는 AuthGuard 및 Service 레이어에서 처리
+> - 관리자는 모든 댓글 수정/삭제 가능, 일반 사용자는 본인 댓글만 가능
+> - 일괄 처리 기능은 관리자 전용 엔드포인트로 분리 (`/admin/comments/multiple`)
+
+### 공통 사용 엔드포인트 (일반/관리자)
+
+- [x] POST /comments/search **[USER/ADMIN]**
+  - `getCommentList`
+  - body: SearchCommentDto
+  - 기능: 댓글 목록 조회, 게시글별 필터링, 계층형 댓글 구조, 페이징, 정렬
+  - 권한: 일반 사용자는 승인된 댓글만 조회, 관리자는 모든 댓글 조회
+
+- [x] GET /comments/:cmntNo **[USER/ADMIN]**
+  - `getCommentByCmntNo`
+  - params: cmntNo: number
+  - 기능: 특정 댓글 상세 조회, 대댓글 포함, 작성자 정보
+
+- [x] POST /comments **[USER/ADMIN]** 🔒 JWT 인증 필요
+  - `createComment`
+  - body: CreateCommentDto
+  - 기능: 새 댓글 작성, 대댓글 작성, 스팸 필터링
+  - 권한: 로그인한 사용자 누구나 작성 가능
+
+- [x] PUT /comments **[USER/ADMIN]** 🔒 JWT 인증 필요
+  - `updateComment`
+  - body: UpdateCommentDto (cmntNo 포함)
+  - 기능: 댓글 수정, 신고 처리
+  - 권한: 일반 사용자는 본인 댓글만 수정 가능, 관리자는 모든 댓글 수정 가능
+
+- [x] DELETE /comments **[USER/ADMIN]** 🔒 JWT 인증 필요
+  - `deleteComment`
+  - body: DeleteCommentDto (cmntNo 포함)
+  - 기능: 댓글 소프트 삭제, 대댓글 처리
+  - 권한: 일반 사용자는 본인 댓글만 삭제 가능, 관리자는 모든 댓글 삭제 가능
+
+### 관리자 전용 엔드포인트
+
+- [x] PUT /admin/comments/multiple **[ADMIN]** 🔒 JWT 인증 + AdminAuthGuard
+  - `adminMultipleUpdateComment`
+  - body: UpdateCommentDto (cmntNoList 포함)
+  - 기능: 다수 댓글 일괄 수정, 상태 일괄 변경, 스팸 일괄 처리
+  - 권한: ADMIN 역할 필요
+
+- [x] DELETE /admin/comments/multiple **[ADMIN]** 🔒 JWT 인증 + AdminAuthGuard
+  - `adminMultipleDeleteComment`
+  - body: DeleteCommentDto (cmntNoList 포함)
+  - 기능: 다수 댓글 일괄 삭제, 스팸 댓글 일괄 정리
+  - 권한: ADMIN 역할 필요
+
+### 구현 특징
+
+- **통합 컨트롤러 패턴**: 기능이 유사한 일반/관리자 API를 하나의 컨트롤러에서 처리
+- **권한 기반 접근 제어**: Service 레이어에서 userNo 비교를 통해 본인 댓글 여부 확인
+- **DTO 기반 요청**: URL params 대신 body에 식별자(cmntNo) 포함하여 일관성 유지
+- **일괄 처리 분리**: 대량 작업은 관리자 전용 엔드포인트로 분리하여 권한 명확화

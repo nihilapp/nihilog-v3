@@ -117,11 +117,11 @@ export const registerUserEndpoints = () => {
                 ),
               },
               emailInUse: {
-                summary: '이메일 중복 (Service)',
+                summary: '이메일 중복',
                 value: createError('CONFLICT', 'EMAIL_IN_USE'),
               },
               createError: {
-                summary: '사용자 생성 실패 (Service)',
+                summary: '사용자 생성 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR'),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
@@ -168,7 +168,7 @@ export const registerUserEndpoints = () => {
                 value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
               },
               nameExists: {
-                summary: '사용자명 중복 (Service)',
+                summary: '사용자명 중복',
                 value: createError('CONFLICT', 'USER_NAME_EXISTS'),
               },
             }, {

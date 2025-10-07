@@ -11,7 +11,7 @@ CREATE TYPE "nihilog"."YnStatus" AS ENUM ('Y', 'N');
 CREATE TYPE "nihilog"."PostStatus" AS ENUM ('EMPTY', 'WRITING', 'FINISHED');
 
 -- CreateEnum
-CREATE TYPE "nihilog"."CommentStatus" AS ENUM ('ACTIVE', 'HIDDEN', 'DELETED');
+CREATE TYPE "nihilog"."CommentStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'SPAM');
 
 -- CreateTable
 CREATE TABLE "nihilog"."user_info" (
@@ -25,14 +25,14 @@ CREATE TABLE "nihilog"."user_info" (
     "resh_token" TEXT,
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
-    "last_lgn_dt" TEXT,
-    "last_pswd_chg_dt" TEXT,
+    "last_lgn_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+    "last_pswd_chg_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "user_info_pkey" PRIMARY KEY ("user_no")
 );
@@ -48,11 +48,11 @@ CREATE TABLE "nihilog"."ctgry_info" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "ctgry_info_pkey" PRIMARY KEY ("ctgry_no")
 );
@@ -66,11 +66,11 @@ CREATE TABLE "nihilog"."tag_info" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "tag_info_pkey" PRIMARY KEY ("tag_no")
 );
@@ -87,7 +87,8 @@ CREATE TABLE "nihilog"."pst_info" (
     "pst_thmb_link" TEXT,
     "pst_view" INTEGER NOT NULL DEFAULT 0,
     "pst_stts" "nihilog"."PostStatus" NOT NULL DEFAULT 'EMPTY',
-    "publ_dt" TEXT,
+    "publ_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+    "pin_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "rls_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "arch_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "secr_yn" "nihilog"."YnStatus",
@@ -95,11 +96,11 @@ CREATE TABLE "nihilog"."pst_info" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "pst_info_pkey" PRIMARY KEY ("pst_no")
 );
@@ -109,16 +110,16 @@ CREATE TABLE "nihilog"."cmnt_info" (
     "cmnt_no" SERIAL NOT NULL,
     "pst_no" INTEGER NOT NULL,
     "cmnt_cntnt" TEXT NOT NULL,
-    "cmnt_sts" "nihilog"."CommentStatus" NOT NULL DEFAULT 'ACTIVE',
+    "cmnt_sts" "nihilog"."CommentStatus" NOT NULL DEFAULT 'PENDING',
     "prnt_cmnt_no" INTEGER,
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "cmnt_info_pkey" PRIMARY KEY ("cmnt_no")
 );
@@ -131,11 +132,11 @@ CREATE TABLE "nihilog"."ctgry_sbcr_mpng" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "ctgry_sbcr_mpng_pkey" PRIMARY KEY ("ctgry_sbcr_no")
 );
@@ -148,9 +149,9 @@ CREATE TABLE "nihilog"."tag_sbcr_mpng" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
     "del_dt" TEXT,
 
@@ -167,11 +168,11 @@ CREATE TABLE "nihilog"."user_sbcr_info" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
 
     CONSTRAINT "user_sbcr_info_pkey" PRIMARY KEY ("sbcr_no")
 );
@@ -184,13 +185,50 @@ CREATE TABLE "nihilog"."pst_tag_mpng" (
     "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
     "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
     "crt_no" INTEGER,
-    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "updt_no" INTEGER,
-    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp, 'YYYY-MM-DD HH24:MI:SS'),
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+    "del_no" INTEGER,
+    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+
+    CONSTRAINT "pst_tag_mpng_pkey" PRIMARY KEY ("tag_map_no")
+);
+
+-- CreateTable
+CREATE TABLE "nihilog"."pst_view_log" (
+    "view_no" SERIAL NOT NULL,
+    "pst_no" INTEGER NOT NULL,
+    "viewer_ip" TEXT,
+    "view_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+
+    CONSTRAINT "pst_view_log_pkey" PRIMARY KEY ("view_no")
+);
+
+-- CreateTable
+CREATE TABLE "nihilog"."pst_shrn_log" (
+    "shrn_no" SERIAL NOT NULL,
+    "pst_no" INTEGER NOT NULL,
+    "shrn_site" TEXT NOT NULL,
+    "shrn_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+
+    CONSTRAINT "pst_shrn_log_pkey" PRIMARY KEY ("shrn_no")
+);
+
+-- CreateTable
+CREATE TABLE "nihilog"."pst_bkmrk_mpng" (
+    "bkmrk_no" SERIAL NOT NULL,
+    "user_no" INTEGER NOT NULL,
+    "pst_no" INTEGER NOT NULL,
+    "use_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'Y',
+    "del_yn" "nihilog"."YnStatus" NOT NULL DEFAULT 'N',
+    "crt_no" INTEGER,
+    "crt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+    "updt_no" INTEGER,
+    "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
     "del_dt" TEXT,
 
-    CONSTRAINT "pst_tag_mpng_pkey" PRIMARY KEY ("tag_map_no")
+    CONSTRAINT "pst_bkmrk_mpng_pkey" PRIMARY KEY ("bkmrk_no")
 );
 
 -- CreateIndex
@@ -222,6 +260,15 @@ CREATE UNIQUE INDEX "user_sbcr_info_user_no_key" ON "nihilog"."user_sbcr_info"("
 
 -- CreateIndex
 CREATE UNIQUE INDEX "pst_tag_mpng_pst_no_tag_no_key" ON "nihilog"."pst_tag_mpng"("pst_no", "tag_no");
+
+-- CreateIndex
+CREATE INDEX "pst_view_log_pst_no_view_dt_idx" ON "nihilog"."pst_view_log"("pst_no", "view_dt");
+
+-- CreateIndex
+CREATE INDEX "pst_shrn_log_pst_no_shrn_dt_idx" ON "nihilog"."pst_shrn_log"("pst_no", "shrn_dt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pst_bkmrk_mpng_user_no_pst_no_key" ON "nihilog"."pst_bkmrk_mpng"("user_no", "pst_no");
 
 -- AddForeignKey
 ALTER TABLE "nihilog"."ctgry_info" ADD CONSTRAINT "ctgry_info_crt_no_fkey" FOREIGN KEY ("crt_no") REFERENCES "nihilog"."user_info"("user_no") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -327,3 +374,24 @@ ALTER TABLE "nihilog"."pst_tag_mpng" ADD CONSTRAINT "pst_tag_mpng_updt_no_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "nihilog"."pst_tag_mpng" ADD CONSTRAINT "pst_tag_mpng_del_no_fkey" FOREIGN KEY ("del_no") REFERENCES "nihilog"."user_info"("user_no") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_view_log" ADD CONSTRAINT "pst_view_log_pst_no_fkey" FOREIGN KEY ("pst_no") REFERENCES "nihilog"."pst_info"("pst_no") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_shrn_log" ADD CONSTRAINT "pst_shrn_log_pst_no_fkey" FOREIGN KEY ("pst_no") REFERENCES "nihilog"."pst_info"("pst_no") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_bkmrk_mpng" ADD CONSTRAINT "pst_bkmrk_mpng_user_no_fkey" FOREIGN KEY ("user_no") REFERENCES "nihilog"."user_info"("user_no") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_bkmrk_mpng" ADD CONSTRAINT "pst_bkmrk_mpng_pst_no_fkey" FOREIGN KEY ("pst_no") REFERENCES "nihilog"."pst_info"("pst_no") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_bkmrk_mpng" ADD CONSTRAINT "pst_bkmrk_mpng_crt_no_fkey" FOREIGN KEY ("crt_no") REFERENCES "nihilog"."user_info"("user_no") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_bkmrk_mpng" ADD CONSTRAINT "pst_bkmrk_mpng_updt_no_fkey" FOREIGN KEY ("updt_no") REFERENCES "nihilog"."user_info"("user_no") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "nihilog"."pst_bkmrk_mpng" ADD CONSTRAINT "pst_bkmrk_mpng_del_no_fkey" FOREIGN KEY ("del_no") REFERENCES "nihilog"."user_info"("user_no") ON DELETE SET NULL ON UPDATE CASCADE;

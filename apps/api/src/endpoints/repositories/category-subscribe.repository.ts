@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, type CtgrySbcrMpng } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
@@ -230,6 +230,36 @@ export class CategorySubscribeRepository {
   }
 
   /**
+   * @description 구독 번호와 카테고리 번호로 카테고리 구독 조회
+   * @param sbcrNo 구독 번호
+   * @param ctgryNo 카테고리 번호
+   */
+  async getCategorySubscribeBySbcrNoAndCtgryNo(sbcrNo: number, ctgryNo: number): Promise<RepoResponseType<SelectCtgrySbcrMpngType> | null> {
+    try {
+      const subscribe = await this.prisma.ctgrySbcrMpng.findUnique({
+        where: {
+          sbcrNo_ctgryNo: {
+            sbcrNo,
+            ctgryNo,
+          },
+        },
+        include: {
+          category: {
+            select: {
+              ctgryNm: true,
+            },
+          },
+        },
+      });
+
+      return prismaResponse(true, subscribe);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
    * @description 카테고리 구독 생성
    * @param userNo 사용자 번호
    * @param createData 카테고리 구독 생성 데이터
@@ -328,7 +358,7 @@ export class CategorySubscribeRepository {
   async updateCategorySubscribe(
     userNo: number,
     updateData: UpdateCategorySubscribeDto
-  ): Promise<RepoResponseType<CtgrySbcrMpng> | null> {
+  ): Promise<RepoResponseType<SelectCtgrySbcrMpngType> | null> {
     try {
       const { ctgrySbcrNo, useYn, delYn, } = updateData;
 
@@ -341,6 +371,13 @@ export class CategorySubscribeRepository {
           delYn,
           updtNo: userNo,
           updtDt: timeToString(),
+        },
+        include: {
+          category: {
+            select: {
+              ctgryNm: true,
+            },
+          },
         },
       });
 

@@ -107,11 +107,11 @@ export const registerTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 조회 성공',
-                value: createResponse('SUCCESS', 'TAG_GET_SUCCESS', CreateExample.tag('detail')),
+                value: createResponse('SUCCESS', 'TAG_GET_BY_NAME_SUCCESS', CreateExample.tag('detail')),
               },
               notFound: {
                 summary: '태그를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'TAG_NOT_FOUND'),
+                value: createError('NOT_FOUND', 'TAG_NAME_NOT_FOUND'),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },

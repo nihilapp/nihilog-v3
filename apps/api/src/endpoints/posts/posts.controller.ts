@@ -1,5 +1,4 @@
 import { Body, Controller, Ip, Param, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { type AuthRequest, CreatePostBookmarkDto, DeletePostBookmarkDto, type ResponseDto, SearchPostDto } from '@/dto';
@@ -10,7 +9,6 @@ import type { ListType } from '@/endpoints/prisma/types/common.types';
 import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostListItemType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 
-@ApiTags('posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) { }

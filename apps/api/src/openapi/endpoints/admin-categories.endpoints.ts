@@ -42,7 +42,7 @@ export const registerAdminCategoriesEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_CATEGORY_SEARCH_SUCCESS', CreateExample.category('list')),
               },
               error: {
-                summary: '카테고리 목록 조회 실패 (Service)',
+                summary: '카테고리 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SEARCH_ERROR'),
               },
             }, {
@@ -83,11 +83,11 @@ export const registerAdminCategoriesEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_CATEGORY_GET_SUCCESS', CreateExample.category('detail')),
               },
               notFound: {
-                summary: '카테고리를 찾을 수 없음 (Repository)',
+                summary: '카테고리를 찾을 수 없음',
                 value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NOT_FOUND'),
               },
               error: {
-                summary: '카테고리 조회 실패 (Service)',
+                summary: '카테고리 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_GET_ERROR'),
               },
             }, {
@@ -128,11 +128,11 @@ export const registerAdminCategoriesEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_CATEGORY_GET_BY_NAME_SUCCESS', CreateExample.category('detail')),
               },
               notFound: {
-                summary: '카테고리를 찾을 수 없음 (Repository)',
+                summary: '카테고리를 찾을 수 없음',
                 value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NAME_NOT_FOUND'),
               },
               error: {
-                summary: '카테고리 조회 실패 (Service)',
+                summary: '카테고리 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_GET_BY_NAME_ERROR'),
               },
             }, {
@@ -174,11 +174,11 @@ export const registerAdminCategoriesEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_CATEGORY_CREATE_SUCCESS', CreateExample.category('detail')),
               },
               conflict: {
-                summary: '카테고리 이름 중복 (Service)',
+                summary: '카테고리 이름 중복',
                 value: createError('CONFLICT', 'ADMIN_CATEGORY_NAME_IN_USE'),
               },
               error: {
-                summary: '카테고리 생성 실패 (Service)',
+                summary: '카테고리 생성 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_CREATE_ERROR'),
               },
             }, {
@@ -224,7 +224,7 @@ export const registerAdminCategoriesEndpoints = () => {
                 }),
               },
               error: {
-                summary: '다수 카테고리 생성 실패 (Service)',
+                summary: '다수 카테고리 생성 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_MULTIPLE_CREATE_ERROR'),
               },
             }, {
@@ -272,11 +272,11 @@ export const registerAdminCategoriesEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_CATEGORY_UPDATE_SUCCESS', CreateExample.category('detail')),
               },
               notFound: {
-                summary: '카테고리를 찾을 수 없음 (Repository)',
+                summary: '카테고리를 찾을 수 없음',
                 value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NOT_FOUND'),
               },
               error: {
-                summary: '카테고리 수정 실패 (Service)',
+                summary: '카테고리 수정 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_UPDATE_ERROR'),
               },
             }, {
@@ -327,7 +327,7 @@ export const registerAdminCategoriesEndpoints = () => {
                 }),
               },
               error: {
-                summary: '다수 카테고리 수정 실패 (Service)',
+                summary: '다수 카테고리 수정 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_MULTIPLE_UPDATE_ERROR'),
               },
             }, {
@@ -368,11 +368,11 @@ export const registerAdminCategoriesEndpoints = () => {
                 value: createResponse('SUCCESS', 'ADMIN_CATEGORY_DELETE_SUCCESS', true),
               },
               notFound: {
-                summary: '카테고리를 찾을 수 없음 (Repository)',
+                summary: '카테고리를 찾을 수 없음',
                 value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NOT_FOUND'),
               },
               error: {
-                summary: '카테고리 삭제 실패 (Service)',
+                summary: '카테고리 삭제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_DELETE_ERROR'),
               },
             }, {
@@ -418,7 +418,7 @@ export const registerAdminCategoriesEndpoints = () => {
                 }),
               },
               error: {
-                summary: '다수 카테고리 삭제 실패 (Service)',
+                summary: '다수 카테고리 삭제 실패',
                 value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_MULTIPLE_DELETE_ERROR'),
               },
             }, {

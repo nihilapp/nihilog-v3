@@ -4,9 +4,6 @@ import {
   Req,
   Res
 } from '@nestjs/common';
-import {
-  ApiTags
-} from '@nestjs/swagger';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -21,7 +18,6 @@ import { clearCookie, setCookie } from '@/utils/setCookie';
 import { AuthService } from './auth.service';
 import { JwtPayload } from './jwt.strategy';
 
-@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }

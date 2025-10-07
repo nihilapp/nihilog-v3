@@ -206,6 +206,57 @@ export const registerTagSubscribeEndpoints = () => {
     },
   });
 
+  // 특정 태그 구독 설정 변경
+  openApiRegistry.registerPath({
+    method: 'put',
+    path: '/users/subscribes/tags/{tagSbcrNo}',
+    summary: '✏️ 특정 태그 구독 설정 변경',
+    description: '특정 태그의 구독 설정을 변경합니다.',
+    tags: [ 'tag-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      params: z.object({
+        tagSbcrNo: z.coerce.number().int().positive().openapi({
+          description: '태그 구독 번호',
+          example: 1,
+        }),
+      }),
+      body: {
+        content: {
+          'application/json': {
+            schema: updateTagSubscribeSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '태그 구독 설정 변경 성공',
+                value: createResponse(
+                  'SUCCESS',
+                  'TAG_SUBSCRIBE_UPDATE_SUCCESS',
+                  CreateExample.tagSubscribe('detail')
+                ),
+              },
+              error: {
+                summary: '태그 구독 설정 변경 실패',
+                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_UPDATE_ERROR'),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
   // 다수 태그 구독 설정 일괄 변경
   openApiRegistry.registerPath({
     method: 'put',

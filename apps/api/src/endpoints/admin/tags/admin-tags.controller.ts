@@ -77,13 +77,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_CREATE_ERROR'
+        result?.error?.message || 'ADMIN_TAG_MULTIPLE_CREATE_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_CREATE_SUCCESS',
+      'ADMIN_TAG_MULTIPLE_CREATE_SUCCESS',
       result.data
     );
   }
@@ -151,13 +151,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_UPDATE_ERROR'
+        result?.error?.message || 'ADMIN_TAG_MULTIPLE_UPDATE_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_UPDATE_SUCCESS',
+      'ADMIN_TAG_MULTIPLE_UPDATE_SUCCESS',
       result.data
     );
   }
@@ -221,13 +221,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_DELETE_ERROR'
+        result?.error?.message || 'ADMIN_TAG_MULTIPLE_DELETE_ERROR'
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_DELETE_SUCCESS',
+      'ADMIN_TAG_MULTIPLE_DELETE_SUCCESS',
       result.data
     );
   }

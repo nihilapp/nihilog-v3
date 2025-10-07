@@ -4,7 +4,6 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
@@ -16,7 +15,6 @@ import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 
 import { AdminService } from './admin.service';
 
-@ApiTags('admin')
 @Controller('admin')
 @UseGuards(AdminAuthGuard)
 export class AdminController {
