@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
@@ -40,11 +41,11 @@ export class AuthController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'SIGN_UP_ERROR'
+        result?.error?.message || MESSAGE.AUTH.SIGN_UP_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'SIGN_UP_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.AUTH.SIGN_UP_SUCCESS, result.data);
   }
 
   /**
@@ -71,7 +72,7 @@ export class AuthController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'UNAUTHORIZED',
-        result?.error?.message || 'INVALID_CREDENTIALS'
+        result?.error?.message || MESSAGE.AUTH.INVALID_CREDENTIALS
       );
     }
 
@@ -102,7 +103,7 @@ export class AuthController {
     if (req.headers[ 'x-swagger-login' ] === 'true') {
       return createResponse(
         'SUCCESS',
-        'SIGN_IN_SUCCESS',
+        MESSAGE.AUTH.SIGN_IN_SUCCESS,
         {
           ...user,
           acsToken: acsToken,
@@ -112,7 +113,7 @@ export class AuthController {
 
     return createResponse(
       'SUCCESS',
-      'SIGN_IN_SUCCESS',
+      MESSAGE.AUTH.SIGN_IN_SUCCESS,
       user
     );
   }
@@ -138,7 +139,7 @@ export class AuthController {
     const refreshToken = req.cookies[ 'refreshToken' ];
 
     if (!refreshToken) {
-      return createError('UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND');
+      return createError('UNAUTHORIZED', MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND);
     }
 
     const result = await this.authService.refresh(refreshToken);
@@ -146,7 +147,7 @@ export class AuthController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'UNAUTHORIZED',
-        result?.error?.message || 'INVALID_REFRESH_TOKEN'
+        result?.error?.message || MESSAGE.AUTH.INVALID_REFRESH_TOKEN
       );
     }
 
@@ -177,7 +178,7 @@ export class AuthController {
 
     return createResponse(
       'SUCCESS',
-      'TOKEN_REFRESH_SUCCESS',
+      MESSAGE.AUTH.TOKEN_REFRESH_SUCCESS,
       user
     );
   }
@@ -204,7 +205,7 @@ export class AuthController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'SIGN_OUT_ERROR'
+        result?.error?.message || MESSAGE.AUTH.SIGN_OUT_ERROR
       );
     }
 
@@ -213,7 +214,7 @@ export class AuthController {
     clearCookie(res, 'refreshToken');
     clearCookie(res, 'accessTokenExpiresAt');
 
-    return createResponse('SUCCESS', 'SIGN_OUT_SUCCESS', null);
+    return createResponse('SUCCESS', MESSAGE.AUTH.SIGN_OUT_SUCCESS, null);
   }
 
   /**
@@ -233,7 +234,7 @@ export class AuthController {
     const authUser = req.user;
 
     if (!authUser) {
-      return createError('UNAUTHORIZED', 'UNAUTHORIZED');
+      return createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
     }
 
     const result = await this.authService.session(authUser.userNo);
@@ -241,11 +242,11 @@ export class AuthController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'UNAUTHORIZED',
-        result?.error?.message || 'SESSION_NOT_FOUND'
+        result?.error?.message || MESSAGE.AUTH.SESSION_NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'SESSION_GET_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.AUTH.SESSION_GET_SUCCESS, result.data);
   }
 
   /**
@@ -269,7 +270,7 @@ export class AuthController {
     const authUser = req.user;
 
     if (!authUser) {
-      return createError('UNAUTHORIZED', 'UNAUTHORIZED');
+      return createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
     }
 
     const result = await this.authService.changePassword(authUser.userNo, changePasswordData);
@@ -277,10 +278,10 @@ export class AuthController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'UNAUTHORIZED',
-        result?.error?.message || 'PASSWORD_CHANGE_ERROR'
+        result?.error?.message || MESSAGE.AUTH.PASSWORD_CHANGE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'PASSWORD_CHANGE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.AUTH.PASSWORD_CHANGE_SUCCESS, result.data);
   }
 }

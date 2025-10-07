@@ -1,7 +1,8 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { MESSAGE_CODE, RESPONSE_CODE } from '@/code';
+import { RESPONSE_CODE } from '@/code';
+import { MESSAGE } from '@/code/messages';
 import { ResponseDto } from '@/dto/response.dto';
 import { timeToString } from '@/utils/timeHelper';
 
@@ -32,7 +33,7 @@ export class UnifiedResponseInterceptor implements NestInterceptor {
         return {
           error: false,
           code: RESPONSE_CODE.SUCCESS,
-          message: MESSAGE_CODE.SUCCESS,
+          message: MESSAGE.COMMON.SUCCESS,
           data,
           responseTime: timeToString(),
         } as ResponseDto<unknown>;
@@ -42,7 +43,7 @@ export class UnifiedResponseInterceptor implements NestInterceptor {
         return {
           error: true,
           code: RESPONSE_CODE.INTERNAL_SERVER_ERROR,
-          message: MESSAGE_CODE.INTERNAL_SERVER_ERROR,
+          message: MESSAGE.COMMON.INTERNAL_SERVER_ERROR,
           data: null,
           responseTime: timeToString(),
         } as ResponseDto<null>;

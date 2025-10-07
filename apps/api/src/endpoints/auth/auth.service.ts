@@ -7,6 +7,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
+import { MESSAGE } from '@/code/messages';
 import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
@@ -47,7 +48,7 @@ export class AuthService {
     const result = await this.userRepository.getUserByNo(userNo);
 
     if (!result?.success) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', 'AUTH_NOT_FOUND');
+      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.NOT_FOUND);
     }
 
     const userToReturn = cloneDeep(result.data);
@@ -68,7 +69,7 @@ export class AuthService {
     const userResult = await this.userRepository.getUserByEmail(emlAddr);
 
     if (!userResult?.success) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
     }
 
     const user = userResult.data;
@@ -77,7 +78,7 @@ export class AuthService {
     const isPasswordMatching = await bcrypt.compare(password, user.encptPswd);
 
     if (!isPasswordMatching) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
     }
 
     // JWT 페이로드 생성
@@ -111,7 +112,7 @@ export class AuthService {
     );
 
     if (!updateResult?.success) {
-      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_IN_ERROR);
     }
 
     // AccessToken 만료시간 계산
@@ -136,7 +137,7 @@ export class AuthService {
    */
   async refresh(token: string): Promise<RepoResponseType<SignInResponseType> | null> {
     if (!token) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', 'REFRESH_TOKEN_NOT_FOUND');
+      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND);
     }
 
     try {
@@ -147,7 +148,7 @@ export class AuthService {
       const userResult = await this.userRepository.getUserByNo(payload.userNo);
 
       if (!userResult?.success || userResult.data.reshToken !== token) {
-        return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
+        return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_REFRESH_TOKEN);
       }
 
       const user = userResult.data;
@@ -175,7 +176,7 @@ export class AuthService {
       );
 
       if (!updateResult?.success) {
-        return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR');
+        return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.AUTH.TOKEN_REFRESH_ERROR);
       }
 
       // AccessToken 만료시간 계산
@@ -193,7 +194,7 @@ export class AuthService {
       });
     }
     catch {
-      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_REFRESH_TOKEN');
+      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_REFRESH_TOKEN);
     }
   }
 
@@ -207,7 +208,7 @@ export class AuthService {
     // 이메일 중복 체크
     const existingUser = await this.userRepository.getUserByEmail(emlAddr);
     if (existingUser?.success) {
-      return prismaResponse(false, null, 'CONFLICT', 'EMAIL_IN_USE');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.AUTH.ALREADY_EXISTS);
     }
 
     // 비밀번호 암호화
@@ -245,7 +246,7 @@ export class AuthService {
     );
 
     if (!isPasswordMatching) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', 'INVALID_CREDENTIALS');
+      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
     }
 
     const newEncptPswd = await bcrypt.hash(newPassword, 10);
@@ -287,7 +288,7 @@ export class AuthService {
         );
 
         if (!updateResult?.success) {
-          return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'SIGN_OUT_ERROR');
+          return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_OUT_ERROR);
         }
       }
 

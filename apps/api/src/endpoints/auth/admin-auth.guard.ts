@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
+import { MESSAGE } from '@/code/messages';
 import { ResponseDto } from '@/dto/response.dto';
 import { userRoleSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError } from '@/utils';
@@ -24,21 +25,21 @@ export class AdminAuthGuard extends AuthGuard('jwt') {
       const result = await super.canActivate(context);
 
       if (!result) {
-        request.errorResponse = createError('UNAUTHORIZED', 'UNAUTHORIZED');
+        request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       const user = request.user;
 
       if (!user || user.userRole !== userRoleSchema.enum.ADMIN) {
-        request.errorResponse = createError('FORBIDDEN', 'ADMIN_ONLY');
+        request.errorResponse = createError('FORBIDDEN', MESSAGE.AUTH.ADMIN_ONLY);
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       return true;
     }
     catch {
-      request.errorResponse = createError('UNAUTHORIZED', 'UNAUTHORIZED');
+      request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
       return true; // Guard를 통과시키되 에러 응답을 설정
     }
   }

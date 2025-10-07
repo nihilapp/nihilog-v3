@@ -6,6 +6,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
+import { MESSAGE } from '@/code/messages';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import { createError } from '@/utils';
@@ -37,14 +38,14 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const jwtResult = await super.canActivate(context);
 
       if (!jwtResult) {
-        request.errorResponse = createError('UNAUTHORIZED', 'UNAUTHORIZED');
+        request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       const user = request.user;
 
       if (!user) {
-        request.errorResponse = createError('UNAUTHORIZED', 'UNAUTHORIZED');
+        request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
         return true;
       }
 
@@ -63,14 +64,14 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const hasRequiredRole = requiredRoles.includes(user.userRole);
 
       if (!hasRequiredRole) {
-        request.errorResponse = createError('FORBIDDEN', 'PERMISSION_DENIED');
+        request.errorResponse = createError('FORBIDDEN', MESSAGE.AUTH.FORBIDDEN);
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       return true;
     }
     catch {
-      request.errorResponse = createError('UNAUTHORIZED', 'UNAUTHORIZED');
+      request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
       return true; // Guard를 통과시키되 에러 응답을 설정
     }
   }

@@ -1,4 +1,4 @@
-import type { MESSAGE_CODE, RESPONSE_CODE } from '@/code';
+import type { RESPONSE_CODE } from '@/code';
 
 // 리스트 형식의 데이터 타입
 export type ListType<TData = unknown> = {
@@ -17,7 +17,7 @@ export type MultipleResultType = {
 export type ResponseType<TData = unknown> = {
   error: false;
   code: keyof typeof RESPONSE_CODE;
-  message: keyof typeof MESSAGE_CODE;
+  message: string;
   data: TData;
   responseTime: string;
 };
@@ -26,7 +26,7 @@ export type ResponseType<TData = unknown> = {
 export type ErrorType = {
   error: true;
   code: keyof typeof RESPONSE_CODE;
-  message: keyof typeof MESSAGE_CODE;
+  message: string;
   data: null;
   responseTime: string;
 };
@@ -37,6 +37,6 @@ export type RepoResponseType<TData = unknown> = {
   data?: TData | null;
   error?: {
     code: keyof typeof RESPONSE_CODE;
-    message: keyof typeof MESSAGE_CODE;
+    message: string;
   };
 };
