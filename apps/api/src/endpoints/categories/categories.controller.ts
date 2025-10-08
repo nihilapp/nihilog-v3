@@ -4,6 +4,7 @@ import {
   Param
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { SearchCategoryDto } from '@/dto/category.dto';
@@ -31,11 +32,11 @@ export class CategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.USER.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.USER.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -52,11 +53,11 @@ export class CategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'CATEGORY_NOT_FOUND'
+        result?.error?.message || MESSAGE.CATEGORY.USER.NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_GET_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.USER.GET_SUCCESS, result.data);
   }
 
   /**
@@ -73,10 +74,10 @@ export class CategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'CATEGORY_NAME_NOT_FOUND'
+        result?.error?.message || MESSAGE.CATEGORY.USER.NAME_NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_GET_BY_NAME_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.USER.GET_BY_NAME_SUCCESS, result.data);
   }
 }

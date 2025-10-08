@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { UpdateUserDto } from '@/dto/user.dto';
 import { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
@@ -35,7 +36,7 @@ export class AdminService {
 
       if (existingUser?.success && existingUser.data && existingUser.data.userNo !== authUser.userNo) {
         // 중복된 사용자명 - prismaResponse 사용
-        return prismaResponse(false, null, 'CONFLICT', 'USER_NAME_EXISTS');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.NAME_EXISTS);
       }
     }
 

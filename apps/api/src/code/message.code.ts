@@ -1,3 +1,8 @@
+/**
+ * @deprecated
+ * 새로운 MESSAGE from '@/code/messages'를 사용하세요.
+ * 마이그레이션 완료 후 제거 예정입니다.
+ */
 export const MESSAGE_CODE = {
   // ===== 공통 메시지 =====
   SUCCESS: '요청이 성공적으로 처리되었습니다.',

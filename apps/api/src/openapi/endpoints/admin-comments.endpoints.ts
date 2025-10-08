@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import {
   updateCommentSchema,
   deleteCommentSchema
@@ -36,7 +37,7 @@ export const registerAdminCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '관리자 댓글 일괄 수정 성공',
-                value: createResponse('SUCCESS', 'ADMIN_COMMENT_MULTIPLE_UPDATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -44,7 +45,7 @@ export const registerAdminCommentsEndpoints = () => {
               },
               error: {
                 summary: '관리자 댓글 일괄 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_COMMENT_MULTIPLE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -82,7 +83,7 @@ export const registerAdminCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '관리자 댓글 일괄 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_COMMENT_MULTIPLE_DELETE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -90,7 +91,7 @@ export const registerAdminCommentsEndpoints = () => {
               },
               error: {
                 summary: '관리자 댓글 일괄 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_COMMENT_MULTIPLE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

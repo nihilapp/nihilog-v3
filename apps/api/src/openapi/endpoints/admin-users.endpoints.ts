@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import { createUserSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { updateUserSchema, searchUserSchema, deleteMultipleUsersSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError, createResponse } from '@/utils';
@@ -35,14 +36,14 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 목록 조회 성공',
-                value: createResponse('SUCCESS', 'USER_SEARCH_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.SEARCH_SUCCESS, {
                   list: [ CreateExample.user('list'), ],
                   totalCnt: 1,
                 }),
               },
               error: {
                 summary: '사용자 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -79,11 +80,11 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 조회 성공',
-                value: createResponse('SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user('detail')),
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, CreateExample.user('detail')),
               },
               notFound: {
                 summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -120,11 +121,11 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 조회 성공',
-                value: createResponse('SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user()),
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, CreateExample.user()),
               },
               notFound: {
                 summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -161,11 +162,11 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 조회 성공',
-                value: createResponse('SUCCESS', 'USER_FETCH_SUCCESS', CreateExample.user('detail')),
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, CreateExample.user('detail')),
               },
               notFound: {
                 summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -203,15 +204,15 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 생성 성공',
-                value: createResponse('CREATED', 'USER_CREATE_SUCCESS', CreateExample.user('detail')),
+                value: createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, CreateExample.user('detail')),
               },
               conflict: {
                 summary: '이미 존재하는 이메일',
-                value: createError('CONFLICT', 'EMAIL_IN_USE'),
+                value: createError('CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS),
               },
               error: {
                 summary: '사용자 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -255,19 +256,19 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 수정 성공',
-                value: createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', CreateExample.user('detail')),
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, CreateExample.user('detail')),
               },
               notFound: {
                 summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
               conflict: {
                 summary: '사용자명 중복',
-                value: createError('CONFLICT', 'USER_NAME_EXISTS'),
+                value: createError('CONFLICT', MESSAGE.USER.USER.NAME_EXISTS),
               },
               error: {
                 summary: '사용자 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -305,7 +306,7 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 사용자 수정 성공',
-                value: createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, {
                   successCnt: 1,
                   failCnt: 0,
                   failNoList: [],
@@ -313,7 +314,7 @@ export const registerAdminUsersEndpoints = () => {
               },
               error: {
                 summary: '사용자 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -350,15 +351,15 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '사용자 삭제 성공',
-                value: createResponse('SUCCESS', 'USER_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, true),
               },
               notFound: {
                 summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
               error: {
                 summary: '사용자 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -396,7 +397,7 @@ export const registerAdminUsersEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 사용자 삭제 성공',
-                value: createResponse('SUCCESS', 'USER_DELETE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, {
                   successCnt: 1,
                   failCnt: 0,
                   failNoList: [],
@@ -404,7 +405,7 @@ export const registerAdminUsersEndpoints = () => {
               },
               error: {
                 summary: '사용자 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'USER_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

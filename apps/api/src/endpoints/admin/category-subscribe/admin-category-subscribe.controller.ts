@@ -5,6 +5,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import {
@@ -49,11 +50,11 @@ export class AdminCategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -82,11 +83,11 @@ export class AdminCategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -115,10 +116,10 @@ export class AdminCategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_SUCCESS, result.data);
   }
 }

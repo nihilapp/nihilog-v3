@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateTagDto, DeleteTagDto, UpdateTagDto } from '@/dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
@@ -21,7 +22,7 @@ export class AdminTagsService {
     const findTag = await this.tagRepository.getTagByTagNm(createData.tagNm);
 
     if (findTag?.success) {
-      return prismaResponse(false, null, 'CONFLICT', 'ADMIN_TAG_NAME_IN_USE');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE);
     }
 
     return this.tagRepository.createTag(userNo, createData);
@@ -37,7 +38,7 @@ export class AdminTagsService {
     for (const item of createData) {
       const findTag = await this.tagRepository.getTagByTagNm(item.tagNm);
       if (findTag?.success) {
-        return prismaResponse(false, null, 'CONFLICT', 'ADMIN_TAG_NAME_IN_USE');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE);
       }
     }
 
@@ -111,7 +112,7 @@ export class AdminTagsService {
     const findTag = await this.tagRepository
       .getPostTagMappingByTagNo(createData.tagNo, createData.pstNo);
     if (findTag?.success) {
-      return prismaResponse(false, null, 'CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS);
     }
 
     return this.tagRepository.addTagToPost(userNo, createData);
@@ -127,7 +128,7 @@ export class AdminTagsService {
       const findTag = await this.tagRepository
         .getPostTagMappingByTagNo(item.tagNo, item.pstNo);
       if (findTag?.success) {
-        return prismaResponse(false, null, 'CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS);
       }
     }
     return this.tagRepository.multipleAddTagToPost(userNo, createData);

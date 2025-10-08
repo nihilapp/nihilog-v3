@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import { createPostShareLogSchema } from '@/endpoints/prisma/schemas/post-sharelog.schema';
 import {
   searchPostSchema,
@@ -39,11 +40,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 목록 조회 성공',
-                value: createResponse('SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
               },
               error: {
                 summary: '게시글 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -76,15 +77,15 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 상세 조회 성공',
-                value: createResponse('SUCCESS', 'POST_GET_SUCCESS', CreateExample.post('detail')),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.GET_SUCCESS, CreateExample.post('detail')),
               },
               notFound: {
                 summary: '게시글을 찾을 수 없음',
-                value: createError('NOT_FOUND', 'POST_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.POST.USER.NOT_FOUND),
               },
               error: {
                 summary: '게시글 상세 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_GET_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.GET_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -117,15 +118,15 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 상세 조회 성공',
-                value: createResponse('SUCCESS', 'POST_GET_SUCCESS', CreateExample.post('detail')),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.GET_SUCCESS, CreateExample.post('detail')),
               },
               notFound: {
                 summary: '게시글을 찾을 수 없음',
-                value: createError('NOT_FOUND', 'POST_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.POST.USER.NOT_FOUND),
               },
               error: {
                 summary: '게시글 상세 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_GET_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.GET_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -165,11 +166,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그별 게시글 목록 조회 성공',
-                value: createResponse('SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
               },
               error: {
                 summary: '태그별 게시글 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -209,11 +210,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리별 게시글 목록 조회 성공',
-                value: createResponse('SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
               },
               error: {
                 summary: '카테고리별 게시글 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -253,11 +254,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '년월별 게시글 목록 조회 성공',
-                value: createResponse('SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
               },
               error: {
                 summary: '년월별 게시글 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -291,11 +292,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '고급 검색 성공',
-                value: createResponse('SUCCESS', 'POST_SEARCH_SUCCESS', [ CreateExample.post('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
               },
               error: {
                 summary: '고급 검색 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -328,11 +329,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 조회 로그 기록 성공',
-                value: createResponse('SUCCESS', 'POST_VIEW_LOG_SUCCESS', CreateExample.postViewLog()),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.VIEW_LOG_SUCCESS, CreateExample.postViewLog()),
               },
               error: {
                 summary: '게시글 조회 로그 기록 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_VIEW_LOG_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.VIEW_LOG_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -372,11 +373,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 공유 로그 기록 성공',
-                value: createResponse('SUCCESS', 'POST_SHARE_LOG_SUCCESS', CreateExample.postShareLog()),
+                value: createResponse('SUCCESS', MESSAGE.POST.USER.SHARE_LOG_SUCCESS, CreateExample.postShareLog()),
               },
               error: {
                 summary: '게시글 공유 로그 기록 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_SHARE_LOG_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SHARE_LOG_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -416,11 +417,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 북마크 생성 성공',
-                value: createResponse('SUCCESS', 'POST_BOOKMARK_CREATE_SUCCESS', CreateExample.postBookmark('detail')),
+                value: createResponse('SUCCESS', MESSAGE.POST.BOOKMARK.CREATE_SUCCESS, CreateExample.postBookmark('detail')),
               },
               error: {
                 summary: '게시글 북마크 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_BOOKMARK_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.BOOKMARK.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -462,11 +463,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '게시글 북마크 삭제 성공',
-                value: createResponse('SUCCESS', 'POST_BOOKMARK_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.POST.BOOKMARK.DELETE_SUCCESS, true),
               },
               error: {
                 summary: '게시글 북마크 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_BOOKMARK_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.BOOKMARK.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -503,11 +504,11 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '북마크한 게시글 목록 조회 성공',
-                value: createResponse('SUCCESS', 'POST_BOOKMARK_SEARCH_SUCCESS', [ CreateExample.postBookmark('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.POST.BOOKMARK.SEARCH_SUCCESS, [ CreateExample.postBookmark('list'), ]),
               },
               error: {
                 summary: '북마크한 게시글 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'POST_BOOKMARK_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.BOOKMARK.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

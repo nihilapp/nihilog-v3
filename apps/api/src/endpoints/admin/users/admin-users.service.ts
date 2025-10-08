@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
+import { MESSAGE } from '@/code/messages';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
@@ -27,7 +28,7 @@ export class AdminUserService {
     const safeData = searchUserSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', 'INVALID_REQUEST');
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
     }
 
     // 검색 조건 설정
@@ -80,7 +81,7 @@ export class AdminUserService {
     const findUser = await this.userRepository.getUserByEmail(createUserData.emlAddr);
 
     if (findUser?.success) {
-      return prismaResponse(false, null, 'CONFLICT', 'EMAIL_IN_USE');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS);
     }
 
     // 비밀번호 해시화
@@ -116,7 +117,7 @@ export class AdminUserService {
       const existingUser = await this.userRepository.getUserByName(updateUserData.userNm);
 
       if (existingUser?.success && existingUser.data && existingUser.data.userNo !== targetUserNo) {
-        return prismaResponse(false, null, 'CONFLICT', 'USER_NAME_EXISTS');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.NAME_EXISTS);
       }
     }
 
@@ -159,7 +160,7 @@ export class AdminUserService {
    */
   async adminMultipleDeleteUser(adminUserNo: number, userNoList: number[]): Promise<RepoResponseType<MultipleResultType> | null> {
     if (!userNoList || userNoList.length === 0) {
-      return prismaResponse(false, null, 'BAD_REQUEST', 'INVALID_REQUEST');
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
     }
 
     return this.userRepository.adminMultipleDeleteUser(adminUserNo, userNoList);

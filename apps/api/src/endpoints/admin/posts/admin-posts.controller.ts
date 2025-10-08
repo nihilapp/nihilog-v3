@@ -1,5 +1,6 @@
 import { Body, Controller, Param, Req, UseGuards } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, ResponseDto } from '@/dto';
 import { CreatePostDto, DeletePostDto, UpdatePostDto, ViewStatDto } from '@/dto/post.dto';
@@ -41,13 +42,13 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_VIEW_STATS_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_VIEW_STATS_SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
       result.data
     );
   }
@@ -79,13 +80,13 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SHARE_STATS_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SHARE_STATS_SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
       result.data
     );
   }
@@ -112,13 +113,13 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SHARE_STATS_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SHARE_STATS_SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
       result.data
     );
   }
@@ -148,11 +149,11 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_POST_CREATE_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_POST_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -180,11 +181,11 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_POST_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_POST_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -209,11 +210,11 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_POST_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_POST_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -238,11 +239,11 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_POST_DELETE_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_POST_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.DELETE_SUCCESS, result.data);
   }
 
   /**
@@ -267,10 +268,10 @@ export class AdminPostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_POST_DELETE_ERROR'
+        result?.error?.message || MESSAGE.POST.ADMIN.DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_POST_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.DELETE_SUCCESS, result.data);
   }
 }

@@ -1,5 +1,6 @@
 import { Body, Controller, Req, UseGuards } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, DeleteCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
 import { AdminCommentsService } from '@/endpoints/admin/comments/admin-comments.service';
@@ -38,13 +39,13 @@ export class AdminCommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_COMMENT_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_COMMENT_MULTIPLE_UPDATE_SUCCESS',
+      MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_SUCCESS,
       result.data
     );
   }
@@ -75,13 +76,13 @@ export class AdminCommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_COMMENT_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_COMMENT_MULTIPLE_DELETE_SUCCESS',
+      MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_SUCCESS,
       result.data
     );
   }

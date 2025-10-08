@@ -6,6 +6,7 @@ import {
   Param
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
@@ -47,10 +48,10 @@ export class AdminUserController {
     const result = await this.usersService.getUserList(body);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_SEARCH_ERROR');
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.SEARCH_ERROR);
     }
 
-    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', 'USER_SEARCH_SUCCESS', result.data));
+    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', MESSAGE.USER.USER.SEARCH_SUCCESS, result.data));
   }
 
   /**
@@ -77,12 +78,12 @@ export class AdminUserController {
     const result = await this.usersService.getUserByNo(userNo);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || 'USER_NOT_FOUND');
+      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || MESSAGE.USER.USER.NOT_FOUND);
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, userToReturn);
   }
 
   /**
@@ -109,12 +110,12 @@ export class AdminUserController {
     const result = await this.usersService.getUserByNm(name);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || 'USER_NOT_FOUND');
+      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || MESSAGE.USER.USER.NOT_FOUND);
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, userToReturn);
   }
 
   /**
@@ -141,12 +142,12 @@ export class AdminUserController {
     const result = await this.usersService.getUserByEmail(email);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || 'USER_NOT_FOUND');
+      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || MESSAGE.USER.USER.NOT_FOUND);
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', 'USER_FETCH_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, userToReturn);
   }
 
   /**
@@ -173,12 +174,12 @@ export class AdminUserController {
     const result = await this.usersService.createUser(req.user, createUserData);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_CREATE_ERROR');
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR);
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('CREATED', 'USER_CREATE_SUCCESS', userToReturn);
+    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, userToReturn);
   }
 
   /**
@@ -207,12 +208,12 @@ export class AdminUserController {
     const result = await this.usersService.updateUser(req.user.userNo, userNo, updateUserData);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_UPDATE_ERROR');
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR);
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, userToReturn);
   }
 
   // TODO: 여기서부터 다시 진행할 것
@@ -241,10 +242,10 @@ export class AdminUserController {
     const result = await this.usersService.multipleUpdateUser(req.user.userNo, updateUserDto);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_UPDATE_ERROR');
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR);
     }
 
-    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -274,10 +275,10 @@ export class AdminUserController {
     );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_DELETE_ERROR');
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.DELETE_ERROR);
     }
 
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, result.data);
   }
 
   /**
@@ -304,9 +305,9 @@ export class AdminUserController {
     const result = await this.usersService.adminMultipleDeleteUser(req.user.userNo, body.userNoList);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || 'USER_DELETE_ERROR');
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.DELETE_ERROR);
     }
 
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, result.data);
   }
 }

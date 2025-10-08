@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import {
   createCategorySchema,
   updateCategorySchema,
@@ -13,10 +14,10 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminCategoriesEndpoints = () => {
-  // POST /admin/categories - 카테고리 목록 조회
+  // POST /admin/categories/search - 카테고리 목록 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/categories',
+    path: '/admin/categories/search',
     summary: '📁 관리자 카테고리 목록 조회',
     description: 'ADMIN 권한으로 카테고리 목록을 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -39,11 +40,11 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 목록 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_SEARCH_SUCCESS', CreateExample.category('list')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.SEARCH_SUCCESS, CreateExample.category('list')),
               },
               error: {
                 summary: '카테고리 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -80,15 +81,15 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_GET_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_SUCCESS, CreateExample.category('detail')),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '카테고리 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_GET_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.GET_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -125,15 +126,15 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_GET_BY_NAME_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_SUCCESS, CreateExample.category('detail')),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NAME_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NAME_NOT_FOUND),
               },
               error: {
                 summary: '카테고리 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_GET_BY_NAME_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -171,15 +172,15 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 생성 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_CREATE_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS, CreateExample.category('detail')),
               },
               conflict: {
                 summary: '카테고리 이름 중복',
-                value: createError('CONFLICT', 'ADMIN_CATEGORY_NAME_IN_USE'),
+                value: createError('CONFLICT', MESSAGE.CATEGORY.ADMIN.NAME_IN_USE),
               },
               error: {
                 summary: '카테고리 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -217,7 +218,7 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 생성 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_MULTIPLE_CREATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -225,7 +226,7 @@ export const registerAdminCategoriesEndpoints = () => {
               },
               error: {
                 summary: '다수 카테고리 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_MULTIPLE_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -269,15 +270,15 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 수정 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_UPDATE_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.UPDATE_SUCCESS, CreateExample.category('detail')),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '카테고리 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -320,7 +321,7 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 수정 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_MULTIPLE_UPDATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -328,7 +329,7 @@ export const registerAdminCategoriesEndpoints = () => {
               },
               error: {
                 summary: '다수 카테고리 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_MULTIPLE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -365,15 +366,15 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.DELETE_SUCCESS, true),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'ADMIN_CATEGORY_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '카테고리 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -411,7 +412,7 @@ export const registerAdminCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_CATEGORY_MULTIPLE_DELETE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -419,7 +420,7 @@ export const registerAdminCategoriesEndpoints = () => {
               },
               error: {
                 summary: '다수 카테고리 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_CATEGORY_MULTIPLE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

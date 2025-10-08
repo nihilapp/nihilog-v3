@@ -51,6 +51,7 @@ export const SUBSCRIBE_MESSAGES = {
     ALREADY_EXISTS: '이미 구독 설정이 존재합니다.',
     ALREADY_DELETED: '이미 삭제된 구독 설정입니다.',
     INVALID_USER_LIST: '유효하지 않은 사용자 목록입니다.',
+    NOT_FOUND: '사용자 구독 설정을 찾을 수 없습니다.',
   },
 
   CATEGORY: {

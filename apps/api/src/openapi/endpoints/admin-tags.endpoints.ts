@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import {
   createTagSchema,
   updateTagSchema,
@@ -41,15 +42,15 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 생성 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_CREATE_SUCCESS', CreateExample.tag('detail')),
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.CREATE_SUCCESS, CreateExample.tag('detail')),
               },
               conflict: {
                 summary: '태그 이름 중복',
-                value: createError('CONFLICT', 'ADMIN_TAG_NAME_IN_USE'),
+                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE),
               },
               error: {
                 summary: '태그 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -87,7 +88,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 태그 생성 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MULTIPLE_CREATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -95,11 +96,11 @@ export const registerAdminTagsEndpoints = () => {
               },
               conflict: {
                 summary: '태그 이름 중복',
-                value: createError('CONFLICT', 'ADMIN_TAG_NAME_IN_USE'),
+                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE),
               },
               error: {
                 summary: '다수 태그 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MULTIPLE_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -137,15 +138,15 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 수정 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_UPDATE_SUCCESS', CreateExample.tag('detail')),
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.UPDATE_SUCCESS, CreateExample.tag('detail')),
               },
               notFound: {
                 summary: '태그를 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '태그 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -183,7 +184,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 태그 수정 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MULTIPLE_UPDATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -191,7 +192,7 @@ export const registerAdminTagsEndpoints = () => {
               },
               error: {
                 summary: '다수 태그 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MULTIPLE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MULTIPLE_UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -229,15 +230,15 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.DELETE_SUCCESS, true),
               },
               notFound: {
                 summary: '태그를 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '태그 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -275,7 +276,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 태그 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MULTIPLE_DELETE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MULTIPLE_DELETE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -283,7 +284,7 @@ export const registerAdminTagsEndpoints = () => {
               },
               error: {
                 summary: '다수 태그 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MULTIPLE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MULTIPLE_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -295,10 +296,10 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/mapping - 태그 매핑 조회
+  // POST /admin/tags/mapping/search - 태그 매핑 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/tags/mapping',
+    path: '/admin/tags/mapping/search',
     summary: '🔍 태그 매핑 조회',
     description: 'ADMIN 권한으로 태그 매핑 목록을 조회합니다.',
     tags: [ 'admin-tags', ],
@@ -321,7 +322,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 매핑 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MAPPING_SEARCH_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_SUCCESS, {
                   list: [
                     {
                       tagNo: 1,
@@ -338,7 +339,7 @@ export const registerAdminTagsEndpoints = () => {
               },
               error: {
                 summary: '태그 매핑 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -379,7 +380,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 매핑 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MAPPING_SEARCH_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_SUCCESS, {
                   tagNo: 1,
                   tagNm: 'JavaScript',
                   pstNo: 1,
@@ -389,11 +390,11 @@ export const registerAdminTagsEndpoints = () => {
               },
               notFound: {
                 summary: '태그 매핑을 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '태그 매핑 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -431,7 +432,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 매핑 추가 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MAPPING_CREATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_CREATE_SUCCESS, {
                   tagNo: 1,
                   tagNm: 'JavaScript',
                   pstNo: 1,
@@ -441,11 +442,11 @@ export const registerAdminTagsEndpoints = () => {
               },
               conflict: {
                 summary: '이미 존재하는 태그 매핑',
-                value: createError('CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS'),
+                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS),
               },
               error: {
                 summary: '태그 매핑 추가 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -483,7 +484,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 태그 매핑 추가 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MAPPING_CREATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_CREATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -491,11 +492,11 @@ export const registerAdminTagsEndpoints = () => {
               },
               conflict: {
                 summary: '이미 존재하는 태그 매핑',
-                value: createError('CONFLICT', 'ADMIN_TAG_MAPPING_ALREADY_EXISTS'),
+                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS),
               },
               error: {
                 summary: '다수 태그 매핑 추가 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -533,15 +534,15 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 매핑 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MAPPING_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_DELETE_SUCCESS, true),
               },
               notFound: {
                 summary: '태그 매핑을 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', 'ADMIN_TAG_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
               },
               error: {
                 summary: '태그 매핑 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -579,7 +580,7 @@ export const registerAdminTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 태그 매핑 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_TAG_MAPPING_DELETE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_DELETE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 0,
                   failNoList: [],
@@ -587,7 +588,7 @@ export const registerAdminTagsEndpoints = () => {
               },
               error: {
                 summary: '다수 태그 매핑 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_TAG_MAPPING_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

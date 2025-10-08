@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import { searchSubscribeSchema, createSubscribeSchema, updateSubscribeSchema, deleteSubscribeSchema } from '@/endpoints/prisma/schemas/subscribe.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
@@ -34,11 +35,11 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 목록 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_SEARCH_SUCCESS', [ CreateExample.subscribe('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.SEARCH_SUCCESS, [ CreateExample.subscribe('list'), ]),
               },
               error: {
                 summary: '구독 설정 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'ADMIN_SUBSCRIBE_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.ADMIN.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -75,11 +76,11 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 조회 성공',
-                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_SEARCH_SUCCESS', CreateExample.subscribe('detail')),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.SEARCH_SUCCESS, CreateExample.subscribe('detail')),
               },
               notFound: {
                 summary: '구독 설정을 찾을 수 없음',
-                value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.ADMIN.NOT_FOUND),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -117,15 +118,15 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 생성 성공',
-                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_CREATE_SUCCESS', CreateExample.subscribe('detail')),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.CREATE_SUCCESS, CreateExample.subscribe('detail')),
               },
               notFound: {
                 summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'USER_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
               conflict: {
                 summary: '이미 구독 설정이 존재함',
-                value: createError('CONFLICT', 'ADMIN_SUBSCRIBE_ALREADY_EXISTS'),
+                value: createError('CONFLICT', MESSAGE.SUBSCRIBE.ADMIN.ALREADY_EXISTS),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -163,7 +164,7 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 일괄 변경 성공',
-                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
                   successCnt: 3,
                   failCnt: 1,
                   failNoList: [],
@@ -171,11 +172,11 @@ export const registerAdminSubscribeEndpoints = () => {
               },
               badRequest: {
                 summary: '유효하지 않은 사용자 목록',
-                value: createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_INVALID_USER_LIST'),
+                value: createError('BAD_REQUEST', MESSAGE.SUBSCRIBE.ADMIN.INVALID_USER_LIST),
               },
               notFound: {
                 summary: '구독 설정을 찾을 수 없음',
-                value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.ADMIN.NOT_FOUND),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -212,15 +213,15 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.DELETE_SUCCESS, true),
               },
               notFound: {
                 summary: '구독 설정을 찾을 수 없음',
-                value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.ADMIN.NOT_FOUND),
               },
               conflict: {
                 summary: '이미 삭제된 구독 설정',
-                value: createError('CONFLICT', 'ADMIN_SUBSCRIBE_ALREADY_DELETED'),
+                value: createError('CONFLICT', MESSAGE.SUBSCRIBE.ADMIN.ALREADY_DELETED),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -258,7 +259,7 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 일괄 삭제 성공',
-                value: createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', {
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_DELETE_SUCCESS, {
                   successCnt: 1,
                   failCnt: 0,
                   failNoList: [],
@@ -266,11 +267,11 @@ export const registerAdminSubscribeEndpoints = () => {
               },
               badRequest: {
                 summary: '유효하지 않은 사용자 목록',
-                value: createError('BAD_REQUEST', 'ADMIN_SUBSCRIBE_INVALID_USER_LIST'),
+                value: createError('BAD_REQUEST', MESSAGE.SUBSCRIBE.ADMIN.INVALID_USER_LIST),
               },
               notFound: {
                 summary: '구독 설정을 찾을 수 없음',
-                value: createError('NOT_FOUND', 'SUBSCRIBE_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.ADMIN.NOT_FOUND),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

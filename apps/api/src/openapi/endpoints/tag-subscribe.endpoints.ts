@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import {
   searchTagSubscribeSchema,
   createTagSubscribeSchema,
@@ -42,13 +43,13 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '태그 구독 목록 조회 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_SEARCH_SUCCESS',
+                  MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
                   [ CreateExample.tagSubscribe('list'), ]
                 ),
               },
               error: {
                 summary: '태그 구독 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -93,13 +94,13 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '태그 구독 상태 조회 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_SEARCH_SUCCESS',
+                  MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
                   CreateExample.tagSubscribe('detail')
                 ),
               },
               error: {
                 summary: '태그 구독 상태 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -144,13 +145,13 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '태그 구독 설정 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_CREATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.TAG.CREATE_SUCCESS,
                   CreateExample.tagSubscribe('detail')
                 ),
               },
               error: {
                 summary: '태그 구독 설정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -189,13 +190,13 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '다수 태그 구독 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_SUCCESS,
                   [ CreateExample.tagSubscribe('detail'), ]
                 ),
               },
               error: {
                 summary: '다수 태그 구독 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -240,13 +241,13 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '태그 구독 설정 변경 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_UPDATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.TAG.UPDATE_SUCCESS,
                   CreateExample.tagSubscribe('detail')
                 ),
               },
               error: {
                 summary: '태그 구독 설정 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -285,13 +286,13 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '다수 태그 구독 설정 변경 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_SUCCESS,
                   [ CreateExample.tagSubscribe('detail'), ]
                 ),
               },
               error: {
                 summary: '다수 태그 구독 설정 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -327,11 +328,11 @@ export const registerTagSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 구독 해제 성공',
-                value: createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.DELETE_SUCCESS, true),
               },
               error: {
                 summary: '태그 구독 해제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -370,13 +371,17 @@ export const registerTagSubscribeEndpoints = () => {
                 summary: '다수 태그 구독 해제 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS',
-                  [ CreateExample.tagSubscribe('detail'), ]
+                  MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_SUCCESS,
+                  {
+                    totalCount: 3,
+                    successCount: 3,
+                    failCount: 0,
+                  }
                 ),
               },
               error: {
                 summary: '다수 태그 구독 해제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

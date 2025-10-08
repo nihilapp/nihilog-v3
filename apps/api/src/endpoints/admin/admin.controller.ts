@@ -5,6 +5,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
@@ -52,12 +53,12 @@ export class AdminController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'PROFILE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.USER.PROFILE.UPDATE_ERROR
       );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', 'PROFILE_UPDATE_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.UPDATE_SUCCESS, userToReturn);
   }
 }

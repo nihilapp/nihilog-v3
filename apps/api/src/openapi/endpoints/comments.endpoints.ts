@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import {
   searchCommentSchema,
   createCommentSchema,
@@ -38,11 +39,11 @@ export const registerCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '댓글 목록 조회 성공',
-                value: createResponse('SUCCESS', 'COMMENT_SEARCH_SUCCESS', [ CreateExample.comment('list'), ]),
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.USER.SEARCH_SUCCESS, [ CreateExample.comment('list'), ]),
               },
               error: {
                 summary: '댓글 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'COMMENT_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -75,11 +76,11 @@ export const registerCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '댓글 상세 조회 성공',
-                value: createResponse('SUCCESS', 'COMMENT_GET_SUCCESS', CreateExample.comment('detail')),
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.USER.GET_SUCCESS, CreateExample.comment('detail')),
               },
               error: {
                 summary: '댓글 상세 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'COMMENT_GET_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.USER.GET_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -114,11 +115,11 @@ export const registerCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '댓글 작성 성공',
-                value: createResponse('SUCCESS', 'COMMENT_CREATE_SUCCESS', CreateExample.comment('detail')),
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.USER.CREATE_SUCCESS, CreateExample.comment('detail')),
               },
               error: {
                 summary: '댓글 작성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'COMMENT_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.USER.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -155,11 +156,11 @@ export const registerCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '댓글 수정 성공',
-                value: createResponse('SUCCESS', 'COMMENT_UPDATE_SUCCESS', CreateExample.comment('detail')),
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.USER.UPDATE_SUCCESS, CreateExample.comment('detail')),
               },
               error: {
                 summary: '댓글 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'COMMENT_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.USER.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -196,11 +197,11 @@ export const registerCommentsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '댓글 삭제 성공',
-                value: createResponse('SUCCESS', 'COMMENT_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.USER.DELETE_SUCCESS, true),
               },
               error: {
                 summary: '댓글 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'COMMENT_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.USER.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

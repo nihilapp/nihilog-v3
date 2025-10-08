@@ -1,18 +1,22 @@
 import {
   Controller,
   Body,
-  Param
+  Param,
+  UseGuards
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import type { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/categories')
+@UseGuards(AdminAuthGuard)
 export class AdminCategoriesController {
   constructor(private readonly adminCategoriesService: AdminCategoriesService) { }
 
@@ -21,7 +25,7 @@ export class AdminCategoriesController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/search',
     method: 'POST',
   })
   async adminGetCategoryList(@Body() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {
@@ -30,11 +34,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -51,11 +55,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_GET_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.GET_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_GET_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_SUCCESS, result.data);
   }
 
   /**
@@ -72,11 +76,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_GET_BY_NAME_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_GET_BY_NAME_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_SUCCESS, result.data);
   }
 
   /**
@@ -93,11 +97,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_CREATE_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -114,11 +118,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_MULTIPLE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_MULTIPLE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -136,11 +140,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -157,11 +161,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_MULTIPLE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -178,11 +182,11 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_DELETE_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.DELETE_SUCCESS, result.data);
   }
 
   /**
@@ -199,10 +203,10 @@ export class AdminCategoriesController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_CATEGORY_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_CATEGORY_MULTIPLE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_SUCCESS, result.data);
   }
 }

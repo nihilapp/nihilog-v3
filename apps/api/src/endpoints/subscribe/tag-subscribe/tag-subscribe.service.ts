@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
@@ -46,7 +47,7 @@ export class TagSubscribeService {
     const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, createData.tagNo);
 
     if (existingSubscribe.data) {
-      return prismaResponse(false, null, 'CONFLICT', 'TAG_SUBSCRIBE_ALREADY_EXISTS');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS);
     }
 
     return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
@@ -63,7 +64,7 @@ export class TagSubscribeService {
       const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, tagNo);
 
       if (existingSubscribe.data) {
-        return prismaResponse(false, null, 'CONFLICT', 'TAG_SUBSCRIBE_ALREADY_EXISTS');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS);
       }
     }
 
@@ -80,7 +81,7 @@ export class TagSubscribeService {
     const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
     }
 
     return this.tagSubscribeRepository.updateTagSubscribe(userNo, updateData);
@@ -97,7 +98,7 @@ export class TagSubscribeService {
       const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
 
       if (!subscribe.data) {
-        return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+        return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
       }
     }
 
@@ -114,7 +115,7 @@ export class TagSubscribeService {
     const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
     }
 
     return this.tagSubscribeRepository.deleteTagSubscribe(userNo, tagSbcrNo);
@@ -131,7 +132,7 @@ export class TagSubscribeService {
       const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
 
       if (!subscribe.data) {
-        return prismaResponse(false, null, 'NOT_FOUND', 'TAG_SUBSCRIBE_NOT_FOUND');
+        return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
       }
     }
 

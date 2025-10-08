@@ -6,6 +6,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, DeleteSubscribeDto, SearchSubscribeDto } from '@/dto';
 import type { ListDto } from '@/dto/response.dto';
@@ -42,13 +43,13 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_SUBSCRIBE_SEARCH_SUCCESS',
+      MESSAGE.SUBSCRIBE.ADMIN.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -79,11 +80,11 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -112,11 +113,11 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_SUBSCRIBE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -145,11 +146,11 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -178,11 +179,11 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_SUBSCRIBE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.DELETE_SUCCESS, result.data);
   }
 
   /**
@@ -211,10 +212,10 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'ADMIN_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_DELETE_SUCCESS, result.data);
   }
 }

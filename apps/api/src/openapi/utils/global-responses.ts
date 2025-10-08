@@ -1,3 +1,4 @@
+import { MESSAGE } from '@/code';
 import { createError } from '@/utils';
 
 /**
@@ -9,8 +10,8 @@ export class GlobalResponses {
    */
   static getUnauthorizedResponse() {
     return {
-      summary: '인증 실패 (Guard)',
-      value: createError('UNAUTHORIZED', 'UNAUTHORIZED'),
+      summary: '인증 실패',
+      value: createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED),
     };
   }
 
@@ -19,8 +20,8 @@ export class GlobalResponses {
    */
   static getForbiddenResponse() {
     return {
-      summary: '권한 없음 (Guard)',
-      value: createError('FORBIDDEN', 'PERMISSION_DENIED'),
+      summary: '권한 없음',
+      value: createError('FORBIDDEN', MESSAGE.AUTH.PERMISSION_DENIED),
     };
   }
 
@@ -29,8 +30,8 @@ export class GlobalResponses {
    */
   static getDBErrorResponse() {
     return {
-      summary: 'DB 연결 에러 (Repository)',
-      value: createError('INTERNAL_SERVER_ERROR', 'DB_CONNECTION_ERROR'),
+      summary: 'DB 연결 에러',
+      value: createError('INTERNAL_SERVER_ERROR', MESSAGE.DB.CONNECTION_ERROR),
     };
   }
 

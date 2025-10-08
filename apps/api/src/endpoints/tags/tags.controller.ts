@@ -4,6 +4,7 @@ import {
   Param
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { SearchTagDto } from '@/dto/tag.dto';
@@ -31,11 +32,11 @@ export class TagController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.TAG.USER.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.TAG.USER.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -52,11 +53,11 @@ export class TagController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'TAG_NOT_FOUND'
+        result?.error?.message || MESSAGE.TAG.USER.NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_GET_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.TAG.USER.GET_SUCCESS, result.data);
   }
 
   /**
@@ -73,10 +74,10 @@ export class TagController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'TAG_NAME_NOT_FOUND'
+        result?.error?.message || MESSAGE.TAG.USER.NAME_NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_GET_BY_NAME_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.TAG.USER.GET_BY_NAME_SUCCESS, result.data);
   }
 }

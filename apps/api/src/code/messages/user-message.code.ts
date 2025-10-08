@@ -24,6 +24,7 @@ export const USER_MESSAGES = {
     EMAIL_EXISTS: '이미 사용 중인 이메일입니다.',
     NAME_EXISTS: '이미 존재하는 이름입니다.',
     NOT_FOUND: '사용자를 찾을 수 없습니다.',
+    ADMIN_NOT_FOUND: '관리자를 찾을 수 없습니다.',
   },
 
   PROFILE: {

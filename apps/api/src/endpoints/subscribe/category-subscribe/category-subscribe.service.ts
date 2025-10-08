@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
@@ -46,7 +47,7 @@ export class CategorySubscribeService {
     const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(createData.sbcrNo, createData.ctgryNo);
 
     if (existingSubscribe.data) {
-      return prismaResponse(false, null, 'CONFLICT', 'CATEGORY_SUBSCRIBE_ALREADY_EXISTS');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS);
     }
 
     return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
@@ -63,7 +64,7 @@ export class CategorySubscribeService {
       const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(createData.sbcrNo, ctgryNo);
 
       if (existingSubscribe.data) {
-        return prismaResponse(false, null, 'CONFLICT', 'CATEGORY_SUBSCRIBE_ALREADY_EXISTS');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS);
       }
     }
 
@@ -80,7 +81,7 @@ export class CategorySubscribeService {
     const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND');
+      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND);
     }
 
     return this.categorySubscribeRepository.updateCategorySubscribe(userNo, updateData);
@@ -105,7 +106,7 @@ export class CategorySubscribeService {
     const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND');
+      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND);
     }
 
     return this.categorySubscribeRepository.deleteCategorySubscribe(userNo, ctgrySbcrNo);
@@ -122,7 +123,7 @@ export class CategorySubscribeService {
       const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo);
 
       if (!subscribe.data) {
-        return prismaResponse(false, null, 'NOT_FOUND', 'CATEGORY_SUBSCRIBE_NOT_FOUND');
+        return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND);
       }
     }
 

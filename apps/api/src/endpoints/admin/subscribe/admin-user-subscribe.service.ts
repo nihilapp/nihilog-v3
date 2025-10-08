@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { DeleteSubscribeDto } from '@/dto';
 import type { ListDto } from '@/dto/response.dto';
 import {
@@ -44,7 +45,7 @@ export class AdminSubscribeService {
     const findSubscribe = await this.getUserSubscribeByUserNo(createData.userNo);
 
     if (findSubscribe?.success) {
-      return prismaResponse(false, null, 'CONFLICT', 'ADMIN_SUBSCRIBE_ALREADY_EXISTS');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.ADMIN.ALREADY_EXISTS);
     }
 
     return this.subscribeRepository.createUserSubscribe(adminNo, createData);

@@ -35,4 +35,5 @@ export const AUTH_MESSAGES = {
   TOKEN_REFRESH_ERROR: '토큰 갱신에 실패했습니다.',
   FORBIDDEN: '접근할 수 없는 기능입니다.',
   ADMIN_ONLY: '관리자만 접근할 수 있습니다.',
+  PERMISSION_DENIED: '접근 권한이 없습니다.',
 } as const;

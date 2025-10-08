@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateUserDto } from '@/dto';
 import type { UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
@@ -43,7 +44,7 @@ export class UserService {
     const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
 
     if (findUser?.data) {
-      return prismaResponse(false, null, 'CONFLICT', 'EMAIL_IN_USE');
+      return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS);
     }
 
     try {
@@ -52,7 +53,7 @@ export class UserService {
       return this.userRepository.createUser(null, createUserDto, hashedPassword);
     }
     catch {
-      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', 'USER_CREATE_ERROR');
+      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR);
     }
   }
 
@@ -76,7 +77,7 @@ export class UserService {
       const existingUser = await this.userRepository.getUserByName(updateData.userNm);
 
       if (existingUser?.success && existingUser.data && existingUser.data.userNo !== user.userNo) {
-        return prismaResponse(false, null, 'CONFLICT', 'USER_NAME_EXISTS');
+        return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.NAME_EXISTS);
       }
     }
 

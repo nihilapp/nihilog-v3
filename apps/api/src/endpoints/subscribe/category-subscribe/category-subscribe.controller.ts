@@ -6,6 +6,7 @@ import {
   ParseIntPipe
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, CreateCategorySubscribeDto, UpdateCategorySubscribeDto, DeleteCategorySubscribeDto } from '@/dto';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
@@ -43,11 +44,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -77,11 +78,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -111,11 +112,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -144,11 +145,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -182,11 +183,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -215,11 +216,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -248,11 +249,11 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.DELETE_SUCCESS, result.data);
   }
 
   /**
@@ -281,10 +282,10 @@ export class CategorySubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_DELETE_SUCCESS, result.data);
   }
 }

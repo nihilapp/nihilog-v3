@@ -1,5 +1,6 @@
 import { Body, Controller, Ip, Param, Req } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { type AuthRequest, CreatePostBookmarkDto, DeletePostBookmarkDto, type ResponseDto, SearchPostDto } from '@/dto';
 import { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
@@ -27,13 +28,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SEARCH_SUCCESS',
+      MESSAGE.POST.USER.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -52,13 +53,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_GET_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.GET_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_GET_SUCCESS',
+      MESSAGE.POST.USER.GET_SUCCESS,
       result.data
     );
   }
@@ -77,13 +78,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_GET_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.GET_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_GET_SUCCESS',
+      MESSAGE.POST.USER.GET_SUCCESS,
       result.data
     );
   }
@@ -106,13 +107,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SEARCH_SUCCESS',
+      MESSAGE.POST.USER.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -135,13 +136,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SEARCH_SUCCESS',
+      MESSAGE.POST.USER.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -164,13 +165,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SEARCH_SUCCESS',
+      MESSAGE.POST.USER.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -189,13 +190,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SEARCH_SUCCESS',
+      MESSAGE.POST.USER.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -218,13 +219,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_VIEW_LOG_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.VIEW_LOG_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_VIEW_LOG_SUCCESS',
+      MESSAGE.POST.USER.VIEW_LOG_SUCCESS,
       result.data
     );
   }
@@ -243,13 +244,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_SHARE_LOG_ERROR'
+        result?.error?.message || MESSAGE.POST.USER.SHARE_LOG_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_SHARE_LOG_SUCCESS',
+      MESSAGE.POST.USER.SHARE_LOG_SUCCESS,
       result.data
     );
   }
@@ -262,6 +263,9 @@ export class PostsController {
   @Endpoint({
     endpoint: '/:pstNo/bookmark',
     method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+    },
   })
   async createPostBookmark(
     @Param('pstNo') pstNo: number,
@@ -272,13 +276,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_BOOKMARK_CREATE_ERROR'
+        result?.error?.message || MESSAGE.POST.BOOKMARK.CREATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_BOOKMARK_CREATE_SUCCESS',
+      MESSAGE.POST.BOOKMARK.CREATE_SUCCESS,
       result.data
     );
   }
@@ -291,6 +295,9 @@ export class PostsController {
   @Endpoint({
     endpoint: '/:pstNo/bookmark',
     method: 'DELETE',
+    options: {
+      authGuard: 'JWT-auth',
+    },
   })
   async deletePostBookmark(
     @Param('pstNo') pstNo: number,
@@ -301,13 +308,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_BOOKMARK_DELETE_ERROR'
+        result?.error?.message || MESSAGE.POST.BOOKMARK.DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_BOOKMARK_DELETE_SUCCESS',
+      MESSAGE.POST.BOOKMARK.DELETE_SUCCESS,
       result.data
     );
   }
@@ -338,13 +345,13 @@ export class PostsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'POST_BOOKMARK_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.POST.BOOKMARK.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'POST_BOOKMARK_SEARCH_SUCCESS',
+      MESSAGE.POST.BOOKMARK.SEARCH_SUCCESS,
       result.data
     );
   }

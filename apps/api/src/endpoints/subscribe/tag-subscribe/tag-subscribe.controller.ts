@@ -6,6 +6,7 @@ import {
   ParseIntPipe
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, CreateTagSubscribeDto, UpdateTagSubscribeDto, DeleteTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
@@ -43,11 +44,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -77,11 +78,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_SEARCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS, result.data);
   }
 
   /**
@@ -111,11 +112,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -144,11 +145,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_MULTIPLE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -182,11 +183,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -215,11 +216,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -248,11 +249,11 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.DELETE_SUCCESS, result.data);
   }
 
   /**
@@ -281,10 +282,10 @@ export class TagSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'TAG_SUBSCRIBE_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_ERROR
       );
     }
 
-    return createResponse('SUCCESS', 'TAG_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_SUCCESS, result.data);
   }
 }

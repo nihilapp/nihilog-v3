@@ -4,6 +4,7 @@ import {
   Req
 } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
@@ -40,12 +41,12 @@ export class UserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'USER_NOT_FOUND'
+        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
       );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
-    return createResponse('SUCCESS', 'PROFILE_GET_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.GET_SUCCESS, userToReturn);
   }
 
   /**
@@ -69,11 +70,11 @@ export class UserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'SUBSCRIBE_NOT_FOUND'
+        result?.error?.message || MESSAGE.SUBSCRIBE.USER.NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'SUBSCRIBE_FETCH_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.USER.FETCH_SUCCESS, result.data);
   }
 
   /**
@@ -94,11 +95,11 @@ export class UserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'CONFLICT',
-        result?.error?.message || 'EMAIL_IN_USE'
+        result?.error?.message || MESSAGE.USER.USER.EMAIL_EXISTS
       );
     }
 
-    return createResponse('CREATED', 'USER_CREATE_SUCCESS', result.data);
+    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, result.data);
   }
 
   /**
@@ -127,12 +128,12 @@ export class UserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'USER_NOT_FOUND'
+        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
       );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
-    return createResponse('SUCCESS', 'USER_UPDATE_SUCCESS', userToReturn);
+    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.UPDATE_SUCCESS, userToReturn);
   }
 
   /**
@@ -161,11 +162,11 @@ export class UserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'SUBSCRIBE_NOT_FOUND'
+        result?.error?.message || MESSAGE.SUBSCRIBE.USER.NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'SUBSCRIBE_UPDATE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.USER.UPDATE_SUCCESS, result.data);
   }
 
   /**
@@ -190,10 +191,10 @@ export class UserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || 'USER_NOT_FOUND'
+        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
       );
     }
 
-    return createResponse('SUCCESS', 'USER_DELETE_SUCCESS', result.data);
+    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.DELETE_SUCCESS, result.data);
   }
 }

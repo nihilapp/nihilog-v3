@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import { searchCategorySchema } from '@/endpoints/prisma/schemas/category.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
@@ -33,11 +34,11 @@ export const registerCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 목록 조회 성공',
-                value: createResponse('SUCCESS', 'CATEGORY_SEARCH_SUCCESS', CreateExample.category('list')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.USER.SEARCH_SUCCESS, CreateExample.category('list')),
               },
               error: {
                 summary: '카테고리 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -70,11 +71,11 @@ export const registerCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', 'CATEGORY_GET_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.USER.GET_SUCCESS, CreateExample.category('detail')),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'CATEGORY_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.CATEGORY.USER.NOT_FOUND),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -107,11 +108,11 @@ export const registerCategoriesEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', 'CATEGORY_GET_BY_NAME_SUCCESS', CreateExample.category('detail')),
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.USER.GET_BY_NAME_SUCCESS, CreateExample.category('detail')),
               },
               notFound: {
                 summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'CATEGORY_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.CATEGORY.USER.NAME_NOT_FOUND),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import {
   searchCategorySubscribeSchema,
   createCategorySubscribeSchema,
@@ -42,13 +43,13 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 목록 조회 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
+                  MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS,
                   [ CreateExample.categorySubscribe('list'), ]
                 ),
               },
               error: {
                 summary: '카테고리 구독 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -93,13 +94,13 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 상태 조회 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'CATEGORY_SUBSCRIBE_SEARCH_SUCCESS',
+                  MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS,
                   CreateExample.categorySubscribe('detail')
                 ),
               },
               error: {
                 summary: '카테고리 구독 상태 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -144,13 +145,13 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 설정 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'CATEGORY_SUBSCRIBE_CREATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.CATEGORY.CREATE_SUCCESS,
                   CreateExample.categorySubscribe('detail')
                 ),
               },
               error: {
                 summary: '카테고리 구독 설정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -189,13 +190,13 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '다수 카테고리 구독 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_CREATE_SUCCESS,
                   [ CreateExample.categorySubscribe('detail'), ]
                 ),
               },
               error: {
                 summary: '다수 카테고리 구독 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_CREATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_CREATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -240,13 +241,13 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '카테고리 구독 설정 변경 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'CATEGORY_SUBSCRIBE_UPDATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.CATEGORY.UPDATE_SUCCESS,
                   CreateExample.categorySubscribe('detail')
                 ),
               },
               error: {
                 summary: '카테고리 구독 설정 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -285,13 +286,13 @@ export const registerCategorySubscribeEndpoints = () => {
                 summary: '다수 카테고리 구독 설정 변경 성공',
                 value: createResponse(
                   'SUCCESS',
-                  'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_SUCCESS',
+                  MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_UPDATE_SUCCESS,
                   [ CreateExample.categorySubscribe('detail'), ]
                 ),
               },
               error: {
                 summary: '다수 카테고리 구독 설정 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_UPDATE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_UPDATE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -327,11 +328,11 @@ export const registerCategorySubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리 구독 해제 성공',
-                value: createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_DELETE_SUCCESS', true),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.DELETE_SUCCESS, true),
               },
               error: {
                 summary: '카테고리 구독 해제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -368,11 +369,15 @@ export const registerCategorySubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '다수 카테고리 구독 해제 성공',
-                value: createResponse('SUCCESS', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_SUCCESS', null),
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_DELETE_SUCCESS, {
+                  totalCount: 3,
+                  successCount: 3,
+                  failCount: 0,
+                }),
               },
               error: {
                 summary: '다수 카테고리 구독 해제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'CATEGORY_SUBSCRIBE_MULTIPLE_DELETE_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_DELETE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

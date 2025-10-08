@@ -1,5 +1,6 @@
 import { Body, Controller, Param, Req } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
 import { CommentsService } from '@/endpoints/comments/comments.service';
@@ -25,13 +26,13 @@ export class CommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'COMMENT_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.USER.SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'COMMENT_SEARCH_SUCCESS',
+      MESSAGE.COMMENT.USER.SEARCH_SUCCESS,
       result.data
     );
   }
@@ -50,13 +51,13 @@ export class CommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'COMMENT_GET_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.USER.GET_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'COMMENT_GET_SUCCESS',
+      MESSAGE.COMMENT.USER.GET_SUCCESS,
       result.data
     );
   }
@@ -86,13 +87,13 @@ export class CommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'COMMENT_CREATE_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.USER.CREATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'COMMENT_CREATE_SUCCESS',
+      MESSAGE.COMMENT.USER.CREATE_SUCCESS,
       result.data
     );
   }
@@ -122,13 +123,13 @@ export class CommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'COMMENT_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.USER.UPDATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'COMMENT_UPDATE_SUCCESS',
+      MESSAGE.COMMENT.USER.UPDATE_SUCCESS,
       result.data
     );
   }
@@ -158,13 +159,13 @@ export class CommentsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'COMMENT_DELETE_ERROR'
+        result?.error?.message || MESSAGE.COMMENT.USER.DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'COMMENT_DELETE_SUCCESS',
+      MESSAGE.COMMENT.USER.DELETE_SUCCESS,
       result.data
     );
   }

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MESSAGE } from '@/code/messages';
 import { searchTagSchema } from '@/endpoints/prisma/schemas/tag.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
@@ -33,11 +34,11 @@ export const registerTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 목록 조회 성공',
-                value: createResponse('SUCCESS', 'TAG_SEARCH_SUCCESS', CreateExample.tag('list')),
+                value: createResponse('SUCCESS', MESSAGE.TAG.USER.SEARCH_SUCCESS, CreateExample.tag('list')),
               },
               error: {
                 summary: '태그 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', 'TAG_SEARCH_ERROR'),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.USER.SEARCH_ERROR),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -70,11 +71,11 @@ export const registerTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 조회 성공',
-                value: createResponse('SUCCESS', 'TAG_GET_SUCCESS', CreateExample.tag('detail')),
+                value: createResponse('SUCCESS', MESSAGE.TAG.USER.GET_SUCCESS, CreateExample.tag('detail')),
               },
               notFound: {
                 summary: '태그를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'TAG_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.TAG.USER.NOT_FOUND),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -107,11 +108,11 @@ export const registerTagsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그 조회 성공',
-                value: createResponse('SUCCESS', 'TAG_GET_BY_NAME_SUCCESS', CreateExample.tag('detail')),
+                value: createResponse('SUCCESS', MESSAGE.TAG.USER.GET_BY_NAME_SUCCESS, CreateExample.tag('detail')),
               },
               notFound: {
                 summary: '태그를 찾을 수 없음',
-                value: createError('NOT_FOUND', 'TAG_NAME_NOT_FOUND'),
+                value: createError('NOT_FOUND', MESSAGE.TAG.USER.NAME_NOT_FOUND),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },

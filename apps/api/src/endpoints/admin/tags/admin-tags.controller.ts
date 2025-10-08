@@ -1,5 +1,6 @@
 import { Body, Controller, Param, Req, UseGuards } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, CreateTagDto, DeleteTagDto, ResponseDto, UpdateTagDto } from '@/dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
@@ -40,13 +41,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_CREATE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.CREATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_CREATE_SUCCESS',
+      MESSAGE.TAG.ADMIN.CREATE_SUCCESS,
       result.data
     );
   }
@@ -77,13 +78,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MULTIPLE_CREATE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MULTIPLE_CREATE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_SUCCESS,
       result.data
     );
   }
@@ -114,13 +115,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.UPDATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_UPDATE_SUCCESS',
+      MESSAGE.TAG.ADMIN.UPDATE_SUCCESS,
       result.data
     );
   }
@@ -151,13 +152,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MULTIPLE_UPDATE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MULTIPLE_UPDATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MULTIPLE_UPDATE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MULTIPLE_UPDATE_SUCCESS,
       result.data
     );
   }
@@ -170,6 +171,10 @@ export class AdminTagsController {
   @Endpoint({
     endpoint: '',
     method: 'DELETE',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
   })
   async adminDeleteTag(
     @Req() req: AuthRequest,
@@ -184,13 +189,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_DELETE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_DELETE_SUCCESS',
+      MESSAGE.TAG.ADMIN.DELETE_SUCCESS,
       result.data
     );
   }
@@ -221,13 +226,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MULTIPLE_DELETE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MULTIPLE_DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MULTIPLE_DELETE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MULTIPLE_DELETE_SUCCESS,
       result.data
     );
   }
@@ -238,7 +243,7 @@ export class AdminTagsController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '/mapping',
+    endpoint: '/mapping/search',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -258,13 +263,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MAPPING_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MAPPING_SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MAPPING_SEARCH_SUCCESS',
+      MESSAGE.TAG.ADMIN.MAPPING_SEARCH_SUCCESS,
       result.data
     );
   }
@@ -297,13 +302,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MAPPING_SEARCH_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MAPPING_SEARCH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MAPPING_SEARCH_SUCCESS',
+      MESSAGE.TAG.ADMIN.MAPPING_SEARCH_SUCCESS,
       result.data
     );
   }
@@ -334,13 +339,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MAPPING_CREATE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MAPPING_CREATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MAPPING_CREATE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MAPPING_CREATE_SUCCESS,
       result.data
     );
   }
@@ -371,13 +376,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MAPPING_CREATE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MAPPING_CREATE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MAPPING_CREATE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MAPPING_CREATE_SUCCESS,
       result.data
     );
   }
@@ -408,13 +413,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MAPPING_DELETE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MAPPING_DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MAPPING_DELETE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MAPPING_DELETE_SUCCESS,
       result.data
     );
   }
@@ -445,13 +450,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || 'ADMIN_TAG_MAPPING_DELETE_ERROR'
+        result?.error?.message || MESSAGE.TAG.ADMIN.MAPPING_DELETE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      'ADMIN_TAG_MAPPING_DELETE_SUCCESS',
+      MESSAGE.TAG.ADMIN.MAPPING_DELETE_SUCCESS,
       result.data
     );
   }
