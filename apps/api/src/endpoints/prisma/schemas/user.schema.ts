@@ -218,13 +218,52 @@ export const withdrawSchema = z.object({
 export const searchUserSchema = baseSearchSchema.extend({
   ...userInfoSchema.pick({
     delYn: true,
+    useYn: true,
+    userRole: true,
   }).shape,
-  srchType: z.enum([ 'userNm', 'emlAddr', 'userRole', ], {
-    error: '검색 타입은 userNm, emlAddr, userRole 중 하나여야 합니다.',
+  srchType: z.enum([ 'userNm', 'emlAddr', ], {
+    error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
   }).optional()
     .openapi({
-      description: '검색 타입 (emlAddr, userNm, userRole 중 하나)',
+      description: '검색 타입 (emlAddr, userNm, 중 하나)',
       example: 'userNm',
+    }),
+  // 날짜 범위 필터
+  crtDtFrom: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '구독일 시작 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-01-01 00:00:00',
+    }),
+  crtDtTo: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '구독일 끝 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-12-31 23:59:59',
+    }),
+  lastLgnDtFrom: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '마지막 로그인일 시작 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-01-01 00:00:00',
+    }),
+  lastLgnDtTo: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '마지막 로그인일 끝 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-12-31 23:59:59',
+    }),
+  // 정렬 옵션
+  orderBy: z.enum([ 'NAME_ASC', 'NAME_DESC', 'SUBSCRIBE_LATEST', 'SUBSCRIBE_OLDEST', 'LOGIN_LATEST', 'LOGIN_OLDEST', ], {
+    error: '정렬 옵션은 NAME_ASC, NAME_DESC, SUBSCRIBE_LATEST, SUBSCRIBE_OLDEST, LOGIN_LATEST, LOGIN_OLDEST 중 하나여야 합니다.',
+  }).optional()
+    .openapi({
+      description: '정렬 옵션 (이름순/역순, 구독 최신/오래된순, 로그인 최신/오래된순)',
+      example: 'SUBSCRIBE_LATEST',
     }),
 }).partial();
 

@@ -1,7 +1,7 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
-import { commonSchema } from '@/endpoints/prisma/schemas/common.schema';
+import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/prisma/schemas/common.schema';
 import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 
 extendZodWithOpenApi(z);
@@ -108,13 +108,36 @@ export const deleteCategorySubscribeSchema = categorySubscribeSchema.pick({
 export const searchCategorySubscribeSchema = baseSearchSchema.extend({
   ...categorySubscribeSchema.pick({
     delYn: true,
+    useYn: true,
+    ctgryNo: true,
+    sbcrNo: true,
   }).shape,
-  srchType: z.enum([ 'ctgryNm', ], {
-    error: '검색 타입은 ctgryNm 여야 합니다.',
+  srchType: z.enum([ 'ctgryNm', 'userNm', 'ctgryExpln', ], {
+    error: '검색 타입은 ctgryNm, userNm, ctgryExpln 중 하나여야 합니다.',
   }).optional().openapi({
-    description: '검색 타입 (ctgryNm)',
+    description: '검색 타입 (ctgryNm: 카테고리명, userNm: 사용자명, ctgryExpln: 카테고리 설명)',
     example: 'ctgryNm',
   }),
+  crtDtFrom: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-01-01 00:00:00',
+    }),
+  crtDtTo: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-12-31 23:59:59',
+    }),
+  orderBy: z.enum([ 'CTGRY_SBCR_LATEST', 'CTGRY_SBCR_OLDEST', 'CTGRY_NAME_ASC', 'CTGRY_NAME_DESC', 'USER_NAME_ASC', 'USER_NAME_DESC', ])
+    .default('CTGRY_SBCR_LATEST')
+    .optional().openapi({
+      description: '정렬 기준 (CTGRY_SBCR_LATEST: 카테고리 구독 최신순, CTGRY_SBCR_OLDEST: 카테고리 구독 오래된순, CTGRY_NAME_ASC: 카테고리명 순, CTGRY_NAME_DESC: 카테고리명 역순, USER_NAME_ASC: 사용자명 순, USER_NAME_DESC: 사용자명 역순)',
+      example: 'CTGRY_SBCR_LATEST',
+    }),
 }).partial();
 
 export type CategorySubscribeType = z.infer<typeof categorySubscribeSchema>;

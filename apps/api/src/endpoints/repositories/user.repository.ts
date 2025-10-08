@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient, type UserRole } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import { CreateAdminDto } from '@/dto/admin.dto';
@@ -146,10 +146,18 @@ export class UserRepository {
    * @param searchData 검색 조건
    */
   async getUserList(searchData: SearchUserDto): Promise<RepoResponseType<ListType<SelectUserInfoListItemType>> | null> {
-    const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+    const { page, strtRow, endRow, srchType, srchKywd, delYn, useYn, userRole, orderBy, lastLgnDtFrom, lastLgnDtTo, crtDtTo, crtDtFrom, } = searchData;
 
     const where = {
-      delYn,
+      ...(delYn && {
+        delYn,
+      }),
+      ...(useYn && {
+        useYn,
+      }),
+      ...(userRole && {
+        userRole,
+      }),
       ...(srchKywd && (srchType === 'userNm') && {
         userNm: {
           contains: srchKywd,
@@ -160,8 +168,17 @@ export class UserRepository {
           contains: srchKywd,
         },
       }),
-      ...(srchKywd && (srchType === 'userRole') && {
-        userRole: srchKywd as UserRole,
+      ...(lastLgnDtFrom && lastLgnDtTo && {
+        lastLgnDt: {
+          gte: lastLgnDtFrom,
+          lte: lastLgnDtTo,
+        },
+      }),
+      ...(crtDtFrom && crtDtTo && {
+        crtDt: {
+          gte: crtDtFrom,
+          lte: crtDtTo,
+        },
       }),
     };
 
@@ -170,13 +187,30 @@ export class UserRepository {
 
     try {
       const [ totalCnt, list, ] = await this.prisma.$transaction([
-        this.prisma.userInfo.count({ where, orderBy: { userNo: 'desc', }, }),
+        this.prisma.userInfo.count({ where, }),
         this.prisma.userInfo.findMany({
           where,
           skip,
           take,
           orderBy: {
-            userNo: 'desc',
+            ...(orderBy === 'NAME_ASC') && {
+              userNm: 'asc',
+            },
+            ...(orderBy === 'NAME_DESC') && {
+              userNm: 'desc',
+            },
+            ...(orderBy === 'SUBSCRIBE_LATEST') && {
+              crtDt: 'desc',
+            },
+            ...(orderBy === 'SUBSCRIBE_OLDEST') && {
+              crtDt: 'asc',
+            },
+            ...(orderBy === 'LOGIN_LATEST') && {
+              lastLgnDt: 'desc',
+            },
+            ...(orderBy === 'LOGIN_OLDEST') && {
+              lastLgnDt: 'asc',
+            },
           },
         }),
       ]);

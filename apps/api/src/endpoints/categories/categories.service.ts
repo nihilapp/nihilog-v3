@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { SearchCategoryDto } from '@/dto/category.dto';
+import { searchCategorySchema } from '@/endpoints/prisma/schemas/category.schema';
 import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints/prisma/types/category.types';
 import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class CategoriesService {
@@ -14,7 +17,13 @@ export class CategoriesService {
    * @param searchData 검색 데이터
    */
   async getCategoryList(searchData: SearchCategoryDto): Promise<RepoResponseType<ListType<SelectCategoryListItemType>> | null> {
-    return this.categoryRepository.getCategoryList(searchData);
+    const safeData = searchCategorySchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.categoryRepository.getCategoryList(safeData.data);
   }
 
   /**

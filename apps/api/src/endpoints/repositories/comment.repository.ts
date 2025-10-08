@@ -26,15 +26,35 @@ export class CommentRepository {
    */
   async getCommentList(searchData: SearchCommentDto): Promise<RepoResponseType<ListType<SelectCommentListItemType>> | null> {
     try {
-      const { page, strtRow, endRow, delYn, cmntSts, srchType, srchKywd, } = searchData;
+      const { page, strtRow, endRow, delYn, cmntSts, srchType, srchKywd, crtDtFrom, crtDtTo, orderBy, pstNo, useYn, } = searchData;
 
       const where: Prisma.CmntInfoWhereInput = {
         ...(delYn && { delYn, }),
+        ...(useYn && { useYn, }),
         ...(srchKywd && (srchType === 'userEmlAddr') && {
           creator: {
             is: {
               emlAddr: srchKywd,
             },
+          },
+        }),
+        ...(srchKywd && (srchType === 'cmntCntnt') && {
+          cmntCntnt: {
+            contains: srchKywd,
+          },
+        }),
+        ...(srchKywd && (srchType === 'userNm') && {
+          creator: {
+            is: {
+              userNm: srchKywd,
+            },
+          },
+        }),
+        ...(pstNo && { pstNo, }),
+        ...(crtDtFrom && crtDtTo && {
+          crtDt: {
+            gte: crtDtFrom,
+            lte: crtDtTo,
           },
         }),
         ...(cmntSts && (cmntSts === 'PENDING') && {
@@ -63,6 +83,14 @@ export class CommentRepository {
             parentComment: true,
             replies: true,
             creator: true,
+          },
+          orderBy: {
+            ...(orderBy === 'LATEST') && {
+              crtDt: 'desc',
+            },
+            ...(orderBy === 'OLDEST') && {
+              crtDt: 'asc',
+            },
           },
         }),
         this.prisma.cmntInfo.count({ where, }),

@@ -36,6 +36,10 @@ export const registerCategoriesEndpoints = () => {
                 summary: '카테고리 목록 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.CATEGORY.USER.SEARCH_SUCCESS, CreateExample.category('list')),
               },
+              validationError: {
+                summary: '요청 데이터 유효성 검증 실패',
+                value: createError('BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST),
+              },
               error: {
                 summary: '카테고리 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.USER.SEARCH_ERROR),

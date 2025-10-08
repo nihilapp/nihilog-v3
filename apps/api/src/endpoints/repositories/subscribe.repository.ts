@@ -87,10 +87,20 @@ export class SubscribeRepository {
    */
   async getSubscribeList(searchData: SearchSubscribeDto): Promise<RepoResponseType<ListType<SelectUserSbcrInfoListItemType>> | null> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, orderBy, crtDtFrom, crtDtTo, useYn, emlNtfyYn, newPstNtfyYn, cmntRplNtfyYn, } = searchData;
 
       const where = {
-        delYn: delYn || 'N',
+        ...(delYn && { delYn, }),
+        ...(useYn && { useYn, }),
+        ...(emlNtfyYn && { emlNtfyYn, }),
+        ...(newPstNtfyYn && { newPstNtfyYn, }),
+        ...(cmntRplNtfyYn && { cmntRplNtfyYn, }),
+        ...(crtDtFrom && crtDtTo && {
+          crtDt: {
+            gte: crtDtFrom,
+            lte: crtDtTo,
+          },
+        }),
         ...(srchKywd && (srchType === 'userNm') && {
           user: {
             is: {
@@ -126,16 +136,30 @@ export class SubscribeRepository {
             },
           },
           orderBy: {
-            sbcrNo: 'desc',
+            ...(orderBy === 'SBSCR_LATEST') && {
+              sbcrNo: 'desc',
+            },
+            ...(orderBy === 'SBSCR_OLDEST') && {
+              sbcrNo: 'asc',
+            },
+            ...(orderBy === 'USER_NAME_ASC') && {
+              userNm: 'asc',
+            },
+            ...(orderBy === 'USER_NAME_DESC') && {
+              userNm: 'desc',
+            },
+            ...(orderBy === 'EMAIL_ASC') && {
+              emlAddr: 'asc',
+            },
+            ...(orderBy === 'EMAIL_DESC') && {
+              emlAddr: 'desc',
+            },
           },
           skip,
           take,
         }),
         this.prisma.userSbcrInfo.count({
           where,
-          orderBy: {
-            sbcrNo: 'desc',
-          },
         }),
       ]);
 

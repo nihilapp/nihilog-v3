@@ -25,14 +25,45 @@ export class CategorySubscribeRepository {
    */
   async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, crtDtFrom, crtDtTo, orderBy, ctgryNo, sbcrNo, useYn, } = searchData;
 
       const where = {
-        delYn: delYn || 'N',
+        ...(delYn && { delYn, }),
+        ...(useYn && { useYn, }),
+        ...(ctgryNo && { ctgryNo, }),
+        ...(sbcrNo && { sbcrNo, }),
+        ...(crtDtFrom && crtDtTo && {
+          crtDt: {
+            gte: crtDtFrom,
+            lte: crtDtTo,
+          },
+        }),
         ...(srchKywd && srchType === 'ctgryNm') && {
           category: {
             is: {
               ctgryNm: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'userNm') && {
+          subscription: {
+            is: {
+              user: {
+                is: {
+                  userNm: {
+                    contains: srchKywd,
+                  },
+                },
+              },
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'ctgryExpln') && {
+          category: {
+            is: {
+              ctgryExpln: {
                 contains: srchKywd,
               },
             },
@@ -53,7 +84,24 @@ export class CategorySubscribeRepository {
             },
           },
           orderBy: {
-            ctgrySbcrNo: 'desc',
+            ...(orderBy === 'CTGRY_SBCR_LATEST') && {
+              ctgrySbcrNo: 'desc',
+            },
+            ...(orderBy === 'CTGRY_SBCR_OLDEST') && {
+              ctgrySbcrNo: 'asc',
+            },
+            ...(orderBy === 'CTGRY_NAME_ASC') && {
+              ctgryNm: 'asc',
+            },
+            ...(orderBy === 'CTGRY_NAME_DESC') && {
+              ctgryNm: 'desc',
+            },
+            ...(orderBy === 'USER_NAME_ASC') && {
+              userNm: 'asc',
+            },
+            ...(orderBy === 'USER_NAME_DESC') && {
+              userNm: 'desc',
+            },
           },
           skip,
           take,
@@ -116,12 +164,42 @@ export class CategorySubscribeRepository {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
 
       const where = {
-        userNo,
+        subscription: {
+          is: {
+            user: {
+              is: {
+                userNo,
+              },
+            },
+          },
+        },
         delYn: delYn || 'N',
         ...(srchKywd && srchType === 'ctgryNm') && {
           category: {
             is: {
               ctgryNm: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'userNm') && {
+          subscription: {
+            is: {
+              user: {
+                is: {
+                  userNm: {
+                    contains: srchKywd,
+                  },
+                },
+              },
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'ctgryExpln') && {
+          category: {
+            is: {
+              ctgryExpln: {
                 contains: srchKywd,
               },
             },
@@ -185,6 +263,28 @@ export class CategorySubscribeRepository {
           category: {
             is: {
               ctgryNm: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'userNm') && {
+          subscription: {
+            is: {
+              user: {
+                is: {
+                  userNm: {
+                    contains: srchKywd,
+                  },
+                },
+              },
+            },
+          },
+        },
+        ...(srchKywd && srchType === 'ctgryExpln') && {
+          category: {
+            is: {
+              ctgryExpln: {
                 contains: srchKywd,
               },
             },

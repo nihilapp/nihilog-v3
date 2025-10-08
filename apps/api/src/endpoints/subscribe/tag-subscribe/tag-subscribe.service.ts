@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
+import { searchTagSubscribeSchema } from '@/endpoints/prisma/schemas/tag-subscribe.schema';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
@@ -16,7 +17,13 @@ export class TagSubscribeService {
    * @param searchData 검색 데이터
    */
   async getTagSubscribeList(searchData: SearchTagSubscribeDto): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
-    return this.tagSubscribeRepository.getTagSubscribeList(searchData);
+    const safeData = searchTagSubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.tagSubscribeRepository.getTagSubscribeList(safeData.data);
   }
 
   /**
@@ -25,7 +32,13 @@ export class TagSubscribeService {
    * @param searchData 검색 데이터
    */
   async getTagSubscribeByUserNo(userNo: number, searchData: SearchTagSubscribeDto): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
-    return this.tagSubscribeRepository.getTagSubscribeByUserNo(userNo, searchData);
+    const safeData = searchTagSubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.tagSubscribeRepository.getTagSubscribeByUserNo(userNo, safeData.data);
   }
 
   /**
@@ -34,7 +47,13 @@ export class TagSubscribeService {
    * @param searchData 검색 데이터
    */
   async getTagSubscribeByTagNo(tagNo: number, searchData: SearchTagSubscribeDto): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
-    return this.tagSubscribeRepository.getTagSubscribeByTagNo(tagNo, searchData);
+    const safeData = searchTagSubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.tagSubscribeRepository.getTagSubscribeByTagNo(tagNo, safeData.data);
   }
 
   /**

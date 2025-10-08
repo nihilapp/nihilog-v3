@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { commonSchema } from '@/endpoints/prisma/schemas/common.schema';
+import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/prisma/schemas/common.schema';
 import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 
 const commentSchema = commonSchema.extend({
@@ -104,19 +104,44 @@ export const deleteCommentSchema = commentSchema.pick({
 
 export const searchCommentSchema = baseSearchSchema.partial().extend({
   ...commentSchema.pick({
+    pstNo: true,
     cmntNo: true,
     cmntNoList: true,
     cmntSts: true,
     delYn: true,
+    useYn: true,
   }).shape,
-  srchType: z.enum([ 'userEmlAddr', ], {
-    error: '검색 타입은 userEmlAddr 중 하나여야 합니다.',
+  srchType: z.enum([ 'userEmlAddr', 'cmntCntnt', 'userNm', ], {
+    error: '검색 타입은 userEmlAddr, cmntCntnt, userNm 중 하나여야 합니다.',
   })
     .default('userEmlAddr')
     .optional()
     .openapi({
-      description: '검색 타입 (userEmlAddr: 사용자 이메일 주소)',
+      description: '검색 타입 (userEmlAddr: 사용자 이메일 주소, cmntCntnt: 댓글 내용, userNm: 사용자 이름)',
       example: 'userEmlAddr',
+    }),
+  crtDtFrom: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-01-01 00:00:00',
+    }),
+  crtDtTo: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-12-31 23:59:59',
+    }),
+  orderBy: z.enum([ 'LATEST', 'OLDEST', ], {
+    error: '정렬 옵션은 LATEST, OLDEST 중 하나여야 합니다.',
+  })
+    .default('LATEST')
+    .optional()
+    .openapi({
+      description: '정렬 옵션 (LATEST: 최신순, OLDEST: 오래된순)',
+      example: 'LATEST',
     }),
 }).partial();
 

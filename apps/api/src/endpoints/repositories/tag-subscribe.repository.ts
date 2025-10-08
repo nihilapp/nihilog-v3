@@ -25,10 +25,19 @@ export class TagSubscribeRepository {
    */
   async getTagSubscribeList(searchData: SearchTagSubscribeDto): Promise<RepoResponseType<ListType<SelectTagSbcrMpngListItemType>> | null> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, crtDtFrom, crtDtTo, orderBy, tagNo, sbcrNo, useYn, } = searchData;
 
       const where = {
-        delYn: delYn || 'N',
+        ...(delYn && { delYn, }),
+        ...(useYn && { useYn, }),
+        ...(tagNo && { tagNo, }),
+        ...(sbcrNo && { sbcrNo, }),
+        ...(crtDtFrom && crtDtTo && {
+          crtDt: {
+            gte: crtDtFrom,
+            lte: crtDtTo,
+          },
+        }),
         ...(srchKywd && srchType === 'tagNm') && {
           tag: {
             is: {
@@ -51,6 +60,15 @@ export class TagSubscribeRepository {
             },
           },
         },
+        ...(srchKywd && srchType === 'tagExpln') && {
+          tag: {
+            is: {
+              tagExpln: {
+                contains: srchKywd,
+              },
+            },
+          },
+        },
       };
       const skip = pageHelper(page, strtRow, endRow).offset;
       const take = pageHelper(page, strtRow, endRow).limit;
@@ -66,7 +84,24 @@ export class TagSubscribeRepository {
             },
           },
           orderBy: {
-            tagSbcrNo: 'desc',
+            ...(orderBy === 'TAG_SBCR_LATEST') && {
+              tagSbcrNo: 'desc',
+            },
+            ...(orderBy === 'TAG_SBCR_OLDEST') && {
+              tagSbcrNo: 'asc',
+            },
+            ...(orderBy === 'TAG_NAME_ASC') && {
+              tagNm: 'asc',
+            },
+            ...(orderBy === 'TAG_NAME_DESC') && {
+              tagNm: 'desc',
+            },
+            ...(orderBy === 'USER_NAME_ASC') && {
+              userNm: 'asc',
+            },
+            ...(orderBy === 'USER_NAME_DESC') && {
+              userNm: 'desc',
+            },
           },
           skip,
           take,

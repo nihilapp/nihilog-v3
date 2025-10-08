@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { commonSchema } from '@/endpoints/prisma/schemas/common.schema';
+import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/prisma/schemas/common.schema';
 import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 
 export const tagSubscribeSchema = commonSchema.extend({
@@ -107,13 +107,36 @@ export const deleteTagSubscribeSchema = tagSubscribeSchema.pick({
 export const searchTagSubscribeSchema = baseSearchSchema.extend({
   ...tagSubscribeSchema.pick({
     delYn: true,
+    useYn: true,
+    tagNo: true,
+    sbcrNo: true,
   }).shape,
-  srchType: z.enum([ 'tagNm', 'userNm', ], {
+  srchType: z.enum([ 'tagNm', 'userNm', 'tagExpln', ], {
     error: '검색 타입은 tagNm, userNm 중 하나여야 합니다.',
   }).optional().openapi({
     description: '검색 타입 (tagNm, userNm)',
     example: 'tagNm',
   }),
+  crtDtFrom: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-01-01 00:00:00',
+    }),
+  crtDtTo: z.string()
+    .regex(dateTimeRegex, dateTimeMessage)
+    .optional()
+    .openapi({
+      description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-12-31 23:59:59',
+    }),
+  orderBy: z.enum([ 'TAG_SBCR_LATEST', 'TAG_SBCR_OLDEST', 'TAG_NAME_ASC', 'TAG_NAME_DESC', 'USER_NAME_ASC', 'USER_NAME_DESC', ])
+    .default('TAG_SBCR_LATEST')
+    .optional().openapi({
+      description: '정렬 기준 (TAG_SBCR_LATEST: 태그 구독 최신순, TAG_SBCR_OLDEST: 태그 구독 오래된순, TAG_NAME_ASC: 태그명 순, TAG_NAME_DESC: 태그명 역순, USER_NAME_ASC: 사용자명 순, USER_NAME_DESC: 사용자명 역순)',
+      example: 'TAG_SBCR_LATEST',
+    }),
 }).partial();
 
 export type TagSubscribeType = z.infer<typeof tagSubscribeSchema>;

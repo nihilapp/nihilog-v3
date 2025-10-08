@@ -41,6 +41,10 @@ export const registerAdminSubscribeEndpoints = () => {
                 summary: '구독 설정 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.ADMIN.SEARCH_ERROR),
               },
+              validationError: {
+                summary: '요청 데이터 유효성 검증 실패',
+                value: createError('BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST),
+              },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
               hasRoles: true, // 권한 사용

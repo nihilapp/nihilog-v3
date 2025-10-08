@@ -8,6 +8,7 @@ import {
   UpdateSubscribeDto,
   type SearchSubscribeDto
 } from '@/dto/subscribe.dto';
+import { searchSubscribeSchema } from '@/endpoints/prisma/schemas/subscribe.schema';
 import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
@@ -22,7 +23,13 @@ export class AdminSubscribeService {
    * @param searchData 검색 조건
    */
   async adminGetUserSubscribeList(searchData: SearchSubscribeDto): Promise<RepoResponseType<ListDto<SelectUserSbcrInfoListItemType>> | null> {
-    return this.subscribeRepository.getSubscribeList(searchData);
+    const safeData = searchSubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.subscribeRepository.getSubscribeList(safeData.data);
   }
 
   /**

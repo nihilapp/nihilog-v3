@@ -31,17 +31,8 @@ export class AdminUserService {
       return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
     }
 
-    // 검색 조건 설정
-    const finalSrchType = safeData.data.srchType || 'userNm';
-    const finalSrchKywd = safeData.data.srchKywd || '';
-
     const result = await this.userRepository.getUserList({
-      page: safeData.data.page,
-      strtRow: safeData.data.strtRow,
-      endRow: safeData.data.endRow,
-      srchType: finalSrchType,
-      srchKywd: finalSrchKywd,
-      delYn: safeData.data.delYn,
+      ...safeData.data,
     });
 
     return result;

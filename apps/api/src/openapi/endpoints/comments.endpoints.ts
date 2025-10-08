@@ -41,6 +41,10 @@ export const registerCommentsEndpoints = () => {
                 summary: '댓글 목록 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.COMMENT.USER.SEARCH_SUCCESS, [ CreateExample.comment('list'), ]),
               },
+              validationError: {
+                summary: '요청 데이터 유효성 검증 실패',
+                value: createError('BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST),
+              },
               error: {
                 summary: '댓글 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.USER.SEARCH_ERROR),

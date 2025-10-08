@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
+import { searchCategorySubscribeSchema } from '@/endpoints/prisma/schemas/category-subscribe.schema';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
@@ -16,7 +17,13 @@ export class CategorySubscribeService {
    * @param searchData 검색 데이터
    */
   async getCategorySubscribeList(searchData: SearchCategorySubscribeDto): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
-    return this.categorySubscribeRepository.getCategorySubscribeList(searchData);
+    const safeData = searchCategorySubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.categorySubscribeRepository.getCategorySubscribeList(safeData.data);
   }
 
   /**
@@ -25,7 +32,13 @@ export class CategorySubscribeService {
    * @param searchData 검색 데이터
    */
   async getCategorySubscribeByUserNo(userNo: number, searchData: SearchCategorySubscribeDto): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
-    return this.categorySubscribeRepository.getCategorySubscribeByUserNo(userNo, searchData);
+    const safeData = searchCategorySubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.categorySubscribeRepository.getCategorySubscribeByUserNo(userNo, safeData.data);
   }
 
   /**
@@ -34,7 +47,13 @@ export class CategorySubscribeService {
    * @param searchData 검색 데이터
    */
   async getCategorySubscribeByCtgryNo(ctgryNo: number, searchData: SearchCategorySubscribeDto): Promise<RepoResponseType<ListType<SelectCtgrySbcrMpngListItemType>> | null> {
-    return this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, searchData);
+    const safeData = searchCategorySubscribeSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, safeData.data);
   }
 
   /**

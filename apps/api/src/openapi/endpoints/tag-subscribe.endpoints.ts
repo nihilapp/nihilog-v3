@@ -47,6 +47,10 @@ export const registerTagSubscribeEndpoints = () => {
                   [ CreateExample.tagSubscribe('list'), ]
                 ),
               },
+              validationError: {
+                summary: '요청 데이터 유효성 검증 실패',
+                value: createError('BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST),
+              },
               error: {
                 summary: '태그 구독 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR),

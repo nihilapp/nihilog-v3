@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
+import { searchCommentSchema } from '@/endpoints/prisma/schemas/comment.schema';
 import type { SelectCommentListItemType, SelectCommentType } from '@/endpoints/prisma/types/comment.types';
 import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CommentRepository } from '@/endpoints/repositories/comment.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class CommentsService {
@@ -14,7 +17,13 @@ export class CommentsService {
    * @param searchData 검색 데이터
    */
   async getCommentList(searchData: SearchCommentDto): Promise<RepoResponseType<ListType<SelectCommentListItemType>> | null> {
-    return this.commentRepository.getCommentList(searchData);
+    const safeData = searchCommentSchema.safeParse(searchData);
+
+    if (!safeData.success) {
+      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+    }
+
+    return this.commentRepository.getCommentList(safeData.data);
   }
 
   /**

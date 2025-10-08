@@ -38,7 +38,7 @@ export const registerUserEndpoints = () => {
                 ),
               },
               error: {
-                summary: '사용자를 찾을 수 없음 (Repository)',
+                summary: '사용자를 찾을 수 없음',
                 value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
             }, {
@@ -74,7 +74,7 @@ export const registerUserEndpoints = () => {
                 ),
               },
               error: {
-                summary: '구독 설정을 찾을 수 없음 (Repository)',
+                summary: '구독 설정을 찾을 수 없음',
                 value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.USER.NOT_FOUND),
               },
             }, {
@@ -165,7 +165,7 @@ export const registerUserEndpoints = () => {
                 ),
               },
               notFound: {
-                summary: '사용자를 찾을 수 없음 (Repository)',
+                summary: '사용자를 찾을 수 없음',
                 value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
               nameExists: {
@@ -214,11 +214,11 @@ export const registerUserEndpoints = () => {
                 ),
               },
               userNotFound: {
-                summary: '사용자를 찾을 수 없음 (Repository)',
+                summary: '사용자를 찾을 수 없음',
                 value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
               subscribeNotFound: {
-                summary: '구독 설정을 찾을 수 없음 (Repository)',
+                summary: '구독 설정을 찾을 수 없음',
                 value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.USER.NOT_FOUND),
               },
             }, {
@@ -254,7 +254,7 @@ export const registerUserEndpoints = () => {
                 ),
               },
               notFound: {
-                summary: '사용자를 찾을 수 없음 (Repository)',
+                summary: '사용자를 찾을 수 없음',
                 value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
               },
             }, {

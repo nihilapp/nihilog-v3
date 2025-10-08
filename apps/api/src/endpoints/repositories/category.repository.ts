@@ -22,13 +22,31 @@ export class CategoryRepository {
    */
   async getCategoryList(searchData: SearchCategoryDto): Promise<RepoResponseType<ListType<SelectCategoryListItemType>> | null> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, orderBy, crtDtFrom, crtDtTo, useYn, ctgryColr, upCtgryNo, } = searchData;
 
       const where: Prisma.CtgryInfoWhereInput = {
-        delYn,
-        ...(srchKywd && srchType && {
+        ...(delYn && { delYn, }),
+        ...(srchKywd && srchType === 'ctgryNm' && {
           [srchType]: {
             contains: srchKywd,
+          },
+        }),
+        ...(srchKywd && srchType === 'ctgryExpln' && {
+          ctgryExpln: {
+            contains: srchKywd,
+          },
+        }),
+        ...(useYn && { useYn, }),
+        ...(ctgryColr && {
+          ctgryColr: {
+            contains: ctgryColr,
+          },
+        }),
+        ...(upCtgryNo && { upCtgryNo, }),
+        ...(crtDtFrom && crtDtTo && {
+          crtDt: {
+            gte: crtDtFrom,
+            lte: crtDtTo,
           },
         }),
       };
@@ -44,7 +62,24 @@ export class CategoryRepository {
             childCategories: true,
           },
           orderBy: {
-            crtNo: 'asc',
+            ...(orderBy === 'LATEST') && {
+              crtDt: 'desc',
+            },
+            ...(orderBy === 'OLDEST') && {
+              crtDt: 'asc',
+            },
+            ...(orderBy === 'NAME_ASC') && {
+              ctgryNm: 'asc',
+            },
+            ...(orderBy === 'NAME_DESC') && {
+              ctgryNm: 'desc',
+            },
+            ...(orderBy === 'STP_ASC') && {
+              ctgryStp: 'asc',
+            },
+            ...(orderBy === 'STP_DESC') && {
+              ctgryStp: 'desc',
+            },
           },
           skip,
           take,
