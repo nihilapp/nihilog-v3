@@ -276,26 +276,6 @@ export const deletePostSchema = postSchema.pick({
   message: '게시글 번호 또는 게시글 번호 목록 중 하나는 필수입니다.',
 });
 
-// 게시글 조회수 통계 스키마
-export const analyzeStatSchema = z.object({
-  mode: z.enum([ 'day', 'week', 'month', 'year', ])
-    .default('day')
-    .openapi({
-      description: '모드 (day: 일간, week: 주간, month: 월간, year: 연간)',
-      example: 'day',
-    }),
-  startDt: z.string()
-    .openapi({
-      description: '시작 날짜',
-      example: '2024-01-01',
-    }),
-  endDt: z.string()
-    .openapi({
-      description: '종료 날짜',
-      example: '2024-01-01',
-    }),
-});
-
 // 게시글 북마크 스키마
 export const postBookmarkSchema = commonSchema.extend({
   bkmrkNo: z.coerce
@@ -347,7 +327,6 @@ export type CreatePostType = z.infer<typeof createPostSchema>;
 export type UpdatePostType = z.infer<typeof updatePostSchema>;
 export type DeletePostType = z.infer<typeof deletePostSchema>;
 export type SearchPostType = z.infer<typeof searchPostSchema>;
-export type ViewStatType = z.infer<typeof analyzeStatSchema>;
 export type CreatePostBookmarkType = z.infer<typeof createPostBookmarkSchema>;
 export type DeletePostBookmarkType = z.infer<typeof deletePostBookmarkSchema>;
 export type SearchPostBookmarkType = z.infer<typeof searchPostBookmarkSchema>;

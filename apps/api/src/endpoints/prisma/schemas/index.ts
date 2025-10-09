@@ -4,6 +4,7 @@ export {
   dateTimeRegex,
   dateTimeMessage,
   ynEnumSchema,
+  analyzeStatSchema,
   type YnType
 } from './common.schema';
 
@@ -47,7 +48,6 @@ export {
   updatePostSchema,
   deletePostSchema,
   searchPostSchema,
-  analyzeStatSchema,
   postBookmarkSchema,
   createPostBookmarkSchema,
   deletePostBookmarkSchema,
@@ -57,7 +57,6 @@ export {
   type UpdatePostType,
   type DeletePostType,
   type SearchPostType,
-  type ViewStatType,
   type CreatePostBookmarkType,
   type DeletePostBookmarkType,
   type SearchPostBookmarkType

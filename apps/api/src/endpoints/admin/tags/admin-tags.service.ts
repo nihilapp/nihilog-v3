@@ -2,15 +2,140 @@ import { Injectable } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import type { CreateTagDto, DeleteTagDto, UpdateTagDto } from '@/dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPstTagMpngListItemType, SelectPstTagMpngType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type {
+  SelectPstTagMpngListItemType,
+  SelectPstTagMpngType,
+  SelectTagInfoType,
+  AnalyzeTagStatItemType,
+  TopUsedTagItemType,
+  TagUsageTrendItemType,
+  UnusedTagItemType,
+  TopTagsBySubscriberItemType,
+  TagSubscriberGrowthRateItemType,
+  TagWithoutSubscribersItemType,
+  TagUsageEfficiencyItemType,
+  TagAverageUsageFrequencyItemType,
+  TagLifecycleItemType,
+  TagStatusDistributionItemType,
+  TagCreatorStatItemType,
+  TagCleanupRecommendationItemType
+} from '@/endpoints/prisma/types/tag.types';
 import { TagRepository } from '@/endpoints/repositories/tag.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminTagsService {
   constructor(private readonly tagRepository: TagRepository) { }
+
+  // ========================================================
+  // 태그 통계 관련 메서드
+  // ========================================================
+
+  /**
+   * @description 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
+   * @param analyzeStatData 분석 통계 데이터
+   * @param tagNo 태그 번호 (선택적, 없으면 전체/있으면 해당 태그만)
+   */
+  async adminGetAnalyzeTagData(analyzeStatData: AnalyzeStatDto, tagNo?: number): Promise<RepoResponseType<AnalyzeTagStatItemType[]> | null> {
+    return this.tagRepository.getAnalyzeTagData(analyzeStatData, tagNo);
+  }
+
+  /**
+   * @description 태그별 사용 횟수 TOP N
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   */
+  async adminGetTopUsedTagsByCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopUsedTagItemType[]> | null> {
+    return this.tagRepository.getTopUsedTagsByCount(limit, analyzeStatData);
+  }
+
+  /**
+   * @description 태그별 사용 추이
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async adminGetTagUsageTrend(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TagUsageTrendItemType[]> | null> {
+    return this.tagRepository.getTagUsageTrend(analyzeStatData);
+  }
+
+  /**
+   * @description 미사용 태그 목록
+   */
+  async adminGetUnusedTagsList(): Promise<RepoResponseType<UnusedTagItemType[]> | null> {
+    return this.tagRepository.getUnusedTagsList();
+  }
+
+  /**
+   * @description 태그별 구독자 수 TOP N
+   * @param limit 상위 N개
+   */
+  async adminGetTopTagsBySubscriberCount(limit: number): Promise<RepoResponseType<TopTagsBySubscriberItemType[]> | null> {
+    return this.tagRepository.getTopTagsBySubscriberCount(limit);
+  }
+
+  /**
+   * @description 태그별 구독자 성장률
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async adminGetTagSubscriberGrowthRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TagSubscriberGrowthRateItemType[]> | null> {
+    return this.tagRepository.getTagSubscriberGrowthRate(analyzeStatData);
+  }
+
+  /**
+   * @description 구독자 없는 태그 목록
+   */
+  async adminGetTagsWithoutSubscribers(): Promise<RepoResponseType<TagWithoutSubscribersItemType[]> | null> {
+    return this.tagRepository.getTagsWithoutSubscribers();
+  }
+
+  /**
+   * @description 태그별 사용 효율성
+   */
+  async adminGetTagUsageEfficiency(): Promise<RepoResponseType<TagUsageEfficiencyItemType[]> | null> {
+    return this.tagRepository.getTagUsageEfficiency();
+  }
+
+  /**
+   * @description 태그별 평균 사용 빈도
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async adminGetTagAverageUsageFrequency(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TagAverageUsageFrequencyItemType[]> | null> {
+    return this.tagRepository.getTagAverageUsageFrequency(analyzeStatData);
+  }
+
+  /**
+   * @description 태그 생명주기 분석
+   */
+  async adminGetTagLifecycleAnalysis(): Promise<RepoResponseType<TagLifecycleItemType[]> | null> {
+    return this.tagRepository.getTagLifecycleAnalysis();
+  }
+
+  /**
+   * @description 태그 상태별 분포
+   */
+  async adminGetTagStatusDistribution(): Promise<RepoResponseType<TagStatusDistributionItemType[]> | null> {
+    return this.tagRepository.getTagStatusDistribution();
+  }
+
+  /**
+   * @description 태그 생성자별 통계
+   */
+  async adminGetTagCreatorStatistics(): Promise<RepoResponseType<TagCreatorStatItemType[]> | null> {
+    return this.tagRepository.getTagCreatorStatistics();
+  }
+
+  /**
+   * @description 태그 정리 필요도
+   */
+  async adminGetTagCleanupRecommendations(): Promise<RepoResponseType<TagCleanupRecommendationItemType[]> | null> {
+    return this.tagRepository.getTagCleanupRecommendations();
+  }
+
+  // ========================================================
+  // 태그 관리 관련 메서드
+  // ========================================================
 
   /**
    * @description 태그 생성

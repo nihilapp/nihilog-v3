@@ -1,19 +1,502 @@
-import { Body, Controller, Param, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Query, Req, UseGuards } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, CreateTagDto, DeleteTagDto, ResponseDto, UpdateTagDto } from '@/dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
 import { AdminTagsService } from '@/endpoints/admin/tags/admin-tags.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPstTagMpngListItemType, SelectPstTagMpngType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type {
+  SelectPstTagMpngListItemType,
+  SelectPstTagMpngType,
+  SelectTagInfoType,
+  AnalyzeTagStatItemType,
+  TopUsedTagItemType,
+  TagUsageTrendItemType,
+  UnusedTagItemType,
+  TopTagsBySubscriberItemType,
+  TagSubscriberGrowthRateItemType,
+  TagWithoutSubscribersItemType,
+  TagUsageEfficiencyItemType,
+  TagAverageUsageFrequencyItemType,
+  TagLifecycleItemType,
+  TagStatusDistributionItemType,
+  TagCreatorStatItemType,
+  TagCleanupRecommendationItemType
+} from '@/endpoints/prisma/types/tag.types';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/tags')
 @UseGuards(AdminAuthGuard)
 export class AdminTagsController {
   constructor(private readonly adminTagsService: AdminTagsService) { }
+
+  // ========================================================
+  // 태그 통계 관련 엔드포인트
+  // ========================================================
+
+  /**
+   * @description 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
+   * @param req 요청 객체
+   * @param analyzeStatData 분석 통계 데이터
+   * @param tagNo 태그 번호 (선택적)
+   */
+  @Endpoint({
+    endpoint: '/analyze/overview',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetAnalyzeTagData(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query('tagNo') tagNo?: number
+  ): Promise<ResponseDto<AnalyzeTagStatItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetAnalyzeTagData(analyzeStatData, tagNo);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 분석 통계 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 분석 통계 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그별 사용 횟수 TOP N
+   * @param req 요청 객체
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-used',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTopUsedTagsByCount(
+    @Req() req: AuthRequest,
+    @Query('limit') limit: number,
+    @Body() analyzeStatData?: AnalyzeStatDto
+  ): Promise<ResponseDto<TopUsedTagItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTopUsedTagsByCount(limit, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 사용 횟수 TOP N 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 사용 횟수 TOP N 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그별 사용 추이
+   * @param req 요청 객체
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/usage-trend',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagUsageTrend(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData: AnalyzeStatDto
+  ): Promise<ResponseDto<TagUsageTrendItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagUsageTrend(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 사용 추이 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 사용 추이 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 미사용 태그 목록
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/unused',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetUnusedTagsList(@Req() req: AuthRequest): Promise<ResponseDto<UnusedTagItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetUnusedTagsList();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '미사용 태그 목록 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '미사용 태그 목록 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그별 구독자 수 TOP N
+   * @param req 요청 객체
+   * @param limit 상위 N개
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-subscribers',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTopTagsBySubscriberCount(
+    @Req() req: AuthRequest,
+    @Query('limit') limit: number
+  ): Promise<ResponseDto<TopTagsBySubscriberItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTopTagsBySubscriberCount(limit);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그별 구독자 수 TOP N 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그별 구독자 수 TOP N 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그별 구독자 성장률
+   * @param req 요청 객체
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/subscriber-growth',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagSubscriberGrowthRate(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData: AnalyzeStatDto
+  ): Promise<ResponseDto<TagSubscriberGrowthRateItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagSubscriberGrowthRate(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그별 구독자 성장률 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그별 구독자 성장률 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 구독자 없는 태그 목록
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/no-subscribers',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagsWithoutSubscribers(@Req() req: AuthRequest): Promise<ResponseDto<TagWithoutSubscribersItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagsWithoutSubscribers();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '구독자 없는 태그 목록 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '구독자 없는 태그 목록 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그별 사용 효율성
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/efficiency',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagUsageEfficiency(@Req() req: AuthRequest): Promise<ResponseDto<TagUsageEfficiencyItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagUsageEfficiency();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그별 사용 효율성 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그별 사용 효율성 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그별 평균 사용 빈도
+   * @param req 요청 객체
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/frequency',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagAverageUsageFrequency(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData: AnalyzeStatDto
+  ): Promise<ResponseDto<TagAverageUsageFrequencyItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagAverageUsageFrequency(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그별 평균 사용 빈도 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그별 평균 사용 빈도 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그 생명주기 분석
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/lifecycle',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagLifecycleAnalysis(@Req() req: AuthRequest): Promise<ResponseDto<TagLifecycleItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagLifecycleAnalysis();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 생명주기 분석 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 생명주기 분석 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그 상태별 분포
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/status-distribution',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagStatusDistribution(@Req() req: AuthRequest): Promise<ResponseDto<TagStatusDistributionItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagStatusDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 상태별 분포 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 상태별 분포 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그 생성자별 통계
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/creator-stats',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagCreatorStatistics(@Req() req: AuthRequest): Promise<ResponseDto<TagCreatorStatItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagCreatorStatistics();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 생성자별 통계 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 생성자별 통계 조회 성공',
+      result.data
+    );
+  }
+
+  /**
+   * @description 태그 정리 필요도
+   * @param req 요청 객체
+   */
+  @Endpoint({
+    endpoint: '/analyze/cleanup',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTagCleanupRecommendations(@Req() req: AuthRequest): Promise<ResponseDto<TagCleanupRecommendationItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.adminTagsService.adminGetTagCleanupRecommendations();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || '태그 정리 필요도 조회 실패'
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      '태그 정리 필요도 조회 성공',
+      result.data
+    );
+  }
+
+  // ========================================================
+  // 태그 관리 관련 엔드포인트
+  // ========================================================
 
   /**
    * @description 태그 생성

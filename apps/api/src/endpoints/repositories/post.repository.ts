@@ -3,9 +3,9 @@ import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
-import type { AnalyzeStatDto } from '@/dto/post.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
@@ -17,7 +17,11 @@ import type {
   SelectPostViewLogType,
   SharePlatformStatItemType,
   AnalyzePostItemType,
-  AverageViewStatItemType
+  AverageViewStatItemType,
+  AverageBookmarkStatItemType,
+  TopPopularPostItemType,
+  TopCommentPostItemType,
+  PostStatusRatioItemType
 } from '@/endpoints/prisma/types/post.types';
 import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
@@ -288,110 +292,110 @@ export class PostRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzePostItemType[]>`
-        with ${createDateSeries(startDt, endDt, mode)}
-        select
-          b.date_start as "dateStart",
-          b.date_end as "dateEnd",
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
 
           -- 1. 게시글 발행 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.pst_info p
-            where
-              case when ${pstNo} is not null
-                then p.pst_no = ${pstNo}
-                else true
-              end
-              and p.publ_dt::timestamptz >= b.date_start
-              and p.publ_dt::timestamptz < b.date_end
-              and p.del_yn = 'N'
-          ) as "publishCount",
+            SELECT COUNT(1)
+            FROM nihilog.pst_info p
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN p.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND p.publ_dt::timestamptz >= b.date_start
+              AND p.publ_dt::timestamptz < b.date_end
+              AND p.del_yn = 'N'
+          ) AS "publishCount",
 
           -- 2. 게시글 수정 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.pst_info p
-            where
-              case when ${pstNo} is not null
-                then p.pst_no = ${pstNo}
-                else true
-              end
-              and p.updt_dt::timestamptz >= b.date_start
-              and p.updt_dt::timestamptz < b.date_end
-              and p.del_yn = 'N'
-              and p.updt_dt != p.crt_dt
-          ) as "updateCount",
+            SELECT COUNT(1)
+            FROM nihilog.pst_info p
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN p.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND p.updt_dt::timestamptz >= b.date_start
+              AND p.updt_dt::timestamptz < b.date_end
+              AND p.del_yn = 'N'
+              AND p.updt_dt != p.crt_dt
+          ) AS "updateCount",
 
           -- 3. 게시글 삭제 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.pst_info p
-            where
-              case when ${pstNo} is not null
-                then p.pst_no = ${pstNo}
-                else true
-              end
-              and p.del_dt::timestamptz >= b.date_start
-              and p.del_dt::timestamptz < b.date_end
-              and p.del_yn = 'Y'
-          ) as "deleteCount",
+            SELECT COUNT(1)
+            FROM nihilog.pst_info p
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN p.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND p.del_dt::timestamptz >= b.date_start
+              AND p.del_dt::timestamptz < b.date_end
+              AND p.del_yn = 'Y'
+          ) AS "deleteCount",
 
           -- 4. 조회 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.pst_view_log v
-            where
-              case when ${pstNo} is not null
-                then v.pst_no = ${pstNo}
-                else true
-              end
-              and v.view_dt::timestamptz >= b.date_start
-              and v.view_dt::timestamptz < b.date_end
-          ) as "viewCount",
+            SELECT COUNT(1)
+            FROM nihilog.pst_view_log v
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN v.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND v.view_dt::timestamptz >= b.date_start
+              AND v.view_dt::timestamptz < b.date_end
+          ) AS "viewCount",
 
           -- 5. 북마크 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.pst_bkmrk_mpng bm
-            where
-              case when ${pstNo} is not null
-                then bm.pst_no = ${pstNo}
-                else true
-              end
-              and bm.crt_dt::timestamptz >= b.date_start
-              and bm.crt_dt::timestamptz < b.date_end
-              and bm.del_yn = 'N'
-          ) as "bookmarkCount",
+            SELECT COUNT(1)
+            FROM nihilog.pst_bkmrk_mpng bm
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN bm.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND bm.crt_dt::timestamptz >= b.date_start
+              AND bm.crt_dt::timestamptz < b.date_end
+              AND bm.del_yn = 'N'
+          ) AS "bookmarkCount",
 
           -- 6. 공유 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.pst_shrn_log sl
-            where
-              case when ${pstNo} is not null
-                then sl.pst_no = ${pstNo}
-                else true
-              end
-              and sl.shrn_dt::timestamptz >= b.date_start
-              and sl.shrn_dt::timestamptz < b.date_end
-          ) as "shareCount",
+            SELECT COUNT(1)
+            FROM nihilog.pst_shrn_log sl
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN sl.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND sl.shrn_dt::timestamptz >= b.date_start
+              AND sl.shrn_dt::timestamptz < b.date_end
+          ) AS "shareCount",
 
           -- 7. 댓글 수 (서브쿼리)
           (
-            select count(1)
-            from nihilog.cmnt_info c
-            where
-              case when ${pstNo} is not null
-                then c.pst_no = ${pstNo}
-                else true
-              end
-              and c.crt_dt::timestamptz >= b.date_start
-              and c.crt_dt::timestamptz < b.date_end
-              and c.del_yn = 'N'
-          ) as "commentCount"
+            SELECT COUNT(1)
+            FROM nihilog.cmnt_info c
+            WHERE
+              CASE WHEN ${pstNo} IS NOT NULL
+                THEN c.pst_no = ${pstNo}
+                ELSE TRUE
+              END
+              AND c.crt_dt::timestamptz >= b.date_start
+              AND c.crt_dt::timestamptz < b.date_end
+              AND c.del_yn = 'N'
+          ) AS "commentCount"
 
-        from bucket b
-        order by b.date_start
+        FROM bucket b
+        ORDER BY b.date_start
       `;
 
       return prismaResponse(true, analyzeData);
@@ -410,30 +414,203 @@ export class PostRepository {
       const { startDt, endDt, mode, } = analyzeStatData;
 
       const dataList = await this.prisma.$queryRaw<AverageViewStatItemType[]>`
-        with ${createDateSeries(startDt, endDt, mode)}
-        select
-          b.date_start as "dateStart",
-          b.date_end as "dateEnd",
-          avg(post_view_counts.view_count) as "avgViewCount"
-        from bucket b
-        left join (
-          select
-            date_trunc(${mode}, v.view_dt::timestamptz) as view_date,
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+          AVG(post_view_counts.view_count) AS "avgViewCount"
+        FROM bucket b
+        LEFT JOIN (
+          SELECT
+            date_trunc(${mode}, v.view_dt::timestamptz) AS view_date,
             v.pst_no,
-            count(*) as view_count
-          from nihilog.pst_view_log v
-          where v.view_dt::timestamptz >= ${startDt}::timestamptz
-            and v.view_dt::timestamptz <= ${endDt}::timestamptz
-          group by date_trunc(${mode}, v.view_dt::timestamptz), v.pst_no
+            COUNT(*) AS view_count
+          FROM nihilog.pst_view_log v
+          WHERE v.view_dt::timestamptz >= ${startDt}::timestamptz
+            AND v.view_dt::timestamptz <= ${endDt}::timestamptz
+          GROUP BY date_trunc(${mode}, v.view_dt::timestamptz), v.pst_no
         ) post_view_counts
-          on post_view_counts.view_date = b.date_start
-        group by
+          ON post_view_counts.view_date = b.date_start
+        GROUP BY
           b.date_start, b.date_end
-        order by
+        ORDER BY
           b.date_start
       `;
 
       return prismaResponse(true, dataList);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 게시글당 평균 북마크 수 조회 (시간대별)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getAverageBookmarkCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageBookmarkStatItemType[]> | null> {
+    try {
+      const { startDt, endDt, mode, } = analyzeStatData;
+
+      const dataList = await this.prisma.$queryRaw<AverageBookmarkStatItemType[]>`
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+          AVG(post_bookmark_counts.bookmark_count) AS "avgBookmarkCount"
+        FROM bucket b
+        LEFT JOIN (
+          SELECT
+            date_trunc(${mode}, bm.crt_dt::timestamptz) AS bookmark_date,
+            bm.pst_no,
+            COUNT(*) AS bookmark_count
+          FROM nihilog.pst_bkmrk_mpng bm
+          WHERE bm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND bm.crt_dt::timestamptz <= ${endDt}::timestamptz
+            AND bm.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, bm.crt_dt::timestamptz), bm.pst_no
+        ) post_bookmark_counts
+          ON post_bookmark_counts.bookmark_date = b.date_start
+        GROUP BY
+          b.date_start, b.date_end
+        ORDER BY
+          b.date_start
+      `;
+
+      return prismaResponse(true, dataList);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 인기 게시글 TOP N (조회수 기준)
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopPopularPostsByViewCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopPopularPostItemType[]> | null> {
+    try {
+      const where: Prisma.PstInfoWhereInput = {
+        delYn: 'N',
+        rlsYn: 'Y',
+        ...(analyzeStatData && {
+          publDt: {
+            gte: analyzeStatData.startDt,
+            lte: analyzeStatData.endDt,
+          },
+        }),
+      };
+
+      const topPosts = await this.prisma.pstInfo.findMany({
+        where,
+        select: {
+          pstNo: true,
+          pstTtl: true,
+          pstView: true,
+          publDt: true,
+        },
+        orderBy: [
+          { pstView: 'desc', },
+          { publDt: 'desc', },
+        ],
+        take: limit,
+      });
+
+      const formattedPosts: TopPopularPostItemType[] = topPosts.map((post) => ({
+        pstNo: post.pstNo,
+        title: post.pstTtl,
+        viewCount: post.pstView,
+        publishDate: post.publDt,
+      }));
+
+      return prismaResponse(true, formattedPosts);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 댓글 많은 게시글 TOP N
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopPostsByCommentCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopCommentPostItemType[]> | null> {
+    try {
+      let whereClause = Prisma.sql`WHERE p.del_yn = 'N' AND p.rls_yn = 'Y'`;
+
+      if (analyzeStatData) {
+        const { startDt, endDt, } = analyzeStatData;
+        whereClause = Prisma.sql`
+          WHERE p.del_yn = 'N'
+            AND p.rls_yn = 'Y'
+            AND p.publ_dt::timestamptz >= ${startDt}::timestamptz
+            AND p.publ_dt::timestamptz <= ${endDt}::timestamptz
+        `;
+      }
+
+      const topPosts = await this.prisma.$queryRaw<TopCommentPostItemType[]>`
+        SELECT
+          p.pst_no AS "pstNo",
+          p.pst_ttl AS "title",
+          COUNT(c.cmnt_no) AS "commentCount",
+          p.publ_dt AS "publishDate"
+        FROM nihilog.pst_info p
+        LEFT JOIN nihilog.cmnt_info c ON p.pst_no = c.pst_no AND c.del_yn = 'N'
+        ${whereClause}
+        GROUP BY p.pst_no, p.pst_ttl, p.publ_dt
+        ORDER BY COUNT(c.cmnt_no) DESC, p.publ_dt DESC
+        LIMIT ${limit}
+      `;
+
+      return prismaResponse(true, topPosts);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 게시글 상태 비율 조회
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getPostStatusRatio(analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<PostStatusRatioItemType[]> | null> {
+    try {
+      const where: Prisma.PstInfoWhereInput = {
+        delYn: 'N',
+        ...(analyzeStatData && {
+          publDt: {
+            gte: analyzeStatData.startDt,
+            lte: analyzeStatData.endDt,
+          },
+        }),
+      };
+
+      // 전체 카운트
+      const total = await this.prisma.pstInfo.count({ where, });
+
+      // 상태별 카운트
+      const statusCounts = await this.prisma.pstInfo.groupBy({
+        by: [ 'pstStts', ],
+        where,
+        _count: {
+          pstStts: true,
+        },
+      });
+
+      // 비율 계산 및 정렬
+      const statusRatio: PostStatusRatioItemType[] = statusCounts
+        .map((item) => ({
+          status: item.pstStts,
+          count: Number(item._count.pstStts),
+          ratio: total > 0
+            ? Math.round((item._count.pstStts / total) * 100 * 100) / 10000
+            : 0,
+        }))
+        .sort((a, b) => Number(b.count - a.count));
+
+      return prismaResponse(true, statusRatio);
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -452,26 +629,31 @@ export class PostRepository {
     try {
       const { startDt, endDt, } = analyzeStatData;
 
-      const stats = await this.prisma.$queryRaw<SharePlatformStatItemType[]>`
-        SELECT
-          shrn_site AS platform,
-          COUNT(1)::int AS count
-        FROM
-          nihilog.pst_shrn_log
-        WHERE
-          case when ${pstNo} is not null
-            then pst_no = ${pstNo}
-            else true
-          end
-          AND shrn_dt >= ${startDt}
-          AND shrn_dt <= ${endDt}
-        GROUP BY
-          shrn_site
-        ORDER BY
-          count DESC, platform
-      `;
+      const stats = await this.prisma.pstShrnLog.groupBy({
+        by: [ 'shrnSite', ],
+        where: {
+          ...(pstNo && { pstNo, }),
+          shrnDt: {
+            gte: startDt,
+            lte: endDt,
+          },
+        },
+        _count: {
+          shrnSite: true,
+        },
+        orderBy: {
+          _count: {
+            shrnSite: 'desc',
+          },
+        },
+      });
 
-      return prismaResponse(true, stats);
+      const formattedStats: SharePlatformStatItemType[] = stats.map((item) => ({
+        platform: item.shrnSite,
+        count: item._count.shrnSite,
+      }));
+
+      return prismaResponse(true, formattedStats);
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

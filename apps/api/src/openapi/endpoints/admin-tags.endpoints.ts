@@ -1,34 +1,38 @@
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import {
-  createTagSchema,
-  updateTagSchema,
-  deleteTagSchema,
-  createPstTagMpngSchema,
-  deletePstTagMpngSchema,
-  searchPstTagMpngSchema
-} from '@/endpoints/prisma/schemas/tag.schema';
+import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
 import { createError, createResponse } from '@/utils';
-import { CreateExample } from '@/utils/createExample';
+import { CreateTagAnalyze } from '@/utils/createTagAnalyze';
 
 import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminTagsEndpoints = () => {
-  // POST /admin/tags - 태그 생성
+  // POST /admin/tags/analyze/overview - 태그 분석 데이터 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/tags',
-    summary: '🏷️ 태그 생성',
-    description: 'ADMIN 권한으로 새로운 태그를 생성합니다.',
+    path: '/admin/tags/analyze/overview',
+    summary: '📊 태그 분석 데이터 조회',
+    description: '관리자가 태그의 종합 분석 데이터를 조회합니다. (생성/삭제/활성/매핑/구독 통계)',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
+      query: z.object({
+        tagNo: z.coerce
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .openapi({
+            description: '태그 번호 (선택사항 - 없으면 전체 태그)',
+            example: 1,
+          }),
+      }),
       body: {
         content: {
           'application/json': {
-            schema: createTagSchema,
+            schema: analyzeStatSchema,
           },
         },
       },
@@ -41,16 +45,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '태그 생성 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.CREATE_SUCCESS, CreateExample.tag('detail')),
-              },
-              conflict: {
-                summary: '태그 이름 중복',
-                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE),
+                summary: '태그 분석 데이터 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.analyzeTag(), ]),
               },
               error: {
-                summary: '태그 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.CREATE_ERROR),
+                summary: '태그 분석 데이터 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -62,19 +62,31 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/multiple - 다수 태그 생성
+  // ========================================================
+  // 사용량 분석 (3개)
+  // ========================================================
+
+  // POST /admin/tags/analyze/top-used - TOP N 사용 태그
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/tags/multiple',
-    summary: '🏷️ 다수 태그 생성',
-    description: 'ADMIN 권한으로 다수 태그를 일괄 생성합니다.',
+    path: '/admin/tags/analyze/top-used',
+    summary: '📊 태그별 사용 횟수 TOP N',
+    description: '관리자가 태그별 사용 횟수 TOP N을 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
         content: {
           'application/json': {
-            schema: z.array(createTagSchema),
+            schema: z.object({
+              limit: z.number().int().positive().openapi({
+                description: '상위 N개',
+                example: 10,
+              }),
+              analyzeStatData: analyzeStatSchema.optional().openapi({
+                description: '분석 통계 데이터 (선택사항)',
+              }),
+            }),
           },
         },
       },
@@ -87,20 +99,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '다수 태그 생성 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
-              },
-              conflict: {
-                summary: '태그 이름 중복',
-                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE),
+                summary: '태그별 사용 횟수 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.topUsedTag(), ]),
               },
               error: {
-                summary: '다수 태그 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_ERROR),
+                summary: '태그별 사용 횟수 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -112,203 +116,19 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // PUT /admin/tags - 태그 수정
-  openApiRegistry.registerPath({
-    method: 'put',
-    path: '/admin/tags',
-    summary: '✏️ 태그 수정',
-    description: 'ADMIN 권한으로 태그 정보를 수정합니다.',
-    tags: [ 'admin-tags', ],
-    security: [ { 'JWT-auth': [], }, ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: updateTagSchema,
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: '응답',
-        content: {
-          'application/json': {
-            schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.UPDATE_SUCCESS, CreateExample.tag('detail')),
-              },
-              notFound: {
-                summary: '태그를 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
-              },
-              error: {
-                summary: '태그 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
-          },
-        },
-      },
-    },
-  });
-
-  // PUT /admin/tags/multiple - 다수 태그 수정
-  openApiRegistry.registerPath({
-    method: 'put',
-    path: '/admin/tags/multiple',
-    summary: '✏️ 다수 태그 수정',
-    description: 'ADMIN 권한으로 다수 태그를 일괄 수정합니다.',
-    tags: [ 'admin-tags', ],
-    security: [ { 'JWT-auth': [], }, ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: updateTagSchema,
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: '응답',
-        content: {
-          'application/json': {
-            schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 태그 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
-              },
-              error: {
-                summary: '다수 태그 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MULTIPLE_UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
-          },
-        },
-      },
-    },
-  });
-
-  // DELETE /admin/tags - 태그 삭제
-  openApiRegistry.registerPath({
-    method: 'delete',
-    path: '/admin/tags',
-    summary: '🗑️ 태그 삭제',
-    description: 'ADMIN 권한으로 태그를 삭제합니다.',
-    tags: [ 'admin-tags', ],
-    security: [ { 'JWT-auth': [], }, ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: deleteTagSchema,
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: '응답',
-        content: {
-          'application/json': {
-            schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.DELETE_SUCCESS, true),
-              },
-              notFound: {
-                summary: '태그를 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
-              },
-              error: {
-                summary: '태그 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
-          },
-        },
-      },
-    },
-  });
-
-  // DELETE /admin/tags/multiple - 다수 태그 삭제
-  openApiRegistry.registerPath({
-    method: 'delete',
-    path: '/admin/tags/multiple',
-    summary: '🗑️ 다수 태그 삭제',
-    description: 'ADMIN 권한으로 다수 태그를 일괄 삭제합니다.',
-    tags: [ 'admin-tags', ],
-    security: [ { 'JWT-auth': [], }, ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: deleteTagSchema,
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: '응답',
-        content: {
-          'application/json': {
-            schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 태그 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MULTIPLE_DELETE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
-              },
-              error: {
-                summary: '다수 태그 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MULTIPLE_DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
-          },
-        },
-      },
-    },
-  });
-
-  // POST /admin/tags/mapping/search - 태그 매핑 조회
+  // POST /admin/tags/analyze/usage-trend - 사용 추이
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/tags/mapping/search',
-    summary: '🔍 태그 매핑 조회',
-    description: 'ADMIN 권한으로 태그 매핑 목록을 조회합니다.',
+    path: '/admin/tags/analyze/usage-trend',
+    summary: '📊 태그별 사용 추이',
+    description: '관리자가 태그별 사용 추이를 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
         content: {
           'application/json': {
-            schema: searchPstTagMpngSchema,
+            schema: analyzeStatSchema,
           },
         },
       },
@@ -321,25 +141,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '태그 매핑 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_SUCCESS, {
-                  list: [
-                    {
-                      tagNo: 1,
-                      tagNm: 'JavaScript',
-                      pstNo: 1,
-                      pstTitle: 'JavaScript 기초',
-                      createdAt: '2024-01-01T00:00:00.000Z',
-                    },
-                  ],
-                  total: 1,
-                  page: 1,
-                  limit: 10,
-                }),
+                summary: '태그별 사용 추이 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagUsageTrend(), ]),
               },
               error: {
-                summary: '태그 매핑 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_ERROR),
+                summary: '태그별 사용 추이 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -351,24 +158,61 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // GET /admin/tags/mapping/:pstNo/:tagNo - 특정 태그 매핑 조회
+  // GET /admin/tags/analyze/unused - 미사용 태그
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/tags/mapping/{pstNo}/{tagNo}',
-    summary: '🔍 특정 태그 매핑 조회',
-    description: 'ADMIN 권한으로 특정 포스트-태그 매핑을 조회합니다.',
+    path: '/admin/tags/analyze/unused',
+    summary: '📊 미사용 태그 목록',
+    description: '관리자가 미사용 태그 목록을 조회합니다.',
+    tags: [ 'admin-tags', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '미사용 태그 목록 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.unusedTag(), ]),
+              },
+              error: {
+                summary: '미사용 태그 목록 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // ========================================================
+  // 구독 분석 (3개)
+  // ========================================================
+
+  // GET /admin/tags/analyze/top-subscribers - TOP N 구독자
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/tags/analyze/top-subscribers',
+    summary: '📊 태그별 구독자 수 TOP N',
+    description: '관리자가 태그별 구독자 수 TOP N을 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      params: z.object({
-        pstNo: z.coerce.number().int().positive().openapi({
-          description: '포스트 번호',
-          example: 1,
-        }),
-        tagNo: z.coerce.number().int().positive().openapi({
-          description: '태그 번호',
-          example: 1,
-        }),
+      query: z.object({
+        limit: z.coerce
+          .number()
+          .int()
+          .positive()
+          .openapi({
+            description: '상위 N개',
+            example: 10,
+          }),
       }),
     },
     responses: {
@@ -379,22 +223,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '태그 매핑 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_SUCCESS, {
-                  tagNo: 1,
-                  tagNm: 'JavaScript',
-                  pstNo: 1,
-                  pstTitle: 'JavaScript 기초',
-                  createdAt: '2024-01-01T00:00:00.000Z',
-                }),
-              },
-              notFound: {
-                summary: '태그 매핑을 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
+                summary: '태그별 구독자 수 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.topTagsBySubscriber(), ]),
               },
               error: {
-                summary: '태그 매핑 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_SEARCH_ERROR),
+                summary: '태그별 구독자 수 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -406,19 +240,19 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/mapping - 태그 매핑 추가
+  // POST /admin/tags/analyze/subscriber-growth - 구독자 성장률
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/tags/mapping',
-    summary: '➕ 태그 매핑 추가',
-    description: 'ADMIN 권한으로 포스트에 태그를 매핑합니다.',
+    path: '/admin/tags/analyze/subscriber-growth',
+    summary: '📊 태그별 구독자 성장률',
+    description: '관리자가 태그별 구독자 성장률을 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
         content: {
           'application/json': {
-            schema: createPstTagMpngSchema,
+            schema: analyzeStatSchema,
           },
         },
       },
@@ -431,22 +265,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '태그 매핑 추가 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_CREATE_SUCCESS, {
-                  tagNo: 1,
-                  tagNm: 'JavaScript',
-                  pstNo: 1,
-                  pstTitle: 'JavaScript 기초',
-                  createdAt: '2024-01-01T00:00:00.000Z',
-                }),
-              },
-              conflict: {
-                summary: '이미 존재하는 태그 매핑',
-                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS),
+                summary: '태그별 구독자 성장률 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagSubscriberGrowthRate(), ]),
               },
               error: {
-                summary: '태그 매핑 추가 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_CREATE_ERROR),
+                summary: '태그별 구독자 성장률 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -458,19 +282,89 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/mapping/multiple - 다수 태그 매핑 추가
+  // GET /admin/tags/analyze/no-subscribers - 구독자 없는 태그
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/tags/analyze/no-subscribers',
+    summary: '📊 구독자 없는 태그 목록',
+    description: '관리자가 구독자 없는 태그 목록을 조회합니다.',
+    tags: [ 'admin-tags', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '구독자 없는 태그 목록 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagWithoutSubscribers(), ]),
+              },
+              error: {
+                summary: '구독자 없는 태그 목록 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // ========================================================
+  // 효율성 분석 (3개)
+  // ========================================================
+
+  // GET /admin/tags/analyze/efficiency - 사용 효율성
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/tags/analyze/efficiency',
+    summary: '📊 태그별 사용 효율성',
+    description: '관리자가 태그별 사용 효율성을 조회합니다.',
+    tags: [ 'admin-tags', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '태그별 사용 효율성 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagUsageEfficiency(), ]),
+              },
+              error: {
+                summary: '태그별 사용 효율성 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/tags/analyze/frequency - 평균 사용 빈도
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/tags/mapping/multiple',
-    summary: '➕ 다수 태그 매핑 추가',
-    description: 'ADMIN 권한으로 다수 포스트-태그 매핑을 일괄 추가합니다.',
+    path: '/admin/tags/analyze/frequency',
+    summary: '📊 태그별 평균 사용 빈도',
+    description: '관리자가 태그별 평균 사용 빈도를 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
       body: {
         content: {
           'application/json': {
-            schema: z.array(createPstTagMpngSchema),
+            schema: analyzeStatSchema,
           },
         },
       },
@@ -483,20 +377,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '다수 태그 매핑 추가 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_CREATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
-              },
-              conflict: {
-                summary: '이미 존재하는 태그 매핑',
-                value: createError('CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS),
+                summary: '태그별 평균 사용 빈도 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagAverageUsageFrequency(), ]),
               },
               error: {
-                summary: '다수 태그 매핑 추가 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_CREATE_ERROR),
+                summary: '태그별 평균 사용 빈도 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -508,23 +394,14 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // DELETE /admin/tags/mapping - 태그 매핑 삭제
+  // GET /admin/tags/analyze/lifecycle - 생명주기
   openApiRegistry.registerPath({
-    method: 'delete',
-    path: '/admin/tags/mapping',
-    summary: '🗑️ 태그 매핑 삭제',
-    description: 'ADMIN 권한으로 포스트-태그 매핑을 삭제합니다.',
+    method: 'get',
+    path: '/admin/tags/analyze/lifecycle',
+    summary: '📊 태그 생명주기 분석',
+    description: '관리자가 태그 생명주기 분석을 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: deletePstTagMpngSchema,
-          },
-        },
-      },
-    },
     responses: {
       200: {
         description: '응답',
@@ -533,16 +410,12 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '태그 매핑 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_DELETE_SUCCESS, true),
-              },
-              notFound: {
-                summary: '태그 매핑을 찾을 수 없음 (Repository)',
-                value: createError('NOT_FOUND', MESSAGE.TAG.ADMIN.NOT_FOUND),
+                summary: '태그 생명주기 분석 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagLifecycle(), ]),
               },
               error: {
-                summary: '태그 매핑 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_DELETE_ERROR),
+                summary: '태그 생명주기 분석 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -554,23 +427,18 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // DELETE /admin/tags/mapping/multiple - 다수 태그 매핑 삭제
+  // ========================================================
+  // 관리 통계 (3개)
+  // ========================================================
+
+  // GET /admin/tags/analyze/status-distribution - 상태별 분포
   openApiRegistry.registerPath({
-    method: 'delete',
-    path: '/admin/tags/mapping/multiple',
-    summary: '🗑️ 다수 태그 매핑 삭제',
-    description: 'ADMIN 권한으로 다수 포스트-태그 매핑을 일괄 삭제합니다.',
+    method: 'get',
+    path: '/admin/tags/analyze/status-distribution',
+    summary: '📊 태그 상태별 분포',
+    description: '관리자가 태그 상태별 분포를 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: deletePstTagMpngSchema,
-          },
-        },
-      },
-    },
     responses: {
       200: {
         description: '응답',
@@ -579,16 +447,78 @@ export const registerAdminTagsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '다수 태그 매핑 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.MAPPING_DELETE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+                summary: '태그 상태별 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagStatusDistribution(), ]),
               },
               error: {
-                summary: '다수 태그 매핑 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.MAPPING_DELETE_ERROR),
+                summary: '태그 상태별 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/tags/analyze/creator-stats - 생성자별 통계
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/tags/analyze/creator-stats',
+    summary: '📊 태그 생성자별 통계',
+    description: '관리자가 태그 생성자별 통계를 조회합니다.',
+    tags: [ 'admin-tags', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '태그 생성자별 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagCreatorStat(), ]),
+              },
+              error: {
+                summary: '태그 생성자별 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/tags/analyze/cleanup - 정리 권장 목록
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/tags/analyze/cleanup',
+    summary: '📊 태그 정리 권장 목록',
+    description: '관리자가 태그 정리 권장 목록을 조회합니다.',
+    tags: [ 'admin-tags', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '태그 정리 권장 목록 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagCleanupRecommendation(), ]),
+              },
+              error: {
+                summary: '태그 정리 권장 목록 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

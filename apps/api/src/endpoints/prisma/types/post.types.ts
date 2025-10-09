@@ -67,3 +67,33 @@ export type AverageViewStatItemType = {
   dateEnd: string;
   avgViewCount: number;
 };
+
+// 게시글당 평균 북마크 수 통계
+export type AverageBookmarkStatItemType = {
+  dateStart: string;
+  dateEnd: string;
+  avgBookmarkCount: number;
+};
+
+// 인기 게시글 TOP N (조회수 기준)
+export type TopPopularPostItemType = {
+  pstNo: number;
+  title: string;
+  viewCount: number;
+  publishDate: string;
+};
+
+// 댓글 많은 게시글 TOP N
+export type TopCommentPostItemType = {
+  pstNo: number;
+  title: string;
+  commentCount: number;
+  publishDate: string;
+};
+
+// 게시글 상태 비율
+export type PostStatusRatioItemType = {
+  status: 'EMPTY' | 'WRITING' | 'FINISHED';
+  count: number;
+  ratio: number;
+};

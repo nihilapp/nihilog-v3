@@ -79,3 +79,23 @@ export const commonSchema = z.object({
       example: '2024-01-01T00:00:00.000Z',
     }),
 });
+
+// 게시글 조회수 통계 스키마
+export const analyzeStatSchema = z.object({
+  mode: z.enum([ 'day', 'week', 'month', 'year', ])
+    .default('day')
+    .openapi({
+      description: '모드 (day: 일간, week: 주간, month: 월간, year: 연간)',
+      example: 'day',
+    }),
+  startDt: z.string()
+    .openapi({
+      description: '시작 날짜',
+      example: '2024-01-01',
+    }),
+  endDt: z.string()
+    .openapi({
+      description: '종료 날짜',
+      example: '2024-01-01',
+    }),
+});

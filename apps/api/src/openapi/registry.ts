@@ -5,6 +5,7 @@ import {
   // 공통 스키마
   commonSchema,
   baseSearchSchema,
+  analyzeStatSchema,
 
   // 사용자 관련 스키마
   userRoleSchema,
@@ -26,7 +27,6 @@ import {
   updatePostSchema,
   deletePostSchema,
   searchPostSchema,
-  viewStatSchema,
   postBookmarkSchema,
   createPostBookmarkSchema,
   deletePostBookmarkSchema,
@@ -92,6 +92,7 @@ export const registerAllSchemas = () => {
   // 공통 스키마 등록
   openApiRegistry.register('CommonSchema', commonSchema);
   openApiRegistry.register('BaseSearch', baseSearchSchema);
+  openApiRegistry.register('AnalyzeStat', analyzeStatSchema);
 
   // 사용자 관련 스키마 등록
   openApiRegistry.register('UserRole', userRoleSchema);
@@ -113,7 +114,6 @@ export const registerAllSchemas = () => {
   openApiRegistry.register('UpdatePost', updatePostSchema);
   openApiRegistry.register('DeletePost', deletePostSchema);
   openApiRegistry.register('SearchPost', searchPostSchema);
-  openApiRegistry.register('ViewStat', viewStatSchema);
   openApiRegistry.register('PostBookmark', postBookmarkSchema);
   openApiRegistry.register('CreatePostBookmark', createPostBookmarkSchema);
   openApiRegistry.register('DeletePostBookmark', deletePostBookmarkSchema);

@@ -1,11 +1,31 @@
 import { Inject, Injectable } from '@nestjs/common';
-import type { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, CreateTagDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto, SearchTagDto, UpdateTagDto } from '@/dto/tag.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPstTagMpngListItemType, SelectPstTagMpngType, SelectTagInfoListItemType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type {
+  SelectPstTagMpngListItemType,
+  SelectPstTagMpngType,
+  SelectTagInfoListItemType,
+  SelectTagInfoType,
+  AnalyzeTagStatItemType,
+  TopUsedTagItemType,
+  TagUsageTrendItemType,
+  UnusedTagItemType,
+  TopTagsBySubscriberItemType,
+  TagSubscriberGrowthRateItemType,
+  TagWithoutSubscribersItemType,
+  TagUsageEfficiencyItemType,
+  TagAverageUsageFrequencyItemType,
+  TagLifecycleItemType,
+  TagStatusDistributionItemType,
+  TagCreatorStatItemType,
+  TagCleanupRecommendationItemType
+} from '@/endpoints/prisma/types/tag.types';
+import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -15,6 +35,646 @@ import { timeToString } from '@/utils/timeHelper';
 export class TagRepository {
   constructor(@Inject(PRISMA)
   private readonly prisma: PrismaClient) { }
+
+  // ========================================================
+  // 태그 통계 관련 메서드
+  // ========================================================
+
+  /**
+   * @description 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
+   * @param analyzeStatData 분석 통계 데이터
+   * @param tagNo 태그 번호 (선택적, 없으면 전체/있으면 해당 태그만)
+   */
+  async getAnalyzeTagData(analyzeStatData: AnalyzeStatDto, tagNo?: number): Promise<RepoResponseType<AnalyzeTagStatItemType[]> | null> {
+    try {
+      const { mode, startDt, endDt, } = analyzeStatData;
+
+      const analyzeData = await this.prisma.$queryRaw<AnalyzeTagStatItemType[]>`
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+
+          -- 태그 생성/삭제 통계
+          COALESCE(SUM(
+            CASE WHEN t.crt_dt >= b.date_start AND t.crt_dt < b.date_end
+              ${tagNo
+                ? Prisma.sql`AND t.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "newTagCount",
+
+          COALESCE(SUM(
+            CASE WHEN t.del_dt >= b.date_start AND t.del_dt < b.date_end
+              ${tagNo
+                ? Prisma.sql`AND t.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "deleteTagCount",
+
+          COALESCE(SUM(
+            CASE WHEN t.use_yn = 'Y' AND t.del_yn = 'N'
+              ${tagNo
+                ? Prisma.sql`AND t.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "activeTagCount",
+
+          -- 태그 사용 통계
+          COALESCE(SUM(
+            CASE WHEN ptm.crt_dt >= b.date_start AND ptm.crt_dt < b.date_end
+              ${tagNo
+                ? Prisma.sql`AND ptm.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "tagMappingCount",
+
+          COALESCE(SUM(
+            CASE WHEN ptm.del_dt >= b.date_start AND ptm.del_dt < b.date_end
+              ${tagNo
+                ? Prisma.sql`AND ptm.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "tagMappingDeleteCount",
+
+          COALESCE(SUM(
+            CASE WHEN ptm.use_yn = 'Y' AND ptm.del_yn = 'N'
+              ${tagNo
+                ? Prisma.sql`AND ptm.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "activeTagMappingCount",
+
+          -- 태그 구독 통계
+          COALESCE(SUM(
+            CASE WHEN tsm.crt_dt >= b.date_start AND tsm.crt_dt < b.date_end
+              ${tagNo
+                ? Prisma.sql`AND tsm.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "subscriberIncreaseCount",
+
+          COALESCE(SUM(
+            CASE WHEN tsm.del_dt >= b.date_start AND tsm.del_dt < b.date_end
+              ${tagNo
+                ? Prisma.sql`AND tsm.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "subscriberDecreaseCount",
+
+          COALESCE(SUM(
+            CASE WHEN tsm.use_yn = 'Y' AND tsm.del_yn = 'N'
+              ${tagNo
+                ? Prisma.sql`AND tsm.tag_no = ${tagNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "activeSubscriberCount"
+
+        FROM bucket b
+        LEFT JOIN tag_info t ON 1=1
+        LEFT JOIN pst_tag_mpng ptm ON 1=1
+        LEFT JOIN tag_sbcr_mpng tsm ON 1=1
+        GROUP BY b.date_start, b.date_end
+        ORDER BY b.date_start
+      `;
+
+      return prismaResponse(true, analyzeData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그별 사용 횟수 TOP N
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   */
+  async getTopUsedTagsByCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopUsedTagItemType[]> | null> {
+    try {
+      const whereCondition = analyzeStatData
+        ? {
+          crtDt: {
+            gte: analyzeStatData.startDt,
+            lte: analyzeStatData.endDt,
+          },
+        }
+        : {};
+
+      const topUsedTags = await this.prisma.pstTagMpng.groupBy({
+        by: [ 'tagNo', ],
+        where: {
+          ...whereCondition,
+          useYn: 'Y',
+          delYn: 'N',
+        },
+        _count: {
+          tagNo: true,
+        },
+        _max: {
+          crtDt: true,
+        },
+        orderBy: {
+          _count: {
+            tagNo: 'desc',
+          },
+        },
+        take: limit,
+      });
+
+      const result = await Promise.all(topUsedTags.map(async (item) => {
+        const tag = await this.prisma.tagInfo.findUnique({
+          where: { tagNo: item.tagNo, },
+          select: { tagNm: true, },
+        });
+
+        const subscriberCount = await this.prisma.tagSbcrMpng.count({
+          where: {
+            tagNo: item.tagNo,
+            useYn: 'Y',
+            delYn: 'N',
+          },
+        });
+
+        return {
+          tagNo: item.tagNo,
+          tagNm: tag?.tagNm || '',
+          usageCount: item._count.tagNo,
+          subscriberCount,
+          lastUsedDate: item._max.crtDt || '',
+        };
+      }));
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그별 사용 추이
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getTagUsageTrend(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TagUsageTrendItemType[]> | null> {
+    try {
+      const { mode, startDt, endDt, } = analyzeStatData;
+
+      const usageTrend = await this.prisma.$queryRaw<TagUsageTrendItemType[]>`
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+          t.tag_no AS "tagNo",
+          t.tag_nm AS "tagNm",
+          COALESCE(COUNT(ptm.tag_map_no), 0) AS "usageCount"
+        FROM bucket b
+        CROSS JOIN tag_info t
+        LEFT JOIN pst_tag_mpng ptm ON ptm.tag_no = t.tag_no
+          AND ptm.crt_dt >= b.date_start
+          AND ptm.crt_dt < b.date_end
+          AND ptm.use_yn = 'Y'
+          AND ptm.del_yn = 'N'
+        WHERE t.use_yn = 'Y' AND t.del_yn = 'N'
+        GROUP BY b.date_start, b.date_end, t.tag_no, t.tag_nm
+        HAVING COUNT(ptm.tag_map_no) > 0
+        ORDER BY b.date_start, t.tag_no
+      `;
+
+      return prismaResponse(true, usageTrend);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 미사용 태그 목록
+   */
+  async getUnusedTagsList(): Promise<RepoResponseType<UnusedTagItemType[]> | null> {
+    try {
+      const unusedTags = await this.prisma.tagInfo.findMany({
+        where: {
+          useYn: 'Y',
+          delYn: 'N',
+          posts: {
+            none: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+          },
+        },
+        select: {
+          tagNo: true,
+          tagNm: true,
+          crtDt: true,
+        },
+        orderBy: {
+          crtDt: 'desc',
+        },
+      });
+
+      const result = unusedTags.map((tag) => {
+        const createDate = new Date(tag.crtDt);
+        const now = new Date();
+        const daysSinceCreation = Math.floor((now.getTime() - createDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        return {
+          tagNo: tag.tagNo,
+          tagNm: tag.tagNm,
+          createDate: tag.crtDt,
+          daysSinceCreation,
+        };
+      });
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그별 구독자 수 TOP N
+   * @param limit 상위 N개
+   */
+  async getTopTagsBySubscriberCount(limit: number): Promise<RepoResponseType<TopTagsBySubscriberItemType[]> | null> {
+    try {
+      const topSubscriberTags = await this.prisma.tagSbcrMpng.groupBy({
+        by: [ 'tagNo', ],
+        where: {
+          useYn: 'Y',
+          delYn: 'N',
+        },
+        _count: {
+          tagNo: true,
+        },
+        _max: {
+          crtDt: true,
+        },
+        orderBy: {
+          _count: {
+            tagNo: 'desc',
+          },
+        },
+        take: limit,
+      });
+
+      const result = await Promise.all(topSubscriberTags.map(async (item) => {
+        const tag = await this.prisma.tagInfo.findUnique({
+          where: { tagNo: item.tagNo, },
+          select: { tagNm: true, },
+        });
+
+        const usageCount = await this.prisma.pstTagMpng.count({
+          where: {
+            tagNo: item.tagNo,
+            useYn: 'Y',
+            delYn: 'N',
+          },
+        });
+
+        return {
+          tagNo: item.tagNo,
+          tagNm: tag?.tagNm || '',
+          subscriberCount: item._count.tagNo,
+          usageCount,
+          lastSubscriberDate: item._max.crtDt || '',
+        };
+      }));
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그별 구독자 성장률
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getTagSubscriberGrowthRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TagSubscriberGrowthRateItemType[]> | null> {
+    try {
+      const { mode, startDt, endDt, } = analyzeStatData;
+
+      const growthRate = await this.prisma.$queryRaw<TagSubscriberGrowthRateItemType[]>`
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+          t.tag_no AS "tagNo",
+          t.tag_nm AS "tagNm",
+          COALESCE(COUNT(tsm.sbcr_map_no), 0) AS "subscriberCount",
+          COALESCE(
+            CASE
+              WHEN LAG(COUNT(tsm.sbcr_map_no)) OVER (PARTITION BY t.tag_no ORDER BY b.date_start) > 0
+              THEN (COUNT(tsm.sbcr_map_no) - LAG(COUNT(tsm.sbcr_map_no)) OVER (PARTITION BY t.tag_no ORDER BY b.date_start))::FLOAT /
+                   LAG(COUNT(tsm.sbcr_map_no)) OVER (PARTITION BY t.tag_no ORDER BY b.date_start)
+              ELSE 0
+            END, 0
+          ) AS "growthRate",
+          COALESCE(LAG(COUNT(tsm.sbcr_map_no)) OVER (PARTITION BY t.tag_no ORDER BY b.date_start), 0) AS "previousSubscriberCount"
+        FROM bucket b
+        CROSS JOIN tag_info t
+        LEFT JOIN tag_sbcr_mpng tsm ON tsm.tag_no = t.tag_no
+          AND tsm.crt_dt < b.date_end
+          AND tsm.use_yn = 'Y'
+          AND tsm.del_yn = 'N'
+        WHERE t.use_yn = 'Y' AND t.del_yn = 'N'
+        GROUP BY b.date_start, b.date_end, t.tag_no, t.tag_nm
+        ORDER BY b.date_start, t.tag_no
+      `;
+
+      return prismaResponse(true, growthRate);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 구독자 없는 태그 목록
+   */
+  async getTagsWithoutSubscribers(): Promise<RepoResponseType<TagWithoutSubscribersItemType[]> | null> {
+    try {
+      const tagsWithoutSubscribers = await this.prisma.tagInfo.findMany({
+        where: {
+          useYn: 'Y',
+          delYn: 'N',
+          subscribers: {
+            none: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+          },
+        },
+        select: {
+          tagNo: true,
+          tagNm: true,
+          crtDt: true,
+        },
+        orderBy: {
+          crtDt: 'desc',
+        },
+      });
+
+      const result = await Promise.all(tagsWithoutSubscribers.map(async (tag) => {
+        const usageCount = await this.prisma.pstTagMpng.count({
+          where: {
+            tagNo: tag.tagNo,
+            useYn: 'Y',
+            delYn: 'N',
+          },
+        });
+
+        return {
+          tagNo: tag.tagNo,
+          tagNm: tag.tagNm,
+          usageCount,
+          createDate: tag.crtDt,
+        };
+      }));
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그별 사용 효율성
+   */
+  async getTagUsageEfficiency(): Promise<RepoResponseType<TagUsageEfficiencyItemType[]> | null> {
+    try {
+      const tags = await this.prisma.tagInfo.findMany({
+        where: {
+          useYn: 'Y',
+          delYn: 'N',
+        },
+        select: {
+          tagNo: true,
+          tagNm: true,
+        },
+      });
+
+      const result = await Promise.all(tags.map(async (tag) => {
+        const [ usageCount, subscriberCount, ] = await Promise.all([
+          this.prisma.pstTagMpng.count({
+            where: {
+              tagNo: tag.tagNo,
+              useYn: 'Y',
+              delYn: 'N',
+            },
+          }),
+          this.prisma.tagSbcrMpng.count({
+            where: {
+              tagNo: tag.tagNo,
+              useYn: 'Y',
+              delYn: 'N',
+            },
+          }),
+        ]);
+
+        const efficiencyRatio = subscriberCount > 0
+          ? usageCount / subscriberCount
+          : 0;
+
+        return {
+          tagNo: tag.tagNo,
+          tagNm: tag.tagNm,
+          usageCount,
+          subscriberCount,
+          efficiencyRatio,
+        };
+      }));
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그별 평균 사용 빈도
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getTagAverageUsageFrequency(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TagAverageUsageFrequencyItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const frequencyData = await this.prisma.$queryRaw<TagAverageUsageFrequencyItemType[]>`
+        SELECT
+          t.tag_no AS "tagNo",
+          t.tag_nm AS "tagNm",
+          COUNT(ptm.tag_map_no) AS "totalUsageCount",
+          EXTRACT(DAYS FROM (${endDt}::timestamp - ${startDt}::timestamp)) + 1 AS "activeDays",
+          CASE
+            WHEN EXTRACT(DAYS FROM (${endDt}::timestamp - ${startDt}::timestamp)) + 1 > 0
+            THEN COUNT(ptm.tag_map_no)::FLOAT / (EXTRACT(DAYS FROM (${endDt}::timestamp - ${startDt}::timestamp)) + 1)
+            ELSE 0
+          END AS "averageFrequency"
+        FROM tag_info t
+        LEFT JOIN pst_tag_mpng ptm ON ptm.tag_no = t.tag_no
+          AND ptm.crt_dt >= ${startDt}::timestamp
+          AND ptm.crt_dt <= ${endDt}::timestamp
+          AND ptm.use_yn = 'Y'
+          AND ptm.del_yn = 'N'
+        WHERE t.use_yn = 'Y' AND t.del_yn = 'N'
+        GROUP BY t.tag_no, t.tag_nm
+        ORDER BY "averageFrequency" DESC
+      `;
+
+      return prismaResponse(true, frequencyData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그 생명주기 분석
+   */
+  async getTagLifecycleAnalysis(): Promise<RepoResponseType<TagLifecycleItemType[]> | null> {
+    try {
+      const lifecycleData = await this.prisma.$queryRaw<TagLifecycleItemType[]>`
+        SELECT
+          t.tag_no AS "tagNo",
+          t.tag_nm AS "tagNm",
+          t.crt_dt AS "createDate",
+          MAX(ptm.crt_dt) AS "lastUsedDate",
+          CASE
+            WHEN MAX(ptm.crt_dt) IS NOT NULL
+            THEN EXTRACT(DAYS FROM (MAX(ptm.crt_dt)::timestamp - t.crt_dt::timestamp))
+            ELSE NULL
+          END AS "lifecycleDays",
+          CASE
+            WHEN t.use_yn = 'Y' AND t.del_yn = 'N' THEN true
+            ELSE false
+          END AS "isActive"
+        FROM tag_info t
+        LEFT JOIN pst_tag_mpng ptm ON ptm.tag_no = t.tag_no
+          AND ptm.use_yn = 'Y'
+          AND ptm.del_yn = 'N'
+        GROUP BY t.tag_no, t.tag_nm, t.crt_dt, t.use_yn, t.del_yn
+        ORDER BY t.crt_dt DESC
+      `;
+
+      return prismaResponse(true, lifecycleData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그 상태별 분포
+   */
+  async getTagStatusDistribution(): Promise<RepoResponseType<TagStatusDistributionItemType[]> | null> {
+    try {
+      const statusDistribution = await this.prisma.$queryRaw<TagStatusDistributionItemType[]>`
+        WITH status_counts AS (
+          SELECT
+            CASE
+              WHEN use_yn = 'Y' AND del_yn = 'N' THEN 'ACTIVE'
+              WHEN use_yn = 'N' AND del_yn = 'N' THEN 'INACTIVE'
+              WHEN del_yn = 'Y' THEN 'DELETED'
+            END AS status,
+            COUNT(*) AS count
+          FROM tag_info
+          GROUP BY
+            CASE
+              WHEN use_yn = 'Y' AND del_yn = 'N' THEN 'ACTIVE'
+              WHEN use_yn = 'N' AND del_yn = 'N' THEN 'INACTIVE'
+              WHEN del_yn = 'Y' THEN 'DELETED'
+            END
+        ),
+        total_count AS (
+          SELECT SUM(count) AS total FROM status_counts
+        )
+        SELECT
+          sc.status,
+          sc.count,
+          ROUND(sc.count::FLOAT / tc.total * 100, 2) / 100 AS ratio
+        FROM status_counts sc
+        CROSS JOIN total_count tc
+        ORDER BY sc.count DESC
+      `;
+
+      return prismaResponse(true, statusDistribution);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그 생성자별 통계
+   */
+  async getTagCreatorStatistics(): Promise<RepoResponseType<TagCreatorStatItemType[]> | null> {
+    try {
+      const creatorStats = await this.prisma.$queryRaw<TagCreatorStatItemType[]>`
+        SELECT
+          t.crt_no AS "creatorNo",
+          COALESCE(u.user_nm, 'Unknown') AS "creatorName",
+          COUNT(t.tag_no) AS "tagCount",
+          COUNT(CASE WHEN t.use_yn = 'Y' AND t.del_yn = 'N' THEN 1 END) AS "activeTagCount",
+          MAX(t.crt_dt) AS "lastCreateDate"
+        FROM tag_info t
+        LEFT JOIN user_info u ON u.user_no = t.crt_no
+        GROUP BY t.crt_no, u.user_nm
+        ORDER BY "tagCount" DESC
+      `;
+
+      return prismaResponse(true, creatorStats);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 태그 정리 필요도
+   */
+  async getTagCleanupRecommendations(): Promise<RepoResponseType<TagCleanupRecommendationItemType[]> | null> {
+    try {
+      const cleanupRecommendations = await this.prisma.$queryRaw<TagCleanupRecommendationItemType[]>`
+        SELECT
+          t.tag_no AS "tagNo",
+          t.tag_nm AS "tagNm",
+          t.crt_dt AS "createDate",
+          MAX(ptm.crt_dt) AS "lastUsedDate",
+          CASE
+            WHEN MAX(ptm.crt_dt) IS NOT NULL
+            THEN EXTRACT(DAYS FROM (NOW() - MAX(ptm.crt_dt)::timestamp))
+            ELSE EXTRACT(DAYS FROM (NOW() - t.crt_dt::timestamp))
+          END AS "daysUnused",
+          CASE
+            WHEN MAX(ptm.crt_dt) IS NULL THEN 'DELETE'
+            WHEN EXTRACT(DAYS FROM (NOW() - MAX(ptm.crt_dt)::timestamp)) > 365 THEN 'DELETE'
+            WHEN EXTRACT(DAYS FROM (NOW() - MAX(ptm.crt_dt)::timestamp)) > 180 THEN 'ARCHIVE'
+            ELSE 'KEEP'
+          END AS recommendation
+        FROM tag_info t
+        LEFT JOIN pst_tag_mpng ptm ON ptm.tag_no = t.tag_no
+          AND ptm.use_yn = 'Y'
+          AND ptm.del_yn = 'N'
+        WHERE t.use_yn = 'Y' AND t.del_yn = 'N'
+        GROUP BY t.tag_no, t.tag_nm, t.crt_dt
+        HAVING
+          MAX(ptm.crt_dt) IS NULL
+          OR EXTRACT(DAYS FROM (NOW() - MAX(ptm.crt_dt)::timestamp)) > 180
+        ORDER BY "daysUnused" DESC
+      `;
+
+      return prismaResponse(true, cleanupRecommendations);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
 
   /**
    * @description 태그 목록 조회

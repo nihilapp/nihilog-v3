@@ -1,13 +1,14 @@
-import { Body, Controller, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Query, Req, UseGuards } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, ResponseDto } from '@/dto';
-import { CreatePostDto, DeletePostDto, UpdatePostDto, AnalyzeStatDto } from '@/dto/post.dto';
+import { AnalyzeStatDto } from '@/dto/common.dto';
+import { CreatePostDto, DeletePostDto, UpdatePostDto } from '@/dto/post.dto';
 import { AdminPostsService } from '@/endpoints/admin/posts/admin-posts.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType } from '@/endpoints/prisma/types/post.types';
+import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType, AverageBookmarkStatItemType, TopPopularPostItemType, TopCommentPostItemType, PostStatusRatioItemType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/posts')
@@ -21,7 +22,7 @@ export class AdminPostsController {
    * @param pstNo 게시글 번호 (쿼리 파라미터, 선택사항)
    */
   @Endpoint({
-    endpoint: '/analyze',
+    endpoint: '/analyze/overview',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -59,7 +60,7 @@ export class AdminPostsController {
    * @param pstNo 게시글 번호 (선택사항)
    */
   @Endpoint({
-    endpoint: '/shares/:pstNo?',
+    endpoint: '/analyze/shares',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -68,7 +69,7 @@ export class AdminPostsController {
   })
   async adminGetPostShareStatsByPlatform(
     @Req() req: AuthRequest,
-    @Param('pstNo') pstNo: number | undefined,
+    @Query('pstNo') pstNo: number | undefined,
     @Body() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<SharePlatformStatItemType[]>> {
     if (req.errorResponse) {
@@ -96,7 +97,7 @@ export class AdminPostsController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/average-views',
+    endpoint: '/analyze/average-views',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -112,6 +113,154 @@ export class AdminPostsController {
     }
 
     const result = await this.postsService.getAverageForPostView(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 관리자 - 게시글당 평균 북마크 수 조회 (시간대별)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/average-bookmarks',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetAverageBookmarkCountPerPost(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData: AnalyzeStatDto
+  ): Promise<ResponseDto<AverageBookmarkStatItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.postsService.getAverageBookmarkCountPerPost(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 관리자 - 인기 게시글 TOP N (조회수 기준)
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-popular',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTopPopularPostsByViewCount(
+    @Req() req: AuthRequest,
+    @Body() body: { limit: number; analyzeStatData?: AnalyzeStatDto }
+  ): Promise<ResponseDto<TopPopularPostItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const { limit, analyzeStatData, } = body;
+    const result = await this.postsService.getTopPopularPostsByViewCount(limit, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 관리자 - 댓글 많은 게시글 TOP N
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-comments',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTopPostsByCommentCount(
+    @Req() req: AuthRequest,
+    @Body() body: { limit: number; analyzeStatData?: AnalyzeStatDto }
+  ): Promise<ResponseDto<TopCommentPostItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const { limit, analyzeStatData, } = body;
+    const result = await this.postsService.getTopPostsByCommentCount(limit, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.POST.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 관리자 - 게시글 상태 비율 조회
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  @Endpoint({
+    endpoint: '/analyze/status-ratio',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetPostStatusRatio(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData?: AnalyzeStatDto
+  ): Promise<ResponseDto<PostStatusRatioItemType[]>> {
+    if (req.errorResponse) {
+      return req.errorResponse;
+    }
+
+    const result = await this.postsService.getPostStatusRatio(analyzeStatData);
 
     if (!result?.success) {
       return createError(
