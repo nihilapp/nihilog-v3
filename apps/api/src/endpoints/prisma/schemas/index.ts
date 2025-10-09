@@ -47,7 +47,7 @@ export {
   updatePostSchema,
   deletePostSchema,
   searchPostSchema,
-  viewStatSchema,
+  analyzeStatSchema,
   postBookmarkSchema,
   createPostBookmarkSchema,
   deletePostBookmarkSchema,

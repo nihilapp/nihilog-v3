@@ -1,13 +1,13 @@
-import { Body, Controller, Param, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Query, Req, UseGuards } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, ResponseDto } from '@/dto';
-import { CreatePostDto, DeletePostDto, UpdatePostDto, ViewStatDto } from '@/dto/post.dto';
+import { CreatePostDto, DeletePostDto, UpdatePostDto, AnalyzeStatDto } from '@/dto/post.dto';
 import { AdminPostsService } from '@/endpoints/admin/posts/admin-posts.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
+import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/posts')
@@ -16,28 +16,28 @@ export class AdminPostsController {
   constructor(private readonly postsService: AdminPostsService) {}
 
   /**
-   * @description 관리자 - 게시글 조회수 통계 조회
-   * @param pstNo 게시글 번호
-   * @param viewStatData 조회수 통계 데이터
+   * @description 관리자 - 게시글 분석 데이터 조회
+   * @param analyzeStatData 분석 통계 데이터
+   * @param pstNo 게시글 번호 (쿼리 파라미터, 선택사항)
    */
   @Endpoint({
-    endpoint: '/:pstNo/views',
+    endpoint: '/analyze',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetPostViewStats(
+  async adminGetAnalyzePostData(
     @Req() req: AuthRequest,
-    @Param('pstNo') pstNo: number,
-    @Body() viewStatData: ViewStatDto
-  ): Promise<ResponseDto<ViewStatItemType[]>> {
+    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query('pstNo') pstNo?: number
+  ): Promise<ResponseDto<AnalyzePostItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.getPostViewStats(pstNo, viewStatData);
+    const result = await this.postsService.getAnalyzePostData(analyzeStatData, pstNo);
 
     if (!result?.success) {
       return createError(
@@ -54,12 +54,12 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 게시글 공유 통계 조회
-   * @param pstNo 게시글 번호
-   * @param viewStatData 공유 통계 데이터
+   * @description 관리자 - 플랫폼별 공유 통계 조회
+   * @param analyzeStatData 분석 통계 데이터
+   * @param pstNo 게시글 번호 (선택사항)
    */
   @Endpoint({
-    endpoint: '/:pstNo/shares',
+    endpoint: '/shares/:pstNo?',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -68,14 +68,14 @@ export class AdminPostsController {
   })
   async adminGetPostShareStatsByPlatform(
     @Req() req: AuthRequest,
-    @Param('pstNo') pstNo: number,
-    @Body() viewStatData: ViewStatDto
+    @Param('pstNo') pstNo: number | undefined,
+    @Body() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<SharePlatformStatItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.getPostShareStatsByPlatform(pstNo, viewStatData);
+    const result = await this.postsService.getPostShareStatsByPlatform(analyzeStatData, pstNo);
 
     if (!result?.success) {
       return createError(
@@ -92,23 +92,26 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 전체 게시글 공유 통계 조회
-   * @param viewStatData 공유 통계 데이터
+   * @description 관리자 - 게시글별 평균 조회수 조회 (시간대별)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/shares',
+    endpoint: '/average-views',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetAllPostShareStatsByPlatform(@Req() req: AuthRequest, @Body() viewStatData: ViewStatDto): Promise<ResponseDto<SharePlatformStatItemType[]>> {
+  async adminGetAverageForPostView(
+    @Req() req: AuthRequest,
+    @Body() analyzeStatData: AnalyzeStatDto
+  ): Promise<ResponseDto<AverageViewStatItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.getAllPostShareStatsByPlatform(viewStatData);
+    const result = await this.postsService.getAverageForPostView(analyzeStatData);
 
     if (!result?.success) {
       return createError(

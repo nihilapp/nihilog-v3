@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import type { SelectCategoryType } from '@/endpoints/prisma/types/category.types';
 import type { SelectCommentType } from '@/endpoints/prisma/types/comment.types';
-import { SelectPostBookmarkType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
+import { SelectPostBookmarkType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType, type AnalyzePostItemType, type AverageViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import type { SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 
@@ -288,14 +288,14 @@ export class CreateExample {
       cmntNo: 1,
       pstNo: 1,
       cmntCntnt: '정말 유용한 정보네요! 감사합니다.',
-      cmntSts: 'ACTIVE',
+      cmntSts: 'PENDING',
       prntCmntNo: null,
       useYn: 'Y',
       delYn: 'N',
       crtNo: 1,
-      crtDt: now.toISO(),
+      crtDt: timeToString(now),
       updtNo: 1,
-      updtDt: now.toISO(),
+      updtDt: timeToString(now),
       delNo: null,
       delDt: null,
       post: {
@@ -307,5 +307,31 @@ export class CreateExample {
         userNo: 1,
       },
     } as SelectCommentType;
+  }
+
+  static analyzePost() {
+    const now = DateTime.now();
+
+    return {
+      dateStart: timeToString(now),
+      dateEnd: timeToString(now),
+      publishCount: 1,
+      updateCount: 1,
+      deleteCount: 1,
+      viewCount: 1,
+      bookmarkCount: 1,
+      shareCount: 1,
+      commentCount: 1,
+    } as AnalyzePostItemType;
+  }
+
+  static averageViewStat() {
+    const now = DateTime.now();
+
+    return {
+      dateStart: timeToString(now),
+      dateEnd: timeToString(now.plus({ days: 1, })),
+      avgViewCount: 15.5,
+    } as AverageViewStatItemType;
   }
 }

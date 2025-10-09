@@ -5,7 +5,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
 import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
-import type { ViewStatDto } from '@/dto/post.dto';
+import type { AnalyzeStatDto } from '@/dto/post.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
@@ -16,9 +16,10 @@ import type {
   SelectPostShareLogType,
   SelectPostViewLogType,
   SharePlatformStatItemType,
-  ViewStatItemType,
-  ViewStatModeType
+  AnalyzePostItemType,
+  AverageViewStatItemType
 } from '@/endpoints/prisma/types/post.types';
+import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -278,45 +279,122 @@ export class PostRepository {
   }
 
   // ===== 사용자 상호작용 기능 =====
-
   /**
-   * @description 게시글 조회수 통계 조회
+   * @description 게시글 분석 데이터 조회
    * @param pstNo 게시글 번호
-   * @param viewStatData 조회 통계 데이터
    */
-  async getPostViewStats(
-    pstNo: number,
-    viewStatData: ViewStatDto
-  ): Promise<RepoResponseType<ViewStatItemType[]> | null> {
+  async getAnalyzePostData(analyzeStatData: AnalyzeStatDto, pstNo?: number): Promise<RepoResponseType<AnalyzePostItemType[]> | null> {
     try {
-      const { mode, startDt, endDt, } = viewStatData;
+      const { mode, startDt, endDt, } = analyzeStatData;
 
-      // mode를 PostgreSQL date_trunc 단위로 변환
-      const truncUnitMap: Record<ViewStatModeType, string> = {
-        daily: 'day',
-        weekly: 'week',
-        monthly: 'month',
-        yearly: 'year',
-      };
-      const truncUnit = truncUnitMap[mode];
+      const analyzeData = await this.prisma.$queryRaw<AnalyzePostItemType[]>`
+        with ${createDateSeries(startDt, endDt, mode)}
+        select
+          b.date_start as "dateStart",
+          b.date_end as "dateEnd",
 
-      const stats = await this.prisma.$queryRaw<ViewStatItemType[]>`
-        SELECT
-          date_trunc(${truncUnit}, view_dt::timestamptz)::date::text AS date,
-          COUNT(*)::int AS count
-        FROM
-          nihilog.pst_view_log
-        WHERE
-          pst_no = ${pstNo}
-          AND view_dt >= ${startDt}
-          AND view_dt <= ${endDt}
-        GROUP BY
-          date_trunc(${truncUnit}, view_dt::timestamptz)::date
-        ORDER BY
-          date_trunc(${truncUnit}, view_dt::timestamptz)::date
+          -- 1. 게시글 발행 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.pst_info p
+            where
+              case when ${pstNo} is not null
+                then p.pst_no = ${pstNo}
+                else true
+              end
+              and p.publ_dt::timestamptz >= b.date_start
+              and p.publ_dt::timestamptz < b.date_end
+              and p.del_yn = 'N'
+          ) as "publishCount",
+
+          -- 2. 게시글 수정 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.pst_info p
+            where
+              case when ${pstNo} is not null
+                then p.pst_no = ${pstNo}
+                else true
+              end
+              and p.updt_dt::timestamptz >= b.date_start
+              and p.updt_dt::timestamptz < b.date_end
+              and p.del_yn = 'N'
+              and p.updt_dt != p.crt_dt
+          ) as "updateCount",
+
+          -- 3. 게시글 삭제 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.pst_info p
+            where
+              case when ${pstNo} is not null
+                then p.pst_no = ${pstNo}
+                else true
+              end
+              and p.del_dt::timestamptz >= b.date_start
+              and p.del_dt::timestamptz < b.date_end
+              and p.del_yn = 'Y'
+          ) as "deleteCount",
+
+          -- 4. 조회 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.pst_view_log v
+            where
+              case when ${pstNo} is not null
+                then v.pst_no = ${pstNo}
+                else true
+              end
+              and v.view_dt::timestamptz >= b.date_start
+              and v.view_dt::timestamptz < b.date_end
+          ) as "viewCount",
+
+          -- 5. 북마크 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.pst_bkmrk_mpng bm
+            where
+              case when ${pstNo} is not null
+                then bm.pst_no = ${pstNo}
+                else true
+              end
+              and bm.crt_dt::timestamptz >= b.date_start
+              and bm.crt_dt::timestamptz < b.date_end
+              and bm.del_yn = 'N'
+          ) as "bookmarkCount",
+
+          -- 6. 공유 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.pst_shrn_log sl
+            where
+              case when ${pstNo} is not null
+                then sl.pst_no = ${pstNo}
+                else true
+              end
+              and sl.shrn_dt::timestamptz >= b.date_start
+              and sl.shrn_dt::timestamptz < b.date_end
+          ) as "shareCount",
+
+          -- 7. 댓글 수 (서브쿼리)
+          (
+            select count(1)
+            from nihilog.cmnt_info c
+            where
+              case when ${pstNo} is not null
+                then c.pst_no = ${pstNo}
+                else true
+              end
+              and c.crt_dt::timestamptz >= b.date_start
+              and c.crt_dt::timestamptz < b.date_end
+              and c.del_yn = 'N'
+          ) as "commentCount"
+
+        from bucket b
+        order by b.date_start
       `;
 
-      return prismaResponse(true, stats);
+      return prismaResponse(true, analyzeData);
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -324,56 +402,68 @@ export class PostRepository {
   }
 
   /**
-   * @description 특정 게시글의 플랫폼별 공유 통계
-   * @param pstNo 게시글 번호
-   * @param viewStatData 조회 통계 데이터
+   * @description 게시글별 평균 조회수 조회 (시간대별)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getAverageForPostView(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageViewStatItemType[]> | null> {
+    try {
+      const { startDt, endDt, mode, } = analyzeStatData;
+
+      const dataList = await this.prisma.$queryRaw<AverageViewStatItemType[]>`
+        with ${createDateSeries(startDt, endDt, mode)}
+        select
+          b.date_start as "dateStart",
+          b.date_end as "dateEnd",
+          avg(post_view_counts.view_count) as "avgViewCount"
+        from bucket b
+        left join (
+          select
+            date_trunc(${mode}, v.view_dt::timestamptz) as view_date,
+            v.pst_no,
+            count(*) as view_count
+          from nihilog.pst_view_log v
+          where v.view_dt::timestamptz >= ${startDt}::timestamptz
+            and v.view_dt::timestamptz <= ${endDt}::timestamptz
+          group by date_trunc(${mode}, v.view_dt::timestamptz), v.pst_no
+        ) post_view_counts
+          on post_view_counts.view_date = b.date_start
+        group by
+          b.date_start, b.date_end
+        order by
+          b.date_start
+      `;
+
+      return prismaResponse(true, dataList);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 플랫폼별 공유 통계 조회
+   * @param analyzeStatData 분석 통계 데이터
+   * @param pstNo 게시글 번호 (선택사항 - 없으면 전체 게시글)
    */
   async getPostShareStatsByPlatform(
-    pstNo: number,
-    viewStatData: ViewStatDto
+    analyzeStatData: AnalyzeStatDto,
+    pstNo?: number
   ): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
     try {
-      const { startDt, endDt, } = viewStatData;
+      const { startDt, endDt, } = analyzeStatData;
 
       const stats = await this.prisma.$queryRaw<SharePlatformStatItemType[]>`
         SELECT
           shrn_site AS platform,
-          COUNT(*)::int AS count
+          COUNT(1)::int AS count
         FROM
           nihilog.pst_shrn_log
         WHERE
-          pst_no = ${pstNo}
+          case when ${pstNo} is not null
+            then pst_no = ${pstNo}
+            else true
+          end
           AND shrn_dt >= ${startDt}
-          AND shrn_dt <= ${endDt}
-        GROUP BY
-          shrn_site
-        ORDER BY
-          count DESC, platform
-      `;
-
-      return prismaResponse(true, stats);
-    }
-    catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
-    }
-  }
-
-  /**
-   * @description 전체 게시글의 플랫폼별 공유 통계
-   * @param viewStatData 조회 통계 데이터
-   */
-  async getAllPostShareStatsByPlatform(viewStatData: ViewStatDto): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
-    try {
-      const { startDt, endDt, } = viewStatData;
-
-      const stats = await this.prisma.$queryRaw<SharePlatformStatItemType[]>`
-        SELECT
-          shrn_site AS platform,
-          COUNT(*)::int AS count
-        FROM
-          nihilog.pst_shrn_log
-        WHERE
-          shrn_dt >= ${startDt}
           AND shrn_dt <= ${endDt}
         GROUP BY
           shrn_site

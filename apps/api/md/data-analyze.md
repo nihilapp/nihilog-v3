@@ -13,7 +13,7 @@
 
 **값 축 (측정값)**
 
-- 게시글 발행 수 (`PstInfo.crtDt` 기준)
+- 게시글 발행 수 (`PstInfo.publ_dt` 기준)
 - 게시글 수정 수 (`updtDt` 기준)
 - 게시글 삭제 수 (`delDt`, `delYn`)
 - 조회 수 (`PstViewLog.viewDt`)

@@ -277,12 +277,12 @@ export const deletePostSchema = postSchema.pick({
 });
 
 // 게시글 조회수 통계 스키마
-export const viewStatSchema = z.object({
-  mode: z.enum([ 'daily', 'weekly', 'monthly', 'yearly', ])
-    .default('daily')
+export const analyzeStatSchema = z.object({
+  mode: z.enum([ 'day', 'week', 'month', 'year', ])
+    .default('day')
     .openapi({
-      description: '모드 (daily: 일간, weekly: 주간, monthly: 월간, yearly: 연간)',
-      example: 'daily',
+      description: '모드 (day: 일간, week: 주간, month: 월간, year: 연간)',
+      example: 'day',
     }),
   startDt: z.string()
     .openapi({
@@ -347,7 +347,7 @@ export type CreatePostType = z.infer<typeof createPostSchema>;
 export type UpdatePostType = z.infer<typeof updatePostSchema>;
 export type DeletePostType = z.infer<typeof deletePostSchema>;
 export type SearchPostType = z.infer<typeof searchPostSchema>;
-export type ViewStatType = z.infer<typeof viewStatSchema>;
+export type ViewStatType = z.infer<typeof analyzeStatSchema>;
 export type CreatePostBookmarkType = z.infer<typeof createPostBookmarkSchema>;
 export type DeletePostBookmarkType = z.infer<typeof deletePostBookmarkSchema>;
 export type SearchPostBookmarkType = z.infer<typeof searchPostBookmarkSchema>;

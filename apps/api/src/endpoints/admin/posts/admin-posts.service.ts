@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { ViewStatDto, type CreatePostDto, type DeletePostDto, type UpdatePostDto } from '@/dto/post.dto';
+import { AnalyzeStatDto, type CreatePostDto, type DeletePostDto, type UpdatePostDto } from '@/dto/post.dto';
 import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostType, SharePlatformStatItemType, ViewStatItemType } from '@/endpoints/prisma/types/post.types';
+import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType } from '@/endpoints/prisma/types/post.types';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 
 @Injectable()
@@ -10,32 +10,35 @@ export class AdminPostsService {
   constructor(private readonly postRepository: PostRepository) {}
 
   /**
-   * @description 게시글 조회수 통계 조회
-   * @param pstNo 게시글 번호
-   * @param viewStatData 조회수 통계 데이터
+   * @description 게시글 분석 데이터 조회
+   * @param analyzeStatData 분석 통계 데이터
+   * @param pstNo 게시글 번호 (선택사항 - 없으면 전체 게시글)
    */
-  async getPostViewStats(
-    pstNo: number,
-    viewStatData: ViewStatDto
-  ): Promise<RepoResponseType<ViewStatItemType[]> | null> {
-    return this.postRepository.getPostViewStats(pstNo, viewStatData);
+  async getAnalyzePostData(
+    analyzeStatData: AnalyzeStatDto,
+    pstNo?: number
+  ): Promise<RepoResponseType<AnalyzePostItemType[]> | null> {
+    return this.postRepository.getAnalyzePostData(analyzeStatData, pstNo);
   }
 
   /**
-   * @description 게시글 공유 통계 조회
-   * @param pstNo 게시글 번호
-   * @param viewStatData 공유 통계 데이터
+   * @description 플랫폼별 공유 통계 조회
+   * @param analyzeStatData 분석 통계 데이터
+   * @param pstNo 게시글 번호 (선택사항 - 없으면 전체 게시글)
    */
-  async getPostShareStatsByPlatform(pstNo: number, viewStatData: ViewStatDto): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
-    return this.postRepository.getPostShareStatsByPlatform(pstNo, viewStatData);
+  async getPostShareStatsByPlatform(
+    analyzeStatData: AnalyzeStatDto,
+    pstNo?: number
+  ): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
+    return this.postRepository.getPostShareStatsByPlatform(analyzeStatData, pstNo);
   }
 
   /**
-   * @description 전체 게시글 공유 통계 조회
-   * @param viewStatData 공유 통계 데이터
+   * @description 게시글별 평균 조회수 조회 (시간대별)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async getAllPostShareStatsByPlatform(viewStatData: ViewStatDto): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
-    return this.postRepository.getAllPostShareStatsByPlatform(viewStatData);
+  async getAverageForPostView(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageViewStatItemType[]> | null> {
+    return this.postRepository.getAverageForPostView(analyzeStatData);
   }
 
   /**

@@ -48,3 +48,22 @@ export type SharePlatformStatItemType = {
   platform: string;
   count: number;
 };
+
+export type AnalyzePostItemType = {
+  dateStart: string;
+  dateEnd: string;
+  publishCount: number;
+  updateCount: number;
+  deleteCount: number;
+  viewCount: number;
+  bookmarkCount: number;
+  shareCount: number;
+  commentCount: number;
+};
+
+// 게시글 평균 조회수 통계
+export type AverageViewStatItemType = {
+  dateStart: string;
+  dateEnd: string;
+  avgViewCount: number;
+};
