@@ -7,13 +7,457 @@ import {
   deleteCategorySchema,
   searchCategorySchema
 } from '@/endpoints/prisma/schemas/category.schema';
+import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
 import { createError, createResponse } from '@/utils';
+import { CreateCategoryAnalyze } from '@/utils/createCategoryAnalyze';
 import { CreateExample } from '@/utils/createExample';
 
 import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminCategoriesEndpoints = () => {
+  // ========================================================
+  // 카테고리 통계 관련 엔드포인트
+  // ========================================================
+
+  // POST /admin/categories/analyze - 카테고리 분석 통계
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/categories/analyze',
+    summary: '📊 카테고리 분석 통계',
+    description: 'ADMIN 권한으로 카테고리 분석 통계를 조회합니다. (전체 또는 개별 카테고리)',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      query: z.object({
+        ctgryNo: z.coerce
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .openapi({
+            description: '카테고리 번호 (선택사항 - 없으면 전체 카테고리)',
+            example: 1,
+          }),
+      }),
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '카테고리 분석 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.ANALYZE_SUCCESS, [ CreateCategoryAnalyze.analyzeCategory(), ]),
+              },
+              error: {
+                summary: '카테고리 분석 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.ANALYZE_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/categories/statistics/popular-index - 카테고리별 인기 지수 TOP N
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/categories/statistics/popular-index',
+    summary: '📊 카테고리별 인기 지수 TOP N',
+    description: 'ADMIN 권한으로 인기 지수 기준 카테고리 TOP N을 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      query: z.object({
+        limit: z.coerce
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .openapi({
+            description: '상위 N개 (기본값: 10)',
+            example: 10,
+          }),
+      }),
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema.optional(),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '인기 카테고리 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.topPopularCategory(), ]),
+              },
+              error: {
+                summary: '인기 카테고리 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/top-subscribers - 구독자 많은 카테고리 TOP N
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/top-subscribers',
+    summary: '📊 구독자 많은 카테고리 TOP N',
+    description: 'ADMIN 권한으로 구독자 수 기준 카테고리 TOP N을 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      query: z.object({
+        limit: z.coerce
+          .number()
+          .int()
+          .positive()
+          .optional()
+          .openapi({
+            description: '상위 N개 (기본값: 10)',
+            example: 10,
+          }),
+      }),
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '구독자 많은 카테고리 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.topCategoryBySubscriber(), ]),
+              },
+              error: {
+                summary: '구독자 많은 카테고리 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/categories/statistics/average-bookmarks - 평균 북마크 수 / 카테고리
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/categories/statistics/average-bookmarks',
+    summary: '📊 평균 북마크 수 / 카테고리 (시간대별)',
+    description: 'ADMIN 권한으로 시간대별 카테고리당 평균 북마크 수를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '평균 북마크 수 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.averageBookmarkPerCategory(), ]),
+              },
+              error: {
+                summary: '평균 북마크 수 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/categories/statistics/average-views - 카테고리별 평균 조회수
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/categories/statistics/average-views',
+    summary: '📊 카테고리별 평균 조회수 (시간대별)',
+    description: 'ADMIN 권한으로 시간대별 카테고리당 평균 조회수를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '평균 조회수 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.averageViewPerCategory(), ]),
+              },
+              error: {
+                summary: '평균 조회수 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/hierarchy-distribution - 계층별 카테고리 분포
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/hierarchy-distribution',
+    summary: '📊 계층별 카테고리 분포',
+    description: 'ADMIN 권한으로 계층별 카테고리 분포를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '계층별 카테고리 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchyDistribution(), ]),
+              },
+              error: {
+                summary: '계층별 카테고리 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/hierarchy-posts - 계층별 게시글 분포
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/hierarchy-posts',
+    summary: '📊 계층별 게시글 분포',
+    description: 'ADMIN 권한으로 계층별 게시글 분포를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '계층별 게시글 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchyPostDistribution(), ]),
+              },
+              error: {
+                summary: '계층별 게시글 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/hierarchy-subscribers - 계층별 구독자 분포
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/hierarchy-subscribers',
+    summary: '📊 계층별 구독자 분포',
+    description: 'ADMIN 권한으로 계층별 구독자 분포를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '계층별 구독자 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchySubscriberDistribution(), ]),
+              },
+              error: {
+                summary: '계층별 구독자 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/status-distribution - 카테고리 상태별 분포
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/status-distribution',
+    summary: '📊 카테고리 상태별 분포',
+    description: 'ADMIN 권한으로 카테고리 상태별 분포를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '카테고리 상태별 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryStatusDistribution(), ]),
+              },
+              error: {
+                summary: '카테고리 상태별 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/creator-stats - 카테고리 생성자별 통계
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/creator-stats',
+    summary: '📊 카테고리 생성자별 통계',
+    description: 'ADMIN 권한으로 생성자별 카테고리 통계를 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '생성자별 카테고리 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryCreatorStat(), ]),
+              },
+              error: {
+                summary: '생성자별 카테고리 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/statistics/unused - 미사용 카테고리 목록
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/statistics/unused',
+    summary: '📊 미사용 카테고리 목록',
+    description: 'ADMIN 권한으로 게시글이 없는 미사용 카테고리 목록을 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '미사용 카테고리 목록 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.unusedCategory(), ]),
+              },
+              error: {
+                summary: '미사용 카테고리 목록 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // ========================================================
+  // 카테고리 CRUD 엔드포인트
+  // ========================================================
+
   // POST /admin/categories/search - 카테고리 목록 조회
   openApiRegistry.registerPath({
     method: 'post',

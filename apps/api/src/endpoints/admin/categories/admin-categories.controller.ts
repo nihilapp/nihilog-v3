@@ -2,6 +2,7 @@ import {
   Controller,
   Body,
   Param,
+  Query,
   UseGuards
 } from '@nestjs/common';
 
@@ -9,9 +10,24 @@ import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
+import { AnalyzeStatDto } from '@/dto/common.dto';
 import type { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints/prisma/types/category.types';
+import type {
+  SelectCategoryListItemType,
+  SelectCategoryType,
+  AnalyzeCategoryStatItemType,
+  TopPopularCategoryItemType,
+  TopCategoriesBySubscriberItemType,
+  AverageBookmarkPerCategoryItemType,
+  AverageViewPerCategoryItemType,
+  CategoryHierarchyDistributionItemType,
+  CategoryHierarchyPostDistributionItemType,
+  CategoryHierarchySubscriberDistributionItemType,
+  CategoryStatusDistributionItemType,
+  CategoryCreatorStatItemType,
+  UnusedCategoryItemType
+} from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
 
@@ -19,6 +35,291 @@ import { createError, createResponse } from '@/utils';
 @UseGuards(AdminAuthGuard)
 export class AdminCategoriesController {
   constructor(private readonly adminCategoriesService: AdminCategoriesService) { }
+
+  // ========================================================
+  // 카테고리 통계 관련 엔드포인트
+  // ========================================================
+
+  /**
+   * @description 카테고리 분석 통계
+   * @param analyzeStatData 분석 통계 데이터
+   * @param ctgryNo 카테고리 번호 (선택적, 쿼리 스트링)
+   */
+  @Endpoint({
+    endpoint: '/analyze',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetAnalyzeCategoryData(
+    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query('ctgryNo') ctgryNo?: number
+  ): Promise<ResponseDto<AnalyzeCategoryStatItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetAnalyzeCategoryData(analyzeStatData, ctgryNo);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.ANALYZE_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.ANALYZE_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 카테고리별 인기 지수 TOP N
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   */
+  @Endpoint({
+    endpoint: '/statistics/popular-index',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTopPopularCategoriesByIndex(
+    @Query('limit') limit: number,
+    @Body() analyzeStatData?: AnalyzeStatDto
+  ): Promise<ResponseDto<TopPopularCategoryItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetTopPopularCategoriesByIndex(limit || 10, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 구독자 많은 카테고리 TOP N
+   * @param limit 상위 N개
+   */
+  @Endpoint({
+    endpoint: '/statistics/top-subscribers',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTopCategoriesBySubscriberCount(@Query('limit') limit: number): Promise<ResponseDto<TopCategoriesBySubscriberItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetTopCategoriesBySubscriberCount(limit || 10);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 평균 북마크 수 / 카테고리
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/statistics/average-bookmarks',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetAverageBookmarkCountPerCategory(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageBookmarkPerCategoryItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetAverageBookmarkCountPerCategory(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 카테고리별 평균 조회수
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/statistics/average-views',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetAverageViewCountPerCategory(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageViewPerCategoryItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetAverageViewCountPerCategory(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 계층별 카테고리 분포
+   */
+  @Endpoint({
+    endpoint: '/statistics/hierarchy-distribution',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategoryHierarchyDistribution(): Promise<ResponseDto<CategoryHierarchyDistributionItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategoryHierarchyDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 계층별 게시글 분포
+   */
+  @Endpoint({
+    endpoint: '/statistics/hierarchy-posts',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategoryHierarchyPostDistribution(): Promise<ResponseDto<CategoryHierarchyPostDistributionItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategoryHierarchyPostDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 계층별 구독자 분포
+   */
+  @Endpoint({
+    endpoint: '/statistics/hierarchy-subscribers',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategoryHierarchySubscriberDistribution(): Promise<ResponseDto<CategoryHierarchySubscriberDistributionItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategoryHierarchySubscriberDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 카테고리 상태별 분포
+   */
+  @Endpoint({
+    endpoint: '/statistics/status-distribution',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategoryStatusDistribution(): Promise<ResponseDto<CategoryStatusDistributionItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategoryStatusDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 카테고리 생성자별 통계
+   */
+  @Endpoint({
+    endpoint: '/statistics/creator-stats',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategoryCreatorStatistics(): Promise<ResponseDto<CategoryCreatorStatItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategoryCreatorStatistics();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 미사용 카테고리 목록
+   */
+  @Endpoint({
+    endpoint: '/statistics/unused',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetUnusedCategoriesList(): Promise<ResponseDto<UnusedCategoryItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetUnusedCategoriesList();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  // ========================================================
+  // 카테고리 CRUD 엔드포인트
+  // ========================================================
 
   /**
    * @description 카테고리 목록 조회

@@ -1,11 +1,26 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CommentStatus, type Prisma, type PrismaClient } from '@prisma/client';
+import { CommentStatus, Prisma, type PrismaClient } from '@prisma/client';
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { SelectCommentListItemType, SelectCommentType } from '@/endpoints/prisma/types/comment.types';
+import type {
+  SelectCommentListItemType,
+  SelectCommentType,
+  AnalyzeCommentStatItemType,
+  TopPostsByCommentItemType,
+  TopUsersByCommentItemType,
+  AverageCommentPerPostItemType,
+  CommentStatusDistributionItemType,
+  CommentApprovalRateItemType,
+  CommentSpamRateItemType,
+  CommentReplyRatioItemType,
+  CommentAverageDepthItemType,
+  PostsWithoutCommentsItemType
+} from '@/endpoints/prisma/types/comment.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -15,6 +30,441 @@ import { timeToString } from '@/utils/timeHelper';
 export class CommentRepository {
   constructor(@Inject(PRISMA)
   private readonly prisma: PrismaClient) { }
+
+  // ========================================================
+  // 댓글 통계 관련 메서드
+  // ========================================================
+
+  /**
+   * @description 댓글 분석 통계 (9개 지표 통합)
+   * @param analyzeStatData 분석 통계 데이터
+   * @param pstNo 게시글 번호 (선택사항)
+   */
+  async getAnalyzeCommentData(
+    analyzeStatData: AnalyzeStatDto,
+    pstNo?: number
+  ): Promise<RepoResponseType<AnalyzeCommentStatItemType[]> | null> {
+    try {
+      const { mode, startDt, endDt, } = analyzeStatData;
+
+      const analyzeData = await this.prisma.$queryRaw<AnalyzeCommentStatItemType[]>`
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+
+          -- 댓글 작성/삭제 통계
+          COALESCE(SUM(
+            CASE WHEN c.crt_dt >= b.date_start AND c.crt_dt < b.date_end
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "newCommentCount",
+
+          COALESCE(SUM(
+            CASE WHEN c.del_dt >= b.date_start AND c.del_dt < b.date_end
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "deleteCommentCount",
+
+          COALESCE(SUM(
+            CASE WHEN c.use_yn = 'Y' AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "activeCommentCount",
+
+          -- 댓글 상태별 통계
+          COALESCE(SUM(
+            CASE WHEN c.cmnt_sts = 'PENDING' AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "pendingCommentCount",
+
+          COALESCE(SUM(
+            CASE WHEN c.cmnt_sts = 'APPROVED' AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "approvedCommentCount",
+
+          COALESCE(SUM(
+            CASE WHEN c.cmnt_sts = 'REJECTED' AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "rejectedCommentCount",
+
+          COALESCE(SUM(
+            CASE WHEN c.cmnt_sts = 'SPAM' AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "spamCommentCount",
+
+          -- 댓글 답글 통계
+          COALESCE(SUM(
+            CASE WHEN c.prnt_cmnt_no IS NULL AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "topLevelCommentCount",
+
+          COALESCE(SUM(
+            CASE WHEN c.prnt_cmnt_no IS NOT NULL AND c.del_yn = 'N'
+              ${pstNo
+                ? Prisma.sql`AND c.pst_no = ${pstNo}`
+                : Prisma.empty}
+            THEN 1 ELSE 0 END
+          ), 0) AS "replyCommentCount"
+
+        FROM date_series b
+        LEFT JOIN cmnt_info c ON (
+          c.crt_dt >= b.date_start AND c.crt_dt < b.date_end
+          OR c.del_dt >= b.date_start AND c.del_dt < b.date_end
+        )
+        GROUP BY b.date_start, b.date_end
+        ORDER BY b.date_start
+      `;
+
+      return prismaResponse(true, analyzeData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 게시글별 댓글 수 TOP N
+   * @param limit 제한 수
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopPostsByCommentCount(
+    limit: number,
+    analyzeStatData?: AnalyzeStatDto
+  ): Promise<RepoResponseType<TopPostsByCommentItemType[]> | null> {
+    try {
+      const result = await this.prisma.$queryRaw<TopPostsByCommentItemType[]>`
+        SELECT
+          c.pst_no AS "pstNo",
+          p.pst_ttl AS "pstTtl",
+          COUNT(c.cmnt_no) AS "commentCount",
+          COUNT(CASE WHEN c.cmnt_sts = 'APPROVED' THEN 1 END) AS "approvedCommentCount",
+          MAX(c.crt_dt) AS "lastCommentDate"
+        FROM cmnt_info c
+        LEFT JOIN pst_info p ON c.pst_no = p.pst_no
+        WHERE c.del_yn = 'N'
+          ${analyzeStatData
+            ? Prisma.sql`AND c.crt_dt >= ${analyzeStatData.startDt} AND c.crt_dt <= ${analyzeStatData.endDt}`
+            : Prisma.empty}
+        GROUP BY c.pst_no, p.pst_ttl
+        ORDER BY COUNT(c.cmnt_no) DESC
+        LIMIT ${limit}
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 사용자별 댓글 작성 수 TOP N
+   * @param limit 제한 수
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopUsersByCommentCount(
+    limit: number,
+    analyzeStatData?: AnalyzeStatDto
+  ): Promise<RepoResponseType<TopUsersByCommentItemType[]> | null> {
+    try {
+      const result = await this.prisma.$queryRaw<TopUsersByCommentItemType[]>`
+        SELECT
+          c.crt_no AS "userNo",
+          u.user_nm AS "userName",
+          COUNT(c.cmnt_no) AS "commentCount",
+          COUNT(CASE WHEN c.cmnt_sts = 'APPROVED' THEN 1 END) AS "approvedCommentCount",
+          MAX(c.crt_dt) AS "lastCommentDate"
+        FROM cmnt_info c
+        LEFT JOIN user_info u ON c.crt_no = u.user_no
+        WHERE c.del_yn = 'N'
+          ${analyzeStatData
+            ? Prisma.sql`AND c.crt_dt >= ${analyzeStatData.startDt} AND c.crt_dt <= ${analyzeStatData.endDt}`
+            : Prisma.empty}
+        GROUP BY c.crt_no, u.user_nm
+        ORDER BY COUNT(c.cmnt_no) DESC
+        LIMIT ${limit}
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 평균 댓글 수 / 게시글
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getAverageCommentCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageCommentPerPostItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const result = await this.prisma.$queryRaw<AverageCommentPerPostItemType[]>`
+        SELECT
+          ${startDt} AS "dateStart",
+          ${endDt} AS "dateEnd",
+          CASE
+            WHEN COUNT(DISTINCT p.pst_no) > 0
+            THEN ROUND(COUNT(c.cmnt_no)::DECIMAL / COUNT(DISTINCT p.pst_no), 2)
+            ELSE 0
+          END AS "avgCommentCount"
+        FROM pst_info p
+        LEFT JOIN cmnt_info c ON p.pst_no = c.pst_no
+          AND c.del_yn = 'N'
+          AND c.crt_dt >= ${startDt}
+          AND c.crt_dt <= ${endDt}
+        WHERE p.del_yn = 'N'
+          AND p.crt_dt >= ${startDt}
+          AND p.crt_dt <= ${endDt}
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 댓글 상태별 분포
+   */
+  async getCommentStatusDistribution(): Promise<RepoResponseType<CommentStatusDistributionItemType[]> | null> {
+    try {
+      const result = await this.prisma.$queryRaw<CommentStatusDistributionItemType[]>`
+        WITH status_counts AS (
+          SELECT
+            cmnt_sts AS status,
+            COUNT(*) AS count
+          FROM cmnt_info
+          WHERE del_yn = 'N'
+          GROUP BY cmnt_sts
+        ),
+        total_count AS (
+          SELECT SUM(count) AS total FROM status_counts
+        )
+        SELECT
+          sc.status,
+          sc.count,
+          CASE
+            WHEN tc.total > 0
+            THEN ROUND((sc.count::DECIMAL / tc.total), 4)
+            ELSE 0
+          END AS ratio
+        FROM status_counts sc
+        CROSS JOIN total_count tc
+        ORDER BY sc.count DESC
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 댓글 승인율
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getCommentApprovalRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<CommentApprovalRateItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const result = await this.prisma.$queryRaw<CommentApprovalRateItemType[]>`
+        SELECT
+          ${startDt} AS "dateStart",
+          ${endDt} AS "dateEnd",
+          CASE
+            WHEN COUNT(*) > 0
+            THEN ROUND(COUNT(CASE WHEN cmnt_sts = 'APPROVED' THEN 1 END)::DECIMAL / COUNT(*), 4)
+            ELSE 0
+          END AS "approvalRate",
+          COUNT(*) AS "totalComments",
+          COUNT(CASE WHEN cmnt_sts = 'APPROVED' THEN 1 END) AS "approvedComments"
+        FROM cmnt_info
+        WHERE del_yn = 'N'
+          AND crt_dt >= ${startDt}
+          AND crt_dt <= ${endDt}
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 스팸 댓글 비율
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getCommentSpamRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<CommentSpamRateItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const result = await this.prisma.$queryRaw<CommentSpamRateItemType[]>`
+        SELECT
+          ${startDt} AS "dateStart",
+          ${endDt} AS "dateEnd",
+          CASE
+            WHEN COUNT(*) > 0
+            THEN ROUND(COUNT(CASE WHEN cmnt_sts = 'SPAM' THEN 1 END)::DECIMAL / COUNT(*), 4)
+            ELSE 0
+          END AS "spamRate",
+          COUNT(*) AS "totalComments",
+          COUNT(CASE WHEN cmnt_sts = 'SPAM' THEN 1 END) AS "spamComments"
+        FROM cmnt_info
+        WHERE del_yn = 'N'
+          AND crt_dt >= ${startDt}
+          AND crt_dt <= ${endDt}
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 답글 비율
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getCommentReplyRatio(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<CommentReplyRatioItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const result = await this.prisma.$queryRaw<CommentReplyRatioItemType[]>`
+        SELECT
+          ${startDt} AS "dateStart",
+          ${endDt} AS "dateEnd",
+          CASE
+            WHEN COUNT(*) > 0
+            THEN ROUND(COUNT(CASE WHEN prnt_cmnt_no IS NOT NULL THEN 1 END)::DECIMAL / COUNT(*), 4)
+            ELSE 0
+          END AS "replyRatio",
+          COUNT(*) AS "totalComments",
+          COUNT(CASE WHEN prnt_cmnt_no IS NOT NULL THEN 1 END) AS "replyComments"
+        FROM cmnt_info
+        WHERE del_yn = 'N'
+          AND crt_dt >= ${startDt}
+          AND crt_dt <= ${endDt}
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 평균 답글 깊이
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getCommentAverageDepth(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<CommentAverageDepthItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const result = await this.prisma.$queryRaw<CommentAverageDepthItemType[]>`
+        WITH RECURSIVE comment_depth AS (
+          -- 최상위 댓글들 (깊이 0)
+          SELECT
+            cmnt_no,
+            prnt_cmnt_no,
+            0 AS depth
+          FROM cmnt_info
+          WHERE prnt_cmnt_no IS NULL
+            AND del_yn = 'N'
+            AND crt_dt >= ${startDt}
+            AND crt_dt <= ${endDt}
+
+          UNION ALL
+
+          -- 답글들 (깊이 +1)
+          SELECT
+            c.cmnt_no,
+            c.prnt_cmnt_no,
+            cd.depth + 1
+          FROM cmnt_info c
+          INNER JOIN comment_depth cd ON c.prnt_cmnt_no = cd.cmnt_no
+          WHERE c.del_yn = 'N'
+            AND c.crt_dt >= ${startDt}
+            AND c.crt_dt <= ${endDt}
+        )
+        SELECT
+          ${startDt} AS "dateStart",
+          ${endDt} AS "dateEnd",
+          CASE
+            WHEN COUNT(*) > 0
+            THEN ROUND(AVG(depth)::DECIMAL, 2)
+            ELSE 0
+          END AS "avgDepth",
+          CASE
+            WHEN COUNT(*) > 0
+            THEN MAX(depth)
+            ELSE 0
+          END AS "maxDepth"
+        FROM comment_depth
+        WHERE depth > 0
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 댓글 없는 게시글 목록
+   */
+  async getPostsWithoutComments(): Promise<RepoResponseType<PostsWithoutCommentsItemType[]> | null> {
+    try {
+      const result = await this.prisma.$queryRaw<PostsWithoutCommentsItemType[]>`
+        SELECT
+          p.pst_no AS "pstNo",
+          p.pst_ttl AS "pstTtl",
+          COALESCE(p.publ_dt, p.crt_dt) AS "publishDate",
+          COALESCE(p.view_count, 0) AS "viewCount",
+          EXTRACT(DAY FROM (NOW() - COALESCE(p.publ_dt, p.crt_dt))) AS "daysSincePublish"
+        FROM pst_info p
+        LEFT JOIN cmnt_info c ON p.pst_no = c.pst_no AND c.del_yn = 'N'
+        WHERE p.del_yn = 'N'
+          AND c.cmnt_no IS NULL
+        ORDER BY COALESCE(p.publ_dt, p.crt_dt) DESC
+        LIMIT 50
+      `;
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
 
   // ================================================
   // 일반 사용자 기능

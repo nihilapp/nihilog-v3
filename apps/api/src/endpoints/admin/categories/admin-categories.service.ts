@@ -1,13 +1,120 @@
 import { Injectable } from '@nestjs/common';
 
 import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
-import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints/prisma/types/category.types';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
+import type {
+  SelectCategoryListItemType,
+  SelectCategoryType,
+  AnalyzeCategoryStatItemType,
+  TopPopularCategoryItemType,
+  TopCategoriesBySubscriberItemType,
+  AverageBookmarkPerCategoryItemType,
+  AverageViewPerCategoryItemType,
+  CategoryHierarchyDistributionItemType,
+  CategoryHierarchyPostDistributionItemType,
+  CategoryHierarchySubscriberDistributionItemType,
+  CategoryStatusDistributionItemType,
+  CategoryCreatorStatItemType,
+  UnusedCategoryItemType
+} from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
 
 @Injectable()
 export class AdminCategoriesService {
   constructor(private readonly categoryRepository: CategoryRepository) { }
+
+  // ========================================================
+  // 카테고리 통계 관련 메서드
+  // ========================================================
+
+  /**
+   * @description 카테고리 분석 통계 (시간대별 합산)
+   * @param analyzeStatData 분석 통계 데이터
+   * @param ctgryNo 카테고리 번호 (선택적)
+   */
+  async adminGetAnalyzeCategoryData(analyzeStatData: AnalyzeStatDto, ctgryNo?: number): Promise<RepoResponseType<AnalyzeCategoryStatItemType[]> | null> {
+    return this.categoryRepository.getAnalyzeCategoryData(analyzeStatData, ctgryNo);
+  }
+
+  /**
+   * @description 카테고리별 인기 지수 TOP N
+   * @param limit 상위 N개
+   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   */
+  async adminGetTopPopularCategoriesByIndex(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopPopularCategoryItemType[]> | null> {
+    return this.categoryRepository.getTopPopularCategoriesByIndex(limit, analyzeStatData);
+  }
+
+  /**
+   * @description 구독자 많은 카테고리 TOP N
+   * @param limit 상위 N개
+   */
+  async adminGetTopCategoriesBySubscriberCount(limit: number): Promise<RepoResponseType<TopCategoriesBySubscriberItemType[]> | null> {
+    return this.categoryRepository.getTopCategoriesBySubscriberCount(limit);
+  }
+
+  /**
+   * @description 평균 북마크 수 / 카테고리
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async adminGetAverageBookmarkCountPerCategory(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageBookmarkPerCategoryItemType[]> | null> {
+    return this.categoryRepository.getAverageBookmarkCountPerCategory(analyzeStatData);
+  }
+
+  /**
+   * @description 카테고리별 평균 조회수
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async adminGetAverageViewCountPerCategory(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageViewPerCategoryItemType[]> | null> {
+    return this.categoryRepository.getAverageViewCountPerCategory(analyzeStatData);
+  }
+
+  /**
+   * @description 계층별 카테고리 분포
+   */
+  async adminGetCategoryHierarchyDistribution(): Promise<RepoResponseType<CategoryHierarchyDistributionItemType[]> | null> {
+    return this.categoryRepository.getCategoryHierarchyDistribution();
+  }
+
+  /**
+   * @description 계층별 게시글 분포
+   */
+  async adminGetCategoryHierarchyPostDistribution(): Promise<RepoResponseType<CategoryHierarchyPostDistributionItemType[]> | null> {
+    return this.categoryRepository.getCategoryHierarchyPostDistribution();
+  }
+
+  /**
+   * @description 계층별 구독자 분포
+   */
+  async adminGetCategoryHierarchySubscriberDistribution(): Promise<RepoResponseType<CategoryHierarchySubscriberDistributionItemType[]> | null> {
+    return this.categoryRepository.getCategoryHierarchySubscriberDistribution();
+  }
+
+  /**
+   * @description 카테고리 상태별 분포
+   */
+  async adminGetCategoryStatusDistribution(): Promise<RepoResponseType<CategoryStatusDistributionItemType[]> | null> {
+    return this.categoryRepository.getCategoryStatusDistribution();
+  }
+
+  /**
+   * @description 카테고리 생성자별 통계
+   */
+  async adminGetCategoryCreatorStatistics(): Promise<RepoResponseType<CategoryCreatorStatItemType[]> | null> {
+    return this.categoryRepository.getCategoryCreatorStatistics();
+  }
+
+  /**
+   * @description 미사용 카테고리 목록
+   */
+  async adminGetUnusedCategoriesList(): Promise<RepoResponseType<UnusedCategoryItemType[]> | null> {
+    return this.categoryRepository.getUnusedCategoriesList();
+  }
+
+  // ========================================================
+  // 카테고리 CRUD 메서드
+  // ========================================================
 
   /**
    * @description 카테고리 목록 조회

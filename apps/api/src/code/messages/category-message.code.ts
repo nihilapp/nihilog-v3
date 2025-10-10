@@ -27,6 +27,8 @@ export const CATEGORY_MESSAGES = {
     MULTIPLE_UPDATE_SUCCESS: '다수 카테고리가 수정되었습니다.',
     DELETE_SUCCESS: '카테고리가 삭제되었습니다.',
     MULTIPLE_DELETE_SUCCESS: '다수 카테고리가 삭제되었습니다.',
+    ANALYZE_SUCCESS: '카테고리 분석 통계를 조회했습니다.',
+    STATISTICS_SUCCESS: '카테고리 통계를 조회했습니다.',
 
     // 에러 메시지
     SEARCH_ERROR: '관리자 카테고리 목록 조회에 실패했습니다.',
@@ -38,6 +40,8 @@ export const CATEGORY_MESSAGES = {
     MULTIPLE_UPDATE_ERROR: '다수 카테고리 수정에 실패했습니다.',
     DELETE_ERROR: '카테고리 삭제에 실패했습니다.',
     MULTIPLE_DELETE_ERROR: '다수 카테고리 삭제에 실패했습니다.',
+    ANALYZE_ERROR: '카테고리 분석 통계 조회에 실패했습니다.',
+    STATISTICS_ERROR: '카테고리 통계 조회에 실패했습니다.',
     NOT_FOUND: '관리할 카테고리를 찾을 수 없습니다.',
     NAME_NOT_FOUND: '해당 이름의 관리자 카테고리를 찾을 수 없습니다.',
     NAME_IN_USE: '이미 사용 중인 카테고리 이름입니다.',
