@@ -81,4 +81,31 @@ export const USER_MESSAGES = {
     PROFILE_BIO_TOO_LONG: '소개가 너무 깁니다. (최대 500자)',
     PROFILE_IMAGE_INVALID: '유효하지 않은 프로필 이미지입니다.',
   },
+
+  // 사용자 통계 관련 메시지
+  STATISTICS: {
+    // 성공 메시지
+    ANALYZE_SUCCESS: '사용자 분석 통계를 조회했습니다.',
+    ACTIVE_USER_ANALYSIS_SUCCESS: '활성 사용자 분석을 조회했습니다.',
+    TOP_CONTRIBUTION_SUCCESS: '사용자별 기여도 TOP N을 조회했습니다.',
+    TOP_POST_COUNT_SUCCESS: '사용자별 게시글 작성 수 TOP N을 조회했습니다.',
+    TOP_COMMENT_COUNT_SUCCESS: '사용자별 댓글 작성 수 TOP N을 조회했습니다.',
+    ROLE_DISTRIBUTION_SUCCESS: '역할별 사용자 분포를 조회했습니다.',
+    STATUS_DISTRIBUTION_SUCCESS: '상태별 사용자 분포를 조회했습니다.',
+    INACTIVE_USERS_SUCCESS: '비활성 사용자 목록을 조회했습니다.',
+    GROWTH_RATE_SUCCESS: '사용자 성장률을 조회했습니다.',
+    RETENTION_RATE_SUCCESS: '사용자 유지율을 조회했습니다.',
+
+    // 에러 메시지
+    ANALYZE_ERROR: '사용자 분석 통계 조회에 실패했습니다.',
+    ACTIVE_USER_ANALYSIS_ERROR: '활성 사용자 분석 조회에 실패했습니다.',
+    TOP_CONTRIBUTION_ERROR: '사용자별 기여도 TOP N 조회에 실패했습니다.',
+    TOP_POST_COUNT_ERROR: '사용자별 게시글 작성 수 TOP N 조회에 실패했습니다.',
+    TOP_COMMENT_COUNT_ERROR: '사용자별 댓글 작성 수 TOP N 조회에 실패했습니다.',
+    ROLE_DISTRIBUTION_ERROR: '역할별 사용자 분포 조회에 실패했습니다.',
+    STATUS_DISTRIBUTION_ERROR: '상태별 사용자 분포 조회에 실패했습니다.',
+    INACTIVE_USERS_ERROR: '비활성 사용자 목록 조회에 실패했습니다.',
+    GROWTH_RATE_ERROR: '사용자 성장률 조회에 실패했습니다.',
+    RETENTION_RATE_ERROR: '사용자 유지율 조회에 실패했습니다.',
+  },
 } as const;

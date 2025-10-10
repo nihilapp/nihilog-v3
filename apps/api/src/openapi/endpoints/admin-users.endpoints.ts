@@ -1,15 +1,443 @@
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
+import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
 import { createUserSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { updateUserSchema, searchUserSchema, deleteMultipleUsersSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
+import { CreateUserAnalyze } from '@/utils/createUserAnalyze';
 
 import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminUsersEndpoints = () => {
+  // ===== 사용자 통계 엔드포인트 (최상단) =====
+
+  // POST /admin/users/analyze/overview - 사용자 분석 통계
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/overview',
+    summary: '📊 사용자 분석 통계',
+    description: '사용자 가입/삭제/활성, 로그인, 게시글/댓글/북마크, 태그/카테고리 구독 통계를 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '사용자 분석 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ANALYZE_SUCCESS, [ CreateUserAnalyze.createUserAnalyzeExample(), ]),
+              },
+              error: {
+                summary: '사용자 분석 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.ANALYZE_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/active-users - 활성 사용자 분석
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/active-users',
+    summary: '👥 활성 사용자 분석',
+    description: '최근 7일/30일 로그인한 활성 사용자 수 및 비율을 분석합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '활성 사용자 분석 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_SUCCESS, CreateUserAnalyze.createActiveUserAnalysisExample()),
+              },
+              error: {
+                summary: '활성 사용자 분석 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/top-contribution - 사용자별 기여도 TOP N
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/top-contribution',
+    summary: '🏆 사용자별 기여도 TOP N',
+    description: '게시글 + 댓글 + 북마크 가중치 합산 기준으로 기여도가 높은 사용자 TOP N을 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema.extend({
+              limit: z.coerce.number().int().positive().optional().openapi({
+                description: '조회할 상위 사용자 수 (기본값: 10)',
+                example: 10,
+              }),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '사용자별 기여도 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_SUCCESS, CreateUserAnalyze.createTopUsersByContributionExample()),
+              },
+              error: {
+                summary: '사용자별 기여도 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/top-posts - 사용자별 게시글 작성 수 TOP N
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/top-posts',
+    summary: '📝 사용자별 게시글 작성 수 TOP N',
+    description: '게시글을 가장 많이 작성한 사용자 TOP N을 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema.extend({
+              limit: z.coerce.number().int().positive().optional().openapi({
+                description: '조회할 상위 사용자 수 (기본값: 10)',
+                example: 10,
+              }),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '사용자별 게시글 작성 수 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS, CreateUserAnalyze.createTopUsersByPostCountExample()),
+              },
+              error: {
+                summary: '사용자별 게시글 작성 수 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/top-comments - 사용자별 댓글 작성 수 TOP N
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/top-comments',
+    summary: '💬 사용자별 댓글 작성 수 TOP N',
+    description: '댓글을 가장 많이 작성한 사용자 TOP N을 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema.extend({
+              limit: z.coerce.number().int().positive().optional().openapi({
+                description: '조회할 상위 사용자 수 (기본값: 10)',
+                example: 10,
+              }),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '사용자별 댓글 작성 수 TOP N 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_SUCCESS, CreateUserAnalyze.createTopUsersByCommentCountExample()),
+              },
+              error: {
+                summary: '사용자별 댓글 작성 수 TOP N 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/users/analyze/role-distribution - 역할별 사용자 분포
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/users/analyze/role-distribution',
+    summary: '👑 역할별 사용자 분포',
+    description: 'ADMIN/USER 역할별 사용자 수 및 비율을 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '역할별 사용자 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_SUCCESS, CreateUserAnalyze.createUserRoleDistributionExample()),
+              },
+              error: {
+                summary: '역할별 사용자 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/users/analyze/status-distribution - 상태별 사용자 분포
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/users/analyze/status-distribution',
+    summary: '📈 상태별 사용자 분포',
+    description: '활성/비활성/삭제 상태별 사용자 수 및 비율을 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '상태별 사용자 분포 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_SUCCESS, CreateUserAnalyze.createUserStatusDistributionExample()),
+              },
+              error: {
+                summary: '상태별 사용자 분포 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/inactive-users - 비활성 사용자 목록
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/inactive-users',
+    summary: '😴 비활성 사용자 목록',
+    description: '일정 기간 로그인하지 않은 비활성 사용자 목록을 조회합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema.extend({
+              daysThreshold: z.coerce.number().int().positive().optional().openapi({
+                description: '비활성 기준 일수 (기본값: 30)',
+                example: 30,
+              }),
+            }),
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '비활성 사용자 목록 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.INACTIVE_USERS_SUCCESS, CreateUserAnalyze.createInactiveUsersListExample()),
+              },
+              error: {
+                summary: '비활성 사용자 목록 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.INACTIVE_USERS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/growth-rate - 사용자 성장률
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/growth-rate',
+    summary: '📈 사용자 성장률',
+    description: '신규 가입 추이를 기반으로 사용자 성장률을 계산합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '사용자 성장률 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.GROWTH_RATE_SUCCESS, CreateUserAnalyze.createUserGrowthRateExample()),
+              },
+              error: {
+                summary: '사용자 성장률 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.GROWTH_RATE_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/users/analyze/retention-rate - 사용자 유지율
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/analyze/retention-rate',
+    summary: '🔄 사용자 유지율',
+    description: '가입 대비 활성 사용자 비율을 기반으로 사용자 유지율을 계산합니다.',
+    tags: [ 'admin-users', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '사용자 유지율 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.RETENTION_RATE_SUCCESS, CreateUserAnalyze.createUserRetentionRateExample()),
+              },
+              error: {
+                summary: '사용자 유지율 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.RETENTION_RATE_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // ===== 기존 사용자 관리 엔드포인트 =====
+
   // POST /admin/users/search - 사용자 목록 검색
   openApiRegistry.registerPath({
     method: 'post',

@@ -1,6 +1,0 @@
-- `md/statistics-status.md` 에 계획되어 있는 엔티티 중에서, 사용자가 지정한 엔티티의 통계를 구현하는 작업순서입니다.
-- 가장 먼저 통계 메소드에서 사용할 타입을 추가합니다.
-- 예시 객체 파일을 새로 생성합니다. `src/utils` 폴더 내에 `create<Entity>Analyze.ts` 로 생성합니다. 그 후 `index.ts` 에 **export** 합니다.
-- src/code/messages 폴더의 각 엔티티 코드 파일에 적당한 메시지를 추가합니다.
-- `<entity>Repository` 에 통계 메소드들을 구현합니다. 이후 service, controller, openapi 순으로 구현합니다. 이 때, 4개의 파일 모두 최상단에 신규 통계 메소드 및 엔드포인트를 추가하도록 합니다.
-- 기존의 파일들을 참고해서 양식을 최대한 동일하게 구현합니다.

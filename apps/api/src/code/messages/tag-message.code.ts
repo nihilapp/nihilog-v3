@@ -25,6 +25,7 @@ export const TAG_MESSAGES = {
     DELETE_SUCCESS: '태그가 삭제되었습니다.',
     MULTIPLE_DELETE_SUCCESS: '다수 태그가 삭제되었습니다.',
     SEARCH_SUCCESS: '태그 검색을 완료했습니다.',
+    ANALYZE_SUCCESS: '태그 분석 통계를 조회했습니다.',
     STATISTICS_SUCCESS: '태그 통계를 조회했습니다.',
 
     // 에러 메시지
@@ -35,6 +36,7 @@ export const TAG_MESSAGES = {
     DELETE_ERROR: '태그 삭제에 실패했습니다.',
     MULTIPLE_DELETE_ERROR: '다수 태그 삭제에 실패했습니다.',
     SEARCH_ERROR: '태그 검색에 실패했습니다.',
+    ANALYZE_ERROR: '태그 분석 통계 조회에 실패했습니다.',
     STATISTICS_ERROR: '태그 통계 조회에 실패했습니다.',
     NOT_FOUND: '태그를 찾을 수 없습니다.',
     ALREADY_EXISTS: '이미 존재하는 태그입니다.',

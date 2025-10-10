@@ -40,6 +40,8 @@ export const SUBSCRIBE_MESSAGES = {
     MULTIPLE_UPDATE_SUCCESS: '다수 사용자 구독 설정이 수정되었습니다.',
     DELETE_SUCCESS: '사용자 구독 설정이 삭제되었습니다.',
     MULTIPLE_DELETE_SUCCESS: '다수 사용자 구독 설정이 삭제되었습니다.',
+    ANALYZE_SUCCESS: '구독 설정 분석 통계를 조회했습니다.',
+    STATISTICS_SUCCESS: '구독 설정 통계를 조회했습니다.',
 
     // 관리자 구독 관리 에러 메시지
     SEARCH_ERROR: '전체 사용자 구독 설정 검색에 실패했습니다.',
@@ -48,6 +50,8 @@ export const SUBSCRIBE_MESSAGES = {
     MULTIPLE_UPDATE_ERROR: '다수 사용자 구독 설정 수정에 실패했습니다.',
     DELETE_ERROR: '사용자 구독 설정 삭제에 실패했습니다.',
     MULTIPLE_DELETE_ERROR: '다수 사용자 구독 설정 삭제에 실패했습니다.',
+    ANALYZE_ERROR: '구독 설정 분석 통계 조회에 실패했습니다.',
+    STATISTICS_ERROR: '구독 설정 통계 조회에 실패했습니다.',
     ALREADY_EXISTS: '이미 구독 설정이 존재합니다.',
     ALREADY_DELETED: '이미 삭제된 구독 설정입니다.',
     INVALID_USER_LIST: '유효하지 않은 사용자 목록입니다.',

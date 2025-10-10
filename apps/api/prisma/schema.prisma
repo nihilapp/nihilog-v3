@@ -134,6 +134,10 @@ model CtgryInfo {
   posts           PstInfo[]
   subscribers     CtgrySbcrMpng[]
 
+  @@index([useYn, delYn])
+  @@index([crtDt, delYn])
+  @@index([delDt, delYn])
+  @@index([upCtgryNo, delYn])
   @@map("ctgry_info")
   @@schema("nihilog")
 }
@@ -160,6 +164,9 @@ model TagInfo {
   subscribers TagSbcrMpng[]
   posts       PstTagMpng[]
 
+  @@index([useYn, delYn])
+  @@index([crtDt, delYn])
+  @@index([delDt, delYn])
   @@map("tag_info")
   @@schema("nihilog")
 }
@@ -204,6 +211,11 @@ model PstInfo {
 
   @@unique([pstTtl])
   @@unique([pstCd])
+  @@index([publDt, delYn, rlsYn])
+  @@index([pstStts, delYn])
+  @@index([pstNo, delYn])
+  @@index([updtDt, delYn])
+  @@index([delDt, delYn])
   @@map("pst_info")
   @@schema("nihilog")
 }
@@ -232,6 +244,11 @@ model CmntInfo {
   parentComment CmntInfo?  @relation("CommentReplies", fields: [prntCmntNo], references: [cmntNo])
   replies       CmntInfo[] @relation("CommentReplies")
 
+  @@index([crtDt, delYn])
+  @@index([pstNo, delYn])
+  @@index([cmntSts, delYn])
+  @@index([prntCmntNo, delYn])
+  @@index([delDt, delYn])
   @@map("cmnt_info")
   @@schema("nihilog")
 }
@@ -258,6 +275,10 @@ model CtgrySbcrMpng {
   deleter      UserInfo?    @relation("CtgrySbcrDeleter", fields: [delNo], references: [userNo])
 
   @@unique([sbcrNo, ctgryNo])
+  @@index([ctgryNo, delYn])
+  @@index([sbcrNo, delYn])
+  @@index([crtDt, delYn])
+  @@index([delDt, delYn])
   @@map("ctgry_sbcr_mpng")
   @@schema("nihilog")
 }
@@ -284,6 +305,10 @@ model TagSbcrMpng {
   deleter      UserInfo?    @relation("TagSbcrDeleter", fields: [delNo], references: [userNo])
 
   @@unique([sbcrNo, tagNo])
+  @@index([tagNo, delYn])
+  @@index([sbcrNo, delYn])
+  @@index([crtDt, delYn])
+  @@index([delDt, delYn])
   @@map("tag_sbcr_mpng")
   @@schema("nihilog")
 }
@@ -312,6 +337,12 @@ model UserSbcrInfo {
   tagSubscriptions      TagSbcrMpng[]
   categorySubscriptions CtgrySbcrMpng[]
 
+  @@index([useYn, delYn])
+  @@index([emlNtfyYn, delYn])
+  @@index([newPstNtfyYn, delYn])
+  @@index([cmntRplNtfyYn, delYn])
+  @@index([crtDt, delYn])
+  @@index([delDt, delYn])
   @@map("user_sbcr_info")
   @@schema("nihilog")
 }
@@ -338,6 +369,10 @@ model PstTagMpng {
   deleter UserInfo? @relation("PstTagDeleter", fields: [delNo], references: [userNo])
 
   @@unique([pstNo, tagNo])
+  @@index([tagNo, delYn])
+  @@index([pstNo, delYn])
+  @@index([crtDt, delYn])
+  @@index([delDt, delYn])
   @@map("pst_tag_mpng")
   @@schema("nihilog")
 }
@@ -353,6 +388,7 @@ model PstViewLog {
   post PstInfo @relation(fields: [pstNo], references: [pstNo])
 
   @@index([pstNo, viewDt])
+  @@index([viewDt, pstNo])
   @@map("pst_view_log")
   @@schema("nihilog")
 }
@@ -368,6 +404,7 @@ model PstShrnLog {
   post PstInfo @relation(fields: [pstNo], references: [pstNo])
 
   @@index([pstNo, shrnDt])
+  @@index([shrnDt, pstNo])
   @@map("pst_shrn_log")
   @@schema("nihilog")
 }
@@ -394,6 +431,8 @@ model PstBkmrkMpng {
   deleter UserInfo? @relation("PstBkmrkDeleter", fields: [delNo], references: [userNo])
 
   @@unique([userNo, pstNo])
+  @@index([crtDt, delYn])
+  @@index([pstNo, delYn])
   @@map("pst_bkmrk_mpng")
   @@schema("nihilog")
 }

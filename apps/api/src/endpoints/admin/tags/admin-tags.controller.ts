@@ -65,13 +65,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 분석 통계 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.ANALYZE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 분석 통계 조회 성공',
+      MESSAGE.TAG.ADMIN.ANALYZE_SUCCESS,
       result.data
     );
   }

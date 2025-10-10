@@ -39,8 +39,6 @@ export const COMMENT_MESSAGES = {
     SPAM_SUCCESS: '댓글이 스팸으로 처리되었습니다.',
     ANALYZE_SUCCESS: '댓글 분석 통계를 조회했습니다.',
     STATISTICS_SUCCESS: '댓글 통계를 조회했습니다.',
-    SUBSCRIBE_ANALYZE_SUCCESS: '구독 설정 분석 통계를 조회했습니다.',
-    SUBSCRIBE_STATISTICS_SUCCESS: '구독 설정 통계를 조회했습니다.',
 
     // 에러 메시지
     SEARCH_ERROR: '관리자 댓글 검색에 실패했습니다.',
@@ -54,8 +52,6 @@ export const COMMENT_MESSAGES = {
     SPAM_ERROR: '댓글 스팸 처리에 실패했습니다.',
     ANALYZE_ERROR: '댓글 분석 통계 조회에 실패했습니다.',
     STATISTICS_ERROR: '댓글 통계 조회에 실패했습니다.',
-    SUBSCRIBE_ANALYZE_ERROR: '구독 설정 분석 통계 조회에 실패했습니다.',
-    SUBSCRIBE_STATISTICS_ERROR: '구독 설정 통계 조회에 실패했습니다.',
     NOT_FOUND: '관리할 댓글을 찾을 수 없습니다.',
     ALREADY_APPROVED: '이미 승인된 댓글입니다.',
     ALREADY_REJECTED: '이미 거부된 댓글입니다.',

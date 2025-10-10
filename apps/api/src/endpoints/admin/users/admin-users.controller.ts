@@ -3,18 +3,33 @@ import {
   Controller,
   Req,
   UseGuards,
-  Param
+  Param,
+  Query
 } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectUserInfoListItemType, SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import type {
+  SelectUserInfoListItemType,
+  SelectUserInfoType,
+  AnalyzeUserStatItemType,
+  ActiveUserAnalysisItemType,
+  TopUsersByContributionItemType,
+  TopUsersByPostCountItemType,
+  TopUsersByCommentCountItemType,
+  UserRoleDistributionItemType,
+  UserStatusDistributionItemType,
+  InactiveUsersListItemType,
+  UserGrowthRateItemType,
+  UserRetentionRateItemType
+} from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
 
 import { AdminUserService } from './admin-users.service';
@@ -23,6 +38,265 @@ import { AdminUserService } from './admin-users.service';
 @UseGuards(AdminAuthGuard)
 export class AdminUserController {
   constructor(private readonly usersService: AdminUserService) { }
+
+  // ========================================================
+  // 사용자 통계 관련 엔드포인트
+  // ========================================================
+
+  /**
+   * @description 사용자 분석 통계 (9개 지표 통합)
+   * @param body 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/overview',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getAnalyzeUserData(@Body() body: AnalyzeStatDto): Promise<ResponseDto<AnalyzeUserStatItemType[]>> {
+    const result = await this.usersService.getAnalyzeUserData(body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.ANALYZE_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ANALYZE_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 활성 사용자 분석
+   * @param body 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/active-users',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getActiveUserAnalysis(@Body() body: AnalyzeStatDto): Promise<ResponseDto<ActiveUserAnalysisItemType[]>> {
+    const result = await this.usersService.getActiveUserAnalysis(body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 사용자별 기여도 TOP N
+   * @param body 분석 통계 데이터 및 제한 수
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-contribution',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getTopUsersByContribution(@Body() body: AnalyzeStatDto & { limit?: number }): Promise<ResponseDto<TopUsersByContributionItemType[]>> {
+    const { limit = 10, ...analyzeStatData } = body;
+    const result = await this.usersService.getTopUsersByContribution(limit, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 사용자별 게시글 작성 수 TOP N
+   * @param body 분석 통계 데이터 및 제한 수
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-post-count',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getTopUsersByPostCount(@Body() body: AnalyzeStatDto & { limit?: number }): Promise<ResponseDto<TopUsersByPostCountItemType[]>> {
+    const { limit = 10, ...analyzeStatData } = body;
+    const result = await this.usersService.getTopUsersByPostCount(limit, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.TOP_POST_COUNT_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 사용자별 댓글 작성 수 TOP N
+   * @param body 분석 통계 데이터 및 제한 수
+   */
+  @Endpoint({
+    endpoint: '/analyze/top-comment-count',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getTopUsersByCommentCount(@Body() body: AnalyzeStatDto & { limit?: number }): Promise<ResponseDto<TopUsersByCommentCountItemType[]>> {
+    const { limit = 10, ...analyzeStatData } = body;
+    const result = await this.usersService.getTopUsersByCommentCount(limit, analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 역할별 사용자 분포
+   */
+  @Endpoint({
+    endpoint: '/analyze/role-distribution',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getUserRoleDistribution(): Promise<ResponseDto<UserRoleDistributionItemType[]>> {
+    const result = await this.usersService.getUserRoleDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 상태별 사용자 분포
+   */
+  @Endpoint({
+    endpoint: '/analyze/status-distribution',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getUserStatusDistribution(): Promise<ResponseDto<UserStatusDistributionItemType[]>> {
+    const result = await this.usersService.getUserStatusDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 비활성 사용자 목록
+   * @param daysThreshold 비활성 기준 일수
+   */
+  @Endpoint({
+    endpoint: '/analyze/inactive-users',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getInactiveUsersList(@Query('daysThreshold') daysThreshold?: number): Promise<ResponseDto<InactiveUsersListItemType[]>> {
+    const result = await this.usersService.getInactiveUsersList(daysThreshold || 30);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.INACTIVE_USERS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.INACTIVE_USERS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 사용자 성장률
+   * @param body 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/growth-rate',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getUserGrowthRate(@Body() body: AnalyzeStatDto): Promise<ResponseDto<UserGrowthRateItemType[]>> {
+    const result = await this.usersService.getUserGrowthRate(body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.GROWTH_RATE_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.GROWTH_RATE_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 사용자 유지율
+   * @param body 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/retention-rate',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async getUserRetentionRate(@Body() body: AnalyzeStatDto): Promise<ResponseDto<UserRetentionRateItemType[]>> {
+    const result = await this.usersService.getUserRetentionRate(body);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.STATISTICS.RETENTION_RATE_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.RETENTION_RATE_SUCCESS, result.data);
+  }
+
+  // ========================================================
+  // 기존 관리자 사용자 관련 엔드포인트
+  // ========================================================
 
   /**
    * @description 사용자 목록 검색

@@ -36,7 +36,7 @@ export class CommentRepository {
   // ========================================================
 
   /**
-   * @description 댓글 분석 통계 (9개 지표 통합)
+   * @description 댓글 분석 통계 (9개 지표 통합) - 최적화된 버전
    * @param analyzeStatData 분석 통계 데이터
    * @param pstNo 게시글 번호 (선택사항)
    */
@@ -48,93 +48,150 @@ export class CommentRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeCommentStatItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
-        SELECT
-          b.date_start AS "dateStart",
-          b.date_end AS "dateEnd",
+        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
 
-          -- 댓글 작성/삭제 통계
-          COALESCE(SUM(
-            CASE WHEN c.crt_dt >= b.date_start AND c.crt_dt < b.date_end
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "newCommentCount",
+        -- 모든 통계를 하나의 CTE로 통합
+        all_stats AS (
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'new_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
 
-          COALESCE(SUM(
-            CASE WHEN c.del_dt >= b.date_start AND c.del_dt < b.date_end
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "deleteCommentCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN c.use_yn = 'Y' AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "activeCommentCount",
+          SELECT
+            date_trunc(${mode}, c.del_dt::timestamptz) AS stat_date,
+            'delete_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.del_dt::timestamptz < ${endDt}::timestamptz
+            AND c.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, c.del_dt::timestamptz)
 
-          -- 댓글 상태별 통계
-          COALESCE(SUM(
-            CASE WHEN c.cmnt_sts = 'PENDING' AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "pendingCommentCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN c.cmnt_sts = 'APPROVED' AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "approvedCommentCount",
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'pending_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.cmnt_sts = 'PENDING'
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
 
-          COALESCE(SUM(
-            CASE WHEN c.cmnt_sts = 'REJECTED' AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "rejectedCommentCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN c.cmnt_sts = 'SPAM' AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "spamCommentCount",
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'approved_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.cmnt_sts = 'APPROVED'
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
 
-          -- 댓글 답글 통계
-          COALESCE(SUM(
-            CASE WHEN c.prnt_cmnt_no IS NULL AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "topLevelCommentCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN c.prnt_cmnt_no IS NOT NULL AND c.del_yn = 'N'
-              ${pstNo
-                ? Prisma.sql`AND c.pst_no = ${pstNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "replyCommentCount"
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'rejected_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.cmnt_sts = 'REJECTED'
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
 
-        FROM date_series b
-        LEFT JOIN cmnt_info c ON (
-          c.crt_dt >= b.date_start AND c.crt_dt < b.date_end
-          OR c.del_dt >= b.date_start AND c.del_dt < b.date_end
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'spam_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.cmnt_sts = 'SPAM'
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'top_level_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.prnt_cmnt_no IS NULL
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'reply_comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.prnt_cmnt_no IS NOT NULL
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
         )
-        GROUP BY b.date_start, b.date_end
-        ORDER BY b.date_start
+
+        SELECT
+          ds.date_start AS "dateStart",
+          ds.date_end AS "dateEnd",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'new_comment' THEN as.stat_count ELSE 0 END), 0) AS "newCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'delete_comment' THEN as.stat_count ELSE 0 END), 0) AS "deleteCommentCount",
+          0 AS "activeCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'pending_comment' THEN as.stat_count ELSE 0 END), 0) AS "pendingCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'approved_comment' THEN as.stat_count ELSE 0 END), 0) AS "approvedCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'rejected_comment' THEN as.stat_count ELSE 0 END), 0) AS "rejectedCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'spam_comment' THEN as.stat_count ELSE 0 END), 0) AS "spamCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'top_level_comment' THEN as.stat_count ELSE 0 END), 0) AS "topLevelCommentCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'reply_comment' THEN as.stat_count ELSE 0 END), 0) AS "replyCommentCount"
+        FROM date_series ds
+        LEFT JOIN all_stats as ON as.stat_date = ds.date_start
+        GROUP BY ds.date_start, ds.date_end
+        ORDER BY ds.date_start
       `;
 
       return prismaResponse(true, analyzeData);
@@ -215,7 +272,7 @@ export class CommentRepository {
   }
 
   /**
-   * @description 평균 댓글 수 / 게시글
+   * @description 평균 댓글 수 / 게시글 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAverageCommentCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageCommentPerPostItemType[]> | null> {
@@ -223,22 +280,29 @@ export class CommentRepository {
       const { startDt, endDt, } = analyzeStatData;
 
       const result = await this.prisma.$queryRaw<AverageCommentPerPostItemType[]>`
+        WITH post_comment_stats AS (
+          SELECT
+            p.pst_no,
+            COUNT(c.cmnt_no) as comment_count
+          FROM nihilog.pst_info p
+          LEFT JOIN nihilog.cmnt_info c ON p.pst_no = c.pst_no
+            AND c.del_yn = 'N'
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz <= ${endDt}::timestamptz
+          WHERE p.del_yn = 'N'
+            AND p.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND p.crt_dt::timestamptz <= ${endDt}::timestamptz
+          GROUP BY p.pst_no
+        )
         SELECT
           ${startDt} AS "dateStart",
           ${endDt} AS "dateEnd",
           CASE
-            WHEN COUNT(DISTINCT p.pst_no) > 0
-            THEN ROUND(COUNT(c.cmnt_no)::DECIMAL / COUNT(DISTINCT p.pst_no), 2)
+            WHEN COUNT(*) > 0
+            THEN ROUND(AVG(comment_count)::DECIMAL, 2)
             ELSE 0
           END AS "avgCommentCount"
-        FROM pst_info p
-        LEFT JOIN cmnt_info c ON p.pst_no = c.pst_no
-          AND c.del_yn = 'N'
-          AND c.crt_dt >= ${startDt}
-          AND c.crt_dt <= ${endDt}
-        WHERE p.del_yn = 'N'
-          AND p.crt_dt >= ${startDt}
-          AND p.crt_dt <= ${endDt}
+        FROM post_comment_stats
       `;
 
       return prismaResponse(true, result);
@@ -440,7 +504,7 @@ export class CommentRepository {
   }
 
   /**
-   * @description 댓글 없는 게시글 목록
+   * @description 댓글 없는 게시글 목록 (최적화된 버전)
    */
   async getPostsWithoutComments(): Promise<RepoResponseType<PostsWithoutCommentsItemType[]> | null> {
     try {
@@ -449,12 +513,16 @@ export class CommentRepository {
           p.pst_no AS "pstNo",
           p.pst_ttl AS "pstTtl",
           COALESCE(p.publ_dt, p.crt_dt) AS "publishDate",
-          COALESCE(p.view_count, 0) AS "viewCount",
-          EXTRACT(DAY FROM (NOW() - COALESCE(p.publ_dt, p.crt_dt))) AS "daysSincePublish"
-        FROM pst_info p
-        LEFT JOIN cmnt_info c ON p.pst_no = c.pst_no AND c.del_yn = 'N'
+          COALESCE(p.pst_view, 0) AS "viewCount",
+          EXTRACT(DAYS FROM (NOW() - COALESCE(p.publ_dt, p.crt_dt)::timestamp)) AS "daysSincePublish"
+        FROM nihilog.pst_info p
         WHERE p.del_yn = 'N'
-          AND c.cmnt_no IS NULL
+          AND NOT EXISTS (
+            SELECT 1
+            FROM nihilog.cmnt_info c
+            WHERE c.pst_no = p.pst_no
+              AND c.del_yn = 'N'
+          )
         ORDER BY COALESCE(p.publ_dt, p.crt_dt) DESC
         LIMIT 50
       `;

@@ -12,6 +12,7 @@ export { CreateTagAnalyze } from './createTagAnalyze';
 export { CreatePostAnalyze } from './createPostAnalyze';
 export { CreateCommentAnalyze } from './createCommentAnalyze';
 export { CreateSubscribeAnalyze } from './createSubscribeAnalyze';
+export { CreateUserAnalyze } from './createUserAnalyze';
 export { CreateExample } from './createExample';
 export { createDateSeries } from './createDateSeries';
 export { prismaError } from './prismaError';

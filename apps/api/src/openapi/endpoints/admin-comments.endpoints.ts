@@ -17,10 +17,10 @@ export const registerAdminCommentsEndpoints = () => {
   // 댓글 통계 관련 엔드포인트
   // ========================================================
 
-  // POST /admin/comments/analyze - 댓글 분석 통계
+  // POST /admin/comments/analyze/overview - 댓글 분석 통계
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/analyze',
+    path: '/admin/comments/analyze/overview',
     summary: '📊 댓글 분석 통계',
     description: 'ADMIN 권한으로 댓글 분석 통계를 조회합니다. (전체 또는 특정 게시글)',
     tags: [ 'admin-comments', ],

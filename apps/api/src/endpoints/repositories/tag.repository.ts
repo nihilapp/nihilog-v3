@@ -41,7 +41,7 @@ export class TagRepository {
   // ========================================================
 
   /**
-   * @description 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
+   * @description 태그 분석 통계 (시간대별 합산) - 9개 지표 통합 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터
    * @param tagNo 태그 번호 (선택적, 없으면 전체/있으면 해당 태그만)
    */
@@ -50,92 +50,116 @@ export class TagRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeTagStatItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+
+        -- 모든 통계를 하나의 CTE로 통합
+        all_stats AS (
+          SELECT
+            date_trunc(${mode}, t.crt_dt::timestamptz) AS stat_date,
+            'new_tag' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.tag_info t
+          WHERE ${tagNo
+            ? Prisma.sql`t.tag_no = ${tagNo}`
+            : Prisma.sql`TRUE`}
+            AND t.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND t.crt_dt::timestamptz < ${endDt}::timestamptz
+          GROUP BY date_trunc(${mode}, t.crt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, t.del_dt::timestamptz) AS stat_date,
+            'delete_tag' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.tag_info t
+          WHERE ${tagNo
+            ? Prisma.sql`t.tag_no = ${tagNo}`
+            : Prisma.sql`TRUE`}
+            AND t.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND t.del_dt::timestamptz < ${endDt}::timestamptz
+            AND t.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, t.del_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, ptm.crt_dt::timestamptz) AS stat_date,
+            'tag_mapping' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_tag_mpng ptm
+          WHERE ${tagNo
+            ? Prisma.sql`ptm.tag_no = ${tagNo}`
+            : Prisma.sql`TRUE`}
+            AND ptm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND ptm.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND ptm.use_yn = 'Y'
+            AND ptm.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, ptm.crt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, ptm.del_dt::timestamptz) AS stat_date,
+            'tag_mapping_delete' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_tag_mpng ptm
+          WHERE ${tagNo
+            ? Prisma.sql`ptm.tag_no = ${tagNo}`
+            : Prisma.sql`TRUE`}
+            AND ptm.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND ptm.del_dt::timestamptz < ${endDt}::timestamptz
+            AND ptm.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, ptm.del_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, tsm.crt_dt::timestamptz) AS stat_date,
+            'subscriber_increase' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.tag_sbcr_mpng tsm
+          WHERE ${tagNo
+            ? Prisma.sql`tsm.tag_no = ${tagNo}`
+            : Prisma.sql`TRUE`}
+            AND tsm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND tsm.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND tsm.use_yn = 'Y'
+            AND tsm.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, tsm.crt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, tsm.del_dt::timestamptz) AS stat_date,
+            'subscriber_decrease' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.tag_sbcr_mpng tsm
+          WHERE ${tagNo
+            ? Prisma.sql`tsm.tag_no = ${tagNo}`
+            : Prisma.sql`TRUE`}
+            AND tsm.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND tsm.del_dt::timestamptz < ${endDt}::timestamptz
+            AND tsm.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, tsm.del_dt::timestamptz)
+        )
+
         SELECT
-          b.date_start AS "dateStart",
-          b.date_end AS "dateEnd",
-
-          -- 태그 생성/삭제 통계
-          COALESCE(SUM(
-            CASE WHEN t.crt_dt >= b.date_start AND t.crt_dt < b.date_end
-              ${tagNo
-                ? Prisma.sql`AND t.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "newTagCount",
-
-          COALESCE(SUM(
-            CASE WHEN t.del_dt >= b.date_start AND t.del_dt < b.date_end
-              ${tagNo
-                ? Prisma.sql`AND t.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "deleteTagCount",
-
-          COALESCE(SUM(
-            CASE WHEN t.use_yn = 'Y' AND t.del_yn = 'N'
-              ${tagNo
-                ? Prisma.sql`AND t.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "activeTagCount",
-
-          -- 태그 사용 통계
-          COALESCE(SUM(
-            CASE WHEN ptm.crt_dt >= b.date_start AND ptm.crt_dt < b.date_end
-              ${tagNo
-                ? Prisma.sql`AND ptm.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "tagMappingCount",
-
-          COALESCE(SUM(
-            CASE WHEN ptm.del_dt >= b.date_start AND ptm.del_dt < b.date_end
-              ${tagNo
-                ? Prisma.sql`AND ptm.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "tagMappingDeleteCount",
-
-          COALESCE(SUM(
-            CASE WHEN ptm.use_yn = 'Y' AND ptm.del_yn = 'N'
-              ${tagNo
-                ? Prisma.sql`AND ptm.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "activeTagMappingCount",
-
-          -- 태그 구독 통계
-          COALESCE(SUM(
-            CASE WHEN tsm.crt_dt >= b.date_start AND tsm.crt_dt < b.date_end
-              ${tagNo
-                ? Prisma.sql`AND tsm.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "subscriberIncreaseCount",
-
-          COALESCE(SUM(
-            CASE WHEN tsm.del_dt >= b.date_start AND tsm.del_dt < b.date_end
-              ${tagNo
-                ? Prisma.sql`AND tsm.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "subscriberDecreaseCount",
-
-          COALESCE(SUM(
-            CASE WHEN tsm.use_yn = 'Y' AND tsm.del_yn = 'N'
-              ${tagNo
-                ? Prisma.sql`AND tsm.tag_no = ${tagNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "activeSubscriberCount"
-
-        FROM bucket b
-        LEFT JOIN tag_info t ON 1=1
-        LEFT JOIN pst_tag_mpng ptm ON 1=1
-        LEFT JOIN tag_sbcr_mpng tsm ON 1=1
-        GROUP BY b.date_start, b.date_end
-        ORDER BY b.date_start
+          ds.date_start AS "dateStart",
+          ds.date_end AS "dateEnd",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'new_tag' THEN as.stat_count ELSE 0 END), 0) AS "newTagCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'delete_tag' THEN as.stat_count ELSE 0 END), 0) AS "deleteTagCount",
+          0 AS "activeTagCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'tag_mapping' THEN as.stat_count ELSE 0 END), 0) AS "tagMappingCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'tag_mapping_delete' THEN as.stat_count ELSE 0 END), 0) AS "tagMappingDeleteCount",
+          0 AS "activeTagMappingCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'subscriber_increase' THEN as.stat_count ELSE 0 END), 0) AS "subscriberIncreaseCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'subscriber_decrease' THEN as.stat_count ELSE 0 END), 0) AS "subscriberDecreaseCount",
+          0 AS "activeSubscriberCount"
+        FROM date_series ds
+        LEFT JOIN all_stats as ON as.stat_date = ds.date_start
+        GROUP BY ds.date_start, ds.date_end
+        ORDER BY ds.date_start
       `;
 
       return prismaResponse(true, analyzeData);
@@ -146,64 +170,49 @@ export class TagRepository {
   }
 
   /**
-   * @description 태그별 사용 횟수 TOP N
+   * @description 태그별 사용 횟수 TOP N (최적화된 버전)
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택적)
    */
   async getTopUsedTagsByCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopUsedTagItemType[]> | null> {
     try {
-      const whereCondition = analyzeStatData
-        ? {
-          crtDt: {
-            gte: analyzeStatData.startDt,
-            lte: analyzeStatData.endDt,
-          },
-        }
-        : {};
-
-      const topUsedTags = await this.prisma.pstTagMpng.groupBy({
-        by: [ 'tagNo', ],
-        where: {
-          ...whereCondition,
-          useYn: 'Y',
-          delYn: 'N',
-        },
-        _count: {
-          tagNo: true,
-        },
-        _max: {
-          crtDt: true,
-        },
-        orderBy: {
-          _count: {
-            tagNo: 'desc',
-          },
-        },
-        take: limit,
-      });
-
-      const result = await Promise.all(topUsedTags.map(async (item) => {
-        const tag = await this.prisma.tagInfo.findUnique({
-          where: { tagNo: item.tagNo, },
-          select: { tagNm: true, },
-        });
-
-        const subscriberCount = await this.prisma.tagSbcrMpng.count({
-          where: {
-            tagNo: item.tagNo,
-            useYn: 'Y',
-            delYn: 'N',
-          },
-        });
-
-        return {
-          tagNo: item.tagNo,
-          tagNm: tag?.tagNm || '',
-          usageCount: item._count.tagNo,
-          subscriberCount,
-          lastUsedDate: item._max.crtDt || '',
-        };
-      }));
+      const result = await this.prisma.$queryRaw<TopUsedTagItemType[]>`
+        WITH top_used_tags AS (
+          SELECT
+            ptm.tag_no,
+            COUNT(*) as usage_count,
+            MAX(ptm.crt_dt) as last_used_date
+          FROM nihilog.pst_tag_mpng ptm
+          WHERE ptm.use_yn = 'Y'
+            AND ptm.del_yn = 'N'
+            ${analyzeStatData
+              ? Prisma.sql`
+                AND ptm.crt_dt::timestamptz >= ${analyzeStatData.startDt}::timestamptz
+                AND ptm.crt_dt::timestamptz <= ${analyzeStatData.endDt}::timestamptz
+              `
+              : Prisma.empty}
+          GROUP BY ptm.tag_no
+          ORDER BY usage_count DESC
+          LIMIT ${limit}
+        )
+        SELECT
+          tut.tag_no AS "tagNo",
+          COALESCE(t.tag_nm, '') AS "tagNm",
+          tut.usage_count AS "usageCount",
+          COALESCE(tsm.subscriber_count, 0) AS "subscriberCount",
+          tut.last_used_date AS "lastUsedDate"
+        FROM top_used_tags tut
+        LEFT JOIN nihilog.tag_info t ON t.tag_no = tut.tag_no
+        LEFT JOIN (
+          SELECT
+            tag_no,
+            COUNT(*) as subscriber_count
+          FROM nihilog.tag_sbcr_mpng
+          WHERE use_yn = 'Y' AND del_yn = 'N'
+          GROUP BY tag_no
+        ) tsm ON tsm.tag_no = tut.tag_no
+        ORDER BY tut.usage_count DESC
+      `;
 
       return prismaResponse(true, result);
     }
@@ -295,53 +304,42 @@ export class TagRepository {
   }
 
   /**
-   * @description 태그별 구독자 수 TOP N
+   * @description 태그별 구독자 수 TOP N (최적화된 버전)
    * @param limit 상위 N개
    */
   async getTopTagsBySubscriberCount(limit: number): Promise<RepoResponseType<TopTagsBySubscriberItemType[]> | null> {
     try {
-      const topSubscriberTags = await this.prisma.tagSbcrMpng.groupBy({
-        by: [ 'tagNo', ],
-        where: {
-          useYn: 'Y',
-          delYn: 'N',
-        },
-        _count: {
-          tagNo: true,
-        },
-        _max: {
-          crtDt: true,
-        },
-        orderBy: {
-          _count: {
-            tagNo: 'desc',
-          },
-        },
-        take: limit,
-      });
-
-      const result = await Promise.all(topSubscriberTags.map(async (item) => {
-        const tag = await this.prisma.tagInfo.findUnique({
-          where: { tagNo: item.tagNo, },
-          select: { tagNm: true, },
-        });
-
-        const usageCount = await this.prisma.pstTagMpng.count({
-          where: {
-            tagNo: item.tagNo,
-            useYn: 'Y',
-            delYn: 'N',
-          },
-        });
-
-        return {
-          tagNo: item.tagNo,
-          tagNm: tag?.tagNm || '',
-          subscriberCount: item._count.tagNo,
-          usageCount,
-          lastSubscriberDate: item._max.crtDt || '',
-        };
-      }));
+      const result = await this.prisma.$queryRaw<TopTagsBySubscriberItemType[]>`
+        WITH top_subscriber_tags AS (
+          SELECT
+            tsm.tag_no,
+            COUNT(*) as subscriber_count,
+            MAX(tsm.crt_dt) as last_subscriber_date
+          FROM nihilog.tag_sbcr_mpng tsm
+          WHERE tsm.use_yn = 'Y'
+            AND tsm.del_yn = 'N'
+          GROUP BY tsm.tag_no
+          ORDER BY subscriber_count DESC
+          LIMIT ${limit}
+        )
+        SELECT
+          tst.tag_no AS "tagNo",
+          COALESCE(t.tag_nm, '') AS "tagNm",
+          tst.subscriber_count AS "subscriberCount",
+          COALESCE(ptm.usage_count, 0) AS "usageCount",
+          tst.last_subscriber_date AS "lastSubscriberDate"
+        FROM top_subscriber_tags tst
+        LEFT JOIN nihilog.tag_info t ON t.tag_no = tst.tag_no
+        LEFT JOIN (
+          SELECT
+            tag_no,
+            COUNT(*) as usage_count
+          FROM nihilog.pst_tag_mpng
+          WHERE use_yn = 'Y' AND del_yn = 'N'
+          GROUP BY tag_no
+        ) ptm ON ptm.tag_no = tst.tag_no
+        ORDER BY tst.subscriber_count DESC
+      `;
 
       return prismaResponse(true, result);
     }
@@ -394,47 +392,36 @@ export class TagRepository {
   }
 
   /**
-   * @description 구독자 없는 태그 목록
+   * @description 구독자 없는 태그 목록 (최적화된 버전)
    */
   async getTagsWithoutSubscribers(): Promise<RepoResponseType<TagWithoutSubscribersItemType[]> | null> {
     try {
-      const tagsWithoutSubscribers = await this.prisma.tagInfo.findMany({
-        where: {
-          useYn: 'Y',
-          delYn: 'N',
-          subscribers: {
-            none: {
-              useYn: 'Y',
-              delYn: 'N',
-            },
-          },
-        },
-        select: {
-          tagNo: true,
-          tagNm: true,
-          crtDt: true,
-        },
-        orderBy: {
-          crtDt: 'desc',
-        },
-      });
-
-      const result = await Promise.all(tagsWithoutSubscribers.map(async (tag) => {
-        const usageCount = await this.prisma.pstTagMpng.count({
-          where: {
-            tagNo: tag.tagNo,
-            useYn: 'Y',
-            delYn: 'N',
-          },
-        });
-
-        return {
-          tagNo: tag.tagNo,
-          tagNm: tag.tagNm,
-          usageCount,
-          createDate: tag.crtDt,
-        };
-      }));
+      const result = await this.prisma.$queryRaw<TagWithoutSubscribersItemType[]>`
+        SELECT
+          t.tag_no AS "tagNo",
+          t.tag_nm AS "tagNm",
+          t.crt_dt AS "createDate",
+          COALESCE(ptm.usage_count, 0) AS "usageCount"
+        FROM nihilog.tag_info t
+        LEFT JOIN (
+          SELECT
+            tag_no,
+            COUNT(*) as usage_count
+          FROM nihilog.pst_tag_mpng
+          WHERE use_yn = 'Y' AND del_yn = 'N'
+          GROUP BY tag_no
+        ) ptm ON ptm.tag_no = t.tag_no
+        WHERE t.use_yn = 'Y'
+          AND t.del_yn = 'N'
+          AND NOT EXISTS (
+            SELECT 1
+            FROM nihilog.tag_sbcr_mpng tsm
+            WHERE tsm.tag_no = t.tag_no
+              AND tsm.use_yn = 'Y'
+              AND tsm.del_yn = 'N'
+          )
+        ORDER BY t.crt_dt DESC
+      `;
 
       return prismaResponse(true, result);
     }

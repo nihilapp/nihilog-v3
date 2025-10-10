@@ -42,7 +42,7 @@ export class AdminSubscribeController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/analyze',
+    endpoint: '/analyze/overview',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -55,13 +55,13 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_ERROR
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.ANALYZE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_SUCCESS,
+      MESSAGE.SUBSCRIBE.ADMIN.ANALYZE_SUCCESS,
       result.data
     );
   }
@@ -83,13 +83,13 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS,
+      MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_SUCCESS,
       result.data
     );
   }
@@ -112,13 +112,13 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS,
+      MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_SUCCESS,
       result.data
     );
   }
@@ -141,13 +141,13 @@ export class AdminSubscribeController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR
+        result?.error?.message || MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS,
+      MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_SUCCESS,
       result.data
     );
   }

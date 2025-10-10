@@ -3,17 +3,133 @@ import bcrypt from 'bcrypt';
 
 import { MESSAGE } from '@/code/messages';
 import { CreateUserDto } from '@/dto/auth.dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
 import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import { searchUserSchema } from '@/endpoints/prisma/schemas/user.schema';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectUserInfoType, SelectUserInfoListItemType } from '@/endpoints/prisma/types/user.types';
+import type {
+  SelectUserInfoType,
+  SelectUserInfoListItemType,
+  AnalyzeUserStatItemType,
+  ActiveUserAnalysisItemType,
+  TopUsersByContributionItemType,
+  TopUsersByPostCountItemType,
+  TopUsersByCommentCountItemType,
+  UserRoleDistributionItemType,
+  UserStatusDistributionItemType,
+  InactiveUsersListItemType,
+  UserGrowthRateItemType,
+  UserRetentionRateItemType
+} from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminUserService {
   constructor(private readonly userRepository: UserRepository) { }
+
+  // ========================================================
+  // 사용자 통계 관련 메서드
+  // ========================================================
+
+  /**
+   * @description 사용자 분석 통계 (9개 지표 통합)
+   * @param analyzeStatData 분석 통계 데이터
+   * @param userNo 사용자 번호 (선택사항)
+   */
+  async getAnalyzeUserData(
+    analyzeStatData: AnalyzeStatDto,
+    userNo?: number
+  ): Promise<RepoResponseType<AnalyzeUserStatItemType[]> | null> {
+    return this.userRepository.getAnalyzeUserData(analyzeStatData, userNo);
+  }
+
+  /**
+   * @description 활성 사용자 분석
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getActiveUserAnalysis(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<ActiveUserAnalysisItemType[]> | null> {
+    return this.userRepository.getActiveUserAnalysis(analyzeStatData);
+  }
+
+  /**
+   * @description 사용자별 기여도 TOP N
+   * @param limit 제한 수
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopUsersByContribution(
+    limit: number,
+    analyzeStatData?: AnalyzeStatDto
+  ): Promise<RepoResponseType<TopUsersByContributionItemType[]> | null> {
+    return this.userRepository.getTopUsersByContribution(limit, analyzeStatData);
+  }
+
+  /**
+   * @description 사용자별 게시글 작성 수 TOP N
+   * @param limit 제한 수
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopUsersByPostCount(
+    limit: number,
+    analyzeStatData?: AnalyzeStatDto
+  ): Promise<RepoResponseType<TopUsersByPostCountItemType[]> | null> {
+    return this.userRepository.getTopUsersByPostCount(limit, analyzeStatData);
+  }
+
+  /**
+   * @description 사용자별 댓글 작성 수 TOP N
+   * @param limit 제한 수
+   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   */
+  async getTopUsersByCommentCount(
+    limit: number,
+    analyzeStatData?: AnalyzeStatDto
+  ): Promise<RepoResponseType<TopUsersByCommentCountItemType[]> | null> {
+    return this.userRepository.getTopUsersByCommentCount(limit, analyzeStatData);
+  }
+
+  /**
+   * @description 역할별 사용자 분포
+   */
+  async getUserRoleDistribution(): Promise<RepoResponseType<UserRoleDistributionItemType[]> | null> {
+    return this.userRepository.getUserRoleDistribution();
+  }
+
+  /**
+   * @description 상태별 사용자 분포
+   */
+  async getUserStatusDistribution(): Promise<RepoResponseType<UserStatusDistributionItemType[]> | null> {
+    return this.userRepository.getUserStatusDistribution();
+  }
+
+  /**
+   * @description 비활성 사용자 목록
+   * @param daysThreshold 비활성 기준 일수
+   */
+  async getInactiveUsersList(daysThreshold: number = 30): Promise<RepoResponseType<InactiveUsersListItemType[]> | null> {
+    return this.userRepository.getInactiveUsersList(daysThreshold);
+  }
+
+  /**
+   * @description 사용자 성장률
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getUserGrowthRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<UserGrowthRateItemType[]> | null> {
+    return this.userRepository.getUserGrowthRate(analyzeStatData);
+  }
+
+  /**
+   * @description 사용자 유지율
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getUserRetentionRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<UserRetentionRateItemType[]> | null> {
+    return this.userRepository.getUserRetentionRate(analyzeStatData);
+  }
+
+  // ========================================================
+  // 기존 관리자 사용자 관련 메서드
+  // ========================================================
 
   /**
    * @description 사용자 목록 검색

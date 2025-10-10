@@ -284,7 +284,7 @@ export class PostRepository {
 
   // ===== 사용자 상호작용 기능 =====
   /**
-   * @description 게시글 분석 데이터 조회
+   * @description 게시글 분석 데이터 조회 (최적화된 버전)
    * @param pstNo 게시글 번호
    */
   async getAnalyzePostData(analyzeStatData: AnalyzeStatDto, pstNo?: number): Promise<RepoResponseType<AnalyzePostItemType[]> | null> {
@@ -292,110 +292,127 @@ export class PostRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzePostItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+
+        -- 모든 통계를 하나의 CTE로 통합
+        all_stats AS (
+          SELECT
+            date_trunc(${mode}, p.publ_dt::timestamptz) AS stat_date,
+            'publish' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_info p
+          WHERE ${pstNo
+            ? Prisma.sql`p.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND p.publ_dt::timestamptz >= ${startDt}::timestamptz
+            AND p.publ_dt::timestamptz < ${endDt}::timestamptz
+            AND p.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, p.publ_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, p.updt_dt::timestamptz) AS stat_date,
+            'update' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_info p
+          WHERE ${pstNo
+            ? Prisma.sql`p.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND p.updt_dt::timestamptz >= ${startDt}::timestamptz
+            AND p.updt_dt::timestamptz < ${endDt}::timestamptz
+            AND p.del_yn = 'N'
+            AND p.updt_dt != p.crt_dt
+          GROUP BY date_trunc(${mode}, p.updt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, p.del_dt::timestamptz) AS stat_date,
+            'delete' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_info p
+          WHERE ${pstNo
+            ? Prisma.sql`p.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND p.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND p.del_dt::timestamptz < ${endDt}::timestamptz
+            AND p.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, p.del_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, v.view_dt::timestamptz) AS stat_date,
+            'view' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_view_log v
+          WHERE ${pstNo
+            ? Prisma.sql`v.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND v.view_dt::timestamptz >= ${startDt}::timestamptz
+            AND v.view_dt::timestamptz < ${endDt}::timestamptz
+          GROUP BY date_trunc(${mode}, v.view_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, bm.crt_dt::timestamptz) AS stat_date,
+            'bookmark' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_bkmrk_mpng bm
+          WHERE ${pstNo
+            ? Prisma.sql`bm.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND bm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND bm.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND bm.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, bm.crt_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, sl.shrn_dt::timestamptz) AS stat_date,
+            'share' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_shrn_log sl
+          WHERE ${pstNo
+            ? Prisma.sql`sl.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND sl.shrn_dt::timestamptz >= ${startDt}::timestamptz
+            AND sl.shrn_dt::timestamptz < ${endDt}::timestamptz
+          GROUP BY date_trunc(${mode}, sl.shrn_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'comment' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info c
+          WHERE ${pstNo
+            ? Prisma.sql`c.pst_no = ${pstNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND c.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
+        )
+
         SELECT
-          b.date_start AS "dateStart",
-          b.date_end AS "dateEnd",
-
-          -- 1. 게시글 발행 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.pst_info p
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN p.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND p.publ_dt::timestamptz >= b.date_start
-              AND p.publ_dt::timestamptz < b.date_end
-              AND p.del_yn = 'N'
-          ) AS "publishCount",
-
-          -- 2. 게시글 수정 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.pst_info p
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN p.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND p.updt_dt::timestamptz >= b.date_start
-              AND p.updt_dt::timestamptz < b.date_end
-              AND p.del_yn = 'N'
-              AND p.updt_dt != p.crt_dt
-          ) AS "updateCount",
-
-          -- 3. 게시글 삭제 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.pst_info p
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN p.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND p.del_dt::timestamptz >= b.date_start
-              AND p.del_dt::timestamptz < b.date_end
-              AND p.del_yn = 'Y'
-          ) AS "deleteCount",
-
-          -- 4. 조회 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.pst_view_log v
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN v.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND v.view_dt::timestamptz >= b.date_start
-              AND v.view_dt::timestamptz < b.date_end
-          ) AS "viewCount",
-
-          -- 5. 북마크 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.pst_bkmrk_mpng bm
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN bm.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND bm.crt_dt::timestamptz >= b.date_start
-              AND bm.crt_dt::timestamptz < b.date_end
-              AND bm.del_yn = 'N'
-          ) AS "bookmarkCount",
-
-          -- 6. 공유 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.pst_shrn_log sl
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN sl.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND sl.shrn_dt::timestamptz >= b.date_start
-              AND sl.shrn_dt::timestamptz < b.date_end
-          ) AS "shareCount",
-
-          -- 7. 댓글 수 (서브쿼리)
-          (
-            SELECT COUNT(1)
-            FROM nihilog.cmnt_info c
-            WHERE
-              CASE WHEN ${pstNo} IS NOT NULL
-                THEN c.pst_no = ${pstNo}
-                ELSE TRUE
-              END
-              AND c.crt_dt::timestamptz >= b.date_start
-              AND c.crt_dt::timestamptz < b.date_end
-              AND c.del_yn = 'N'
-          ) AS "commentCount"
-
-        FROM bucket b
-        ORDER BY b.date_start
+          ds.date_start AS "dateStart",
+          ds.date_end AS "dateEnd",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'publish' THEN as.stat_count ELSE 0 END), 0) AS "publishCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'update' THEN as.stat_count ELSE 0 END), 0) AS "updateCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'delete' THEN as.stat_count ELSE 0 END), 0) AS "deleteCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'view' THEN as.stat_count ELSE 0 END), 0) AS "viewCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'bookmark' THEN as.stat_count ELSE 0 END), 0) AS "bookmarkCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'share' THEN as.stat_count ELSE 0 END), 0) AS "shareCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'comment' THEN as.stat_count ELSE 0 END), 0) AS "commentCount"
+        FROM date_series ds
+        LEFT JOIN all_stats as ON as.stat_date = ds.date_start
+        GROUP BY ds.date_start, ds.date_end
+        ORDER BY ds.date_start
       `;
 
       return prismaResponse(true, analyzeData);
@@ -572,43 +589,42 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 상태 비율 조회
+   * @description 게시글 상태 비율 조회 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
   async getPostStatusRatio(analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<PostStatusRatioItemType[]> | null> {
     try {
-      const where: Prisma.PstInfoWhereInput = {
-        delYn: 'N',
-        ...(analyzeStatData && {
-          publDt: {
-            gte: analyzeStatData.startDt,
-            lte: analyzeStatData.endDt,
-          },
-        }),
-      };
-
-      // 전체 카운트
-      const total = await this.prisma.pstInfo.count({ where, });
-
-      // 상태별 카운트
-      const statusCounts = await this.prisma.pstInfo.groupBy({
-        by: [ 'pstStts', ],
-        where,
-        _count: {
-          pstStts: true,
-        },
-      });
-
-      // 비율 계산 및 정렬
-      const statusRatio: PostStatusRatioItemType[] = statusCounts
-        .map((item) => ({
-          status: item.pstStts,
-          count: Number(item._count.pstStts),
-          ratio: total > 0
-            ? Math.round((item._count.pstStts / total) * 100 * 100) / 10000
-            : 0,
-        }))
-        .sort((a, b) => Number(b.count - a.count));
+      // Raw SQL로 한 번에 처리하여 성능 향상
+      const statusRatio = await this.prisma.$queryRaw<PostStatusRatioItemType[]>`
+        WITH status_counts AS (
+          SELECT
+            pst_stts,
+            COUNT(*) as count
+          FROM nihilog.pst_info
+          WHERE del_yn = 'N'
+            ${analyzeStatData
+              ? Prisma.sql`
+                AND publ_dt::timestamptz >= ${analyzeStatData.startDt}::timestamptz
+                AND publ_dt::timestamptz <= ${analyzeStatData.endDt}::timestamptz
+              `
+              : Prisma.empty}
+          GROUP BY pst_stts
+        ),
+        total_count AS (
+          SELECT SUM(count) as total FROM status_counts
+        )
+        SELECT
+          sc.pst_stts as status,
+          sc.count,
+          CASE
+            WHEN tc.total > 0
+            THEN ROUND((sc.count::decimal / tc.total) * 100, 2)
+            ELSE 0
+          END as ratio
+        FROM status_counts sc
+        CROSS JOIN total_count tc
+        ORDER BY sc.count DESC
+      `;
 
       return prismaResponse(true, statusRatio);
     }

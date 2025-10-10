@@ -15,10 +15,10 @@ export const registerAdminSubscribeEndpoints = () => {
   // 구독 설정 통계 관련 엔드포인트
   // ========================================================
 
-  // POST /admin/subscribes/analyze - 구독 설정 분석 통계
+  // POST /admin/subscribes/analyze/overview - 구독 설정 분석 통계
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/subscribes/analyze',
+    path: '/admin/subscribes/analyze/overview',
     summary: '📊 구독 설정 분석 통계',
     description: 'ADMIN 권한으로 구독 설정 분석 통계를 조회합니다.',
     tags: [ 'admin-subscribe', ],
@@ -41,13 +41,13 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '구독 설정 분석 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_SUCCESS, [
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.ANALYZE_SUCCESS, [
                   CreateSubscribeAnalyze.analyzeSubscribe(),
                 ]),
               },
               error: {
                 summary: '구독 설정 분석 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_ERROR),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.ADMIN.ANALYZE_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -76,13 +76,13 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '알림 설정별 분포 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS, [
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_SUCCESS, [
                   CreateSubscribeAnalyze.subscribeNotificationDistribution(),
                 ]),
               },
               error: {
                 summary: '알림 설정별 분포 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -120,13 +120,13 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '전체 알림 활성 사용자 수 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS, [
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_SUCCESS, [
                   CreateSubscribeAnalyze.totalActiveNotificationUsers(),
                 ]),
               },
               error: {
                 summary: '전체 알림 활성 사용자 수 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용
@@ -164,13 +164,13 @@ export const registerAdminSubscribeEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '전체 알림 비활성 사용자 수 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS, [
+                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_SUCCESS, [
                   CreateSubscribeAnalyze.totalInactiveNotificationUsers(),
                 ]),
               },
               error: {
                 summary: '전체 알림 비활성 사용자 수 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR),
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.ADMIN.STATISTICS_ERROR),
               },
             }, {
               hasAuthGuard: true, // JWT 인증 사용

@@ -29,7 +29,7 @@ export class SubscribeRepository {
   // ========================================================
 
   /**
-   * @description 구독 설정 분석 통계 (6개 지표 통합)
+   * @description 구독 설정 분석 통계 (6개 지표 통합) - 최적화된 버전
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAnalyzeSubscribeData(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AnalyzeSubscribeStatItemType[]> | null> {
@@ -37,51 +37,35 @@ export class SubscribeRepository {
       const { startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeSubscribeStatItemType[]>`
+        WITH subscription_stats AS (
+          SELECT
+            COUNT(CASE WHEN crt_dt::timestamptz >= ${startDt}::timestamptz
+                      AND crt_dt::timestamptz <= ${endDt}::timestamptz
+                 THEN 1 END) as new_subscription_count,
+            COUNT(CASE WHEN del_dt::timestamptz >= ${startDt}::timestamptz
+                      AND del_dt::timestamptz <= ${endDt}::timestamptz
+                      AND del_yn = 'Y'
+                 THEN 1 END) as delete_subscription_count,
+            COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N'
+                 THEN 1 END) as active_subscription_count,
+            COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
+                 THEN 1 END) as email_notification_count,
+            COUNT(CASE WHEN new_pst_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
+                 THEN 1 END) as new_post_notification_count,
+            COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
+                 THEN 1 END) as comment_reply_notification_count
+          FROM nihilog.user_sbcr_info
+        )
         SELECT
           ${startDt} as "dateStart",
           ${endDt} as "dateEnd",
-          -- 구독 생성/삭제 통계
-          (
-            SELECT COUNT(*)
-            FROM "UserSbcrInfo" usi
-            WHERE usi."crtDt" >= ${startDt}
-              AND usi."crtDt" <= ${endDt}
-          ) as "newSubscriptionCount",
-          (
-            SELECT COUNT(*)
-            FROM "UserSbcrInfo" usi
-            WHERE usi."delDt" >= ${startDt}
-              AND usi."delDt" <= ${endDt}
-              AND usi."delYn" = 'Y'
-          ) as "deleteSubscriptionCount",
-          (
-            SELECT COUNT(*)
-            FROM "UserSbcrInfo" usi
-            WHERE usi."useYn" = 'Y'
-              AND usi."delYn" = 'N'
-          ) as "activeSubscriptionCount",
-          -- 알림 설정별 통계
-          (
-            SELECT COUNT(*)
-            FROM "UserSbcrInfo" usi
-            WHERE usi."emlNtfyYn" = 'Y'
-              AND usi."useYn" = 'Y'
-              AND usi."delYn" = 'N'
-          ) as "emailNotificationCount",
-          (
-            SELECT COUNT(*)
-            FROM "UserSbcrInfo" usi
-            WHERE usi."newPstNtfyYn" = 'Y'
-              AND usi."useYn" = 'Y'
-              AND usi."delYn" = 'N'
-          ) as "newPostNotificationCount",
-          (
-            SELECT COUNT(*)
-            FROM "UserSbcrInfo" usi
-            WHERE usi."cmntRplNtfyYn" = 'Y'
-              AND usi."useYn" = 'Y'
-              AND usi."delYn" = 'N'
-          ) as "commentReplyNotificationCount"
+          new_subscription_count as "newSubscriptionCount",
+          delete_subscription_count as "deleteSubscriptionCount",
+          active_subscription_count as "activeSubscriptionCount",
+          email_notification_count as "emailNotificationCount",
+          new_post_notification_count as "newPostNotificationCount",
+          comment_reply_notification_count as "commentReplyNotificationCount"
+        FROM subscription_stats
       `;
 
       return prismaResponse(true, analyzeData);
@@ -92,7 +76,7 @@ export class SubscribeRepository {
   }
 
   /**
-   * @description 알림 설정별 분포 통계
+   * @description 알림 설정별 분포 통계 (최적화된 버전)
    */
   async getSubscribeNotificationDistribution(): Promise<RepoResponseType<SubscribeNotificationDistributionItemType[]> | null> {
     try {
@@ -100,28 +84,28 @@ export class SubscribeRepository {
         WITH notification_stats AS (
           SELECT
             'EMAIL' as "notificationType",
-            COUNT(CASE WHEN "emlNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as active_count,
-            COUNT(CASE WHEN "emlNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as inactive_count,
-            COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as total_count
-          FROM "UserSbcrInfo"
+            COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as active_count,
+            COUNT(CASE WHEN eml_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as inactive_count,
+            COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as total_count
+          FROM nihilog.user_sbcr_info
 
           UNION ALL
 
           SELECT
             'NEW_POST' as "notificationType",
-            COUNT(CASE WHEN "newPstNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as active_count,
-            COUNT(CASE WHEN "newPstNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as inactive_count,
-            COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as total_count
-          FROM "UserSbcrInfo"
+            COUNT(CASE WHEN new_pst_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as active_count,
+            COUNT(CASE WHEN new_pst_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as inactive_count,
+            COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as total_count
+          FROM nihilog.user_sbcr_info
 
           UNION ALL
 
           SELECT
             'COMMENT_REPLY' as "notificationType",
-            COUNT(CASE WHEN "cmntRplNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as active_count,
-            COUNT(CASE WHEN "cmntRplNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as inactive_count,
-            COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as total_count
-          FROM "UserSbcrInfo"
+            COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as active_count,
+            COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as inactive_count,
+            COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as total_count
+          FROM nihilog.user_sbcr_info
         )
         SELECT
           "notificationType",
@@ -143,7 +127,7 @@ export class SubscribeRepository {
   }
 
   /**
-   * @description 전체 알림 활성 사용자 수 통계
+   * @description 전체 알림 활성 사용자 수 통계 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getTotalActiveNotificationUsers(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TotalActiveNotificationUsersItemType[]> | null> {
@@ -154,12 +138,12 @@ export class SubscribeRepository {
         SELECT
           ${startDt} as "dateStart",
           ${endDt} as "dateEnd",
-          COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "totalActiveUsers",
-          COUNT(CASE WHEN "emlNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "emailActiveUsers",
-          COUNT(CASE WHEN "newPstNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "newPostActiveUsers",
-          COUNT(CASE WHEN "cmntRplNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "commentReplyActiveUsers",
-          COUNT(CASE WHEN "emlNtfyYn" = 'Y' AND "newPstNtfyYn" = 'Y' AND "cmntRplNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "allNotificationsActiveUsers"
-        FROM "UserSbcrInfo"
+          COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "totalActiveUsers",
+          COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "emailActiveUsers",
+          COUNT(CASE WHEN new_pst_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "newPostActiveUsers",
+          COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "commentReplyActiveUsers",
+          COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND new_pst_ntfy_yn = 'Y' AND cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "allNotificationsActiveUsers"
+        FROM nihilog.user_sbcr_info
       `;
 
       return prismaResponse(true, activeUsersData);
@@ -170,7 +154,7 @@ export class SubscribeRepository {
   }
 
   /**
-   * @description 전체 알림 비활성 사용자 수 통계
+   * @description 전체 알림 비활성 사용자 수 통계 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getTotalInactiveNotificationUsers(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TotalInactiveNotificationUsersItemType[]> | null> {
@@ -181,12 +165,12 @@ export class SubscribeRepository {
         SELECT
           ${startDt} as "dateStart",
           ${endDt} as "dateEnd",
-          COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "totalInactiveUsers",
-          COUNT(CASE WHEN "emlNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "emailInactiveUsers",
-          COUNT(CASE WHEN "newPstNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "newPostInactiveUsers",
-          COUNT(CASE WHEN "cmntRplNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "commentReplyInactiveUsers",
-          COUNT(CASE WHEN "emlNtfyYn" = 'N' AND "newPstNtfyYn" = 'N' AND "cmntRplNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "allNotificationsInactiveUsers"
-        FROM "UserSbcrInfo"
+          COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "totalInactiveUsers",
+          COUNT(CASE WHEN eml_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "emailInactiveUsers",
+          COUNT(CASE WHEN new_pst_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "newPostInactiveUsers",
+          COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "commentReplyInactiveUsers",
+          COUNT(CASE WHEN eml_ntfy_yn = 'N' AND new_pst_ntfy_yn = 'N' AND cmnt_rpl_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "allNotificationsInactiveUsers"
+        FROM nihilog.user_sbcr_info
       `;
 
       return prismaResponse(true, inactiveUsersData);

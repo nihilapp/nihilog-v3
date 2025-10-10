@@ -20,10 +20,10 @@ export const registerAdminCategoriesEndpoints = () => {
   // 카테고리 통계 관련 엔드포인트
   // ========================================================
 
-  // POST /admin/categories/analyze - 카테고리 분석 통계
+  // POST /admin/categories/analyze/overview - 카테고리 분석 통계
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/categories/analyze',
+    path: '/admin/categories/analyze/overview',
     summary: '📊 카테고리 분석 통계',
     description: 'ADMIN 권한으로 카테고리 분석 통계를 조회합니다. (전체 또는 개별 카테고리)',
     tags: [ 'admin-categories', ],

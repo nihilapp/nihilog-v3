@@ -39,7 +39,7 @@ export class CategoryRepository {
   // ========================================================
 
   /**
-   * @description 카테고리 분석 통계 (시간대별 합산) - 11개 지표 통합
+   * @description 카테고리 분석 통계 (시간대별 합산) - 11개 지표 통합 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터
    * @param ctgryNo 카테고리 번호 (선택적, 없으면 전체/있으면 해당 카테고리만)
    */
@@ -48,115 +48,173 @@ export class CategoryRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeCategoryStatItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
-        SELECT
-          b.date_start AS "dateStart",
-          b.date_end AS "dateEnd",
+        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
 
-          -- 카테고리 생성/삭제 통계
-          COALESCE(SUM(
-            CASE WHEN c.crt_dt >= b.date_start AND c.crt_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND c.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "newCategoryCount",
+        -- 모든 통계를 하나의 CTE로 통합
+        all_stats AS (
+          SELECT
+            date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
+            'new_category' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.ctgry_info c
+          WHERE ${ctgryNo
+            ? Prisma.sql`c.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.crt_dt::timestamptz < ${endDt}::timestamptz
+          GROUP BY date_trunc(${mode}, c.crt_dt::timestamptz)
 
-          COALESCE(SUM(
-            CASE WHEN c.del_dt >= b.date_start AND c.del_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND c.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "deleteCategoryCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN c.use_yn = 'Y' AND c.del_yn = 'N'
-              ${ctgryNo
-                ? Prisma.sql`AND c.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "activeCategoryCount",
+          SELECT
+            date_trunc(${mode}, c.del_dt::timestamptz) AS stat_date,
+            'delete_category' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.ctgry_info c
+          WHERE ${ctgryNo
+            ? Prisma.sql`c.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND c.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND c.del_dt::timestamptz < ${endDt}::timestamptz
+            AND c.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, c.del_dt::timestamptz)
 
-          -- 카테고리 구독 통계
-          COALESCE(SUM(
-            CASE WHEN csm.crt_dt >= b.date_start AND csm.crt_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND csm.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "subscriberIncreaseCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN csm.del_dt >= b.date_start AND csm.del_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND csm.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "subscriberDecreaseCount",
+          SELECT
+            date_trunc(${mode}, csm.crt_dt::timestamptz) AS stat_date,
+            'subscriber_increase' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.ctgry_sbcr_mpng csm
+          WHERE ${ctgryNo
+            ? Prisma.sql`csm.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND csm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND csm.crt_dt::timestamptz < ${endDt}::timestamptz
+            AND csm.use_yn = 'Y'
+            AND csm.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, csm.crt_dt::timestamptz)
 
-          COALESCE(SUM(
-            CASE WHEN csm.use_yn = 'Y' AND csm.del_yn = 'N'
-              ${ctgryNo
-                ? Prisma.sql`AND csm.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "activeSubscriberCount",
+          UNION ALL
 
-          -- 카테고리 사용 통계
-          COALESCE(SUM(
-            CASE WHEN p.publ_dt >= b.date_start AND p.publ_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND p.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            AND p.use_yn = 'Y' AND p.del_yn = 'N'
-            THEN 1 ELSE 0 END
-          ), 0) AS "postCount",
+          SELECT
+            date_trunc(${mode}, csm.del_dt::timestamptz) AS stat_date,
+            'subscriber_decrease' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.ctgry_sbcr_mpng csm
+          WHERE ${ctgryNo
+            ? Prisma.sql`csm.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND csm.del_dt::timestamptz >= ${startDt}::timestamptz
+            AND csm.del_dt::timestamptz < ${endDt}::timestamptz
+            AND csm.del_yn = 'Y'
+          GROUP BY date_trunc(${mode}, csm.del_dt::timestamptz)
 
-          COALESCE(SUM(
-            CASE WHEN v.view_dt >= b.date_start AND v.view_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND p.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "viewCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN bm.crt_dt >= b.date_start AND bm.crt_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND p.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
+          SELECT
+            date_trunc(${mode}, p.publ_dt::timestamptz) AS stat_date,
+            'post_count' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_info p
+          WHERE ${ctgryNo
+            ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND p.publ_dt::timestamptz >= ${startDt}::timestamptz
+            AND p.publ_dt::timestamptz < ${endDt}::timestamptz
+            AND p.use_yn = 'Y'
+            AND p.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, p.publ_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, v.view_dt::timestamptz) AS stat_date,
+            'view_count' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_view_log v
+          INNER JOIN nihilog.pst_info p ON p.pst_no = v.pst_no
+          WHERE ${ctgryNo
+            ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND v.view_dt::timestamptz >= ${startDt}::timestamptz
+            AND v.view_dt::timestamptz < ${endDt}::timestamptz
+            AND p.use_yn = 'Y'
+            AND p.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, v.view_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, bm.crt_dt::timestamptz) AS stat_date,
+            'bookmark_count' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_bkmrk_mpng bm
+          INNER JOIN nihilog.pst_info p ON p.pst_no = bm.pst_no
+          WHERE ${ctgryNo
+            ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND bm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND bm.crt_dt::timestamptz < ${endDt}::timestamptz
             AND bm.del_yn = 'N'
-            THEN 1 ELSE 0 END
-          ), 0) AS "bookmarkCount",
+            AND p.use_yn = 'Y'
+            AND p.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, bm.crt_dt::timestamptz)
 
-          COALESCE(SUM(
-            CASE WHEN sl.shrn_dt >= b.date_start AND sl.shrn_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND p.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
-            THEN 1 ELSE 0 END
-          ), 0) AS "shareCount",
+          UNION ALL
 
-          COALESCE(SUM(
-            CASE WHEN cm.crt_dt >= b.date_start AND cm.crt_dt < b.date_end
-              ${ctgryNo
-                ? Prisma.sql`AND p.ctgry_no = ${ctgryNo}`
-                : Prisma.empty}
+          SELECT
+            date_trunc(${mode}, sl.shrn_dt::timestamptz) AS stat_date,
+            'share_count' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.pst_shrn_log sl
+          INNER JOIN nihilog.pst_info p ON p.pst_no = sl.pst_no
+          WHERE ${ctgryNo
+            ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND sl.shrn_dt::timestamptz >= ${startDt}::timestamptz
+            AND sl.shrn_dt::timestamptz < ${endDt}::timestamptz
+            AND p.use_yn = 'Y'
+            AND p.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, sl.shrn_dt::timestamptz)
+
+          UNION ALL
+
+          SELECT
+            date_trunc(${mode}, cm.crt_dt::timestamptz) AS stat_date,
+            'comment_count' AS stat_type,
+            COUNT(*) AS stat_count
+          FROM nihilog.cmnt_info cm
+          INNER JOIN nihilog.pst_info p ON p.pst_no = cm.pst_no
+          WHERE ${ctgryNo
+            ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
+            : Prisma.sql`TRUE`}
+            AND cm.crt_dt::timestamptz >= ${startDt}::timestamptz
+            AND cm.crt_dt::timestamptz < ${endDt}::timestamptz
             AND cm.del_yn = 'N'
-            THEN 1 ELSE 0 END
-          ), 0) AS "commentCount"
+            AND p.use_yn = 'Y'
+            AND p.del_yn = 'N'
+          GROUP BY date_trunc(${mode}, cm.crt_dt::timestamptz)
+        )
 
-        FROM bucket b
-        LEFT JOIN ctgry_info c ON 1=1
-        LEFT JOIN ctgry_sbcr_mpng csm ON 1=1
-        LEFT JOIN pst_info p ON 1=1
-        LEFT JOIN pst_view_log v ON v.pst_no = p.pst_no
-        LEFT JOIN pst_bkmrk_mpng bm ON bm.pst_no = p.pst_no
-        LEFT JOIN pst_shrn_log sl ON sl.pst_no = p.pst_no
-        LEFT JOIN cmnt_info cm ON cm.pst_no = p.pst_no
-        GROUP BY b.date_start, b.date_end
-        ORDER BY b.date_start
+        SELECT
+          ds.date_start AS "dateStart",
+          ds.date_end AS "dateEnd",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'new_category' THEN as.stat_count ELSE 0 END), 0) AS "newCategoryCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'delete_category' THEN as.stat_count ELSE 0 END), 0) AS "deleteCategoryCount",
+          0 AS "activeCategoryCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'subscriber_increase' THEN as.stat_count ELSE 0 END), 0) AS "subscriberIncreaseCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'subscriber_decrease' THEN as.stat_count ELSE 0 END), 0) AS "subscriberDecreaseCount",
+          0 AS "activeSubscriberCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'post_count' THEN as.stat_count ELSE 0 END), 0) AS "postCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'view_count' THEN as.stat_count ELSE 0 END), 0) AS "viewCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'bookmark_count' THEN as.stat_count ELSE 0 END), 0) AS "bookmarkCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'share_count' THEN as.stat_count ELSE 0 END), 0) AS "shareCount",
+          COALESCE(SUM(CASE WHEN as.stat_type = 'comment_count' THEN as.stat_count ELSE 0 END), 0) AS "commentCount"
+        FROM date_series ds
+        LEFT JOIN all_stats as ON as.stat_date = ds.date_start
+        GROUP BY ds.date_start, ds.date_end
+        ORDER BY ds.date_start
       `;
 
       return prismaResponse(true, analyzeData);
@@ -228,53 +286,42 @@ export class CategoryRepository {
   }
 
   /**
-   * @description 구독자 많은 카테고리 TOP N
+   * @description 구독자 많은 카테고리 TOP N (최적화된 버전)
    * @param limit 상위 N개
    */
   async getTopCategoriesBySubscriberCount(limit: number): Promise<RepoResponseType<TopCategoriesBySubscriberItemType[]> | null> {
     try {
-      const topSubscriberCategories = await this.prisma.ctgrySbcrMpng.groupBy({
-        by: [ 'ctgryNo', ],
-        where: {
-          useYn: 'Y',
-          delYn: 'N',
-        },
-        _count: {
-          ctgryNo: true,
-        },
-        _max: {
-          crtDt: true,
-        },
-        orderBy: {
-          _count: {
-            ctgryNo: 'desc',
-          },
-        },
-        take: limit,
-      });
-
-      const result = await Promise.all(topSubscriberCategories.map(async (item) => {
-        const category = await this.prisma.ctgryInfo.findUnique({
-          where: { ctgryNo: item.ctgryNo, },
-          select: { ctgryNm: true, },
-        });
-
-        const postCount = await this.prisma.pstInfo.count({
-          where: {
-            ctgryNo: item.ctgryNo,
-            useYn: 'Y',
-            delYn: 'N',
-          },
-        });
-
-        return {
-          ctgryNo: item.ctgryNo,
-          ctgryNm: category?.ctgryNm || '',
-          subscriberCount: item._count.ctgryNo,
-          postCount,
-          lastSubscriberDate: item._max.crtDt || '',
-        };
-      }));
+      const result = await this.prisma.$queryRaw<TopCategoriesBySubscriberItemType[]>`
+        WITH top_subscriber_categories AS (
+          SELECT
+            csm.ctgry_no,
+            COUNT(*) as subscriber_count,
+            MAX(csm.crt_dt) as last_subscriber_date
+          FROM nihilog.ctgry_sbcr_mpng csm
+          WHERE csm.use_yn = 'Y'
+            AND csm.del_yn = 'N'
+          GROUP BY csm.ctgry_no
+          ORDER BY subscriber_count DESC
+          LIMIT ${limit}
+        )
+        SELECT
+          tsc.ctgry_no AS "ctgryNo",
+          COALESCE(c.ctgry_nm, '') AS "ctgryNm",
+          tsc.subscriber_count AS "subscriberCount",
+          COALESCE(p.post_count, 0) AS "postCount",
+          tsc.last_subscriber_date AS "lastSubscriberDate"
+        FROM top_subscriber_categories tsc
+        LEFT JOIN nihilog.ctgry_info c ON c.ctgry_no = tsc.ctgry_no
+        LEFT JOIN (
+          SELECT
+            ctgry_no,
+            COUNT(*) as post_count
+          FROM nihilog.pst_info
+          WHERE use_yn = 'Y' AND del_yn = 'N'
+          GROUP BY ctgry_no
+        ) p ON p.ctgry_no = tsc.ctgry_no
+        ORDER BY tsc.subscriber_count DESC
+      `;
 
       return prismaResponse(true, result);
     }
@@ -654,52 +701,37 @@ export class CategoryRepository {
   }
 
   /**
-   * @description 구독자 없는 카테고리 목록
+   * @description 구독자 없는 카테고리 목록 (최적화된 버전)
    */
   async getCategoriesWithoutSubscribers(): Promise<RepoResponseType<CategoriesWithoutSubscribersItemType[]> | null> {
     try {
-      const categoriesWithoutSubscribers = await this.prisma.ctgryInfo.findMany({
-        where: {
-          useYn: 'Y',
-          delYn: 'N',
-          subscribers: {
-            none: {
-              useYn: 'Y',
-              delYn: 'N',
-            },
-          },
-        },
-        select: {
-          ctgryNo: true,
-          ctgryNm: true,
-          crtDt: true,
-        },
-        orderBy: {
-          crtDt: 'desc',
-        },
-      });
-
-      const result = await Promise.all(categoriesWithoutSubscribers.map(async (category) => {
-        const postCount = await this.prisma.pstInfo.count({
-          where: {
-            ctgryNo: category.ctgryNo,
-            useYn: 'Y',
-            delYn: 'N',
-          },
-        });
-
-        const createDate = new Date(category.crtDt);
-        const now = new Date();
-        const daysSinceCreation = Math.floor((now.getTime() - createDate.getTime()) / (1000 * 60 * 60 * 24));
-
-        return {
-          ctgryNo: category.ctgryNo,
-          ctgryNm: category.ctgryNm,
-          postCount,
-          createDate: category.crtDt,
-          daysSinceCreation,
-        };
-      }));
+      const result = await this.prisma.$queryRaw<CategoriesWithoutSubscribersItemType[]>`
+        SELECT
+          c.ctgry_no AS "ctgryNo",
+          c.ctgry_nm AS "ctgryNm",
+          c.crt_dt AS "createDate",
+          COALESCE(p.post_count, 0) AS "postCount",
+          EXTRACT(DAYS FROM (NOW() - c.crt_dt::timestamp)) AS "daysSinceCreation"
+        FROM nihilog.ctgry_info c
+        LEFT JOIN (
+          SELECT
+            ctgry_no,
+            COUNT(*) as post_count
+          FROM nihilog.pst_info
+          WHERE use_yn = 'Y' AND del_yn = 'N'
+          GROUP BY ctgry_no
+        ) p ON p.ctgry_no = c.ctgry_no
+        WHERE c.use_yn = 'Y'
+          AND c.del_yn = 'N'
+          AND NOT EXISTS (
+            SELECT 1
+            FROM nihilog.ctgry_sbcr_mpng csm
+            WHERE csm.ctgry_no = c.ctgry_no
+              AND csm.use_yn = 'Y'
+              AND csm.del_yn = 'N'
+          )
+        ORDER BY c.crt_dt DESC
+      `;
 
       return prismaResponse(true, result);
     }

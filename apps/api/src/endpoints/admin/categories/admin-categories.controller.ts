@@ -48,7 +48,7 @@ export class AdminCategoriesController {
    * @param ctgryNo 카테고리 번호 (선택적, 쿼리 스트링)
    */
   @Endpoint({
-    endpoint: '/analyze',
+    endpoint: '/analyze/overview',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
