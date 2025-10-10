@@ -2,9 +2,9 @@
 
 > **문서 목적**: data-analyze.md 기반 통계 기능 구현 현황을 체크리스트 형태로 관리
 > **최종 업데이트**: 2025년 10월 10일
-> **전체 진행률**: 41/55 메서드 (74.5%) | 71/98 지표 (72.4%)
-> **완성 통계**: 포스트(12개) + 태그(21개) + 카테고리(20개) + 댓글(18개) = **71개 지표** ✅
-> **구현 완성도**: Repository (41개) → Service (41개) → Controller (41개) → OpenAPI (41개) ✅
+> **전체 진행률**: 45/55 메서드 (81.8%) | 80/98 지표 (81.6%)
+> **완성 통계**: 포스트(12개) + 태그(21개) + 카테고리(20개) + 댓글(18개) + 구독설정(9개) = **80개 지표** ✅
+> **구현 완성도**: Repository (45개) → Service (45개) → Controller (45개) → OpenAPI (45개) ✅
 
 ---
 
@@ -274,38 +274,92 @@
 > **분석 기준**: `UserSbcrInfo` 테이블 기반 통계
 > **참고**: 태그/카테고리 구독 통계는 각각의 통계에 포함됨
 
-### 기본 통계
+### 기본 통계 (전체 지원)
+
+> 시간대별 합산 통계 - `getAnalyzeSubscribeData()` 통합 구현
 
 #### 1. 구독 생성/삭제 통계
 
-- [ ] 신규 구독 설정 수 (`UserSbcrInfo.crtDt`)
+- [x] 신규 구독 설정 수 (`UserSbcrInfo.crtDt`) - `getAnalyzeSubscribeData()` 구현됨
   - 새로 생성된 구독 설정 수
-- [ ] 구독 설정 삭제 수 (`UserSbcrInfo.delDt`, `delYn`)
+- [x] 구독 설정 삭제 수 (`UserSbcrInfo.delDt`, `delYn`) - `getAnalyzeSubscribeData()` 구현됨
   - 삭제된 구독 설정 수
-- [ ] 활성 구독 설정 수 (`UserSbcrInfo.useYn='Y'`, `delYn='N'`)
+- [x] 활성 구독 설정 수 (`UserSbcrInfo.useYn='Y'`, `delYn='N'`) - `getAnalyzeSubscribeData()` 구현됨
   - 현재 활성 구독 설정 수
 
 #### 2. 알림 설정별 통계
 
-- [ ] 이메일 알림 활성 수 (`UserSbcrInfo.emlNtfyYn='Y'`)
+- [x] 이메일 알림 활성 수 (`UserSbcrInfo.emlNtfyYn='Y'`) - `getAnalyzeSubscribeData()` 구현됨
   - 이메일 알림을 켜놓은 사용자 수
-- [ ] 새 게시글 알림 활성 수 (`UserSbcrInfo.newPstNtfyYn='Y'`)
+- [x] 새 게시글 알림 활성 수 (`UserSbcrInfo.newPstNtfyYn='Y'`) - `getAnalyzeSubscribeData()` 구현됨
   - 새 게시글 알림을 켜놓은 사용자 수
-- [ ] 댓글 답글 알림 활성 수 (`UserSbcrInfo.cmntRplNtfyYn='Y'`)
+- [x] 댓글 답글 알림 활성 수 (`UserSbcrInfo.cmntRplNtfyYn='Y'`) - `getAnalyzeSubscribeData()` 구현됨
   - 댓글 답글 알림을 켜놓은 사용자 수
 
-### 파생 지표
+### 파생 지표 (전체만)
+
+> 모든 구독 설정을 전체적으로 봤을 때의 통계 수치
 
 #### 1. 알림 설정 분석
 
-- [ ] 알림 설정별 분포
+- [x] 알림 설정별 분포 - `getSubscribeNotificationDistribution()` 구현됨
   - 각 알림 설정의 활성화 비율
-- [ ] 전체 알림 활성 사용자 수
+- [x] 전체 알림 활성 사용자 수 - `getTotalActiveNotificationUsers()` 구현됨
   - 모든 알림을 켜놓은 사용자 수
-- [ ] 전체 알림 비활성 사용자 수
+- [x] 전체 알림 비활성 사용자 수 - `getTotalInactiveNotificationUsers()` 구현됨
   - 모든 알림을 꺼놓은 사용자 수
 
-**구독 설정 통계 진행률**: 0/9 (0%)
+**구독 설정 통계 진행률**: 9/9 (100.0%)
+
+---
+
+### 🔧 태그/카테고리 구독 확장 지표 제안 (schema.prisma 기반)
+
+> 데이터 소스: `TagSbcrMpng`, `CtgrySbcrMpng`, `UserSbcrInfo`
+
+#### 1) 집계 지표 (구독 관점, 전체)
+
+- [ ] 태그별 구독자 수 집계 (`TagSbcrMpng`)
+- [ ] 카테고리별 구독자 수 집계 (`CtgrySbcrMpng`)
+- [ ] 태그별 구독 증가율 (기간 대비 증감)
+- [ ] 카테고리별 구독 증가율 (기간 대비 증감)
+- [ ] 인기 태그 순위 (구독자 수 기준)
+- [ ] 인기 카테고리 순위 (구독자 수 기준)
+- [ ] 사용자별 태그 구독 수 분포
+- [ ] 사용자별 카테고리 구독 수 분포
+- [ ] 태그-카테고리 동시 구독 상관관계 분석
+
+#### 2) 예상 Repository 메서드 (SubscribeRepository)
+
+- `getTagSubscriberStats(analyzeStatData)`
+- `getCategorySubscriberStats(analyzeStatData)`
+- `getTagSubscriberGrowthRate(analyzeStatData)`
+- `getCategorySubscriberGrowthRate(analyzeStatData)`
+- `getTopTagsBySubscriberCount(limit, analyzeStatData?)`
+- `getTopCategoriesBySubscriberCount(limit, analyzeStatData?)`
+- `getUserTagSubscriptionCounts(analyzeStatData)`
+- `getUserCategorySubscriptionCounts(analyzeStatData)`
+- `getTagCategorySubscriptionCorrelation(analyzeStatData)`
+
+#### 3) 예상 Service/Controller/Endpoint 패턴 (ADMIN)
+
+- Service: `AdminSubscribeService.*`
+- Controller Base: `/admin/subscribes` (JWT + ADMIN)
+- Endpoint (통일 규칙: `/analyze/...`)
+  - `POST /analyze/tag-subscribers`
+  - `POST /analyze/category-subscribers`
+  - `POST /analyze/tag-subscriber-growth`
+  - `POST /analyze/category-subscriber-growth`
+  - `GET  /analyze/top-tags?limit={n}`
+  - `GET  /analyze/top-categories?limit={n}`
+  - `POST /analyze/user-tag-subscriptions`
+  - `POST /analyze/user-category-subscriptions`
+  - `POST /analyze/correlation-tag-category`
+
+#### 4) 비고 (중복/경계 정리)
+
+- 태그/카테고리 관점의 상세 순위/성장률은 해당 도메인 통계(태그/카테고리)에도 존재합니다.
+- 구독 통계에서는 "사용자 구독 관점(전사 집계/기간 분석/상관분석)"을 중심으로 제공하여 중복을 피합니다.
 
 ---
 
@@ -390,9 +444,9 @@
 | 태그 통계      | 21      | ✅ 13/13          | ✅ 13/13       | ✅ 13/13              | ✅ 13/13     | ✅ **100%** |
 | 카테고리 통계  | 20      | ✅ 11/11          | ✅ 11/11       | ✅ 11/11              | ✅ 11/11     | ✅ **100%** |
 | 댓글 통계      | 18      | ✅ 10/10          | ✅ 10/10       | ✅ 10/10              | ✅ 10/10     | ✅ **100%** |
+| 구독 설정 통계 | 9       | ✅ 4/4            | ✅ 4/4         | ✅ 4/4                | ✅ 4/4       | ✅ **100%** |
 | 사용자 통계    | 18      | ❌ 0/10           | ❌ 0/10        | ❌ 0/10               | ❌ 0/10      | ❌ **0%**   |
-| 구독 설정 통계 | 9       | ❌ 0/4            | ❌ 0/4         | ❌ 0/4                | ❌ 0/4       | ❌ **0%**   |
-| **총합**       | **98**  | **41/55**         | **41/55**      | **41/55**             | **41/55**    | **74.5%**   |
+| **총합**       | **98**  | **45/55**         | **45/55**      | **45/55**             | **45/55**    | **81.8%**   |
 
 > **참고**: 기본 통계는 `getAnalyze{Entity}Data()` 하나의 메서드로 여러 지표를 통합 제공합니다.
 
@@ -408,24 +462,23 @@
   - Repository (11개) → Service (11개) → Controller (11개) → OpenAPI (11개)
 - **댓글 통계**: 18개 지표 / 10개 메서드
   - Repository (10개) → Service (10개) → Controller (10개) → OpenAPI (10개)
+- **구독 설정 통계**: 9개 지표 / 4개 메서드
+  - Repository (4개) → Service (4개) → Controller (4개) → OpenAPI (4개)
 
 **❌ 미구현 (재설계 완료, 구현 대기)**
 
 - **사용자 통계**: 18개 지표 / 10개 메서드 (전 단계 미구현)
   - 기본 통계 9개 → `getAnalyzeUserData()` 1개로 통합
   - 파생 지표 9개 → 각각 메서드 9개
-- **구독 설정 통계**: 9개 지표 / 4개 메서드 (전 단계 미구현)
-  - 기본 통계 6개 → `getAnalyzeSubscriptionData()` 1개로 통합
-  - 파생 지표 3개 → 각각 메서드 3개
 
 ---
 
 ## 🎯 구현된 기능 상세
 
-### ✅ 완전 구현된 기능 (41개 통계 × 4계층 = 164개)
+### ✅ 완전 구현된 기능 (45개 통계 × 4계층 = 180개)
 
 > **구현 계층**: Repository → Service → Controller → OpenAPI 문서
-> **완성 통계**: 포스트(7개) + 태그(13개) + 카테고리(11개) + 댓글(10개) = 41개
+> **완성 통계**: 포스트(7개) + 태그(13개) + 카테고리(11개) + 댓글(10개) + 구독설정(4개) = 45개
 
 ---
 
@@ -501,32 +554,32 @@
 
 - **Repository**: `TagRepository.getAnalyzeTagData(analyzeStatData, tagNo?)` ✅
 - **Service**: `AdminTagsService.adminGetAnalyzeTagData(analyzeStatData, tagNo)` ✅
-- **Controller**: `POST /admin/tags/analyze?tagNo={tagNo}` ✅
+- **Controller**: `POST /admin/tags/analyze/overview?tagNo={tagNo}` ✅
 - **OpenAPI**: `admin-tags.endpoints.ts` 문서화 완료 ✅
 
 #### 9~11. 태그 사용량 분석 (3개)
 
-- **getTopUsedTagsByCount**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/statistics/top-used` ✅ → OpenAPI ✅
-- **getTagUsageTrend**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/statistics/usage-trend` ✅ → OpenAPI ✅
-- **getUnusedTagsList**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/unused` ✅ → OpenAPI ✅
+- **getTopUsedTagsByCount**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/analyze/top-used` ✅ → OpenAPI ✅
+- **getTagUsageTrend**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/analyze/usage-trend` ✅ → OpenAPI ✅
+- **getUnusedTagsList**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/unused` ✅ → OpenAPI ✅
 
 #### 12~14. 태그 구독 분석 (3개)
 
-- **getTopTagsBySubscriberCount**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/top-subscribers` ✅ → OpenAPI ✅
-- **getTagSubscriberGrowthRate**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/statistics/subscriber-growth` ✅ → OpenAPI ✅
-- **getTagsWithoutSubscribers**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/no-subscribers` ✅ → OpenAPI ✅
+- **getTopTagsBySubscriberCount**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/top-subscribers` ✅ → OpenAPI ✅
+- **getTagSubscriberGrowthRate**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/analyze/subscriber-growth` ✅ → OpenAPI ✅
+- **getTagsWithoutSubscribers**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/no-subscribers` ✅ → OpenAPI ✅
 
 #### 15~17. 태그 효율성 분석 (3개)
 
-- **getTagUsageEfficiency**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/usage-efficiency` ✅ → OpenAPI ✅
-- **getTagAverageUsageFrequency**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/statistics/average-frequency` ✅ → OpenAPI ✅
-- **getTagLifecycleAnalysis**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/lifecycle` ✅ → OpenAPI ✅
+- **getTagUsageEfficiency**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/usage-efficiency` ✅ → OpenAPI ✅
+- **getTagAverageUsageFrequency**: Repository ✅ → Service ✅ → Controller `POST /admin/tags/analyze/average-frequency` ✅ → OpenAPI ✅
+- **getTagLifecycleAnalysis**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/lifecycle` ✅ → OpenAPI ✅
 
 #### 18~20. 태그 관리 통계 (3개)
 
-- **getTagStatusDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/status-distribution` ✅ → OpenAPI ✅
-- **getTagCreatorStatistics**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/creator-stats` ✅ → OpenAPI ✅
-- **getTagCleanupRecommendations**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/statistics/cleanup-recommendations` ✅ → OpenAPI ✅
+- **getTagStatusDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/status-distribution` ✅ → OpenAPI ✅
+- **getTagCreatorStatistics**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/creator-stats` ✅ → OpenAPI ✅
+- **getTagCleanupRecommendations**: Repository ✅ → Service ✅ → Controller `GET /admin/tags/analyze/cleanup-recommendations` ✅ → OpenAPI ✅
 
 ---
 
@@ -541,22 +594,22 @@
 
 #### 22~25. 카테고리 인기도 분석 (4개)
 
-- **getTopPopularCategoriesByIndex**: Repository ✅ → Service ✅ → Controller `POST /admin/categories/statistics/popular-index?limit={limit}` ✅ → OpenAPI ✅
-- **getTopCategoriesBySubscriberCount**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/top-subscribers?limit={limit}` ✅ → OpenAPI ✅
-- **getAverageBookmarkCountPerCategory**: Repository ✅ → Service ✅ → Controller `POST /admin/categories/statistics/average-bookmarks` ✅ → OpenAPI ✅
-- **getAverageViewCountPerCategory**: Repository ✅ → Service ✅ → Controller `POST /admin/categories/statistics/average-views` ✅ → OpenAPI ✅
+- **getTopPopularCategoriesByIndex**: Repository ✅ → Service ✅ → Controller `POST /admin/categories/analyze/popular-index?limit={limit}` ✅ → OpenAPI ✅
+- **getTopCategoriesBySubscriberCount**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/top-subscribers?limit={limit}` ✅ → OpenAPI ✅
+- **getAverageBookmarkCountPerCategory**: Repository ✅ → Service ✅ → Controller `POST /admin/categories/analyze/average-bookmarks` ✅ → OpenAPI ✅
+- **getAverageViewCountPerCategory**: Repository ✅ → Service ✅ → Controller `POST /admin/categories/analyze/average-views` ✅ → OpenAPI ✅
 
 #### 26~28. 카테고리 계층 분석 (3개)
 
-- **getCategoryHierarchyDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/hierarchy-distribution` ✅ → OpenAPI ✅
-- **getCategoryHierarchyPostDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/hierarchy-posts` ✅ → OpenAPI ✅
-- **getCategoryHierarchySubscriberDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/hierarchy-subscribers` ✅ → OpenAPI ✅
+- **getCategoryHierarchyDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/hierarchy-distribution` ✅ → OpenAPI ✅
+- **getCategoryHierarchyPostDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/hierarchy-posts` ✅ → OpenAPI ✅
+- **getCategoryHierarchySubscriberDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/hierarchy-subscribers` ✅ → OpenAPI ✅
 
 #### 29~31. 카테고리 관리 통계 (3개)
 
-- **getCategoryStatusDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/status-distribution` ✅ → OpenAPI ✅
-- **getCategoryCreatorStatistics**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/creator-stats` ✅ → OpenAPI ✅
-- **getUnusedCategoriesList**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/statistics/unused` ✅ → OpenAPI ✅
+- **getCategoryStatusDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/status-distribution` ✅ → OpenAPI ✅
+- **getCategoryCreatorStatistics**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/creator-stats` ✅ → OpenAPI ✅
+- **getUnusedCategoriesList**: Repository ✅ → Service ✅ → Controller `GET /admin/categories/analyze/unused` ✅ → OpenAPI ✅
 
 ---
 
@@ -582,21 +635,62 @@
 
 #### 33~35. 댓글 활동 분석 (3개)
 
-- **getTopPostsByCommentCount**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/top-posts?limit={limit}` ✅ → OpenAPI ✅
-- **getTopUsersByCommentCount**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/top-users?limit={limit}` ✅ → OpenAPI ✅
-- **getAverageCommentCountPerPost**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/average-per-post` ✅ → OpenAPI ✅
+- **getTopPostsByCommentCount**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/top-posts?limit={limit}` ✅ → OpenAPI ✅
+- **getTopUsersByCommentCount**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/top-users?limit={limit}` ✅ → OpenAPI ✅
+- **getAverageCommentCountPerPost**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/average-per-post` ✅ → OpenAPI ✅
 
 #### 36~38. 댓글 상태 분석 (3개)
 
-- **getCommentStatusDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/comments/statistics/status-distribution` ✅ → OpenAPI ✅
-- **getCommentApprovalRate**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/approval-rate` ✅ → OpenAPI ✅
-- **getCommentSpamRate**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/spam-rate` ✅ → OpenAPI ✅
+- **getCommentStatusDistribution**: Repository ✅ → Service ✅ → Controller `GET /admin/comments/analyze/status-distribution` ✅ → OpenAPI ✅
+- **getCommentApprovalRate**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/approval-rate` ✅ → OpenAPI ✅
+- **getCommentSpamRate**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/spam-rate` ✅ → OpenAPI ✅
 
 #### 39~41. 댓글 구조 분석 (3개)
 
-- **getCommentReplyRatio**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/reply-ratio` ✅ → OpenAPI ✅
-- **getCommentAverageDepth**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/statistics/average-depth` ✅ → OpenAPI ✅
-- **getPostsWithoutComments**: Repository ✅ → Service ✅ → Controller `GET /admin/comments/statistics/posts-without-comments` ✅ → OpenAPI ✅
+- **getCommentReplyRatio**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/reply-ratio` ✅ → OpenAPI ✅
+- **getCommentAverageDepth**: Repository ✅ → Service ✅ → Controller `POST /admin/comments/analyze/average-depth` ✅ → OpenAPI ✅
+- **getPostsWithoutComments**: Repository ✅ → Service ✅ → Controller `GET /admin/comments/analyze/posts-without-comments` ✅ → OpenAPI ✅
+
+---
+
+### 🔔 구독 설정 통계 (4개) - 100% 완성
+
+#### 42. 종합 구독 설정 분석 통계
+
+- **Repository**: `SubscribeRepository.getAnalyzeSubscribeData(analyzeStatData)` ✅
+- **Service**: `AdminSubscribeService.adminGetAnalyzeSubscribeData(analyzeStatData)` ✅
+- **Controller**: `POST /admin/subscribes/analyze` ✅
+- **OpenAPI**: `admin-subscribe.endpoints.ts` 문서화 완료 ✅
+- **기능**: 6개 축 데이터를 단일 쿼리로 통합 분석
+- **데이터 소스**:
+  - `UserSbcrInfo` (구독 생성/삭제/활성)
+  - 알림 설정 (이메일/새게시글/댓글답글)
+- **구현 방식**: 서브쿼리 기반 조건부 집계
+- **특징**:
+  - 시간 단위별 분석 (일간/주간/월간/년간)
+  - 단일 쿼리로 성능 최적화
+  - JWT + ADMIN 권한 필수
+
+#### 43. 알림 설정별 분포 통계
+
+- **Repository**: `SubscribeRepository.getSubscribeNotificationDistribution()` ✅
+- **Service**: `AdminSubscribeService.adminGetSubscribeNotificationDistribution()` ✅
+- **Controller**: `GET /admin/subscribes/analyze/notification-distribution` ✅
+- **OpenAPI**: `admin-subscribe.endpoints.ts` 문서화 완료 ✅
+
+#### 44. 전체 알림 활성 사용자 수 통계
+
+- **Repository**: `SubscribeRepository.getTotalActiveNotificationUsers(analyzeStatData)` ✅
+- **Service**: `AdminSubscribeService.adminGetTotalActiveNotificationUsers(analyzeStatData)` ✅
+- **Controller**: `POST /admin/subscribes/analyze/active-users` ✅
+- **OpenAPI**: `admin-subscribe.endpoints.ts` 문서화 완료 ✅
+
+#### 45. 전체 알림 비활성 사용자 수 통계
+
+- **Repository**: `SubscribeRepository.getTotalInactiveNotificationUsers(analyzeStatData)` ✅
+- **Service**: `AdminSubscribeService.adminGetTotalInactiveNotificationUsers(analyzeStatData)` ✅
+- **Controller**: `POST /admin/subscribes/analyze/inactive-users` ✅
+- **OpenAPI**: `admin-subscribe.endpoints.ts` 문서화 완료 ✅
 
 ---
 
@@ -614,25 +708,18 @@
 
 **완성도**: 71개 지표 / 41개 메서드 / 4계층 모두 완료 ✅
 
+#### 2단계: 구독 설정 통계 완성
+
+- [x] **구독 설정 통계**: 9개 지표 / 4개 메서드 (100% 완성)
+- [x] **전 계층 구현**: Repository → Service → Controller → OpenAPI 문서
+
+**완성도**: 80개 지표 / 45개 메서드 / 4계층 모두 완료 ✅
+
 ---
 
 ### 🎯 다음 단계: 사용자 중심 통계 구현
 
-#### 2단계: 구독 설정 통계 (우선순위: 높음) 🔥
-
-**이유**: 알림 관리 기능에 필요, 구조 단순
-
-- [ ] **기본 통계** (6개 지표 → 1개 메서드)
-  - `getAnalyzeSubscriptionData(analyzeStatData)` 구현
-  - 구독 설정 생성/삭제/활성, 알림 설정별 통계
-- [ ] **파생 지표** (3개 지표 → 3개 메서드)
-  - 알림 설정별 분포, 전체 알림 활성/비활성 사용자
-
-**예상 메서드**: 4개 (1개 통합 + 3개 개별)
-
----
-
-#### 3단계: 사용자 통계 (우선순위: 중간) 📊
+#### 3단계: 사용자 통계 (우선순위: 높음) 📊
 
 **이유**: 서비스 운영 지표로 중요, 복잡도 중간
 
@@ -650,14 +737,14 @@
 
 ### 📋 구현 로드맵
 
-| 단계  | 통계 종류   | 지표 수 | 메서드 수 | 난이도 | 우선순위 | 상태     |
-| ----- | ----------- | ------- | --------- | ------ | -------- | -------- |
-| 1단계 | 댓글 통계   | 18개    | 10개      | ⭐⭐   | 🔥 높음  | ✅ 완료  |
-| 2단계 | 구독 설정   | 9개     | 4개       | ⭐     | 🔥 높음  | ❌ 대기  |
-| 3단계 | 사용자 통계 | 18개    | 10개      | ⭐⭐⭐ | ⭐ 중간  | ❌ 대기  |
+| 단계  | 통계 종류   | 지표 수 | 메서드 수 | 난이도 | 우선순위 | 상태    |
+| ----- | ----------- | ------- | --------- | ------ | -------- | ------- |
+| 1단계 | 콘텐츠 통계 | 71개    | 41개      | ⭐⭐   | 🔥 높음  | ✅ 완료 |
+| 2단계 | 구독 설정   | 9개     | 4개       | ⭐     | 🔥 높음  | ✅ 완료 |
+| 3단계 | 사용자 통계 | 18개    | 10개      | ⭐⭐⭐ | 🔥 높음  | ❌ 대기 |
 
 **전체 완료 시**: 98개 지표 / 55개 메서드 / 전 계층 완성
-**현재 진행률**: 71/98 지표 (72.4%) | 41/55 메서드 (74.5%)
+**현재 진행률**: 80/98 지표 (81.6%) | 45/55 메서드 (81.8%)
 
 ---
 
@@ -698,9 +785,8 @@
   - 조회수/북마크/공유/댓글 수
   - 전체 진행률 1.7% → 3.3%로 향상
 - **2025-10-09**: API 엔드포인트 분리 및 최적화 완료
-  - 전체 게시글 분석: `POST /admin/posts/analyze`
-  - 특정 게시글 분석: `POST /admin/posts/analyze/:pstNo`
-  - 플랫폼별 공유 통계: `POST /admin/posts/shares/:pstNo?`
+  - 전체/특정 게시글 분석: `POST /admin/posts/analyze/overview?pstNo={pstNo}`
+  - 플랫폼별 공유 통계: `POST /admin/posts/analyze/shares?pstNo={pstNo}`
 - **2025-10-09**: 통계 현황 점검 완료
   - 실제 구현 상태 확인: 포스트 관련 2개 메서드만 구현됨
   - 문서 진행률 수정: 11.7% → 3.3%로 정정
@@ -804,3 +890,18 @@
   - 전체 진행률: 56.4% → 74.5%로 향상
   - **완성 통계**: 포스트(7개) + 태그(13개) + 카테고리(11개) + 댓글(10개) = 41개 메서드 완성
   - **남은 구현**: 사용자 통계 (10개) + 구독 설정 통계 (4개) = 14개 메서드
+- **2025-10-10**: 구독 설정 통계 전체 구현 완료 ✅
+  - **SubscribeRepository**: 4개 구독 설정 통계 메서드 구현 완료
+    - 기본 통계 6개 지표: `getAnalyzeSubscribeData()` 통합 구현
+      - 구독 생성/삭제 통계 (3개)
+      - 알림 설정별 통계 (3개): 이메일/새게시글/댓글답글
+    - 파생 지표 3개 구현:
+      - 알림 설정별 분포, 전체 알림 활성/비활성 사용자
+  - **Admin Service 계층 완성**: AdminSubscribeService 4개 통계 메서드 구현
+  - **Admin Controller 계층 완성**: AdminSubscribeController 4개 통계 엔드포인트 구현 (JWT + ADMIN 권한)
+  - **OpenAPI 문서화 완성**: admin-subscribe.endpoints.ts 4개 통계 API 문서화
+  - **통계 완성도**: Repository → Service → Controller → OpenAPI 전 계층 완성
+  - 구독 설정 통계 진행률: 0% → 100.0%로 완성 (4단계 모두 완료)
+  - 전체 진행률: 74.5% → 81.8%로 향상
+  - **완성 통계**: 포스트(7개) + 태그(13개) + 카테고리(11개) + 댓글(10개) + 구독설정(4개) = 45개 메서드 완성
+  - **남은 구현**: 사용자 통계 (10개) = 10개 메서드

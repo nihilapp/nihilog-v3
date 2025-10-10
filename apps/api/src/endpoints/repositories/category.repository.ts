@@ -18,7 +18,9 @@ import type {
   CategoryHierarchySubscriberDistributionItemType,
   CategoryStatusDistributionItemType,
   CategoryCreatorStatItemType,
-  UnusedCategoryItemType
+  UnusedCategoryItemType,
+  CategorySubscriberGrowthRateItemType,
+  CategoriesWithoutSubscribersItemType
 } from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { createDateSeries } from '@/utils/createDateSeries';
@@ -598,6 +600,106 @@ export class CategoryRepository {
           daysSinceCreation,
         };
       });
+
+      return prismaResponse(true, result);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  // 4. 카테고리 구독 분석 (2개 추가)
+
+  /**
+   * @description 카테고리별 구독자 성장률 (시계열)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getCategorySubscriberGrowthRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<CategorySubscriberGrowthRateItemType[]> | null> {
+    try {
+      const { mode, startDt, endDt, } = analyzeStatData;
+
+      const growthRate = await this.prisma.$queryRaw<CategorySubscriberGrowthRateItemType[]>`
+        WITH ${createDateSeries(startDt, endDt, mode)}
+        SELECT
+          b.date_start AS "dateStart",
+          b.date_end AS "dateEnd",
+          c.ctgry_no AS "ctgryNo",
+          c.ctgry_nm AS "ctgryNm",
+          COALESCE(COUNT(csm.ctgry_sbcr_no), 0) AS "subscriberCount",
+          COALESCE(
+            CASE
+              WHEN LAG(COUNT(csm.ctgry_sbcr_no)) OVER (PARTITION BY c.ctgry_no ORDER BY b.date_start) > 0
+              THEN (COUNT(csm.ctgry_sbcr_no) - LAG(COUNT(csm.ctgry_sbcr_no)) OVER (PARTITION BY c.ctgry_no ORDER BY b.date_start))::FLOAT /
+                   LAG(COUNT(csm.ctgry_sbcr_no)) OVER (PARTITION BY c.ctgry_no ORDER BY b.date_start)
+              ELSE 0
+            END, 0
+          ) AS "growthRate",
+          COALESCE(LAG(COUNT(csm.ctgry_sbcr_no)) OVER (PARTITION BY c.ctgry_no ORDER BY b.date_start), 0) AS "previousSubscriberCount"
+        FROM bucket b
+        CROSS JOIN ctgry_info c
+        LEFT JOIN ctgry_sbcr_mpng csm ON csm.ctgry_no = c.ctgry_no
+          AND csm.crt_dt < b.date_end
+          AND csm.use_yn = 'Y'
+          AND csm.del_yn = 'N'
+        WHERE c.use_yn = 'Y' AND c.del_yn = 'N'
+        GROUP BY b.date_start, b.date_end, c.ctgry_no, c.ctgry_nm
+        ORDER BY b.date_start, c.ctgry_no
+      `;
+
+      return prismaResponse(true, growthRate);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 구독자 없는 카테고리 목록
+   */
+  async getCategoriesWithoutSubscribers(): Promise<RepoResponseType<CategoriesWithoutSubscribersItemType[]> | null> {
+    try {
+      const categoriesWithoutSubscribers = await this.prisma.ctgryInfo.findMany({
+        where: {
+          useYn: 'Y',
+          delYn: 'N',
+          subscribers: {
+            none: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+          },
+        },
+        select: {
+          ctgryNo: true,
+          ctgryNm: true,
+          crtDt: true,
+        },
+        orderBy: {
+          crtDt: 'desc',
+        },
+      });
+
+      const result = await Promise.all(categoriesWithoutSubscribers.map(async (category) => {
+        const postCount = await this.prisma.pstInfo.count({
+          where: {
+            ctgryNo: category.ctgryNo,
+            useYn: 'Y',
+            delYn: 'N',
+          },
+        });
+
+        const createDate = new Date(category.crtDt);
+        const now = new Date();
+        const daysSinceCreation = Math.floor((now.getTime() - createDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        return {
+          ctgryNo: category.ctgryNo,
+          ctgryNm: category.ctgryNm,
+          postCount,
+          createDate: category.crtDt,
+          daysSinceCreation,
+        };
+      }));
 
       return prismaResponse(true, result);
     }

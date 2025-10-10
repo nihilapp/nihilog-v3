@@ -11,7 +11,9 @@ import type {
   CategoryHierarchySubscriberDistributionItemType,
   CategoryStatusDistributionItemType,
   CategoryCreatorStatItemType,
-  UnusedCategoryItemType
+  UnusedCategoryItemType,
+  CategorySubscriberGrowthRateItemType,
+  CategoriesWithoutSubscribersItemType
 } from '@/endpoints/prisma/types/category.types';
 
 import { timeToString } from './timeHelper';
@@ -154,5 +156,34 @@ export class CreateCategoryAnalyze {
       createDate: timeToString(now.minus({ days: 45, })),
       daysSinceCreation: 45,
     } as UnusedCategoryItemType;
+  }
+
+  // 4. 구독 분석 (2개 추가)
+  // 카테고리별 구독자 성장률 (시계열)
+  static categorySubscriberGrowthRate() {
+    const now = DateTime.now();
+
+    return {
+      dateStart: timeToString(now.minus({ days: 7, })),
+      dateEnd: timeToString(now),
+      ctgryNo: 1,
+      ctgryNm: '프론트엔드',
+      subscriberCount: 45,
+      previousSubscriberCount: 38,
+      growthRate: 18.42, // ((45 - 38) / 38) * 100
+    } as CategorySubscriberGrowthRateItemType;
+  }
+
+  // 구독자 없는 카테고리 목록
+  static categoriesWithoutSubscribers() {
+    const now = DateTime.now();
+
+    return {
+      ctgryNo: 4,
+      ctgryNm: '새 카테고리',
+      postCount: 3,
+      createDate: timeToString(now.minus({ days: 15, })),
+      daysSinceCreation: 15,
+    } as CategoriesWithoutSubscribersItemType;
   }
 }

@@ -2,10 +2,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto } from '@/dto/subscribe.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectUserSbcrInfoType, SelectUserSbcrInfoListItemType } from '@/endpoints/prisma/types/subscribe.types';
+import type {
+  SelectUserSbcrInfoType,
+  SelectUserSbcrInfoListItemType,
+  AnalyzeSubscribeStatItemType,
+  SubscribeNotificationDistributionItemType,
+  TotalActiveNotificationUsersItemType,
+  TotalInactiveNotificationUsersItemType
+} from '@/endpoints/prisma/types/subscribe.types';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -15,6 +23,182 @@ import { timeToString } from '@/utils/timeHelper';
 export class SubscribeRepository {
   constructor(@Inject(PRISMA)
   private readonly prisma: PrismaClient) { }
+
+  // ========================================================
+  // 구독 설정 통계 관련 메서드
+  // ========================================================
+
+  /**
+   * @description 구독 설정 분석 통계 (6개 지표 통합)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getAnalyzeSubscribeData(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AnalyzeSubscribeStatItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const analyzeData = await this.prisma.$queryRaw<AnalyzeSubscribeStatItemType[]>`
+        SELECT
+          ${startDt} as "dateStart",
+          ${endDt} as "dateEnd",
+          -- 구독 생성/삭제 통계
+          (
+            SELECT COUNT(*)
+            FROM "UserSbcrInfo" usi
+            WHERE usi."crtDt" >= ${startDt}
+              AND usi."crtDt" <= ${endDt}
+          ) as "newSubscriptionCount",
+          (
+            SELECT COUNT(*)
+            FROM "UserSbcrInfo" usi
+            WHERE usi."delDt" >= ${startDt}
+              AND usi."delDt" <= ${endDt}
+              AND usi."delYn" = 'Y'
+          ) as "deleteSubscriptionCount",
+          (
+            SELECT COUNT(*)
+            FROM "UserSbcrInfo" usi
+            WHERE usi."useYn" = 'Y'
+              AND usi."delYn" = 'N'
+          ) as "activeSubscriptionCount",
+          -- 알림 설정별 통계
+          (
+            SELECT COUNT(*)
+            FROM "UserSbcrInfo" usi
+            WHERE usi."emlNtfyYn" = 'Y'
+              AND usi."useYn" = 'Y'
+              AND usi."delYn" = 'N'
+          ) as "emailNotificationCount",
+          (
+            SELECT COUNT(*)
+            FROM "UserSbcrInfo" usi
+            WHERE usi."newPstNtfyYn" = 'Y'
+              AND usi."useYn" = 'Y'
+              AND usi."delYn" = 'N'
+          ) as "newPostNotificationCount",
+          (
+            SELECT COUNT(*)
+            FROM "UserSbcrInfo" usi
+            WHERE usi."cmntRplNtfyYn" = 'Y'
+              AND usi."useYn" = 'Y'
+              AND usi."delYn" = 'N'
+          ) as "commentReplyNotificationCount"
+      `;
+
+      return prismaResponse(true, analyzeData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 알림 설정별 분포 통계
+   */
+  async getSubscribeNotificationDistribution(): Promise<RepoResponseType<SubscribeNotificationDistributionItemType[]> | null> {
+    try {
+      const distributionData = await this.prisma.$queryRaw<SubscribeNotificationDistributionItemType[]>`
+        WITH notification_stats AS (
+          SELECT
+            'EMAIL' as "notificationType",
+            COUNT(CASE WHEN "emlNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as active_count,
+            COUNT(CASE WHEN "emlNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as inactive_count,
+            COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as total_count
+          FROM "UserSbcrInfo"
+
+          UNION ALL
+
+          SELECT
+            'NEW_POST' as "notificationType",
+            COUNT(CASE WHEN "newPstNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as active_count,
+            COUNT(CASE WHEN "newPstNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as inactive_count,
+            COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as total_count
+          FROM "UserSbcrInfo"
+
+          UNION ALL
+
+          SELECT
+            'COMMENT_REPLY' as "notificationType",
+            COUNT(CASE WHEN "cmntRplNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as active_count,
+            COUNT(CASE WHEN "cmntRplNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as inactive_count,
+            COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as total_count
+          FROM "UserSbcrInfo"
+        )
+        SELECT
+          "notificationType",
+          active_count as "activeCount",
+          inactive_count as "inactiveCount",
+          total_count as "totalCount",
+          CASE
+            WHEN total_count > 0 THEN ROUND(active_count::numeric / total_count::numeric, 4)
+            ELSE 0
+          END as "activeRatio"
+        FROM notification_stats
+      `;
+
+      return prismaResponse(true, distributionData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 전체 알림 활성 사용자 수 통계
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getTotalActiveNotificationUsers(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TotalActiveNotificationUsersItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const activeUsersData = await this.prisma.$queryRaw<TotalActiveNotificationUsersItemType[]>`
+        SELECT
+          ${startDt} as "dateStart",
+          ${endDt} as "dateEnd",
+          COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "totalActiveUsers",
+          COUNT(CASE WHEN "emlNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "emailActiveUsers",
+          COUNT(CASE WHEN "newPstNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "newPostActiveUsers",
+          COUNT(CASE WHEN "cmntRplNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "commentReplyActiveUsers",
+          COUNT(CASE WHEN "emlNtfyYn" = 'Y' AND "newPstNtfyYn" = 'Y' AND "cmntRplNtfyYn" = 'Y' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "allNotificationsActiveUsers"
+        FROM "UserSbcrInfo"
+      `;
+
+      return prismaResponse(true, activeUsersData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 전체 알림 비활성 사용자 수 통계
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async getTotalInactiveNotificationUsers(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TotalInactiveNotificationUsersItemType[]> | null> {
+    try {
+      const { startDt, endDt, } = analyzeStatData;
+
+      const inactiveUsersData = await this.prisma.$queryRaw<TotalInactiveNotificationUsersItemType[]>`
+        SELECT
+          ${startDt} as "dateStart",
+          ${endDt} as "dateEnd",
+          COUNT(CASE WHEN "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "totalInactiveUsers",
+          COUNT(CASE WHEN "emlNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "emailInactiveUsers",
+          COUNT(CASE WHEN "newPstNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "newPostInactiveUsers",
+          COUNT(CASE WHEN "cmntRplNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "commentReplyInactiveUsers",
+          COUNT(CASE WHEN "emlNtfyYn" = 'N' AND "newPstNtfyYn" = 'N' AND "cmntRplNtfyYn" = 'N' AND "useYn" = 'Y' AND "delYn" = 'N' THEN 1 END) as "allNotificationsInactiveUsers"
+        FROM "UserSbcrInfo"
+      `;
+
+      return prismaResponse(true, inactiveUsersData);
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  // ========================================================
+  // 기존 구독 설정 관리 메서드
+  // ========================================================
 
   /**
    * @description 사용자 구독 정보 조회 (include 사용)

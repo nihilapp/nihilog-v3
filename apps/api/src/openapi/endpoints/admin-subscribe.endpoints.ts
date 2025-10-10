@@ -1,14 +1,191 @@
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
+import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
 import { searchSubscribeSchema, createSubscribeSchema, updateSubscribeSchema, deleteSubscribeSchema } from '@/endpoints/prisma/schemas/subscribe.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
+import { CreateSubscribeAnalyze } from '@/utils/createSubscribeAnalyze';
 
 import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminSubscribeEndpoints = () => {
+  // ========================================================
+  // 구독 설정 통계 관련 엔드포인트
+  // ========================================================
+
+  // POST /admin/subscribes/analyze - 구독 설정 분석 통계
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/subscribes/analyze',
+    summary: '📊 구독 설정 분석 통계',
+    description: 'ADMIN 권한으로 구독 설정 분석 통계를 조회합니다.',
+    tags: [ 'admin-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '구독 설정 분석 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_SUCCESS, [
+                  CreateSubscribeAnalyze.analyzeSubscribe(),
+                ]),
+              },
+              error: {
+                summary: '구독 설정 분석 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/subscribes/analyze/notification-distribution - 알림 설정별 분포 통계
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/subscribes/analyze/notification-distribution',
+    summary: '📊 알림 설정별 분포 통계',
+    description: 'ADMIN 권한으로 알림 설정별 분포 통계를 조회합니다.',
+    tags: [ 'admin-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '알림 설정별 분포 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS, [
+                  CreateSubscribeAnalyze.subscribeNotificationDistribution(),
+                ]),
+              },
+              error: {
+                summary: '알림 설정별 분포 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/subscribes/analyze/active-users - 전체 알림 활성 사용자 수 통계
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/subscribes/analyze/active-users',
+    summary: '📊 전체 알림 활성 사용자 수 통계',
+    description: 'ADMIN 권한으로 전체 알림 활성 사용자 수 통계를 조회합니다.',
+    tags: [ 'admin-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '전체 알림 활성 사용자 수 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS, [
+                  CreateSubscribeAnalyze.totalActiveNotificationUsers(),
+                ]),
+              },
+              error: {
+                summary: '전체 알림 활성 사용자 수 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/subscribes/analyze/inactive-users - 전체 알림 비활성 사용자 수 통계
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/subscribes/analyze/inactive-users',
+    summary: '📊 전체 알림 비활성 사용자 수 통계',
+    description: 'ADMIN 권한으로 전체 알림 비활성 사용자 수 통계를 조회합니다.',
+    tags: [ 'admin-subscribe', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '전체 알림 비활성 사용자 수 통계 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS, [
+                  CreateSubscribeAnalyze.totalInactiveNotificationUsers(),
+                ]),
+              },
+              error: {
+                summary: '전체 알림 비활성 사용자 수 통계 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true, // JWT 인증 사용
+              hasRoles: true, // 권한 사용
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // ========================================================
+  // 기존 구독 설정 관리 엔드포인트
+  // ========================================================
+
   // POST /admin/subscribes - 구독 설정 목록 조회
   openApiRegistry.registerPath({
     method: 'post',

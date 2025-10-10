@@ -26,7 +26,9 @@ import type {
   CategoryHierarchySubscriberDistributionItemType,
   CategoryStatusDistributionItemType,
   CategoryCreatorStatItemType,
-  UnusedCategoryItemType
+  UnusedCategoryItemType,
+  CategorySubscriberGrowthRateItemType,
+  CategoriesWithoutSubscribersItemType
 } from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import { createError, createResponse } from '@/utils';
@@ -75,7 +77,7 @@ export class AdminCategoriesController {
    * @param analyzeStatData 분석 통계 데이터 (선택적)
    */
   @Endpoint({
-    endpoint: '/statistics/popular-index',
+    endpoint: '/analyze/popular-index',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -103,7 +105,7 @@ export class AdminCategoriesController {
    * @param limit 상위 N개
    */
   @Endpoint({
-    endpoint: '/statistics/top-subscribers',
+    endpoint: '/analyze/top-subscribers',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -128,7 +130,7 @@ export class AdminCategoriesController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/average-bookmarks',
+    endpoint: '/analyze/average-bookmarks',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -153,7 +155,7 @@ export class AdminCategoriesController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/average-views',
+    endpoint: '/analyze/average-views',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -177,7 +179,7 @@ export class AdminCategoriesController {
    * @description 계층별 카테고리 분포
    */
   @Endpoint({
-    endpoint: '/statistics/hierarchy-distribution',
+    endpoint: '/analyze/hierarchy-distribution',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -201,7 +203,7 @@ export class AdminCategoriesController {
    * @description 계층별 게시글 분포
    */
   @Endpoint({
-    endpoint: '/statistics/hierarchy-posts',
+    endpoint: '/analyze/hierarchy-posts',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -225,7 +227,7 @@ export class AdminCategoriesController {
    * @description 계층별 구독자 분포
    */
   @Endpoint({
-    endpoint: '/statistics/hierarchy-subscribers',
+    endpoint: '/analyze/hierarchy-subscribers',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -249,7 +251,7 @@ export class AdminCategoriesController {
    * @description 카테고리 상태별 분포
    */
   @Endpoint({
-    endpoint: '/statistics/status-distribution',
+    endpoint: '/analyze/status-distribution',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -273,7 +275,7 @@ export class AdminCategoriesController {
    * @description 카테고리 생성자별 통계
    */
   @Endpoint({
-    endpoint: '/statistics/creator-stats',
+    endpoint: '/analyze/creator-stats',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -297,7 +299,7 @@ export class AdminCategoriesController {
    * @description 미사용 카테고리 목록
    */
   @Endpoint({
-    endpoint: '/statistics/unused',
+    endpoint: '/analyze/unused',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -306,6 +308,55 @@ export class AdminCategoriesController {
   })
   async adminGetUnusedCategoriesList(): Promise<ResponseDto<UnusedCategoryItemType[]>> {
     const result = await this.adminCategoriesService.adminGetUnusedCategoriesList();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 카테고리별 구독자 성장률 (시계열)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/subscriber-growth',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategorySubscriberGrowthRate(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CategorySubscriberGrowthRateItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategorySubscriberGrowthRate(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+      );
+    }
+
+    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+  }
+
+  /**
+   * @description 구독자 없는 카테고리 목록
+   */
+  @Endpoint({
+    endpoint: '/analyze/no-subscribers',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetCategoriesWithoutSubscribers(): Promise<ResponseDto<CategoriesWithoutSubscribersItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetCategoriesWithoutSubscribers();
 
     if (!result?.success) {
       return createError(

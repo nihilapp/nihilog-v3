@@ -70,10 +70,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/top-posts - 게시글별 댓글 수 TOP N
+  // POST /admin/comments/analyze/top-posts - 게시글별 댓글 수 TOP N
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/top-posts',
+    path: '/admin/comments/analyze/top-posts',
     summary: '📊 게시글별 댓글 수 TOP N',
     description: 'ADMIN 권한으로 댓글 수 기준 게시글 TOP N을 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -123,10 +123,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/top-users - 사용자별 댓글 작성 수 TOP N
+  // POST /admin/comments/analyze/top-users - 사용자별 댓글 작성 수 TOP N
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/top-users',
+    path: '/admin/comments/analyze/top-users',
     summary: '📊 사용자별 댓글 작성 수 TOP N',
     description: 'ADMIN 권한으로 댓글 작성 수 기준 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -176,10 +176,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/average-per-post - 평균 댓글 수 / 게시글
+  // POST /admin/comments/analyze/average-per-post - 평균 댓글 수 / 게시글
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/average-per-post',
+    path: '/admin/comments/analyze/average-per-post',
     summary: '📊 평균 댓글 수 / 게시글',
     description: 'ADMIN 권한으로 게시글당 평균 댓글 수를 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -218,10 +218,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // GET /admin/comments/statistics/status-distribution - 댓글 상태별 분포
+  // GET /admin/comments/analyze/status-distribution - 댓글 상태별 분포
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/comments/statistics/status-distribution',
+    path: '/admin/comments/analyze/status-distribution',
     summary: '📊 댓글 상태별 분포',
     description: 'ADMIN 권한으로 댓글 상태별 분포를 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -251,10 +251,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/approval-rate - 댓글 승인율
+  // POST /admin/comments/analyze/approval-rate - 댓글 승인율
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/approval-rate',
+    path: '/admin/comments/analyze/approval-rate',
     summary: '📊 댓글 승인율',
     description: 'ADMIN 권한으로 댓글 승인율을 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -293,10 +293,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/spam-rate - 스팸 댓글 비율
+  // POST /admin/comments/analyze/spam-rate - 스팸 댓글 비율
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/spam-rate',
+    path: '/admin/comments/analyze/spam-rate',
     summary: '📊 스팸 댓글 비율',
     description: 'ADMIN 권한으로 스팸 댓글 비율을 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -335,10 +335,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/reply-ratio - 답글 비율
+  // POST /admin/comments/analyze/reply-ratio - 답글 비율
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/reply-ratio',
+    path: '/admin/comments/analyze/reply-ratio',
     summary: '📊 답글 비율',
     description: 'ADMIN 권한으로 답글 비율을 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -377,10 +377,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/statistics/average-depth - 평균 답글 깊이
+  // POST /admin/comments/analyze/average-depth - 평균 답글 깊이
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/comments/statistics/average-depth',
+    path: '/admin/comments/analyze/average-depth',
     summary: '📊 평균 답글 깊이',
     description: 'ADMIN 권한으로 평균 답글 깊이를 조회합니다.',
     tags: [ 'admin-comments', ],
@@ -419,10 +419,10 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // GET /admin/comments/statistics/posts-without-comments - 댓글 없는 게시글 목록
+  // GET /admin/comments/analyze/posts-without-comments - 댓글 없는 게시글 목록
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/comments/statistics/posts-without-comments',
+    path: '/admin/comments/analyze/posts-without-comments',
     summary: '📊 댓글 없는 게시글 목록',
     description: 'ADMIN 권한으로 댓글이 없는 게시글 목록을 조회합니다.',
     tags: [ 'admin-comments', ],

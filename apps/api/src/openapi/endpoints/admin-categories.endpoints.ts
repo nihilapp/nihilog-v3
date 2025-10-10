@@ -73,10 +73,85 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/statistics/popular-index - 카테고리별 인기 지수 TOP N
+  // POST /admin/categories/analyze/subscriber-growth - 카테고리별 구독자 성장률 (시계열)
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/categories/statistics/popular-index',
+    path: '/admin/categories/analyze/subscriber-growth',
+    summary: '📊 카테고리별 구독자 성장률 (시계열)',
+    description: 'ADMIN 권한으로 시간대별 카테고리 구독자 성장률을 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: analyzeStatSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '카테고리 구독자 성장률 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categorySubscriberGrowthRate(), ]),
+              },
+              error: {
+                summary: '카테고리 구독자 성장률 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // GET /admin/categories/analyze/no-subscribers - 구독자 없는 카테고리 목록
+  openApiRegistry.registerPath({
+    method: 'get',
+    path: '/admin/categories/analyze/no-subscribers',
+    summary: '📊 구독자 없는 카테고리 목록',
+    description: 'ADMIN 권한으로 구독자가 없는 카테고리 목록을 조회합니다.',
+    tags: [ 'admin-categories', ],
+    security: [ { 'JWT-auth': [], }, ],
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: addGlobalResponses({
+              success: {
+                summary: '구독자 없는 카테고리 목록 조회 성공',
+                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoriesWithoutSubscribers(), ]),
+              },
+              error: {
+                summary: '구독자 없는 카테고리 목록 조회 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
+              },
+            }, {
+              hasAuthGuard: true,
+              hasRoles: true,
+            }),
+          },
+        },
+      },
+    },
+  });
+
+  // POST /admin/categories/analyze/popular-index - 카테고리별 인기 지수 TOP N
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/categories/analyze/popular-index',
     summary: '📊 카테고리별 인기 지수 TOP N',
     description: 'ADMIN 권한으로 인기 지수 기준 카테고리 TOP N을 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -126,10 +201,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/top-subscribers - 구독자 많은 카테고리 TOP N
+  // GET /admin/categories/analyze/top-subscribers - 구독자 많은 카테고리 TOP N
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/top-subscribers',
+    path: '/admin/categories/analyze/top-subscribers',
     summary: '📊 구독자 많은 카테고리 TOP N',
     description: 'ADMIN 권한으로 구독자 수 기준 카테고리 TOP N을 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -172,10 +247,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/statistics/average-bookmarks - 평균 북마크 수 / 카테고리
+  // POST /admin/categories/analyze/average-bookmarks - 평균 북마크 수 / 카테고리
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/categories/statistics/average-bookmarks',
+    path: '/admin/categories/analyze/average-bookmarks',
     summary: '📊 평균 북마크 수 / 카테고리 (시간대별)',
     description: 'ADMIN 권한으로 시간대별 카테고리당 평균 북마크 수를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -214,10 +289,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/statistics/average-views - 카테고리별 평균 조회수
+  // POST /admin/categories/analyze/average-views - 카테고리별 평균 조회수
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/categories/statistics/average-views',
+    path: '/admin/categories/analyze/average-views',
     summary: '📊 카테고리별 평균 조회수 (시간대별)',
     description: 'ADMIN 권한으로 시간대별 카테고리당 평균 조회수를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -256,10 +331,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/hierarchy-distribution - 계층별 카테고리 분포
+  // GET /admin/categories/analyze/hierarchy-distribution - 계층별 카테고리 분포
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/hierarchy-distribution',
+    path: '/admin/categories/analyze/hierarchy-distribution',
     summary: '📊 계층별 카테고리 분포',
     description: 'ADMIN 권한으로 계층별 카테고리 분포를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -289,10 +364,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/hierarchy-posts - 계층별 게시글 분포
+  // GET /admin/categories/analyze/hierarchy-posts - 계층별 게시글 분포
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/hierarchy-posts',
+    path: '/admin/categories/analyze/hierarchy-posts',
     summary: '📊 계층별 게시글 분포',
     description: 'ADMIN 권한으로 계층별 게시글 분포를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -322,10 +397,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/hierarchy-subscribers - 계층별 구독자 분포
+  // GET /admin/categories/analyze/hierarchy-subscribers - 계층별 구독자 분포
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/hierarchy-subscribers',
+    path: '/admin/categories/analyze/hierarchy-subscribers',
     summary: '📊 계층별 구독자 분포',
     description: 'ADMIN 권한으로 계층별 구독자 분포를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -355,10 +430,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/status-distribution - 카테고리 상태별 분포
+  // GET /admin/categories/analyze/status-distribution - 카테고리 상태별 분포
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/status-distribution',
+    path: '/admin/categories/analyze/status-distribution',
     summary: '📊 카테고리 상태별 분포',
     description: 'ADMIN 권한으로 카테고리 상태별 분포를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -388,10 +463,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/creator-stats - 카테고리 생성자별 통계
+  // GET /admin/categories/analyze/creator-stats - 카테고리 생성자별 통계
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/creator-stats',
+    path: '/admin/categories/analyze/creator-stats',
     summary: '📊 카테고리 생성자별 통계',
     description: 'ADMIN 권한으로 생성자별 카테고리 통계를 조회합니다.',
     tags: [ 'admin-categories', ],
@@ -421,10 +496,10 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/statistics/unused - 미사용 카테고리 목록
+  // GET /admin/categories/analyze/unused - 미사용 카테고리 목록
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/statistics/unused',
+    path: '/admin/categories/analyze/unused',
     summary: '📊 미사용 카테고리 목록',
     description: 'ADMIN 권한으로 게시글이 없는 미사용 카테고리 목록을 조회합니다.',
     tags: [ 'admin-categories', ],

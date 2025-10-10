@@ -125,3 +125,24 @@ export type UnusedCategoryItemType = {
   createDate: string;
   daysSinceCreation: number;
 };
+
+// 4. 카테고리 구독 분석 (2개 추가)
+// 카테고리별 구독자 성장률 (시계열)
+export type CategorySubscriberGrowthRateItemType = {
+  dateStart: string;
+  dateEnd: string;
+  ctgryNo: number;
+  ctgryNm: string;
+  subscriberCount: number;
+  previousSubscriberCount: number;
+  growthRate: number; // (현재 - 이전) / 이전 * 100
+};
+
+// 구독자 없는 카테고리 목록
+export type CategoriesWithoutSubscribersItemType = {
+  ctgryNo: number;
+  ctgryNm: string;
+  postCount: number;
+  createDate: string;
+  daysSinceCreation: number;
+};

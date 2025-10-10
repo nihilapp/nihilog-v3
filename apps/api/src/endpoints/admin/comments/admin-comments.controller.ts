@@ -65,7 +65,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터 (선택적)
    */
   @Endpoint({
-    endpoint: '/statistics/top-posts',
+    endpoint: '/analyze/top-posts',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -94,7 +94,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터 (선택적)
    */
   @Endpoint({
-    endpoint: '/statistics/top-users',
+    endpoint: '/analyze/top-users',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -122,7 +122,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/average-per-post',
+    endpoint: '/analyze/average-per-post',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -146,7 +146,7 @@ export class AdminCommentsController {
    * @description 댓글 상태별 분포
    */
   @Endpoint({
-    endpoint: '/statistics/status-distribution',
+    endpoint: '/analyze/status-distribution',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -171,7 +171,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/approval-rate',
+    endpoint: '/analyze/approval-rate',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -196,7 +196,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/spam-rate',
+    endpoint: '/analyze/spam-rate',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -221,7 +221,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/reply-ratio',
+    endpoint: '/analyze/reply-ratio',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -246,7 +246,7 @@ export class AdminCommentsController {
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
-    endpoint: '/statistics/average-depth',
+    endpoint: '/analyze/average-depth',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -270,7 +270,7 @@ export class AdminCommentsController {
    * @description 댓글 없는 게시글 목록
    */
   @Endpoint({
-    endpoint: '/statistics/posts-without-comments',
+    endpoint: '/analyze/posts-without-comments',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',

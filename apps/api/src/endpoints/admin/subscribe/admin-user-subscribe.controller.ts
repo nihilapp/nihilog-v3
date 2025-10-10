@@ -9,6 +9,7 @@ import {
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, DeleteSubscribeDto, SearchSubscribeDto } from '@/dto';
+import { AnalyzeStatDto } from '@/dto/common.dto';
 import type { ListDto } from '@/dto/response.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import {
@@ -19,12 +20,141 @@ import {
 import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type {
+  AnalyzeSubscribeStatItemType,
+  SubscribeNotificationDistributionItemType,
+  TotalActiveNotificationUsersItemType,
+  TotalInactiveNotificationUsersItemType
+} from '@/endpoints/prisma/types/subscribe.types';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/subscribes')
 @UseGuards(AdminAuthGuard)
 export class AdminSubscribeController {
   constructor(private readonly subscribeService: AdminSubscribeService) {}
+
+  // ========================================================
+  // 구독 설정 통계 관련 엔드포인트
+  // ========================================================
+
+  /**
+   * @description 구독 설정 분석 통계
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetAnalyzeSubscribeData(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AnalyzeSubscribeStatItemType[]>> {
+    const result = await this.subscribeService.adminGetAnalyzeSubscribeData(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_ANALYZE_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 알림 설정별 분포 통계
+   */
+  @Endpoint({
+    endpoint: '/analyze/notification-distribution',
+    method: 'GET',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetSubscribeNotificationDistribution(): Promise<ResponseDto<SubscribeNotificationDistributionItemType[]>> {
+    const result = await this.subscribeService.adminGetSubscribeNotificationDistribution();
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 전체 알림 활성 사용자 수 통계
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/active-users',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTotalActiveNotificationUsers(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TotalActiveNotificationUsersItemType[]>> {
+    const result = await this.subscribeService.adminGetTotalActiveNotificationUsers(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  /**
+   * @description 전체 알림 비활성 사용자 수 통계
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  @Endpoint({
+    endpoint: '/analyze/inactive-users',
+    method: 'POST',
+    options: {
+      authGuard: 'JWT-auth',
+      roles: [ 'ADMIN', ],
+    },
+  })
+  async adminGetTotalInactiveNotificationUsers(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TotalInactiveNotificationUsersItemType[]>> {
+    const result = await this.subscribeService.adminGetTotalInactiveNotificationUsers(analyzeStatData);
+
+    if (!result?.success) {
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_ERROR
+      );
+    }
+
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.SUBSCRIBE_STATISTICS_SUCCESS,
+      result.data
+    );
+  }
+
+  // ========================================================
+  // 기존 구독 설정 관리 엔드포인트
+  // ========================================================
 
   /**
    * @description 전체 사용자 구독 설정 목록 조회

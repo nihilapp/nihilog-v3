@@ -15,7 +15,9 @@ import type {
   CategoryHierarchySubscriberDistributionItemType,
   CategoryStatusDistributionItemType,
   CategoryCreatorStatItemType,
-  UnusedCategoryItemType
+  UnusedCategoryItemType,
+  CategorySubscriberGrowthRateItemType,
+  CategoriesWithoutSubscribersItemType
 } from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
@@ -110,6 +112,21 @@ export class AdminCategoriesService {
    */
   async adminGetUnusedCategoriesList(): Promise<RepoResponseType<UnusedCategoryItemType[]> | null> {
     return this.categoryRepository.getUnusedCategoriesList();
+  }
+
+  /**
+   * @description 카테고리별 구독자 성장률 (시계열)
+   * @param analyzeStatData 분석 통계 데이터
+   */
+  async adminGetCategorySubscriberGrowthRate(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<CategorySubscriberGrowthRateItemType[]> | null> {
+    return this.categoryRepository.getCategorySubscriberGrowthRate(analyzeStatData);
+  }
+
+  /**
+   * @description 구독자 없는 카테고리 목록
+   */
+  async adminGetCategoriesWithoutSubscribers(): Promise<RepoResponseType<CategoriesWithoutSubscribersItemType[]> | null> {
+    return this.categoryRepository.getCategoriesWithoutSubscribers();
   }
 
   // ========================================================
