@@ -24,29 +24,7 @@ export class CreateExample {
       ctgryNo: 1,
       pstTtl: '첫 번째 게시글입니다',
       pstSmry: '이것은 첫 번째 게시글의 요약입니다.',
-      pstMtxt: {
-        type: 'doc',
-        content: [
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: '안녕하세요! 이것은 첫 번째 게시글의 본문입니다. 다양한 내용을 포함하고 있습니다.',
-              },
-            ],
-          },
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: '마크다운 형식으로 작성된 내용을 JSON 형태로 저장합니다.',
-              },
-            ],
-          },
-        ],
-      },
+      pstMtxt: '이것은 첫 번째 게시글의 본문입니다.',
       pstCd: 'first-post',
       pstThmbLink: 'https://example.com/thumbnail.jpg',
       pstView: 0,

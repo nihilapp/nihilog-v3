@@ -901,7 +901,7 @@ export class PostRepository {
         data: {
           userNo,
           pstTtl: pstTtl || '새로운 포스트',
-          pstMtxt: pstMtxt || [],
+          pstMtxt: pstMtxt || '',
           pstStts: 'EMPTY',
           crtNo: userNo,
           crtDt: timeToString(),

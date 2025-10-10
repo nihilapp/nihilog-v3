@@ -178,7 +178,7 @@ model PstInfo {
   ctgryNo     Int?       @map("ctgry_no")
   pstTtl      String     @map("pst_ttl")
   pstSmry     String?    @map("pst_smry")
-  pstMtxt     Json       @map("pst_mtxt")
+  pstMtxt     String     @map("pst_mtxt") @db.Text
   pstCd       String?    @map("pst_cd")
   pstThmbLink String?    @map("pst_thmb_link")
   pstView     Int        @default(0) @map("pst_view")

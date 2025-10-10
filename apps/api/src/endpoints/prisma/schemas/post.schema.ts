@@ -65,10 +65,10 @@ export const postSchema = commonSchema.extend({
       example: '게시글 요약입니다',
     }),
   pstMtxt: z
-    .record(z.string(), z.any(), '게시글 본문은 JSON 형태여야 합니다.')
+    .string('게시글 본문은 문자열이어야 합니다.')
     .openapi({
-      description: '게시글 본문 (JSON 형식)',
-      example: { content: '게시글 본문입니다', },
+      description: '게시글 본문 (Markdown 형식)',
+      example: '# 게시글 제목\n\n게시글 본문 내용입니다.',
     }),
   pstCd: z
     .string()
