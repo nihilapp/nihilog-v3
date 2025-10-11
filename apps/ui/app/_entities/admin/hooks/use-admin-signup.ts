@@ -5,9 +5,10 @@ import { adminKeys } from '@/_entities/admin/admin.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { CreateUserType, UserInfoType } from '@/_schemas/user.schema';
+import type { CreateUserType } from '@/_schemas/user.schema';
+import type { SelectUserInfoType } from '@/_types';
 
-interface UseAdminSignUpOptions extends MutationOptionsType<UserInfoType, CreateUserType> {}
+interface UseAdminSignUpOptions extends MutationOptionsType<SelectUserInfoType, CreateUserType> {}
 
 export function useAdminSignUp(options: UseAdminSignUpOptions = {}) {
   const router = useRouter();
@@ -15,7 +16,7 @@ export function useAdminSignUp(options: UseAdminSignUpOptions = {}) {
   const {
     response: userInfo,
     ...query
-  } = usePost<UserInfoType, CreateUserType>({
+  } = usePost<SelectUserInfoType, CreateUserType>({
     url: [
       'admin', 'signup',
     ],

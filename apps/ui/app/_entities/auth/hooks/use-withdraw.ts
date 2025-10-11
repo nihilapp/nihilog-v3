@@ -6,7 +6,8 @@ import { authKeys } from '@/_entities/auth/auth.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { WithdrawType, UserInfoType } from '@/_schemas/user.schema';
+import type { WithdrawType } from '@/_schemas/user.schema';
+import type { UserInfoType } from '@/_types';
 
 type WithdrawTypeWithoutPasswordConfirm = Omit<WithdrawType, 'passwordConfirm'>;
 

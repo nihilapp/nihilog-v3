@@ -7,7 +7,8 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks';
 import { usersKeys } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
-import type { ChangePasswordType, UserInfoType } from '@/_schemas/user.schema';
+import type { ChangePasswordType } from '@/_schemas/user.schema';
+import type { UserInfoType } from '@/_types';
 
 interface UseChangePasswordOptions extends MutationOptionsType<UserInfoType, ChangePasswordType> {}
 
@@ -36,12 +37,10 @@ export function useChangePassword(options: UseChangePasswordOptions = {}) {
       queryClient.invalidateQueries({
         queryKey: authKeys.session().queryKey,
       });
-      // 사용자 단건 갱신 (userNo가 있다면)
-      if (userInfo?.data?.userNo) {
-        queryClient.invalidateQueries({
-          queryKey: usersKeys.userByNo(userInfo.data.userNo).queryKey,
-        });
-      }
+      // 사용자 프로필 정보 갱신
+      queryClient.invalidateQueries({
+        queryKey: usersKeys.profile().queryKey,
+      });
       // 로그인 페이지로 이동
       router.push('/auth/signin');
     },

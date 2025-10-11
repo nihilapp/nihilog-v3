@@ -6,7 +6,7 @@ import type { QueryOptionType } from '@/_entities/common/common.types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { ResponseType } from '@/_schemas/response.schema';
-import type { UserInfoType } from '@/_schemas/user.schema';
+import type { UserInfoType } from '@/_types';
 
 interface UseGetSessionOptions extends QueryOptionType<UserInfoType> {}
 

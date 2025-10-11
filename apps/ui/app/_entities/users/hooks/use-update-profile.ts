@@ -6,7 +6,8 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { usersKeys } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
-import type { UpdateUserType, UserInfoType } from '@/_schemas/user.schema';
+import type { UpdateUserType } from '@/_schemas/user.schema';
+import type { UserInfoType } from '@/_types';
 
 interface UseUpdateProfileOptions
   extends MutationOptionsType<UserInfoType, UpdateUserType> { }

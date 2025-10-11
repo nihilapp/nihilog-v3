@@ -5,7 +5,8 @@ import { authKeys } from '@/_entities/auth/auth.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { SignInType, UserInfoType } from '@/_schemas/user.schema';
+import type { SignInType } from '@/_schemas/user.schema';
+import type { UserInfoType } from '@/_types';
 
 interface UseSignInOptions extends MutationOptionsType<UserInfoType, SignInType> {}
 

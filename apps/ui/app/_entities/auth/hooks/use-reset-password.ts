@@ -5,7 +5,8 @@ import { authKeys } from '@/_entities/auth/auth.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { ResetPasswordType, UserInfoType } from '@/_schemas/user.schema';
+import type { ResetPasswordType } from '@/_schemas/user.schema';
+import type { UserInfoType } from '@/_types';
 
 interface UseResetPasswordOptions extends MutationOptionsType<UserInfoType, ResetPasswordType> {}
 
