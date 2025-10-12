@@ -20,7 +20,7 @@ export function useAdminCreateSubscribe(options: UseAdminCreateSubscribeOptions 
 
   const query = usePost<SelectUserSbcrInfoType, CreateSubscribeType>({
     url: [
-      'admin', 'subscribe',
+      'admin', 'subscribes',
     ],
     key: adminSubscribeKeys.createSubscribe(),
     callback(res) {

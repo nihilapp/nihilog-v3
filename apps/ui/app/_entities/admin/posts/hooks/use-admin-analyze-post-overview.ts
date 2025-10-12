@@ -7,7 +7,9 @@ import { getToastStyle } from '@/_libs';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 import type { AnalyzePostItemType } from '@/_types';
 
-interface UseAdminAnalyzePostOverviewOptions extends MutationOptionsType<AnalyzePostItemType, AnalyzeStatType> {}
+interface UseAdminAnalyzePostOverviewOptions extends MutationOptionsType<AnalyzePostItemType, AnalyzeStatType> {
+  pstNo?: number;
+}
 
 /**
  * @description 관리자용 게시글 분석 통계를 위한 커스텀 훅
@@ -15,11 +17,16 @@ interface UseAdminAnalyzePostOverviewOptions extends MutationOptionsType<Analyze
  * @returns 게시글 분석 통계 뮤테이션 객체
  */
 export function useAdminAnalyzePostOverview(options: UseAdminAnalyzePostOverviewOptions = {}) {
+  const { pstNo, ...restOptions } = options;
+
   const query = usePost<AnalyzePostItemType, AnalyzeStatType>({
     url: [
       'admin', 'posts', 'analyze', 'overview',
     ],
     key: adminPostsKeys.analyzeOverview({} as AnalyzeStatType),
+    params: pstNo
+      ? { pstNo, }
+      : undefined,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -28,7 +35,7 @@ export function useAdminAnalyzePostOverview(options: UseAdminAnalyzePostOverview
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    ...restOptions,
   });
 
   return query;

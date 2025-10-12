@@ -1,7 +1,7 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
-import type { SearchPostType, CreatePostType, UpdatePostType } from '@/_schemas/post.schema';
+import type { SearchPostType } from '@/_schemas/post.schema';
 
 /**
  * 관리자 게시글 관련 쿼리 키 정의
@@ -40,11 +40,11 @@ export const adminPostsKeys = createQueryKeys('adminPosts', {
   updatePost: (pstNo: number) => [
     'updatePost', pstNo,
   ], // 게시글 수정
-  updateMultiplePosts: () => [ 'updateMultiplePosts', ], // 다수 게시글 수정
+  multipleUpdatePost: () => [ 'multipleUpdatePost', ], // 다수 게시글 수정
 
   // ===== DELETE Mutations =====
   deletePost: (pstNo: number) => [
     'deletePost', pstNo,
   ], // 게시글 삭제
-  deleteMultiplePosts: () => [ 'deleteMultiplePosts', ], // 다수 게시글 삭제
+  multipleDeletePost: () => [ 'multipleDeletePost', ], // 다수 게시글 삭제
 });

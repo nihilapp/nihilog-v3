@@ -12,11 +12,16 @@ interface UseAdminAnalyzeSharesOptions extends MutationOptionsType<SharePlatform
 }
 
 export function useAdminAnalyzeShares(options: UseAdminAnalyzeSharesOptions = {}) {
+  const { pstNo, ...restOptions } = options;
+
   const query = usePost<SharePlatformStatItemType[], AnalyzeStatType>({
     url: [
       'admin', 'posts', 'analyze', 'shares',
     ],
-    key: adminPostsKeys.analyzeShares(options.pstNo),
+    key: adminPostsKeys.analyzeShares(pstNo),
+    params: pstNo
+      ? { pstNo, }
+      : undefined,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -25,7 +30,7 @@ export function useAdminAnalyzeShares(options: UseAdminAnalyzeSharesOptions = {}
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    ...restOptions,
   });
 
   return query;

@@ -19,7 +19,7 @@ export function useAdminDeleteSubscribe(sbcrNo: number, options: UseAdminDeleteS
 
   const query = useDelete<boolean>({
     url: [
-      'admin', 'subscribe', sbcrNo,
+      'admin', 'subscribes', sbcrNo,
     ],
     key: adminSubscribeKeys.deleteSubscribe(sbcrNo),
     callback(res) {

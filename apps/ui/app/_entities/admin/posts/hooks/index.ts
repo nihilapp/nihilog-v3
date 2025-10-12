@@ -11,3 +11,7 @@ export { useAdminAnalyzeStatusRatio } from './use-admin-analyze-status-ratio';
 export { useAdminCreatePost } from './use-admin-create-post';
 export { useAdminUpdatePost } from './use-admin-update-post';
 export { useAdminDeletePost } from './use-admin-delete-post';
+
+// Multiple operations hooks
+export { useAdminMultipleUpdatePosts } from './use-admin-multiple-update-posts';
+export { useAdminMultipleDeletePosts } from './use-admin-multiple-delete-posts';

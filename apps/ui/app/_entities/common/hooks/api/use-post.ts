@@ -14,6 +14,8 @@ interface MutationWithDataParams<TData, TVariables> {
   url: Array<string | number | undefined>;
   /** 무효화할 쿼리 키 (createQueryKeys 객체 또는 배열 형태) */
   key: { queryKey: readonly (string | number | Record<string, any>)[] } | string | Array<string | number | Record<string, any>>;
+  /** URL 쿼리 파라미터 객체 (선택사항) */
+  params?: Record<string, any>;
   /** React Query 뮤테이션 옵션 (선택사항) */
   options?: MutationOptionsType<OkType<TData>, TVariables>;
   /** 성공 콜백 */
@@ -29,11 +31,12 @@ interface MutationWithDataParams<TData, TVariables> {
 export function usePost<TData = any, TVariables = any>({
   url,
   key,
+  params,
   options,
   callback,
   errorCallback,
 }: MutationWithDataParams<TData, TVariables>) {
-  const { queryClient, queryKey, fullUrl, } = usePrepareMutationParams(key, url);
+  const { queryClient, queryKey, fullUrl, } = usePrepareMutationParams(key, url, params);
 
   const {
     data: response,

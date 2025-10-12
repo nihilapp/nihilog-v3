@@ -12,11 +12,16 @@ interface UseAdminAnalyzeTopPopularCategoriesOptions extends MutationOptionsType
 }
 
 export function useAdminAnalyzeTopPopularCategories(options: UseAdminAnalyzeTopPopularCategoriesOptions = {}) {
+  const { limit, ...restOptions } = options;
+
   const query = usePost<TopPopularCategoryItemType[], AnalyzeStatType>({
     url: [
       'admin', 'categories', 'analyze', 'popular-index',
     ],
-    key: adminCategoriesKeys.analyzeTopPopularCategories(options.limit || 10),
+    key: adminCategoriesKeys.analyzeTopPopularCategories(limit || 10),
+    params: limit
+      ? { limit, }
+      : undefined,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -25,7 +30,7 @@ export function useAdminAnalyzeTopPopularCategories(options: UseAdminAnalyzeTopP
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    ...restOptions,
   });
 
   return query;

@@ -17,7 +17,7 @@ interface UseAdminAnalyzeSubscribeOverviewOptions extends MutationOptionsType<An
 export function useAdminAnalyzeSubscribeOverview(options: UseAdminAnalyzeSubscribeOverviewOptions = {}) {
   const query = usePost<AnalyzeSubscribeStatItemType, AnalyzeStatType>({
     url: [
-      'admin', 'subscribe', 'analyze', 'overview',
+      'admin', 'subscribes', 'analyze', 'overview',
     ],
     key: adminSubscribeKeys.analyzeOverview({} as AnalyzeStatType),
     callback() {

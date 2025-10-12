@@ -7,6 +7,7 @@ export { useAdminDeleteUser } from './use-admin-delete-user';
 export { useAdminUpdateMultipleUsers } from './use-admin-update-multiple-users';
 export { useAdminDeleteMultipleUsers } from './use-admin-delete-multiple-users';
 export { useAdminAnalyzeOverview } from './use-admin-analyze-overview';
+export { useAdminAnalyzeActiveUsers } from './use-admin-analyze-active-users';
 export { useAdminAnalyzeTopContribution } from './use-admin-analyze-top-contribution';
 export { useAdminAnalyzeTopPostCount } from './use-admin-analyze-top-post-count';
 export { useAdminAnalyzeTopCommentCount } from './use-admin-analyze-top-comment-count';

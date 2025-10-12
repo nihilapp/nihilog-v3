@@ -12,11 +12,16 @@ interface UseAdminAnalyzeTopUsersByCommentsOptions extends MutationOptionsType<T
 }
 
 export function useAdminAnalyzeTopUsersByComments(options: UseAdminAnalyzeTopUsersByCommentsOptions = {}) {
+  const { limit, ...restOptions } = options;
+
   const query = usePost<TopUsersByCommentItemType[], AnalyzeStatType>({
     url: [
       'admin', 'comments', 'analyze', 'top-users',
     ],
-    key: adminCommentsKeys.analyzeTopUsersByComments(options.limit || 10),
+    key: adminCommentsKeys.analyzeTopUsersByComments(limit || 10),
+    params: limit
+      ? { limit, }
+      : undefined,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -25,7 +30,7 @@ export function useAdminAnalyzeTopUsersByComments(options: UseAdminAnalyzeTopUse
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    ...restOptions,
   });
 
   return query;

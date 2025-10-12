@@ -6,7 +6,8 @@ import { useQueryClient } from '@tanstack/react-query';
  */
 export function usePrepareMutationParams(
   key: { queryKey: readonly (string | number | Record<string, any>)[] } | string | Array<string | number | Record<string, any>>,
-  url: Array<string | number | undefined>
+  url: Array<string | number | undefined>,
+  params?: Record<string, any>
 ) {
   const queryClient = useQueryClient();
 
@@ -17,7 +18,13 @@ export function usePrepareMutationParams(
       : [ key, ];
 
   const urlPath = url.filter(Boolean).join('/');
-  const fullUrl = `/${urlPath}`;
+
+  // 쿼리 파라미터 처리
+  const queryString = params
+    ? '?' + new URLSearchParams(params).toString()
+    : '';
+
+  const fullUrl = `/${urlPath}${queryString}`;
 
   return { queryClient, queryKey, fullUrl, };
 }

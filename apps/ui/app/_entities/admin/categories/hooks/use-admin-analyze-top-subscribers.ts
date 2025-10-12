@@ -11,11 +11,16 @@ interface UseAdminAnalyzeTopSubscribersOptions extends QueryOptionType<TopCatego
 }
 
 export function useAdminAnalyzeTopSubscribers(options: UseAdminAnalyzeTopSubscribersOptions = {}) {
+  const { limit, ...restOptions } = options;
+
   const query = useGet<TopCategoriesBySubscriberItemType[]>({
     url: [
       'admin', 'categories', 'analyze', 'top-subscribers',
     ],
-    key: adminCategoriesKeys.analyzeTopSubscribers(options.limit || 10),
+    key: adminCategoriesKeys.analyzeTopSubscribers(limit || 10),
+    params: limit
+      ? { limit, }
+      : undefined,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -24,7 +29,7 @@ export function useAdminAnalyzeTopSubscribers(options: UseAdminAnalyzeTopSubscri
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    ...restOptions,
   });
 
   return query;
