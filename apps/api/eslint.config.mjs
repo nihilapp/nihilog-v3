@@ -50,7 +50,6 @@ const baseConfig = [
       '**/coverage/**',
       '**/*.d.ts',
       '**/*.log',
-      'drizzle.config.ts',
     ],
   },
 

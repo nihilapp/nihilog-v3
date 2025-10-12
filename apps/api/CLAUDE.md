@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a NestJS API server built with TypeScript, using Fastify as the HTTP adapter and Drizzle ORM for database operations. The application follows a modular architecture with strict separation of concerns.
+This is a NestJS API server built with TypeScript, using Fastify as the HTTP adapter and Prisma ORM for database operations. The application follows a modular architecture with strict separation of concerns.
 
 ### Core Architecture Patterns
 
@@ -26,16 +26,18 @@ This is a NestJS API server built with TypeScript, using Fastify as the HTTP ada
 ### Key Architectural Components
 
 1. **Application Bootstrap** (`src/main.ts`):
+
    - Uses Fastify adapter with cookies and CORS support
    - Global Zod validation pipes
    - HTTP logging and response time interceptors
    - Swagger API documentation at `/api`
 
 2. **Module Structure**:
+
    - `AuthModule`: JWT authentication, login, registration
    - `UsersModule`: User management and profile operations
    - `AdminModule`: Administrative functionality
-   - `DrizzleModule`: Global database connection and schema
+   - `PrismaModule`: Global database connection and schema
 
 3. **Configuration System** (`src/conf/conf.ts`):
    - Type-safe configuration using `registerAs`
@@ -45,10 +47,10 @@ This is a NestJS API server built with TypeScript, using Fastify as the HTTP ada
 
 ### Database Architecture
 
-- **ORM**: Drizzle ORM with PostgreSQL
-- **Schema Organization**: Schemas defined in `src/drizzle/schemas/`
-- **Tables**: Table definitions in `src/drizzle/tables/`
-- **Connection**: Global DRIZZLE symbol injection pattern
+- **ORM**: Prisma ORM with PostgreSQL
+- **Schema Organization**: Schema defined in `prisma/schema.prisma`
+- **Tables**: Table definitions in Prisma schema
+- **Connection**: Global PrismaClient instance
 
 ### Request/Response Architecture
 
@@ -88,9 +90,10 @@ This is a NestJS API server built with TypeScript, using Fastify as the HTTP ada
 ### Module Dependencies
 
 The application uses a clean dependency graph:
+
 - Controllers depend on Services
 - Services depend on Repositories
-- Repositories depend on Drizzle connection
+- Repositories depend on Prisma connection
 - All modules can access global ConfigService
 
 When working with this codebase, always maintain the existing architectural patterns and use the provided utility functions for consistency.
