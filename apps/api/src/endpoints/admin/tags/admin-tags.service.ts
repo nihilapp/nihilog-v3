@@ -146,7 +146,7 @@ export class AdminTagsService {
     // 태그명 중복 확인
     const findTag = await this.tagRepository.getTagByTagNm(createData.tagNm);
 
-    if (findTag?.success) {
+    if (findTag?.success && findTag.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE);
     }
 
@@ -162,7 +162,7 @@ export class AdminTagsService {
     // 태그명 중복 확인
     for (const item of createData) {
       const findTag = await this.tagRepository.getTagByTagNm(item.tagNm);
-      if (findTag?.success) {
+      if (findTag?.success && findTag.data) {
         return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE);
       }
     }
@@ -236,7 +236,7 @@ export class AdminTagsService {
     // 태그 중복
     const findTag = await this.tagRepository
       .getPostTagMappingByTagNo(createData.tagNo, createData.pstNo);
-    if (findTag?.success) {
+    if (findTag?.success && findTag.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS);
     }
 
@@ -252,7 +252,7 @@ export class AdminTagsService {
     for (const item of createData) {
       const findTag = await this.tagRepository
         .getPostTagMappingByTagNo(item.tagNo, item.pstNo);
-      if (findTag?.success) {
+      if (findTag?.success && findTag.data) {
         return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS);
       }
     }

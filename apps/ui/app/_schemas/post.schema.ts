@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // 공통 스키마 import
-import { ynEnumSchema, postStatusSchema, baseSearchSchema } from './common.schema.js';
+import { ynEnumSchema, postStatusSchema, baseSearchSchema } from './common.schema';
 
 // 게시글 요청 스키마들
 

@@ -9,7 +9,7 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
-import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
+import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
@@ -22,31 +22,6 @@ import { JwtPayload } from './jwt.strategy';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
-
-  /**
-   * @description 사용자 회원가입
-   * @param createUserData 회원가입 정보
-   */
-  @Endpoint({
-    endpoint: '/signup',
-    method: 'POST',
-    options: {
-      throttle: [ 3, 60000, ],
-      serialize: true,
-    },
-  })
-  async signUp(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
-    const result = await this.authService.signUp(null, createUserData);
-
-    if (!result?.success) {
-      return createError(
-        result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.AUTH.SIGN_UP_ERROR
-      );
-    }
-
-    return createResponse('SUCCESS', MESSAGE.AUTH.SIGN_UP_SUCCESS, result.data);
-  }
 
   /**
    * @description 사용자 로그인

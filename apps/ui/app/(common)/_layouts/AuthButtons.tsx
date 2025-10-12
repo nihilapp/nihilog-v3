@@ -55,6 +55,11 @@ export function AuthButtons({ className, ...props }: Props) {
             <Button asChild>
               <Link href='/auth/signup'>회원가입</Link>
             </Button>
+            {process.env.NODE_ENV === 'development' && (
+              <Button asChild>
+                <Link href='/admin/signup'>관리자 회원가입</Link>
+              </Button>
+            )}
           </>
         )}
     </div>

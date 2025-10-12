@@ -11,7 +11,8 @@ import { FormInput } from '@/(common)/_components/form/FormInput';
 import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
 import { Form } from '@/(common)/_components/ui/form';
 import { useAuthActions } from '@/_entities/auth/auth.store';
-import { useGetSession, useSignUp } from '@/_entities/auth/hooks';
+import { useGetSession } from '@/_entities/auth/hooks';
+import { useCreateUser } from '@/_entities/users/hooks';
 import { cn } from '@/_libs';
 import { createUserSchema, type CreateUserType } from '@/_schemas/user.schema';
 
@@ -37,7 +38,7 @@ export function SignUpForm({ className, ...props }: Props) {
     showModal, setShowModal,
   ] = useState(false);
 
-  const { mutate: signUp, isPending, } = useSignUp();
+  const { mutate: signUp, isPending, } = useCreateUser();
 
   const form = useForm<CreateUserType>({
     mode: 'all',

@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Req,
-  UseGuards,
   Param,
   Query
 } from '@nestjs/common';
@@ -14,7 +13,6 @@ import { CreateUserDto } from '@/dto/auth.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
-import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectUserInfoListItemType,
@@ -35,7 +33,6 @@ import { createError, createResponse, removeSensitiveInfoFromListResponse, remov
 import { AdminUserService } from './admin-users.service';
 
 @Controller('admin/users')
-@UseGuards(AdminAuthGuard)
 export class AdminUserController {
   constructor(private readonly usersService: AdminUserService) { }
 
@@ -425,7 +422,7 @@ export class AdminUserController {
   }
 
   /**
-   * @description 새 사용자 생성
+   * @description 새 사용자 생성 (기존 어드민이 새 어드민 추가)
    * @param req 요청 객체
    * @param createUserData 사용자 생성 정보
    */
@@ -446,6 +443,37 @@ export class AdminUserController {
     }
 
     const result = await this.usersService.createUser(req.user, createUserData);
+
+    if (!result?.success) {
+      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR);
+    }
+
+    const userToReturn = removeSensitiveInfo(result.data);
+
+    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, userToReturn);
+  }
+
+  /**
+   * @description 최초 어드민 생성 (개발 환경에서만)
+   * @param createUserData 사용자 생성 정보
+   */
+  @Endpoint({
+    endpoint: '/signup',
+    method: 'POST',
+    options: {
+      // 개발 환경에서만 인증 없이 접근 가능
+    },
+  })
+  async adminSignup(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
+    // 개발 환경이 아니면 접근 거부
+    if (process.env.NODE_ENV !== 'development') {
+      return createError('FORBIDDEN', MESSAGE.COMMON.DEVELOPMENT_ONLY);
+    }
+
+    // 최초 어드민 생성 (req.user 없이)
+    const result = await this.usersService.createUser(null, createUserData);
+
+    console.log('result', result);
 
     if (!result?.success) {
       return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR);

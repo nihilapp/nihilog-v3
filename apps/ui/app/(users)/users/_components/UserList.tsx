@@ -10,7 +10,7 @@ import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
 import { DataTable } from '@/(common)/_components/ui/data-table';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/(common)/_components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/(common)/_components/ui/select';
-import { useGetUsers } from '@/_entities/users/hooks';
+import { useAdminSearchUsers } from '@/_entities/admin/users/hooks';
 import { searchUserSchema, type SearchUserType } from '@/_schemas/user.schema';
 
 import { columns } from './columns';
@@ -46,10 +46,10 @@ export function UserList() {
   };
 
   const {
-    users,
-    loading,
+    data: users,
+    isLoading: loading,
     error,
-  } = useGetUsers(searchParams);
+  } = useAdminSearchUsers(searchParams);
 
   // 검색 실행 함수
   const handleSearch = useCallback((formData: SearchUserType) => {

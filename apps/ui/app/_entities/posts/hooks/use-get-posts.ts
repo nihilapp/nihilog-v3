@@ -19,7 +19,32 @@ export function useGetPosts(options: UseGetPostsOptions = {}) {
     url: [
       'posts', 'search',
     ],
-    key: postsKeys.postList({} as SearchPostType), // 기본값으로 빈 객체 사용
+    key: postsKeys.postList({}),
+    callback() {
+      // 성공 시 토스트 메시지는 필요에 따라 추가
+    },
+    errorCallback(error) {
+      toast.error(error.message, {
+        style: getToastStyle('error'),
+      });
+    },
+    ...options,
+  });
+
+  return query;
+}
+
+/**
+ * @description 관리자 대시보드용 게시글 목록 조회 훅
+ * @param {UseGetPostsOptions} [options] - 쿼리 옵션 (선택사항)
+ * @returns 게시글 목록 조회 쿼리 객체
+ */
+export function useGetPostsForAdmin(options: UseGetPostsOptions = {}) {
+  const query = usePost<ListType<SelectPostListItemType>, SearchPostType>({
+    url: [
+      'posts', 'search',
+    ],
+    key: postsKeys.postList({}),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

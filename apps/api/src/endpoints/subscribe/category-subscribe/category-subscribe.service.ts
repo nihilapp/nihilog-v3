@@ -65,7 +65,7 @@ export class CategorySubscribeService {
     // 카테고리 구독 중복 체크
     const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(createData.sbcrNo, createData.ctgryNo);
 
-    if (existingSubscribe.data) {
+    if (existingSubscribe?.success && existingSubscribe.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS);
     }
 
@@ -82,7 +82,7 @@ export class CategorySubscribeService {
     for (const ctgryNo of createData.ctgryNoList) {
       const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(createData.sbcrNo, ctgryNo);
 
-      if (existingSubscribe.data) {
+      if (existingSubscribe?.success && existingSubscribe.data) {
         return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS);
       }
     }

@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/(common)/_components/ui/card';
-import { useGetUserByNo } from '@/_entities/users/hooks';
+import { useAdminGetUserByNo } from '@/_entities/admin/users/hooks';
 
 interface Props
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -26,7 +26,7 @@ const cssVariants = cva(
 );
 
 export function UserDetail({ userNo, className, ...props }: Props) {
-  const { user, loading, error, } = useGetUserByNo(userNo);
+  const { data: user, isLoading: loading, error, } = useAdminGetUserByNo(userNo);
 
   if (loading) {
     return (

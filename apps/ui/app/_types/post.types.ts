@@ -2,6 +2,7 @@
 
 export interface PostInfoType {
   postNo: number;
+  postCd: string;
   userNo: number;
   ctgrNo?: number;
   postTtl: string;

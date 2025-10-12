@@ -10,4 +10,7 @@ export const COMMON_MESSAGES = {
   ALREADY_EXISTS: '이미 존재하는 항목입니다.',
   DELETED: '성공적으로 삭제되었습니다.',
   INTERNAL_SERVER_ERROR: '서버 내부 오류가 발생했습니다.',
+
+  // ===== 개발 환경 전용 메시지 =====
+  DEVELOPMENT_ONLY: '이 기능은 개발 환경에서만 사용할 수 있습니다.',
 } as const;

@@ -75,25 +75,6 @@ async function attemptTokenRefresh(refreshToken: string): Promise<NextResponse |
   return response;
 }
 
-/**
- * @description 로그인 페이지로 리다이렉트하면서 인증 관련 쿠키를 삭제합니다.
- */
-function redirectToSigninAndClearCookies(request: NextRequest): NextResponse {
-  // 로그인 페이지로 리다이렉트
-  const response = NextResponse.redirect(new URL('/auth/signin', request.url));
-
-  // 액세스 토큰 삭제
-  response.cookies.delete('accessToken');
-
-  // 리프레시 토큰 삭제
-  response.cookies.delete('refreshToken');
-
-  // 액세스 토큰 만료 시간 삭제
-  response.cookies.delete('accessTokenExpiresAt');
-
-  return response;
-}
-
 export async function middleware(request: NextRequest) {
   const { pathname, } = request.nextUrl;
 
@@ -161,8 +142,10 @@ export async function middleware(request: NextRequest) {
           });
         }
 
-        // 토큰 갱신 실패 시, 로그인 페이지로 리다이렉트하고 모든 인증 관련 쿠키를 삭제합니다.
-        return redirectToSigninAndClearCookies(request);
+        // 토큰 갱신 실패 시, 기존 토큰이 유효한지 확인 후 처리
+        // 갱신 실패가 반드시 인증 실패를 의미하지는 않으므로, 기존 토큰으로 진행을 시도
+        console.warn('토큰 갱신 실패했지만 기존 토큰으로 진행을 시도합니다.');
+        return NextResponse.next();
       }
     }
     catch (error) {
@@ -183,8 +166,10 @@ export async function middleware(request: NextRequest) {
         console.error('미들웨어 토큰 갱신 실패:', pathname);
       }
 
-      // 갱신 실패 시, 로그인 페이지로 리다이렉트하고 모든 인증 관련 쿠키를 삭제합니다.
-      return redirectToSigninAndClearCookies(request);
+      // 갱신 실패 시, 기존 토큰이 유효한지 확인 후 처리
+      // 갱신 실패가 반드시 인증 실패를 의미하지는 않으므로, 기존 토큰으로 진행을 시도
+      console.warn('토큰 갱신 중 예외 발생했지만 기존 토큰으로 진행을 시도합니다.');
+      return NextResponse.next();
     }
   }
 

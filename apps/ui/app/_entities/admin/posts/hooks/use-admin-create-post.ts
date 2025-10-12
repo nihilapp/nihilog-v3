@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
@@ -17,6 +18,7 @@ interface UseAdminCreatePostOptions extends MutationOptionsType<SelectPostType, 
  */
 export function useAdminCreatePost(options: UseAdminCreatePostOptions = {}) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const query = usePost<SelectPostType, CreatePostType>({
     url: [
@@ -32,6 +34,8 @@ export function useAdminCreatePost(options: UseAdminCreatePostOptions = {}) {
       queryClient.invalidateQueries({
         queryKey: adminPostsKeys.postList({}).queryKey,
       });
+      // 생성된 포스트의 코드를 쿼리스트링으로 전달하여 편집 페이지로 이동
+      router.push(`/admin/dashboard/posts/new/edit?slug=${res.data?.postCd}`);
     },
     errorCallback(error) {
       toast.error(error.message, {

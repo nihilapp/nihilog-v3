@@ -65,7 +65,7 @@ export class TagSubscribeService {
     // 태그 구독 중복 체크
     const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, createData.tagNo);
 
-    if (existingSubscribe.data) {
+    if (existingSubscribe?.success && existingSubscribe.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS);
     }
 
@@ -82,7 +82,7 @@ export class TagSubscribeService {
     for (const tagNo of createData.tagNoList) {
       const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, tagNo);
 
-      if (existingSubscribe.data) {
+      if (existingSubscribe?.success && existingSubscribe.data) {
         return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS);
       }
     }

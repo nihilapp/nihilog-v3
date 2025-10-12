@@ -11,7 +11,7 @@ export {
   type PostStatusType,
   type BaseSearchType,
   type AnalyzeStatType
-} from './common.schema.js';
+} from './common.schema';
 
 // 응답 스키마 export
 export {

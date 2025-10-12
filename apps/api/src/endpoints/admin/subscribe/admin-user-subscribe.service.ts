@@ -98,7 +98,7 @@ export class AdminSubscribeService {
   ): Promise<RepoResponseType<SelectUserSbcrInfoType> | null> {
     const findSubscribe = await this.getUserSubscribeByUserNo(createData.userNo);
 
-    if (findSubscribe?.success) {
+    if (findSubscribe?.success && findSubscribe.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.ADMIN.ALREADY_EXISTS);
     }
 

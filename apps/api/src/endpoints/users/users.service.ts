@@ -43,7 +43,7 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
 
-    if (findUser?.data) {
+    if (findUser?.success && findUser.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS);
     }
 

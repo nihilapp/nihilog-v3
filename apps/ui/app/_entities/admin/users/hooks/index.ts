@@ -2,6 +2,7 @@ export { useAdminGetUserByNo } from './use-admin-get-user-by-no';
 export { useAdminGetUserByName } from './use-admin-get-user-by-name';
 export { useAdminGetUserByEmail } from './use-admin-get-user-by-email';
 export { useAdminCreateUser } from './use-admin-create-user';
+export { useAdminSignup } from './use-admin-signup';
 export { useAdminUpdateUser } from './use-admin-update-user';
 export { useAdminDeleteUser } from './use-admin-delete-user';
 export { useAdminUpdateMultipleUsers } from './use-admin-update-multiple-users';

@@ -1,6 +1,7 @@
 import { applyDecorators, HttpCode, HttpStatus, UseGuards, Get, Post, Put, Patch, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
+import { JwtAuthGuard } from '@/endpoints/auth/jwt-auth.guard';
 import { RoleAuthGuard, Roles } from '@/endpoints/auth/role-auth.guard';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 
@@ -43,13 +44,13 @@ export function Endpoint({
     HttpCode(HttpStatus.OK),
   ];
 
-  // 인증 가드 추가 (ApiBearerAuth 제거 - Zod OpenAPI에서 처리)
-  if (options?.authGuard) {
-    // JWT 인증은 Zod OpenAPI에서 처리하므로 여기서는 제거
+  // 인증 가드 추가
+  if (options?.authGuard === 'JWT-auth') {
+    decorators.push(UseGuards(JwtAuthGuard));
   }
 
-  // 롤 기반 인증 추가
-  if (options?.roles && options.roles.length > 0) {
+  // 롤 기반 인증 추가 (개발 환경에서는 우회)
+  if (options?.roles && options.roles.length > 0 && process.env.NODE_ENV !== 'development') {
     decorators.push(UseGuards(RoleAuthGuard));
     decorators.push(Roles(...options.roles));
   }

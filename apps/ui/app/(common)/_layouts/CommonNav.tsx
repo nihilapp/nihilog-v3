@@ -13,9 +13,7 @@ interface Props
   className?: string;
 }
 
-const cssVariants = cva([
-  'border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
-], {
+const cssVariants = cva([ 'border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60', ], {
   variants: {},
   defaultVariants: {},
   compoundVariants: [],

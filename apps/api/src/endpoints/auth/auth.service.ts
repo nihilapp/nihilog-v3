@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { MESSAGE } from '@/code/messages';
-import { ChangePasswordDto, CreateUserDto, SignInDto } from '@/dto/auth.dto';
+import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
 import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
@@ -68,7 +68,7 @@ export class AuthService {
     // 사용자 조회
     const userResult = await this.userRepository.getUserByEmail(emlAddr);
 
-    if (!userResult?.success) {
+    if (!userResult?.success || !userResult.data) {
       return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
     }
 
@@ -196,30 +196,6 @@ export class AuthService {
     catch {
       return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_REFRESH_TOKEN);
     }
-  }
-
-  /**
-   * @description 일반 사용자 회원가입
-   * @param createUserData 회원가입 정보
-   */
-  async signUp(user: null, createUserData: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
-    const { emlAddr, password, } = createUserData;
-
-    // 이메일 중복 체크
-    const existingUser = await this.userRepository.getUserByEmail(emlAddr);
-    if (existingUser?.success) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.AUTH.ALREADY_EXISTS);
-    }
-
-    // 비밀번호 암호화
-    const encptPswd = await bcrypt.hash(password, 10);
-
-    // 사용자 생성
-    return this.userRepository.createUser(
-      null,
-      createUserData,
-      encptPswd
-    );
   }
 
   /**

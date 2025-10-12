@@ -686,7 +686,7 @@ export class UserRepository {
    */
   async createUser(
     userNo: number | null,
-    signUpData: CreateUserDto | CreateAdminDto,
+    signUpData: Omit<CreateUserDto, 'password'> | Omit<CreateAdminDto, 'password'>,
     hashedPassword: string
   ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const currentTime = timeToString();
@@ -706,6 +706,7 @@ export class UserRepository {
       return prismaResponse(true, newUser);
     }
     catch (error) {
+      console.log('createUser', error);
       return prismaError(error as PrismaClientKnownRequestError);
     }
   }

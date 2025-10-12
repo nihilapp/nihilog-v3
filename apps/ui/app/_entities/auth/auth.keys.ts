@@ -9,7 +9,6 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
  *
  * POST 뮤테이션:
  * - signin: 로그인
- * - signup: 회원가입
  * - signout: 로그아웃
  * - withdraw: 회원탈퇴
  * - forgotPassword: 비밀번호 재설정 요청
@@ -22,7 +21,6 @@ export const authKeys = createQueryKeys('auth', {
 
   // ===== POST Mutations =====
   signin: () => [ 'signin', ],
-  signup: () => [ 'signup', ],
   signout: () => [ 'signout', ],
   withdraw: () => [ 'withdraw', ],
   forgotPassword: () => [ 'forgotPassword', ],

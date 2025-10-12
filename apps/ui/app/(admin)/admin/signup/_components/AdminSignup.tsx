@@ -8,7 +8,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { FormInput } from '@/(common)/_components/form/FormInput';
 import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
 import { Form } from '@/(common)/_components/ui/form';
-import { useAdminSignUp } from '@/_entities/admin/hooks';
+import { useAdminSignup } from '@/_entities/admin/users/hooks';
 import { cn } from '@/_libs';
 import { createUserSchema, type CreateUserType } from '@/_schemas/user.schema';
 
@@ -28,7 +28,7 @@ const cssVariants = cva(
 );
 
 export function AdminSignup({ className, ...props }: Props) {
-  const { mutate: adminSignUp, isPending, } = useAdminSignUp();
+  const { mutate: adminSignUp, isPending, } = useAdminSignup();
 
   const form = useForm<CreateUserType>({
     mode: 'all',

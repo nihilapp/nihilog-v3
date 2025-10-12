@@ -31,6 +31,7 @@ export const adminUsersKeys = createQueryKeys('adminUsers', {
 
   // ===== POST Mutations =====
   createUser: () => [ 'createUser', ], // 사용자 생성
+  signup: () => [ 'signup', ], // 최초 어드민 생성 (개발 환경에서만)
   analyzeOverview: (params: AnalyzeStatType) => [
     'analyzeOverview', params,
   ], // 사용자 분석 통계 (9개 지표 통합)

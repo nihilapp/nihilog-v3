@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
 import {
-  createUserSchema,
   signInSchema,
   changePasswordSchema
 } from '@/endpoints/prisma/schemas';
@@ -14,52 +13,6 @@ import { addGlobalResponses } from '../utils/global-responses';
 
 // 인증 엔드포인트 경로 등록
 export const registerAuthEndpoints = () => {
-  // 회원가입
-  openApiRegistry.registerPath({
-    method: 'post',
-    path: '/auth/signup',
-    summary: '회원가입',
-    description: '새로운 사용자 계정을 생성합니다.',
-    tags: [ 'auth', ],
-    request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: createUserSchema,
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: '응답',
-        content: {
-          'application/json': {
-            schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '회원가입 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.AUTH.SIGN_UP_SUCCESS,
-                  CreateExample.user('detail')
-                ),
-              },
-              emailInUse: {
-                summary: '이메일 중복',
-                value: createError('CONFLICT', MESSAGE.AUTH.ALREADY_EXISTS),
-              },
-              signUpError: {
-                summary: '회원가입 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_UP_ERROR),
-              },
-            }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
-          },
-        },
-      },
-    },
-  });
-
   // 로그인
   openApiRegistry.registerPath({
     method: 'post',

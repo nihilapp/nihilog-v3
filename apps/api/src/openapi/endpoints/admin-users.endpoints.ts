@@ -652,6 +652,53 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
+  // POST /admin/users/signup - 최초 어드민 생성 (개발 환경에서만)
+  openApiRegistry.registerPath({
+    method: 'post',
+    path: '/admin/users/signup',
+    summary: '🔐 최초 어드민 생성',
+    description: '개발 환경에서만 사용 가능한 최초 어드민 계정 생성 기능입니다. 프로덕션 환경에서는 접근이 제한됩니다.',
+    tags: [ 'admin-users', ],
+    // 개발 환경에서만 인증 없이 접근 가능
+    request: {
+      body: {
+        content: {
+          'application/json': {
+            schema: createUserSchema,
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: '응답',
+        content: {
+          'application/json': {
+            schema: z.looseObject({}),
+            examples: {
+              success: {
+                summary: '최초 어드민 생성 성공',
+                value: createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, CreateExample.user('detail')),
+              },
+              forbidden: {
+                summary: '개발 환경에서만 사용 가능',
+                value: createError('FORBIDDEN', MESSAGE.COMMON.DEVELOPMENT_ONLY),
+              },
+              conflict: {
+                summary: '이미 존재하는 이메일',
+                value: createError('CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS),
+              },
+              error: {
+                summary: '사용자 생성 실패',
+                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
   // PUT /admin/users/{userNo} - 사용자 정보 수정
   openApiRegistry.registerPath({
     method: 'put',

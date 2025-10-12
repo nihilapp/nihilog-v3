@@ -180,27 +180,30 @@ export class AdminUserService {
 
   /**
    * @description 새 사용자 생성
-   * @param user 사용자 정보
+   * @param user 사용자 정보 (null일 수 있음 - 최초 어드민 생성 시)
    * @param createUserData 사용자 생성 정보
    */
-  async createUser(user: JwtPayload, createUserData: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
+  async createUser(user: JwtPayload | null, createUserData: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    const { password, ...createUserDataWithoutPassword } = createUserData;
     // 이메일 중복 확인
-    const findUser = await this.userRepository.getUserByEmail(createUserData.emlAddr);
+    const findUser = await this.userRepository.getUserByEmail(createUserDataWithoutPassword.emlAddr);
 
-    if (findUser?.success) {
+    console.log('findUser', findUser);
+
+    if (findUser?.success && findUser.data) {
       return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS);
     }
 
     // 비밀번호 해시화
     const hashedPassword = await bcrypt.hash(
-      createUserData.password,
+      password,
       10
     );
 
-    // 사용자 계정 생성
+    // 사용자 계정 생성 (user가 null이면 최초 생성자 없음)
     return this.userRepository.createUser(
-      user.userNo,
-      createUserData,
+      user?.userNo || null,
+      createUserDataWithoutPassword,
       hashedPassword
     );
   }

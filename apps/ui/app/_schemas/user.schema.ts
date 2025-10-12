@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // 공통 스키마 import
-import { ynEnumSchema, userRoleSchema, passwordSchema, baseSearchSchema } from './common.schema.js';
+import { ynEnumSchema, userRoleSchema, passwordSchema, baseSearchSchema } from './common.schema';
 
 // 사용자 요청 스키마들
 
