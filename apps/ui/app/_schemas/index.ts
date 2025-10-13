@@ -21,7 +21,7 @@ export {
   type ResponseType,
   type ListResponseType,
   type ListType
-} from './response.schema.js';
+} from './response.schema';
 
 // 사용자 스키마 export
 export {
@@ -41,7 +41,7 @@ export {
   type ResetPasswordType,
   type WithdrawType,
   type SearchUserType
-} from './user.schema.js';
+} from './user.schema';
 
 // 게시글 스키마 export
 export {
@@ -57,7 +57,7 @@ export {
   type SearchPostType,
   type CreatePostBookmarkType,
   type DeletePostBookmarkType
-} from './post.schema.js';
+} from './post.schema';
 
 // 카테고리 스키마 export
 export {
@@ -69,7 +69,7 @@ export {
   type UpdateCategoryType,
   type DeleteCategoryType,
   type SearchCategoryType
-} from './category.schema.js';
+} from './category.schema';
 
 // 태그 스키마 export
 export {
@@ -89,7 +89,7 @@ export {
   type UpdatePstTagMpngType,
   type DeletePstTagMpngType,
   type SearchPstTagMpngType
-} from './tag.schema.js';
+} from './tag.schema';
 
 // 댓글 스키마 export
 export {
@@ -101,7 +101,7 @@ export {
   type UpdateCommentType,
   type DeleteCommentType,
   type SearchCommentType
-} from './comment.schema.js';
+} from './comment.schema';
 
 // 구독 스키마 export
 export {
@@ -113,7 +113,7 @@ export {
   type UpdateSubscribeType,
   type DeleteSubscribeType,
   type SearchSubscribeType
-} from './subscribe.schema.js';
+} from './subscribe.schema';
 
 // 카테고리 구독 스키마 export
 export {
@@ -125,7 +125,7 @@ export {
   type UpdateCategorySubscribeType,
   type DeleteCategorySubscribeType,
   type SearchCategorySubscribeType
-} from './category-subscribe.schema.js';
+} from './category-subscribe.schema';
 
 // 태그 구독 스키마 export
 export {
@@ -137,4 +137,4 @@ export {
   type UpdateTagSubscribeType,
   type DeleteTagSubscribeType,
   type SearchTagSubscribeType
-} from './tag-subscribe.schema.js';
+} from './tag-subscribe.schema';

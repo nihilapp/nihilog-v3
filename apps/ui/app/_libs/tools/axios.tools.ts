@@ -55,6 +55,49 @@ export class Api {
   static getInstance(): AxiosInstance {
     if (!this.instance) {
       this.instance = axios.create(this.config);
+
+      // 요청 인터셉터: withCredentials 강제 적용 및 디버깅
+      this.instance.interceptors.request.use(
+        (config) => {
+          // withCredentials가 명시적으로 false가 아니면 항상 true로 설정
+          if (config.withCredentials !== false) {
+            config.withCredentials = true;
+          }
+
+          // 개발 환경에서 요청 로깅
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[API Request]', {
+              method: config.method?.toUpperCase(),
+              url: config.url,
+              baseURL: config.baseURL,
+              withCredentials: config.withCredentials,
+            });
+          }
+
+          return config;
+        },
+        (error) => {
+          console.error('[API Request Error]', error);
+          return Promise.reject(error);
+        }
+      );
+
+      // 응답 인터셉터: CORS 에러 디버깅
+      this.instance.interceptors.response.use(
+        (response) => response,
+        (error) => {
+          if (process.env.NODE_ENV === 'development') {
+            console.error('[API Response Error]', {
+              message: error.message,
+              code: error.code,
+              status: error.response?.status,
+              url: error.config?.url,
+              isCorsError: error.message?.includes('CORS') || error.message?.includes('Network Error'),
+            });
+          }
+          return Promise.reject(error);
+        }
+      );
     }
     return this.instance;
   }

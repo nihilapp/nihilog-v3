@@ -1,166 +1,118 @@
 'use client';
 
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
-import { AuthRedirectModal, NotShow } from '@/(common)/_components';
 import { FormInput } from '@/(common)/_components/form/FormInput';
-import { SubmitButton } from '@/(common)/_components/form/SubmitButton';
+import { LinkButton } from '@/(common)/_components/LinkButton';
+import { Button } from '@/(common)/_components/ui/button';
 import { Form } from '@/(common)/_components/ui/form';
+import { Separator } from '@/(common)/_components/ui/separator';
 import { useAuthActions } from '@/_entities/auth/auth.store';
-import { useGetSession, useSignIn } from '@/_entities/auth/hooks';
-import { cn } from '@/_libs';
-import { signInSchema, type SignInType } from '@/_schemas/user.schema';
+import { useSignIn } from '@/_entities/auth/hooks';
+import { signInSchema, type SignInType } from '@/_schemas';
 
-interface Props
-  extends React.FormHTMLAttributes<HTMLFormElement>,
-  VariantProps<typeof cssVariants> {
-  className?: string;
-}
+export function SignInForm() {
+  const { setAuthCardHeader, resetAuthCardHeader, } = useAuthActions();
 
-const cssVariants = cva(
-  [ 'flex flex-col gap-2 flex-1', ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
+  const signIn = useSignIn();
 
-export function SignInForm({ className, ...props }: Props) {
-  const { setAuthCardHeader, } = useAuthActions();
-  const { session, loading, } = useGetSession();
-  const [
-    showModal, setShowModal,
-  ] = useState(false);
-
-  const { mutate: signIn, isPending, } = useSignIn();
-
-  const form = useForm<SignInType>({
+  const form = useForm({
     mode: 'all',
-    resolver: standardSchemaResolver(signInSchema),
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       emlAddr: '',
       password: '',
     },
   });
 
-  useEffect(() => {
-    form.trigger();
-
-    setAuthCardHeader({
-      title: '로그인',
-      description: '로그인 후 서비스를 이용해주세요.',
-    });
-  }, [
-    form, setAuthCardHeader,
-  ]);
-
-  useEffect(() => {
-    if (!loading && session) {
-      setShowModal(true);
-    }
-  }, [
-    session, loading,
-  ]);
-
-  const onSubmit: SubmitHandler<SignInType> = (data) => {
-    signIn(data);
+  const onSubmitForm: SubmitHandler<SignInType> = (data) => {
+    signIn.mutate(data);
   };
 
+  useEffect(() => {
+    setAuthCardHeader({
+      title: '로그인',
+      description: '로그인 페이지입니다.',
+    });
+
+    form.trigger();
+
+    return () => {
+      resetAuthCardHeader();
+    };
+  }, [
+    setAuthCardHeader,
+    resetAuthCardHeader,
+    form,
+  ]);
+
   return (
-    <>
-      {
-        !loading && session
-          ? (
-            <NotShow />
-          )
-          : (
-            <>
-              <Form {...form}>
-                <form
-                  className={cn(
-                    cssVariants({}),
-                    className
-                  )}
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  {...props}
-                >
-                  <FormInput
-                    form={form}
-                    label='이메일'
-                    name='emlAddr'
-                    type='email'
-                    placeholder='이메일을 입력해주세요.'
-                    autoComplete='username'
-                    required
-                    disabled={isPending}
-                  />
+    <div className='flex flex-col gap-5'>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmitForm)} className='flex flex-col gap-2'>
+          <FormInput
+            fieldName='emlAddr'
+            label='이메일'
+            type='email'
+            autoComplete='email'
+          />
 
-                  <FormInput
-                    form={form}
-                    label='비밀번호'
-                    name='password'
-                    type='password'
-                    placeholder='비밀번호를 입력해주세요.'
-                    autoComplete='current-password'
-                    required
-                    disabled={isPending}
-                  />
+          <FormInput
+            fieldName='password'
+            label='비밀번호'
+            type='password'
+            autoComplete='current-password'
+          />
 
-                  <SubmitButton>
-                    {isPending
-                      ? '로그인 중...'
-                      : '로그인'}
-                  </SubmitButton>
-                </form>
-              </Form>
+          <div className='flex items-center justify-end mt-1'>
+            <Link
+              href='/auth/forgot-password'
+              className='text-sm text-muted-foreground hover:text-foreground transition-colors'
+            >
+              비밀번호를 잊으셨나요?
+            </Link>
+          </div>
 
-              <div className='flex flex-col gap-3 pt-4 border-t border-gray-200'>
-                <div className='text-center'>
-                  <span className='text-sm text-gray-600'>계정이 없으신가요? </span>
-                  <Link
-                    href='/auth/signup'
-                    className='text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors'
-                  >
-                    회원가입
-                  </Link>
-                </div>
+          <Button
+            type='submit'
+            className='mt-3'
+            disabled={!form.formState.isValid || signIn.isPending}
+          >
+            {signIn.isPending
+              ? '로그인 중...'
+              : '로그인'}
+          </Button>
+        </form>
+      </Form>
 
-                <div className='text-center'>
-                  <Link
-                    href='/auth/forgot-password'
-                    className='text-sm text-gray-500 hover:text-gray-700 transition-colors'
-                  >
-                    비밀번호를 잊으셨나요?
-                  </Link>
-                </div>
+      <div className='relative'>
+        <Separator />
+        <div className='absolute inset-0 flex items-center justify-center'>
+          <span className='bg-card px-2 text-xs text-muted-foreground'>또는</span>
+        </div>
+      </div>
 
-                <div className='text-center'>
-                  <Link
-                    href='/'
-                    className='text-sm text-gray-400 hover:text-gray-600 transition-colors'
-                  >
-                    홈으로 돌아가기
-                  </Link>
-                </div>
-              </div>
-            </>
-          )
-      }
+      <div className='flex flex-col gap-3'>
+        <LinkButton href='/auth/signup' size='lg'>
+          회원가입하기
+        </LinkButton>
 
-      {/* 이미 로그인된 사용자를 위한 모달 */}
-      {session && (
-        <AuthRedirectModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          title='이미 로그인되어 있습니다'
-          description='로그인한 상태에서는 로그인 페이지에 접근할 수 없습니다. 홈으로 이동하거나 마이페이지로 이동해주세요.'
-        />
-      )}
-    </>
+        <div className='relative'>
+          <div className='absolute inset-0 flex items-center'>
+            <Separator className='w-full' />
+          </div>
+          <div className='relative flex justify-center text-xs'>
+            <span className='bg-card px-2 text-muted-foreground'>or</span>
+          </div>
+        </div>
+
+        <LinkButton href='/' size='sm'>
+          홈으로 돌아가기
+        </LinkButton>
+      </div>
+    </div>
   );
 }

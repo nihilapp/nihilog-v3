@@ -12,7 +12,7 @@ const publicPaths = [
 
 export const config = {
   // 미들웨어는 정적 파일과 Next.js 내부 파일을 제외한 모든 경로에서 실행됩니다.
-  matcher: [ '/((?!_next/static|_next/image|favicon.ico|api/auth).*)', ],
+  matcher: [ '/((?!_next/static|_next/image|favicon.ico|api/auth|images).*)', ],
 };
 
 /**
@@ -44,8 +44,14 @@ function shouldRefreshToken(accessTokenExpiresAt?: string): boolean {
  * 실패 시에는 null을 반환합니다.
  */
 async function attemptTokenRefresh(refreshToken: string): Promise<NextResponse | null> {
-  // 토큰 갱신 엔드포인트 구성
-  const refreshUrl = new URL('/auth/refresh', siteConfig.api.route);
+  // 토큰 갱신 엔드포인트 구성 (서버 사이드에서는 직접 백엔드 호출)
+  // 환경 변수로 백엔드 URL 설정 가능 (Docker, 다양한 환경 지원)
+  const backendUrl = process.env.BACKEND_URL || (
+    process.env.NODE_ENV === 'development'
+      ? siteConfig.backEnd.development
+      : siteConfig.backEnd.production
+  );
+  const refreshUrl = new URL('/auth/refresh', backendUrl);
 
   // 토큰 갱신 요청
   const refreshResponse = await fetch(refreshUrl, {

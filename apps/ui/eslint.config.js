@@ -242,7 +242,7 @@ const config = [
 
       // React 규칙
       '@stylistic/indent': [
-        'warn',
+        'error',
         2,
         {
           SwitchCase: 1,
@@ -263,24 +263,6 @@ const config = [
           ObjectExpression: 1,
           ImportDeclaration: 1,
           flatTernaryExpressions: false,
-          ignoredNodes: [
-            'JSXElement',
-            'JSXElement > *',
-            'JSXAttribute',
-            'JSXIdentifier',
-            'JSXNamespacedName',
-            'JSXMemberExpression',
-            'JSXSpreadAttribute',
-            'JSXExpressionContainer',
-            'JSXOpeningElement',
-            'JSXClosingElement',
-            'JSXFragment',
-            'JSXOpeningFragment',
-            'JSXClosingFragment',
-            'JSXText',
-            'JSXEmptyExpression',
-            'JSXSpreadChild',
-          ],
           ignoreComments: false,
         },
       ],
@@ -318,6 +300,7 @@ const config = [
       ],
       'react/require-default-props': 'off',
       'react/jsx-one-expression-per-line': 'off',
+      '@stylistic/jsx-one-expression-per-line': 'off',
       'react/function-component-definition': 'off',
       'react/jsx-no-useless-fragment': 'off',
       'react/no-arrow-function-lifecycle': 'off',

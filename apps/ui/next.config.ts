@@ -1,5 +1,7 @@
 import { type NextConfig } from 'next';
 
+import { siteConfig } from './app/_config/config';
+
 const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
@@ -28,13 +30,14 @@ const nextConfig: NextConfig = {
       '@': './app',
     },
   },
-  pageExtensions: [ 'tsx', 'ts', ],
+  pageExtensions: [
+    'tsx', 'ts',
+  ],
   distDir: 'build',
   reactStrictMode: false,
   compiler: {
     styledComponents: true,
   },
-  transpilePackages: [ '@repo/shadcn', '@repo/message', ],
   eslint: {
     dirs: [],
     ignoreDuringBuilds: true,
@@ -45,6 +48,22 @@ const nextConfig: NextConfig = {
   // 개발 서버 포트 설정
   env: {
     PORT: '3000',
+  },
+  // API 프록시 설정 (WSL2 네트워크 문제 해결)
+  async rewrites() {
+    // 환경 변수로 백엔드 URL 설정 가능 (Docker, 다양한 환경 지원)
+    const apiUrl = process.env.BACKEND_URL || (
+      process.env.NODE_ENV === 'development'
+        ? siteConfig.backEnd.development
+        : siteConfig.backEnd.production
+    );
+
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${apiUrl}/:path*`,
+      },
+    ];
   },
 };
 

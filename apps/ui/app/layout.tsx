@@ -58,7 +58,7 @@ interface Props {
 
 export default function AppLayout({ children, }: Props) {
   return (
-    <html lang='ko'>
+    <html lang='ko' className='h-full'>
       <head>
         {siteConfig.google.adSrc && (
           <Script async src={siteConfig.google.adSrc} crossOrigin='anonymous' />
@@ -67,7 +67,7 @@ export default function AppLayout({ children, }: Props) {
           <GoogleAnalytics gaId={siteConfig.google.analyticsId} />
         )}
       </head>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className='h-full'>
         <Providers>{children}</Providers>
       </body>
     </html>

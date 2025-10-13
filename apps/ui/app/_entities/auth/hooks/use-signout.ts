@@ -28,7 +28,7 @@ export function useSignOut(options: UseSignOutOptions = {}) {
         style: getToastStyle('success'),
       });
       // 로그아웃 성공 시 세션 갱신
-      queryClient.invalidateQueries({
+      queryClient.removeQueries({
         queryKey: authKeys.session().queryKey,
       });
       // 홈으로 이동

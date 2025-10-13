@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build:remove": "rm -rf node_modules/.cache && rm -rf build/",
-    "dev": "pnpm build:remove && next dev --turbopack",
+    "dev": "pnpm build:remove && NODE_OPTIONS='--no-deprecation' next dev --turbopack",
     "start": "pnpm vercel:build && next start",
     "build": "pnpm build:remove && next build",
     "vercel:build": "pnpm build:remove && next build",

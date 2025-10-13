@@ -26,9 +26,13 @@ export const siteConfig = {
     adSrc: '',
     analyticsId: '',
   },
+  backEnd: {
+    development: 'http://localhost:8000',
+    production: 'https://api.nihilncunia.dev',
+    default: 'http://localhost:8000',
+  },
   api: {
-    route: process.env.NODE_ENV === 'development'
-      ? 'http://localhost:8000'
-      : 'https://api.nihilncunia.dev',
+    // Next.js rewrites 프록시를 통해 요청 (WSL2 네트워크 및 CORS 문제 해결)
+    route: '/api',
   },
 };

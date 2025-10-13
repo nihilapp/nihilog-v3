@@ -1,11 +1,17 @@
+import React from 'react';
+
 import { Home } from '@/(common)/_components/Home';
-import { setMeta } from '@/_libs/setMeta';
+import { setMeta } from '@/_libs';
+
+// interface Props {}
 
 export const metadata = setMeta({
-  title: '메인',
+  title: '홈',
   url: '/',
 });
 
-export default function Page() {
-  return <Home />;
+export default function page() {
+  return (
+    <Home />
+  );
 }

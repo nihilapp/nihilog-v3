@@ -1,135 +1,182 @@
 'use client';
 
-import { type VariantProps } from 'class-variance-authority';
-import { useState } from 'react';
-import type { UseFormReturn } from 'react-hook-form';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { Eye, EyeOff } from 'lucide-react';
+import React, { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-import { fieldContainerVariants, inputVariants, itemVariants, labelVariants } from '@/(common)/_components/form/form-input.cva';
 import { Button } from '@/(common)/_components/ui/button';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/(common)/_components/ui/form';
 import { Input } from '@/(common)/_components/ui/input';
+import { Textarea } from '@/(common)/_components/ui/textarea';
 import { cn } from '@/_libs';
 
+type InputType = 'text' | 'number' | 'email' | 'password' | 'textarea';
+
 interface Props
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'form' | 'size'>,
+  extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof itemVariants> {
-  className?: string;
-  form: UseFormReturn<any>;
+  fieldName: string;
   label: string;
-  required?: boolean;
-  disabled?: boolean;
-  placeholder?: string;
+  type?: InputType;
+  classNames?: {
+    container: string;
+    label: string;
+    input: string;
+    toggle: string;
+  };
   autoComplete?: string;
-  type?: string;
-  labelClassName?: string;
-  inputClassName?: string;
-  layout?: 'vertical' | 'horizontal';
-  size?: 'default' | 'sm' | 'lg';
-  variant?: 'default' | 'error' | 'disabled';
 }
 
+const itemVariants = cva(
+  [ 'flex flex-col gap-2', ],
+  {
+    variants: {
+      variant: {
+        default: '',
+        error: 'text-destructive',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+const labelVariants = cva(
+  [ 'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70', ],
+  {
+    variants: {
+      variant: {
+        default: 'text-foreground',
+        error: 'text-destructive',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+const inputVariants = cva(
+  [ 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50', ],
+  {
+    variants: {
+      variant: {
+        default: 'border-input',
+        error: 'border-destructive focus-visible:ring-destructive',
+      },
+      hasPasswordToggle: {
+        true: 'pr-10',
+        false: '',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      hasPasswordToggle: false,
+    },
+  }
+);
+
 export function FormInput({
-  className,
-  form,
+  fieldName,
   label,
-  name,
-  required = false,
-  disabled = false,
-  placeholder,
-  autoComplete,
   type = 'text',
-  size,
+  classNames,
   variant,
-  labelClassName,
-  inputClassName,
-  layout = 'vertical',
+  autoComplete,
   ...props
 }: Props) {
-  const isDisabled = disabled || form.formState.isSubmitting;
-  const [ showPassword, setShowPassword, ] = useState(false);
-
-  // 비밀번호 타입인지 확인
+  const form = useFormContext();
+  const [
+    showPassword,
+    setShowPassword,
+  ] = useState(false);
   const isPasswordType = type === 'password';
-
-  // 실제 입력 타입 결정
-  const inputType = isPasswordType && showPassword
-    ? 'text'
+  const isTextareaType = type === 'textarea';
+  const actualInputType = isPasswordType
+    ? (
+      showPassword
+        ? 'text'
+        : 'password'
+    )
     : type;
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <FormField
       control={form.control}
-      name={name!}
+      name={fieldName}
       render={({ field, fieldState, }) => {
         const hasError = !!fieldState.error;
+        const currentVariant = hasError
+          ? 'error'
+          : variant;
 
         return (
-          <FormItem className={cn(
-            itemVariants({}),
-            className
-          )}
-          >
-            <div className={cn(
-              fieldContainerVariants({ layout, })
-            )}
-            >
-              <FormLabel className={cn(
-                labelVariants({
-                  layout,
-                  disabled: isDisabled,
-                }),
-                labelClassName
-              )}
-              >
-                {label}
-                {required && <span className='text-destructive'>*</span>}
-              </FormLabel>
-              <FormControl>
-                <div className='relative'>
-                  <Input
-                    {...field}
-                    type={inputType}
-                    placeholder={placeholder}
-                    autoComplete={autoComplete}
-                    disabled={isDisabled}
+          <FormItem className={cn(itemVariants({ variant: currentVariant, }), classNames?.container)}>
+            <FormLabel className={cn(labelVariants({ variant: currentVariant, }), classNames?.label)}>
+              {label}
+            </FormLabel>
+            <FormControl>
+              {isTextareaType
+                ? (
+                  <Textarea
                     className={cn(
                       inputVariants({
-                        variant: hasError
-                          ? 'error'
-                          : isDisabled
-                            ? 'disabled'
-                            : variant || 'default',
-                        size: size || 'default',
+                        variant: currentVariant,
+                        hasPasswordToggle: false,
                       }),
-                      // 비밀번호 타입인 경우 우측 패딩 추가
-                      isPasswordType && 'pr-10',
-                      inputClassName
+                      classNames?.input
                     )}
-                    {...props}
+                    {...field}
                   />
-                  {isPasswordType && (
-                    <Button
-                      type='button'
-                      variant='ghost'
-                      size='sm'
-                      className='absolute right-0 top-0 h-full px-3 hover:bg-transparent'
-                      onClick={() => setShowPassword(!showPassword)}
-                      disabled={isDisabled}
-                    >
-                      {showPassword
-                        ? (
-                          <FiEyeOff className='h-4 w-4 text-muted-foreground' />
-                        )
-                        : (
-                          <FiEye className='h-4 w-4 text-muted-foreground' />
+                )
+                : (
+                  <div className='relative'>
+                    <Input
+                      type={actualInputType}
+                      className={cn(
+                        inputVariants({
+                          variant: currentVariant,
+                          hasPasswordToggle: isPasswordType,
+                        }),
+                        classNames?.input
+                      )}
+                      {...field}
+                      autoComplete={autoComplete}
+                      {...props}
+                    />
+                    {isPasswordType && (
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='sm'
+                        className={cn(
+                          'absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent',
+                          classNames?.toggle
                         )}
-                    </Button>
-                  )}
-                </div>
-              </FormControl>
-            </div>
-            <FormMessage className='ml-auto' />
+                        onClick={togglePasswordVisibility}
+                        tabIndex={-1}
+                      >
+                        {showPassword
+                          ? (
+                            <EyeOff className='h-4 w-4 text-muted-foreground' />
+                          )
+                          : (
+                            <Eye className='h-4 w-4 text-muted-foreground' />
+                          )}
+                      </Button>
+                    )}
+                  </div>
+                )}
+            </FormControl>
+            {hasError && (
+              <FormMessage className='italic font-900' />
+            )}
           </FormItem>
         );
       }}

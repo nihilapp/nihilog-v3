@@ -12,7 +12,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ '', ],
+  [ 'h-full', ],
   {
     variants: {},
     defaultVariants: {},
@@ -20,7 +20,7 @@ const cssVariants = cva(
   }
 );
 
-export function NewPost({ className, ...props }: Props) {
+export function AuthRight({ className, ...props }: Props) {
   return (
     <div
       className={cn(

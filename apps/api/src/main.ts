@@ -29,10 +29,25 @@ async function bootstrap() {
   // NestJS Fastify 어댑터와 플러그인 간의 알려진 타입 호환성 문제
   // @ts-expect-error - NestJS Fastify 어댑터와 플러그인 타입 호환성 문제
   await app.register(fastifyCors, {
-    origin: true,
+    origin: (origin, cb) => {
+      // 모든 origin 허용 (개발 환경)
+      if (process.env.NODE_ENV === 'development') {
+        cb(null, true);
+        return;
+      }
+      // 프로덕션 환경에서는 허용된 origin만
+      const allowedOrigins = [ 'https://nihilncunia.dev', ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        cb(null, true);
+      }
+      else {
+        cb(new Error('Not allowed by CORS'), false);
+      }
+    },
     credentials: true,
     methods: [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', ],
-    allowedHeaders: [ 'Content-Type', 'Authorization', 'X-Requested-With', ],
+    allowedHeaders: [ 'Content-Type', 'Authorization', 'X-Requested-With', 'Cookie', ],
+    exposedHeaders: [ 'Set-Cookie', ],
   });
 
   // @ts-expect-error - NestJS Fastify 어댑터와 플러그인 타입 호환성 문제

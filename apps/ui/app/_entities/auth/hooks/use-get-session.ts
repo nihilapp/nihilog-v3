@@ -46,6 +46,10 @@ export function useGetSession(options: UseGetSessionOptions = {}) {
       // 포커스/재연결 시 자동 재조회 방지, 인증 전 과다 요청 억제
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      // 인증 실패 시 재시도 방지
+      retry: false,
+      // 마운트 시에만 한 번 요청
+      refetchOnMount: false,
       ...options,
     },
   });
