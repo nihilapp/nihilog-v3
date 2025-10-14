@@ -67,7 +67,7 @@ export const registerCategorySubscribeEndpoints = () => {
   // 특정 카테고리 구독 상태 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/users/subscribes/categories/{ctgryNo}',
+    path: '/users/subscribes/categories/{ctgryNo}/search',
     summary: '📋 특정 카테고리 구독 상태 조회',
     description: '특정 카테고리의 구독 상태를 조회합니다.',
     tags: [ 'category-subscribe', ],

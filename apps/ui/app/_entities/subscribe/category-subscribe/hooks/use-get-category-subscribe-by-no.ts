@@ -18,7 +18,7 @@ interface UseGetCategorySubscribeByNoOptions extends QueryOptionType<ListType<Se
 export function useGetCategorySubscribeByNo(ctgryNo: number, options: UseGetCategorySubscribeByNoOptions = {}) {
   const query = usePost<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType>({
     url: [
-      'users', 'subscribes', 'categories', ctgryNo,
+      'users', 'subscribes', 'categories', ctgryNo, 'search',
     ],
     key: categorySubscribeKeys.byNo(ctgryNo, {} as SearchCategorySubscribeType), // 기본값으로 빈 객체 사용
     callback() {

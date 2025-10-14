@@ -9,7 +9,7 @@ import type { SelectCommentType } from '@/_types';
 
 interface UseUpdateCommentOptions extends MutationOptionsType<SelectCommentType> {
   commentNo?: number; // 댓글 번호 (댓글 상세 무효화용)
-  postNo?: number; // 게시글 번호 (댓글 목록 무효화용)
+  pstNo?: number; // 게시글 번호 (댓글 목록 무효화용)
 }
 
 /**
@@ -36,14 +36,14 @@ export function useUpdateComment(options: UseUpdateCommentOptions = {}) {
       }
 
       // 특정 게시글의 댓글 목록 무효화
-      if (options.postNo) {
+      if (options.pstNo) {
         queryClient.invalidateQueries({
-          queryKey: commentsKeys.search({ pstNo: options.postNo, }).queryKey,
+          queryKey: commentsKeys.search({ pstNo: options.pstNo, }).queryKey,
         });
       }
 
       // 둘 다 없는 경우에만 전체 무효화 (fallback)
-      if (!options.commentNo && !options.postNo) {
+      if (!options.commentNo && !options.pstNo) {
         queryClient.invalidateQueries({
           queryKey: commentsKeys.search({}).queryKey,
         });

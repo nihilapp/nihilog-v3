@@ -1,10 +1,12 @@
 // 카테고리 관련 타입 정의 (기본 구조)
 
 export interface CategoryInfoType {
-  ctgrNo: number;
-  ctgrNm: string;
-  ctgrDesc?: string;
-  prntCtgrNo?: number;
+  ctgryNo: number;
+  ctgryNm: string;
+  ctgryExpln?: string;
+  ctgryColr?: string;
+  ctgryStp: number;
+  upCtgryNo: number;
   useYn: 'Y' | 'N';
   delYn: 'Y' | 'N';
   crtNo?: number;
@@ -31,27 +33,27 @@ export interface AnalyzeCategoryStatItemType {
 }
 
 export interface TopPopularCategoryItemType {
-  ctgrNo: number;
-  ctgrNm: string;
+  ctgryNo: number;
+  ctgryNm: string;
   postCount: number;
   viewCount: number;
 }
 
 export interface TopCategoriesBySubscriberItemType {
-  ctgrNo: number;
-  ctgrNm: string;
+  ctgryNo: number;
+  ctgryNm: string;
   subscriberCount: number;
 }
 
 export interface AverageBookmarkPerCategoryItemType {
-  ctgrNo: number;
-  ctgrNm: string;
+  ctgryNo: number;
+  ctgryNm: string;
   averageBookmarks: number;
 }
 
 export interface AverageViewPerCategoryItemType {
-  ctgrNo: number;
-  ctgrNm: string;
+  ctgryNo: number;
+  ctgryNm: string;
   averageViews: number;
 }
 
@@ -86,8 +88,8 @@ export interface CategoryCreatorStatItemType {
 }
 
 export interface UnusedCategoryItemType {
-  ctgrNo: number;
-  ctgrNm: string;
+  ctgryNo: number;
+  ctgryNm: string;
   lastUsedDate?: string;
 }
 
@@ -98,7 +100,7 @@ export interface CategorySubscriberGrowthRateItemType {
 }
 
 export interface CategoriesWithoutSubscribersItemType {
-  ctgrNo: number;
-  ctgrNm: string;
+  ctgryNo: number;
+  ctgryNm: string;
   postCount: number;
 }

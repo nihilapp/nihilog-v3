@@ -2,11 +2,11 @@
 
 export interface CommentInfoType {
   cmntNo: number;
-  postNo: number;
+  pstNo: number;
   userNo: number;
   prntCmntNo?: number;
-  cmntCntn: string;
-  cmntStts: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SPAM';
+  cmntCntnt: string;
+  cmntSts: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SPAM';
   useYn: 'Y' | 'N';
   delYn: 'Y' | 'N';
   crtNo?: number;
@@ -34,7 +34,7 @@ export interface AnalyzeCommentStatItemType {
 }
 
 export interface TopPostsByCommentItemType {
-  postNo: number;
+  pstNo: number;
   postTitle: string;
   commentCount: number;
 }
@@ -82,7 +82,7 @@ export interface CommentAverageDepthItemType {
 }
 
 export interface PostsWithoutCommentsItemType {
-  postNo: number;
+  pstNo: number;
   postTitle: string;
   postDate: string;
 }

@@ -9,7 +9,7 @@ import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostBookmarkType } from '@/_types';
 
 interface UseCreateBookmarkOptions extends MutationOptionsType<SelectPostBookmarkType> {
-  postNo?: number; // 게시글 번호 (북마크 상태 및 목록 무효화용)
+  pstNo?: number; // 게시글 번호 (북마크 상태 및 목록 무효화용)
 }
 
 /**
@@ -31,9 +31,9 @@ export function useCreateBookmark(options: UseCreateBookmarkOptions = {}) {
       });
 
       // 특정 게시글의 북마크 상태 무효화
-      if (options.postNo) {
+      if (options.pstNo) {
         queryClient.invalidateQueries({
-          queryKey: postsKeys.byNo(options.postNo).queryKey,
+          queryKey: postsKeys.byNo(options.pstNo).queryKey,
         });
       }
 
@@ -42,8 +42,8 @@ export function useCreateBookmark(options: UseCreateBookmarkOptions = {}) {
         queryKey: postsKeys.bookmarked({} as SearchPostType).queryKey,
       });
 
-      // postNo가 없는 경우에만 전체 무효화 (fallback)
-      if (!options.postNo) {
+      // pstNo가 없는 경우에만 전체 무효화 (fallback)
+      if (!options.pstNo) {
         queryClient.invalidateQueries({
           queryKey: postsKeys.search({} as SearchPostType).queryKey,
         });

@@ -67,7 +67,7 @@ export const registerTagSubscribeEndpoints = () => {
   // 특정 태그 구독 상태 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/users/subscribes/tags/{tagNo}',
+    path: '/users/subscribes/tags/{tagNo}/search',
     summary: '📋 특정 태그 구독 상태 조회',
     description: '특정 태그의 구독 상태를 조회합니다.',
     tags: [ 'tag-subscribe', ],

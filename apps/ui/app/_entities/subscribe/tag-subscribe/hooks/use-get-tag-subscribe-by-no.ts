@@ -18,7 +18,7 @@ interface UseGetTagSubscribeByNoOptions extends QueryOptionType<ListType<SelectT
 export function useGetTagSubscribeByNo(tagNo: number, options: UseGetTagSubscribeByNoOptions = {}) {
   const query = usePost<ListType<SelectTagSubscribeMappingListItemType>, SearchTagSubscribeType>({
     url: [
-      'users', 'subscribes', 'tags', tagNo,
+      'users', 'subscribes', 'tags', tagNo, 'search',
     ],
     key: tagSubscribeKeys.byNo(tagNo, {} as SearchTagSubscribeType), // 기본값으로 빈 객체 사용
     callback() {

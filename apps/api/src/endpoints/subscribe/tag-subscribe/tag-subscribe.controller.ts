@@ -57,7 +57,7 @@ export class TagSubscribeController {
    * @param tagNo 태그 번호
    */
   @Endpoint({
-    endpoint: '/:tagNo',
+    endpoint: '/:tagNo/search',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',

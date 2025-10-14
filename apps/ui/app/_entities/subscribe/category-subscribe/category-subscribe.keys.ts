@@ -11,8 +11,8 @@ export const categorySubscribeKeys = createQueryKeys('categorySubscribe', {
     'users', 'subscribes', 'categories', 'search', searchData,
   ], // 카테고리 구독 목록 조회 (POST)
   byNo: (ctgryNo: number, params: SearchCategorySubscribeType) => [
-    'users', 'subscribes', 'categories', 'by-no', ctgryNo, params,
-  ], // 특정 카테고리 구독 상태 조회 (GET)
+    'users', 'subscribes', 'categories', ctgryNo, 'search', params,
+  ], // 특정 카테고리 구독 상태 조회 (POST)
 
   // ===== POST Mutations =====
   create: (ctgryNo: number) => [

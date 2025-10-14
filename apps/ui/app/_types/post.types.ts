@@ -1,13 +1,21 @@
 // 게시글 관련 타입 정의 (기본 구조)
 
 export interface PostInfoType {
-  postNo: number;
-  postCd: string;
+  pstNo: number;
+  pstCd: string;
   userNo: number;
-  ctgrNo?: number;
-  postTtl: string;
-  postCntn: string;
-  postStts: 'EMPTY' | 'WRITING' | 'FINISHED';
+  ctgryNo?: number;
+  pstTtl: string;
+  pstSmry?: string;
+  pstMtxt: string;
+  pstThmbLink?: string;
+  pstStts: 'EMPTY' | 'WRITING' | 'FINISHED';
+  publDt?: string;
+  pinYn: 'Y' | 'N';
+  rlsYn: 'Y' | 'N';
+  archYn: 'Y' | 'N';
+  secrYn?: 'Y' | 'N';
+  pstPswd?: string;
   useYn: 'Y' | 'N';
   delYn: 'Y' | 'N';
   crtNo?: number;
@@ -27,14 +35,14 @@ export type SelectPostListItemType = PostInfoType & {
 // 기타 필요한 타입들 (기본 구조)
 export interface PostViewLogType {
   viewLogNo: number;
-  postNo: number;
+  pstNo: number;
   userNo?: number;
   viewDt: string;
 }
 
 export interface PostShareLogType {
   shareLogNo: number;
-  postNo: number;
+  pstNo: number;
   userNo?: number;
   sharePlatform: string;
   shareDt: string;
@@ -42,7 +50,7 @@ export interface PostShareLogType {
 
 export interface PostBookmarkType {
   bookmarkNo: number;
-  postNo: number;
+  pstNo: number;
   userNo: number;
   bookmarkDt: string;
 }
@@ -101,7 +109,7 @@ export interface AverageBookmarkStatItemType {
 }
 
 export interface TopPopularPostItemType {
-  postNo: number;
+  pstNo: number;
   postTitle: string;
   viewCount: number;
   shareCount: number;
@@ -109,7 +117,7 @@ export interface TopPopularPostItemType {
 }
 
 export interface TopCommentPostItemType {
-  postNo: number;
+  pstNo: number;
   postTitle: string;
   commentCount: number;
 }

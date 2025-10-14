@@ -47,13 +47,31 @@ export function usePost<TData = any, TVariables = any>({
     },
     ...options,
     onSuccess: (data, variables, onMutateResult, mutationContext) => {
-      // 1. 쿼리 무효화 (기본 동작)
+      // 1. 수동 캐싱 처리 - 기존 쿼리 키로 캐시 업데이트
+      const oldData = queryClient.getQueryData(queryKey);
+      if (oldData && Array.isArray((oldData as any)?.data)) {
+        // 배열 데이터인 경우 새 데이터 추가
+        const newCacheData = {
+          ...oldData,
+          data: [
+            ...(oldData as any).data,
+            data.data,
+          ],
+        };
+        queryClient.setQueryData(queryKey, newCacheData);
+      }
+      else if (oldData) {
+        // 단일 객체 데이터인 경우 교체
+        queryClient.setQueryData(queryKey, data);
+      }
+
+      // 2. 쿼리 무효화 (기본 동작)
       queryClient.invalidateQueries({ queryKey, });
 
-      // 2. options의 onSuccess 실행 (사용자 정의 options)
+      // 3. options의 onSuccess 실행 (사용자 정의 options)
       options?.onSuccess?.(data, variables, onMutateResult, mutationContext);
 
-      // 3. callback 실행 (훅 레벨의 기본 콜백)
+      // 4. callback 실행 (훅 레벨의 기본 콜백)
       callback?.(data, variables, onMutateResult);
     },
     onError: (errorData, variables, onMutateResult, mutationContext) => {

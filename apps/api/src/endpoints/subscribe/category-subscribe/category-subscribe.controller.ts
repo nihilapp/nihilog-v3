@@ -57,7 +57,7 @@ export class CategorySubscribeController {
    * @param ctgryNo 카테고리 번호
    */
   @Endpoint({
-    endpoint: '/:ctgryNo',
+    endpoint: '/:ctgryNo/search',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',

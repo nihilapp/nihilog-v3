@@ -11,8 +11,8 @@ export const tagSubscribeKeys = createQueryKeys('tagSubscribe', {
     'users', 'subscribes', 'tags', 'search', searchData,
   ], // 태그 구독 목록 조회 (POST)
   byNo: (tagNo: number, params: SearchTagSubscribeType) => [
-    'users', 'subscribes', 'tags', 'by-no', tagNo, params,
-  ], // 특정 태그 구독 상태 조회 (GET)
+    'users', 'subscribes', 'tags', tagNo, 'search', params,
+  ], // 특정 태그 구독 상태 조회 (POST)
 
   // ===== POST Mutations =====
   create: (tagNo: number) => [

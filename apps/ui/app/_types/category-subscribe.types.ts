@@ -1,9 +1,9 @@
 // 카테고리 구독 관련 타입 정의 (기본 구조)
 
 export interface CategorySubscribeMappingType {
-  mappingNo: number;
-  userNo: number;
-  ctgrNo: number;
+  ctgrySbcrNo: number;
+  sbcrNo: number;
+  ctgryNo: number;
   useYn: 'Y' | 'N';
   delYn: 'Y' | 'N';
   crtNo?: number;

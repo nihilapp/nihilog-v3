@@ -3,7 +3,8 @@
 export interface TagInfoType {
   tagNo: number;
   tagNm: string;
-  tagDesc?: string;
+  tagExpln?: string;
+  tagColr?: string;
   useYn: 'Y' | 'N';
   delYn: 'Y' | 'N';
   crtNo?: number;
@@ -15,10 +16,17 @@ export interface TagInfoType {
 }
 
 export interface PostTagMappingType {
-  mappingNo: number;
-  postNo: number;
+  tagMapNo: number;
+  pstNo: number;
   tagNo: number;
+  useYn: 'Y' | 'N';
+  delYn: 'Y' | 'N';
+  crtNo?: number;
   crtDt: string;
+  updtNo?: number;
+  updtDt: string;
+  delNo?: number;
+  delDt?: string;
 }
 
 export type SelectPostTagMappingType = PostTagMappingType;

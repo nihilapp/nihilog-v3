@@ -1,8 +1,8 @@
 // 태그 구독 관련 타입 정의 (기본 구조)
 
 export interface TagSubscribeMappingType {
-  mappingNo: number;
-  userNo: number;
+  tagSbcrNo: number;
+  sbcrNo: number;
   tagNo: number;
   useYn: 'Y' | 'N';
   delYn: 'Y' | 'N';

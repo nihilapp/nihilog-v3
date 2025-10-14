@@ -9,7 +9,7 @@ import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostShareLogType } from '@/_types';
 
 interface UseCreateShareLogOptions extends MutationOptionsType<SelectPostShareLogType> {
-  postNo?: number; // 게시글 번호 (공유수 업데이트용)
+  pstNo?: number; // 게시글 번호 (공유수 업데이트용)
 }
 
 /**
@@ -31,13 +31,13 @@ export function useCreateShareLog(options: UseCreateShareLogOptions = {}) {
       });
 
       // 특정 게시글의 공유수만 무효화
-      if (options.postNo) {
+      if (options.pstNo) {
         queryClient.invalidateQueries({
-          queryKey: postsKeys.byNo(options.postNo).queryKey,
+          queryKey: postsKeys.byNo(options.pstNo).queryKey,
         });
       }
       else {
-        // postNo가 없는 경우에만 전체 무효화 (fallback)
+        // pstNo가 없는 경우에만 전체 무효화 (fallback)
         queryClient.invalidateQueries({
           queryKey: postsKeys.search({} as SearchPostType).queryKey,
         });
