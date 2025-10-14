@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { getToastStyle } from '@/_libs';
-import type { CreateTagType } from '@/_schemas/tag.schema';
+import type { CreateTagType, SearchTagType } from '@/_schemas/tag.schema';
 import type { MultipleResultType, SelectTagInfoType } from '@/_types';
 
 interface UseAdminCreateMultipleTagsOptions extends MutationOptionsType<MultipleResultType<SelectTagInfoType>, CreateTagType[]> {}
@@ -22,14 +22,14 @@ export function useAdminCreateMultipleTags(options: UseAdminCreateMultipleTagsOp
     url: [
       'admin', 'tags', 'multiple',
     ],
-    key: adminTagsKeys.createMultipleTags(),
+    key: adminTagsKeys.createMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 태그 생성 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagList({}).queryKey,
+        queryKey: adminTagsKeys.search({} as SearchTagType).queryKey,
       });
     },
     errorCallback(error) {

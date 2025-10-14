@@ -5,6 +5,7 @@ import { adminUsersKeys } from '@/_entities/admin/users/admin-users.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
+import type { SearchUserType } from '@/_schemas/user.schema';
 import type { SelectUserInfoType } from '@/_types';
 
 interface UseAdminDeleteUserOptions extends MutationOptionsType<SelectUserInfoType, undefined> {}
@@ -22,18 +23,18 @@ export function useAdminDeleteUser(userNo: number, options: UseAdminDeleteUserOp
     url: [
       'admin', 'users', userNo,
     ],
-    key: adminUsersKeys.deleteUser(userNo),
+    key: adminUsersKeys.delete(userNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 사용자 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminUsersKeys.userByNo(userNo).queryKey,
+        queryKey: adminUsersKeys.byNo(userNo).queryKey,
       });
       // 관리자 사용자 목록도 무효화
       queryClient.invalidateQueries({
-        queryKey: adminUsersKeys.userList({}).queryKey,
+        queryKey: adminUsersKeys.search({} as SearchUserType).queryKey,
       });
     },
     errorCallback(error) {

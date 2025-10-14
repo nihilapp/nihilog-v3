@@ -18,7 +18,7 @@ export function useAdminGetTagsWithoutSubscribers(options: UseAdminGetTagsWithou
     url: [
       'admin', 'tags', 'analyze', 'no-subscribers',
     ],
-    key: adminTagsKeys.tagsWithoutSubscribers(),
+    key: adminTagsKeys.analyzeTagsWithoutSubscribers(),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

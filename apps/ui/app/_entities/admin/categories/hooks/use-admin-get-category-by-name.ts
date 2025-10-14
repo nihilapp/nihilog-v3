@@ -13,7 +13,7 @@ export function useAdminGetCategoryByName(name: string, options: UseAdminGetCate
     url: [
       'admin', 'categories', 'name', name,
     ],
-    key: adminCategoriesKeys.categoryByName(name),
+    key: adminCategoriesKeys.byName(name),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

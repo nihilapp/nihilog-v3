@@ -9,10 +9,10 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerTagsEndpoints = () => {
-  // POST /tags - 태그 목록 조회
+  // POST /tags/search - 태그 목록 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/tags',
+    path: '/tags/search',
     summary: '🏷️ 태그 목록 조회',
     description: '전체 태그 목록을 조회합니다. 인기도순/알파벳순 정렬, 사용 횟수 포함',
     tags: [ 'tags', ],

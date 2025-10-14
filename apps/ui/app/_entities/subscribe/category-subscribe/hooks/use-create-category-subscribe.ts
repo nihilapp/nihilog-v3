@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchCategorySubscribeType } from '@/_schemas';
 import type { SelectCategorySubscribeMappingType } from '@/_types';
 
 interface UseCreateCategorySubscribeOptions extends MutationOptionsType<SelectCategorySubscribeMappingType> {}
@@ -22,7 +23,7 @@ export function useCreateCategorySubscribe(ctgryNo: number, options: UseCreateCa
     url: [
       'users', 'subscribes', 'categories', ctgryNo,
     ],
-    key: categorySubscribeKeys.createCategorySubscribe(ctgryNo),
+    key: categorySubscribeKeys.create(ctgryNo),
     callback() {
       toast.success('카테고리 구독이 설정되었습니다.', {
         style: getToastStyle('success'),
@@ -30,11 +31,11 @@ export function useCreateCategorySubscribe(ctgryNo: number, options: UseCreateCa
 
       // 사용자의 카테고리 구독 목록 무효화 (기본 파라미터 사용)
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeList({}).queryKey,
+        queryKey: categorySubscribeKeys.search({} as SearchCategorySubscribeType).queryKey,
       });
       // 특정 카테고리 구독 상태도 무효화
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeByNo(ctgryNo, {}).queryKey,
+        queryKey: categorySubscribeKeys.byNo(ctgryNo, {} as SearchCategorySubscribeType).queryKey,
       });
     },
     errorCallback(error) {

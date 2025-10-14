@@ -7,20 +7,25 @@ import type { SearchCommentType } from '@/_schemas/comment.schema';
  */
 export const commentsKeys = createQueryKeys('comments', {
   // ===== GET Queries =====
-  all: () => [ 'all', ], // 모든 댓글 관련 쿼리 무효화
-  commentList: (params: SearchCommentType) => [
-    'commentList', params,
-  ], // 댓글 목록 조회 (POST)
-  commentByNo: (cmntNo: number) => [
-    'commentByNo', cmntNo,
+  search: (params: SearchCommentType) => [
+    'comments', 'search', params,
+  ], // 댓글 목록 조회 (POST /comments/search)
+  byNo: (cmntNo: number) => [
+    'comments', 'by-no', cmntNo,
   ], // 댓글 번호로 조회
 
   // ===== POST Mutations =====
-  createComment: () => [ 'createComment', ], // 댓글 생성
+  create: () => [
+    'comments', 'create',
+  ], // 댓글 생성
 
   // ===== PUT Mutations =====
-  updateComment: () => [ 'updateComment', ], // 댓글 수정
+  update: (cmntNo: number) => [
+    'comments', 'update', cmntNo,
+  ], // 댓글 수정
 
   // ===== DELETE Mutations =====
-  deleteComment: () => [ 'deleteComment', ], // 댓글 삭제
+  delete: (cmntNo: number) => [
+    'comments', 'delete', cmntNo,
+  ], // 댓글 삭제
 });

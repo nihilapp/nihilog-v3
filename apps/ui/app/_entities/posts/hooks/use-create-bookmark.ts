@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { postsKeys } from '@/_entities/posts/posts.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostBookmarkType } from '@/_types';
 
 interface UseCreateBookmarkOptions extends MutationOptionsType<SelectPostBookmarkType> {
@@ -32,19 +33,19 @@ export function useCreateBookmark(options: UseCreateBookmarkOptions = {}) {
       // 특정 게시글의 북마크 상태 무효화
       if (options.postNo) {
         queryClient.invalidateQueries({
-          queryKey: postsKeys.postByNo(options.postNo).queryKey,
+          queryKey: postsKeys.byNo(options.postNo).queryKey,
         });
       }
 
       // 사용자의 북마크 목록 무효화 (기본 파라미터 사용)
       queryClient.invalidateQueries({
-        queryKey: postsKeys.bookmarkedPosts({}).queryKey,
+        queryKey: postsKeys.bookmarked({} as SearchPostType).queryKey,
       });
 
       // postNo가 없는 경우에만 전체 무효화 (fallback)
       if (!options.postNo) {
         queryClient.invalidateQueries({
-          queryKey: postsKeys.all().queryKey,
+          queryKey: postsKeys.search({} as SearchPostType).queryKey,
         });
       }
     },

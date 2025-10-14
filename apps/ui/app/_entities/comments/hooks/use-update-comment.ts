@@ -22,7 +22,7 @@ export function useUpdateComment(options: UseUpdateCommentOptions = {}) {
 
   const mutation = usePut<SelectCommentType, any>({
     url: [ 'comments', ],
-    key: commentsKeys.updateComment(),
+    key: commentsKeys.update(options.commentNo!),
     callback() {
       toast.success('댓글이 수정되었습니다.', {
         style: getToastStyle('success'),
@@ -31,21 +31,21 @@ export function useUpdateComment(options: UseUpdateCommentOptions = {}) {
       // 특정 댓글 상세 정보 무효화
       if (options.commentNo) {
         queryClient.invalidateQueries({
-          queryKey: commentsKeys.commentByNo(options.commentNo).queryKey,
+          queryKey: commentsKeys.byNo(options.commentNo).queryKey,
         });
       }
 
       // 특정 게시글의 댓글 목록 무효화
       if (options.postNo) {
         queryClient.invalidateQueries({
-          queryKey: commentsKeys.commentList({ pstNo: options.postNo, }).queryKey,
+          queryKey: commentsKeys.search({ pstNo: options.postNo, }).queryKey,
         });
       }
 
       // 둘 다 없는 경우에만 전체 무효화 (fallback)
       if (!options.commentNo && !options.postNo) {
         queryClient.invalidateQueries({
-          queryKey: commentsKeys.all().queryKey,
+          queryKey: commentsKeys.search({}).queryKey,
         });
       }
     },

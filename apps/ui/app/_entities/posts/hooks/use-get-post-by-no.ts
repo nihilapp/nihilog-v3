@@ -19,7 +19,7 @@ export function useGetPostByNo(pstNo: number, options: UseGetPostByNoOptions = {
     url: [
       'posts', pstNo,
     ],
-    key: postsKeys.postByNo(pstNo),
+    key: postsKeys.byNo(pstNo),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

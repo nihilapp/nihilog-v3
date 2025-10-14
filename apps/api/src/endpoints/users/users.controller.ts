@@ -99,7 +99,9 @@ export class UserController {
       );
     }
 
-    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, result.data);
+    const userToReturn = removeSensitiveInfo(result.data);
+
+    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, userToReturn);
   }
 
   /**

@@ -7,29 +7,34 @@ import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.
  */
 export const categorySubscribeKeys = createQueryKeys('categorySubscribe', {
   // ===== GET Queries =====
-  all: () => [ 'all', ], // 모든 카테고리 구독 관련 쿼리 무효화
-  categorySubscribeList: (params: SearchCategorySubscribeType) => [
-    'categorySubscribeList', params,
-  ], // 카테고리 구독 목록 조회 (GET)
-  categorySubscribeByNo: (ctgryNo: number, params: SearchCategorySubscribeType) => [
-    'categorySubscribeByNo', ctgryNo, params,
+  search: (searchData: SearchCategorySubscribeType) => [
+    'users', 'subscribes', 'categories', 'search', searchData,
+  ], // 카테고리 구독 목록 조회 (POST)
+  byNo: (ctgryNo: number, params: SearchCategorySubscribeType) => [
+    'users', 'subscribes', 'categories', 'by-no', ctgryNo, params,
   ], // 특정 카테고리 구독 상태 조회 (GET)
 
   // ===== POST Mutations =====
-  createCategorySubscribe: (ctgryNo: number) => [
-    'createCategorySubscribe', ctgryNo,
+  create: (ctgryNo: number) => [
+    'users', 'subscribes', 'categories', 'create', ctgryNo,
   ], // 카테고리 구독 설정
-  createMultipleCategorySubscribe: () => [ 'createMultipleCategorySubscribe', ], // 다수 카테고리 일괄 구독
+  createMultiple: () => [
+    'users', 'subscribes', 'categories', 'create', 'multiple',
+  ], // 다수 카테고리 일괄 구독
 
   // ===== PUT Mutations =====
-  updateCategorySubscribe: (ctgrySbcrNo: number) => [
-    'updateCategorySubscribe', ctgrySbcrNo,
+  update: (ctgrySbcrNo: number) => [
+    'users', 'subscribes', 'categories', 'update', ctgrySbcrNo,
   ], // 카테고리 구독 설정 변경
-  updateMultipleCategorySubscribe: () => [ 'updateMultipleCategorySubscribe', ], // 다수 카테고리 구독 설정 일괄 변경
+  updateMultiple: () => [
+    'users', 'subscribes', 'categories', 'update', 'multiple',
+  ], // 다수 카테고리 구독 설정 일괄 변경
 
   // ===== DELETE Mutations =====
-  deleteCategorySubscribe: (ctgrySbcrNo: number) => [
-    'deleteCategorySubscribe', ctgrySbcrNo,
+  delete: (ctgrySbcrNo: number) => [
+    'users', 'subscribes', 'categories', 'delete', ctgrySbcrNo,
   ], // 카테고리 구독 해제
-  deleteMultipleCategorySubscribe: () => [ 'deleteMultipleCategorySubscribe', ], // 다수 카테고리 구독 일괄 해제
+  deleteMultiple: () => [
+    'users', 'subscribes', 'categories', 'delete', 'multiple',
+  ], // 다수 카테고리 구독 일괄 해제
 });

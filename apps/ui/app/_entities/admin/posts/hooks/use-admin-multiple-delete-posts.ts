@@ -5,7 +5,7 @@ import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
-import type { DeletePostType } from '@/_schemas/post.schema';
+import type { DeletePostType, SearchPostType } from '@/_schemas/post.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseAdminMultipleDeletePostsOptions extends MutationOptionsType<MultipleResultType, DeletePostType> {}
@@ -22,14 +22,14 @@ export function useAdminMultipleDeletePosts(options: UseAdminMultipleDeletePosts
     url: [
       'admin', 'posts', 'multiple',
     ],
-    key: adminPostsKeys.multipleDeletePost(),
+    key: adminPostsKeys.deleteMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 게시글 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminPostsKeys.postList({}).queryKey,
+        queryKey: adminPostsKeys.search({} as SearchPostType).queryKey,
       });
     },
     errorCallback(error) {

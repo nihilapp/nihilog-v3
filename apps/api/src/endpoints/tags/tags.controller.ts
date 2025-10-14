@@ -23,7 +23,7 @@ export class TagController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/search',
     method: 'POST',
   })
   async getTagList(@Body() searchData: SearchTagDto): Promise<ResponseDto<ListType<SelectTagInfoListItemType>>> {

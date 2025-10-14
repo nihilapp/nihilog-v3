@@ -24,7 +24,7 @@ export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
     url: [
       'users', 'profile',
     ],
-    key: usersKeys.profile(),
+    key: usersKeys.updateProfile(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),

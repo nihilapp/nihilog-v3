@@ -6,7 +6,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
-import type { DeleteTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
+import type { DeleteTagSubscribeType, SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 import type { MultipleResultType } from '@/_types/common.types';
 
 interface UseAdminDeleteMultipleTagSubscribesOptions extends MutationOptionsType<MultipleResultType, DeleteTagSubscribeType> {}
@@ -18,14 +18,14 @@ export function useAdminDeleteMultipleTagSubscribes(options: UseAdminDeleteMulti
     url: [
       'admin', 'subscribes', 'tags', 'multiple',
     ],
-    key: adminTagSubscribeKeys.deleteMultipleTagSubscribes(),
+    key: adminTagSubscribeKeys.deleteMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 태그 구독 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
     },
     errorCallback(error) {

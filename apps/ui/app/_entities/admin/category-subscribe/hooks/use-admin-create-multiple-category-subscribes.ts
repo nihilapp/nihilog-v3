@@ -6,7 +6,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
-import type { CreateCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
+import type { CreateCategorySubscribeType, SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 import type { MultipleResultType, SelectCategorySubscribeMappingType } from '@/_types';
 
 interface UseAdminCreateMultipleCategorySubscribesOptions extends MutationOptionsType<MultipleResultType<SelectCategorySubscribeMappingType>, CreateCategorySubscribeType[]> {}
@@ -23,14 +23,14 @@ export function useAdminCreateMultipleCategorySubscribes(options: UseAdminCreate
     url: [
       'admin', 'subscribes',
     ],
-    key: adminCategorySubscribeKeys.createMultipleCategorySubscribes(),
+    key: adminCategorySubscribeKeys.createMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 카테고리 구독 생성 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeList({}).queryKey,
+        queryKey: categorySubscribeKeys.search({} as SearchCategorySubscribeType).queryKey,
       });
     },
     errorCallback(error) {

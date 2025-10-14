@@ -686,10 +686,12 @@ export class UserRepository {
    */
   async createUser(
     userNo: number | null,
-    signUpData: Omit<CreateUserDto, 'password'> | Omit<CreateAdminDto, 'password'>,
+    signUpData: CreateUserDto | CreateAdminDto,
     hashedPassword: string
   ): Promise<RepoResponseType<SelectUserInfoType> | null> {
     const currentTime = timeToString();
+
+    delete signUpData.password;
 
     try {
       const newUser = await this.prisma.userInfo.create({

@@ -19,7 +19,7 @@ export function useGetPosts(options: UseGetPostsOptions = {}) {
     url: [
       'posts', 'search',
     ],
-    key: postsKeys.postList({}),
+    key: postsKeys.search({} as SearchPostType),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -44,7 +44,7 @@ export function useGetPostsForAdmin(options: UseGetPostsOptions = {}) {
     url: [
       'posts', 'search',
     ],
-    key: postsKeys.postList({}),
+    key: postsKeys.search({} as SearchPostType),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

@@ -5,7 +5,7 @@ import { adminUsersKeys } from '@/_entities/admin/users/admin-users.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { getToastStyle } from '@/_libs';
-import type { UpdateUserType } from '@/_schemas/user.schema';
+import type { UpdateUserType, SearchUserType } from '@/_schemas/user.schema';
 import type { MultipleResultType, SelectUserInfoType } from '@/_types';
 
 interface UseAdminUpdateMultipleUsersOptions extends MutationOptionsType<MultipleResultType<SelectUserInfoType>, UpdateUserType[]> {}
@@ -22,14 +22,14 @@ export function useAdminUpdateMultipleUsers(options: UseAdminUpdateMultipleUsers
     url: [
       'admin', 'users', 'multiple',
     ],
-    key: adminUsersKeys.updateMultipleUsers(),
+    key: adminUsersKeys.updateMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 사용자 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminUsersKeys.userList({}).queryKey,
+        queryKey: adminUsersKeys.search({} as SearchUserType).queryKey,
       });
     },
     errorCallback(error) {

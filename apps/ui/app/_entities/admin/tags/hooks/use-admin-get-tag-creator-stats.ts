@@ -18,7 +18,7 @@ export function useAdminGetTagCreatorStats(options: UseAdminGetTagCreatorStatsOp
     url: [
       'admin', 'tags', 'analyze', 'creator-stats',
     ],
-    key: adminTagsKeys.tagCreatorStats(),
+    key: adminTagsKeys.analyzeTagCreatorStats(),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

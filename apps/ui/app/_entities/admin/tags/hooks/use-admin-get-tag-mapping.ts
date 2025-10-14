@@ -20,7 +20,7 @@ export function useAdminGetTagMapping(pstNo: number, tagNo: number, options: Use
     url: [
       'admin', 'tags', 'mapping', pstNo, tagNo,
     ],
-    key: adminTagsKeys.tagMapping(pstNo, tagNo),
+    key: adminTagsKeys.mappingByKey(pstNo, tagNo),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

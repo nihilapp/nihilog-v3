@@ -20,7 +20,7 @@ export function useGetPostsByTag(tagNo: number, options: UseGetPostsByTagOptions
     url: [
       'posts', 'tag', tagNo,
     ],
-    key: postsKeys.postListByTag(tagNo, {} as SearchPostType), // 기본값으로 빈 객체 사용
+    key: postsKeys.listByTag(tagNo, {} as SearchPostType), // 기본값으로 빈 객체 사용
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

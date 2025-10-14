@@ -19,7 +19,7 @@ export function useGetAdvancedPosts(options: UseGetAdvancedPostsOptions = {}) {
     url: [
       'posts', 'advanced-search',
     ],
-    key: postsKeys.advancedPostList({} as SearchPostType), // 기본값으로 빈 객체 사용
+    key: postsKeys.advancedSearch({} as SearchPostType), // 기본값으로 빈 객체 사용
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

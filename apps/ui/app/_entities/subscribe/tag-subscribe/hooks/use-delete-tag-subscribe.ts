@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 
 interface UseDeleteTagSubscribeOptions extends MutationOptionsType<boolean> {
   tagNo?: number; // 태그 번호 (구독 상태 무효화용)
@@ -23,7 +24,7 @@ export function useDeleteTagSubscribe(tagSbcrNo: number, options: UseDeleteTagSu
     url: [
       'users', 'subscribes', 'tags', tagSbcrNo,
     ],
-    key: tagSubscribeKeys.deleteTagSubscribe(tagSbcrNo),
+    key: tagSubscribeKeys.delete(tagSbcrNo),
     callback() {
       toast.success('태그 구독이 해제되었습니다.', {
         style: getToastStyle('success'),
@@ -31,12 +32,12 @@ export function useDeleteTagSubscribe(tagSbcrNo: number, options: UseDeleteTagSu
 
       // 사용자의 태그 구독 목록 무효화 (기본 파라미터 사용)
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
       // 특정 태그 구독 상태도 무효화
       if (options.tagNo) {
         queryClient.invalidateQueries({
-          queryKey: tagSubscribeKeys.tagSubscribeByNo(options.tagNo, {}).queryKey,
+          queryKey: tagSubscribeKeys.byNo(options.tagNo, {} as SearchTagSubscribeType).queryKey,
         });
       }
     },

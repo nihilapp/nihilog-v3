@@ -22,14 +22,14 @@ export function useAdminMultipleDeleteSubscribes(options: UseAdminMultipleDelete
     url: [
       'admin', 'subscribes', 'multiple',
     ],
-    key: adminSubscribeKeys.deleteMultipleSubscribes(),
+    key: adminSubscribeKeys.deleteMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 구독 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminSubscribeKeys.searchSubscribes().queryKey,
+        queryKey: adminSubscribeKeys.search().queryKey,
       });
     },
     errorCallback(error) {

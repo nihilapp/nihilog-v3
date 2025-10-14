@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
-import type { DeletePstTagMpngType } from '@/_schemas/tag.schema';
+import type { DeletePstTagMpngType, SearchPstTagMpngType } from '@/_schemas/tag.schema';
 import type { MultipleResultType, SelectPostTagMappingType } from '@/_types';
 
 interface UseAdminDeleteMultipleTagMappingsOptions extends MutationOptionsType<MultipleResultType<SelectPostTagMappingType>, DeletePstTagMpngType[]> {}
@@ -22,14 +22,14 @@ export function useAdminDeleteMultipleTagMappings(options: UseAdminDeleteMultipl
     url: [
       'admin', 'tags', 'mapping', 'multiple',
     ],
-    key: adminTagsKeys.deleteMultipleTagMappings(),
+    key: adminTagsKeys.deleteMultipleMappings(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 태그 매핑 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagMappings({}).queryKey,
+        queryKey: adminTagsKeys.searchMappings({} as SearchPstTagMpngType).queryKey,
       });
     },
     errorCallback(error) {

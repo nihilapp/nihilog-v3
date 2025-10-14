@@ -18,7 +18,7 @@ export function useAdminGetTagStatusDistribution(options: UseAdminGetTagStatusDi
     url: [
       'admin', 'tags', 'analyze', 'status-distribution',
     ],
-    key: adminTagsKeys.tagStatusDistribution(),
+    key: adminTagsKeys.analyzeTagStatusDistribution(),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

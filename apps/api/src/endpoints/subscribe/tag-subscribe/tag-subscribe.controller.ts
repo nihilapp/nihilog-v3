@@ -24,8 +24,8 @@ export class TagSubscribeController {
    * @param req 요청 객체
    */
   @Endpoint({
-    endpoint: '/',
-    method: 'GET',
+    endpoint: '/search',
+    method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
@@ -58,7 +58,7 @@ export class TagSubscribeController {
    */
   @Endpoint({
     endpoint: '/:tagNo',
-    method: 'GET',
+    method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],

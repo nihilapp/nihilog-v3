@@ -7,31 +7,44 @@ import type { AnalyzeStatType } from '@/_schemas/common.schema';
  */
 export const adminSubscribeKeys = createQueryKeys('adminSubscribe', {
   // ===== GET Queries =====
-  all: () => [ 'all', ], // 모든 관리자 구독 관련 쿼리 무효화
-
-  // 구독 관리
-  searchSubscribes: () => [ 'searchSubscribes', ], // 구독 목록 조회 (POST)
-  subscribeByUserNo: (userNo: number) => [
-    'subscribeByUserNo', userNo,
+  search: () => [
+    'admin', 'subscribes', 'search',
+  ], // 구독 목록 조회 (POST)
+  byUserNo: (userNo: number) => [
+    'admin', 'subscribes', 'by-user-no', userNo,
   ], // 사용자별 구독 조회
 
   // ===== 통계 관련 GET Queries =====
-  analyzeNotificationDistribution: () => [ 'analyzeNotificationDistribution', ], // 알림 설정 분포
+  analyzeNotificationDistribution: () => [
+    'admin', 'subscribes', 'analyze', 'notification-distribution',
+  ], // 알림 설정 분포
+
+  // ===== POST Mutations (통계) =====
+  analyzeOverview: (params: AnalyzeStatType) => [
+    'admin', 'subscribes', 'analyze', 'overview', params,
+  ], // 구독 분석 통계
+  analyzeActiveUsers: () => [
+    'admin', 'subscribes', 'analyze', 'active-users',
+  ], // 활성 구독자 분석
+  analyzeInactiveUsers: () => [
+    'admin', 'subscribes', 'analyze', 'inactive-users',
+  ], // 비활성 구독자 분석
 
   // ===== POST Mutations =====
-  createSubscribe: () => [ 'createSubscribe', ], // 구독 생성
-  analyzeOverview: (params: AnalyzeStatType) => [
-    'analyzeOverview', params,
-  ], // 구독 분석 통계
-  analyzeActiveUsers: () => [ 'analyzeActiveUsers', ], // 활성 구독자 분석
-  analyzeInactiveUsers: () => [ 'analyzeInactiveUsers', ], // 비활성 구독자 분석
+  create: () => [
+    'admin', 'subscribes', 'create',
+  ], // 구독 생성
 
   // ===== PUT Mutations =====
-  updateMultipleSubscribes: () => [ 'updateMultipleSubscribes', ], // 다수 구독 수정
+  updateMultiple: () => [
+    'admin', 'subscribes', 'update', 'multiple',
+  ], // 다수 구독 수정
 
   // ===== DELETE Mutations =====
-  deleteSubscribe: (sbcrNo: number) => [
-    'deleteSubscribe', sbcrNo,
+  delete: (sbcrNo: number) => [
+    'admin', 'subscribes', 'delete', sbcrNo,
   ], // 구독 삭제
-  deleteMultipleSubscribes: () => [ 'deleteMultipleSubscribes', ], // 다수 구독 삭제
+  deleteMultiple: () => [
+    'admin', 'subscribes', 'delete', 'multiple',
+  ], // 다수 구독 삭제
 });

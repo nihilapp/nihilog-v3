@@ -5,6 +5,7 @@ import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
+import type { SearchPostType } from '@/_schemas/post.schema';
 
 interface UseAdminDeletePostOptions extends MutationOptionsType<boolean> {}
 
@@ -21,7 +22,7 @@ export function useAdminDeletePost(pstNo: number, options: UseAdminDeletePostOpt
     url: [
       'admin', 'posts', pstNo,
     ],
-    key: adminPostsKeys.deletePost(pstNo),
+    key: adminPostsKeys.delete(pstNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -29,7 +30,7 @@ export function useAdminDeletePost(pstNo: number, options: UseAdminDeletePostOpt
       // 게시글 삭제 성공 시 관련 쿼리 무효화
       // 관리자 게시글 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminPostsKeys.postList({}).queryKey,
+        queryKey: adminPostsKeys.search({} as SearchPostType).queryKey,
       });
     },
     errorCallback(error) {

@@ -20,7 +20,7 @@ export function useGetPostsByArchive(date: string, options: UseGetPostsByArchive
     url: [
       'posts', 'archive', date,
     ],
-    key: postsKeys.postListByArchive(date, {} as SearchPostType), // 기본값으로 빈 객체 사용
+    key: postsKeys.listByArchive(date, {} as SearchPostType), // 기본값으로 빈 객체 사용
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

@@ -1,41 +1,44 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { FormInput } from '@/(common)/_components/form/FormInput';
 import { LinkButton } from '@/(common)/_components/LinkButton';
 import { Button } from '@/(common)/_components/ui/button';
-import { Form } from '@/(common)/_components/ui/form';
+import { Form, FormControl, FormField, FormItem } from '@/(common)/_components/ui/form';
+import { Input } from '@/(common)/_components/ui/input';
 import { Separator } from '@/(common)/_components/ui/separator';
 import { useAuthActions } from '@/_entities/auth/auth.store';
-import { useSignIn } from '@/_entities/auth/hooks';
-import { signInSchema, type SignInType } from '@/_schemas';
+import { useCreateUser } from '@/_entities/users/hooks';
+import { createUserSchema, userRoleSchema, type CreateUserType } from '@/_schemas';
 
-export function SignInForm() {
+export function SignUpForm() {
   const { setAuthCardHeader, resetAuthCardHeader, } = useAuthActions();
 
-  const signIn = useSignIn();
+  const createUser = useCreateUser();
 
   const form = useForm({
     mode: 'all',
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(createUserSchema),
     defaultValues: {
+      userNm: '',
       emlAddr: '',
       password: '',
+      passwordConfirm: '',
+      userRole: userRoleSchema.enum.USER,
     },
   });
 
-  const onSubmitForm: SubmitHandler<SignInType> = (data) => {
-    signIn.mutate(data);
+  const onSubmitForm: SubmitHandler<CreateUserType> = (data) => {
+    createUser.mutate(data);
   };
 
   useEffect(() => {
     setAuthCardHeader({
-      title: '로그인',
-      description: '로그인 페이지입니다.',
+      title: '회원가입',
+      description: '회원가입 페이지입니다.',
     });
 
     form.trigger();
@@ -61,29 +64,48 @@ export function SignInForm() {
           />
 
           <FormInput
+            fieldName='userNm'
+            label='이름'
+            type='text'
+            autoComplete='name'
+          />
+
+          <FormInput
             fieldName='password'
             label='비밀번호'
             type='password'
-            autoComplete='current-password'
+            autoComplete='new-password'
           />
 
-          <div className='flex items-center justify-end mt-1'>
-            <Link
-              href='/auth/forgot-password'
-              className='text-sm text-muted-foreground hover:text-foreground transition-colors'
-            >
-              비밀번호를 잊으셨나요?
-            </Link>
-          </div>
+          <FormInput
+            fieldName='passwordConfirm'
+            label='비밀번호 확인'
+            type='password'
+            autoComplete='new-password'
+          />
+
+          <FormField
+            control={form.control}
+            name='userRole'
+            render={({ field, }) => {
+              return (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type='hidden' />
+                  </FormControl>
+                </FormItem>
+              );
+            }}
+          />
 
           <Button
             type='submit'
             className='mt-3'
-            disabled={!form.formState.isValid || signIn.isPending}
+            disabled={!form.formState.isValid || createUser.isPending}
           >
-            {signIn.isPending
-              ? '로그인 중...'
-              : '로그인'}
+            {createUser.isPending
+              ? '블로그 구독 중...'
+              : '블로그 구독'}
           </Button>
         </form>
       </Form>
@@ -96,8 +118,8 @@ export function SignInForm() {
       </div>
 
       <div className='flex flex-col gap-3'>
-        <LinkButton href='/auth/signup' size='lg'>
-          회원가입하기
+        <LinkButton href='/auth/signin' size='lg'>
+          로그인하기
         </LinkButton>
 
         <div className='relative'>

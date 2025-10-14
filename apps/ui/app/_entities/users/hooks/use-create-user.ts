@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import type { MutationOptionsType } from '@/_entities/common/common.types';
@@ -17,19 +18,21 @@ interface UseCreateUserOptions extends MutationOptionsType<SelectUserInfoType, C
  */
 export function useCreateUser(options: UseCreateUserOptions = {}) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const query = usePost<SelectUserInfoType, CreateUserType>({
     url: [ 'users', ],
-    key: usersKeys.all(),
+    key: usersKeys.create(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 사용자 생성 성공 시 관련 쿼리 무효화
-      // 사용자 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
         queryKey: usersKeys.profile().queryKey,
       });
+
+      router.push('/');
     },
     errorCallback(error) {
       toast.error(error.message, {

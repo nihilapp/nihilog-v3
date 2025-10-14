@@ -1,6 +1,6 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import type { SearchCommentType, UpdateCommentType } from '@/_schemas/comment.schema';
+import type { SearchCommentType } from '@/_schemas/comment.schema';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 
 /**
@@ -8,36 +8,51 @@ import type { AnalyzeStatType } from '@/_schemas/common.schema';
  */
 export const adminCommentsKeys = createQueryKeys('adminComments', {
   // ===== GET Queries =====
-  all: () => [ 'all', ], // 모든 관리자 댓글 관련 쿼리 무효화
-
-  // 댓글 관리
-  commentList: (params: SearchCommentType) => [
-    'commentList', params,
+  search: (params: SearchCommentType) => [
+    'admin', 'comments', 'search', params,
   ], // 댓글 목록 조회 (POST)
 
   // ===== 통계 관련 GET Queries =====
-  analyzeCommentStatusDistribution: () => [ 'analyzeCommentStatusDistribution', ], // 댓글 상태 분포
-  analyzePostsWithoutComments: () => [ 'analyzePostsWithoutComments', ], // 댓글 없는 게시글
+  analyzeCommentStatusDistribution: () => [
+    'admin', 'comments', 'analyze', 'comment-status-distribution',
+  ], // 댓글 상태 분포
+  analyzePostsWithoutComments: () => [
+    'admin', 'comments', 'analyze', 'posts-without-comments',
+  ], // 댓글 없는 게시글
 
-  // ===== POST Mutations =====
+  // ===== POST Mutations (통계) =====
   analyzeOverview: (params: AnalyzeStatType) => [
-    'analyzeOverview', params,
+    'admin', 'comments', 'analyze', 'overview', params,
   ], // 댓글 분석 통계
   analyzeTopPostsByComments: (limit: number) => [
-    'analyzeTopPostsByComments', limit,
+    'admin', 'comments', 'analyze', 'top-posts-by-comments', limit,
   ], // 댓글 많은 게시글 TOP N
   analyzeTopUsersByComments: (limit: number) => [
-    'analyzeTopUsersByComments', limit,
+    'admin', 'comments', 'analyze', 'top-users-by-comments', limit,
   ], // 댓글 많은 사용자 TOP N
-  analyzeAverageCommentsPerPost: () => [ 'analyzeAverageCommentsPerPost', ], // 게시글당 평균 댓글 수
-  analyzeCommentApprovalRate: () => [ 'analyzeCommentApprovalRate', ], // 댓글 승인율
-  analyzeCommentSpamRate: () => [ 'analyzeCommentSpamRate', ], // 스팸 댓글 비율
-  analyzeCommentReplyRatio: () => [ 'analyzeCommentReplyRatio', ], // 답글 비율
-  analyzeCommentAverageDepth: () => [ 'analyzeCommentAverageDepth', ], // 평균 댓글 깊이
+  analyzeAverageCommentsPerPost: () => [
+    'admin', 'comments', 'analyze', 'average-comments-per-post',
+  ], // 게시글당 평균 댓글 수
+  analyzeCommentApprovalRate: () => [
+    'admin', 'comments', 'analyze', 'comment-approval-rate',
+  ], // 댓글 승인율
+  analyzeCommentSpamRate: () => [
+    'admin', 'comments', 'analyze', 'comment-spam-rate',
+  ], // 스팸 댓글 비율
+  analyzeCommentReplyRatio: () => [
+    'admin', 'comments', 'analyze', 'comment-reply-ratio',
+  ], // 답글 비율
+  analyzeCommentAverageDepth: () => [
+    'admin', 'comments', 'analyze', 'comment-average-depth',
+  ], // 평균 댓글 깊이
 
   // ===== PUT Mutations =====
-  updateMultipleComments: () => [ 'updateMultipleComments', ], // 다수 댓글 수정
+  updateMultiple: () => [
+    'admin', 'comments', 'update', 'multiple',
+  ], // 다수 댓글 수정
 
   // ===== DELETE Mutations =====
-  deleteMultipleComments: () => [ 'deleteMultipleComments', ], // 다수 댓글 삭제
+  deleteMultiple: () => [
+    'admin', 'comments', 'delete', 'multiple',
+  ], // 다수 댓글 삭제
 });

@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { getToastStyle } from '@/_libs';
-import type { CreateTagType } from '@/_schemas/tag.schema';
+import type { CreateTagType, SearchTagType } from '@/_schemas/tag.schema';
 import type { SelectTagInfoType } from '@/_types';
 
 interface UseAdminCreateTagOptions extends MutationOptionsType<SelectTagInfoType, CreateTagType> {}
@@ -22,7 +22,7 @@ export function useAdminCreateTag(options: UseAdminCreateTagOptions = {}) {
     url: [
       'admin', 'tags',
     ],
-    key: adminTagsKeys.createTag(),
+    key: adminTagsKeys.create(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -30,7 +30,7 @@ export function useAdminCreateTag(options: UseAdminCreateTagOptions = {}) {
       // 태그 생성 성공 시 관련 쿼리 무효화
       // 관리자 태그 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagList({}).queryKey,
+        queryKey: adminTagsKeys.search({} as SearchTagType).queryKey,
       });
     },
     errorCallback(error) {

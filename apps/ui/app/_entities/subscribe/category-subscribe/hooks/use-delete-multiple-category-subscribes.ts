@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseDeleteMultipleCategorySubscribesOptions extends MutationOptionsType<MultipleResultType> {}
@@ -21,7 +22,7 @@ export function useDeleteMultipleCategorySubscribes(options: UseDeleteMultipleCa
     url: [
       'users', 'subscribes', 'categories', 'multiple',
     ],
-    key: categorySubscribeKeys.deleteMultipleCategorySubscribe(),
+    key: categorySubscribeKeys.deleteMultiple(),
     callback() {
       toast.success('다수 카테고리 구독이 해제되었습니다.', {
         style: getToastStyle('success'),
@@ -29,7 +30,7 @@ export function useDeleteMultipleCategorySubscribes(options: UseDeleteMultipleCa
 
       // 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeList({}).queryKey,
+        queryKey: categorySubscribeKeys.search({} as SearchCategorySubscribeType).queryKey,
       });
     },
     errorCallback(error) {

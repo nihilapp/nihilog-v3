@@ -5,6 +5,7 @@ import { adminUsersKeys } from '@/_entities/admin/users/admin-users.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
+import type { SearchUserType } from '@/_schemas/user.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseAdminDeleteMultipleUsersOptions extends MutationOptionsType<MultipleResultType<boolean>, number[]> {}
@@ -21,14 +22,14 @@ export function useAdminDeleteMultipleUsers(options: UseAdminDeleteMultipleUsers
     url: [
       'admin', 'users', 'multiple',
     ],
-    key: adminUsersKeys.deleteMultipleUsers(),
+    key: adminUsersKeys.deleteMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 사용자 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminUsersKeys.userList({}).queryKey,
+        queryKey: adminUsersKeys.search({} as SearchUserType).queryKey,
       });
     },
     errorCallback(error) {

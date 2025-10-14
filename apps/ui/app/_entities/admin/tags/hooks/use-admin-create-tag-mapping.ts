@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { getToastStyle } from '@/_libs';
-import type { CreatePstTagMpngType } from '@/_schemas/tag.schema';
+import type { CreatePstTagMpngType, SearchPstTagMpngType } from '@/_schemas/tag.schema';
 import type { SelectPostTagMappingType } from '@/_types';
 
 interface UseAdminCreateTagMappingOptions extends MutationOptionsType<SelectPostTagMappingType, CreatePstTagMpngType> {}
@@ -22,7 +22,7 @@ export function useAdminCreateTagMapping(options: UseAdminCreateTagMappingOption
     url: [
       'admin', 'tags', 'mapping',
     ],
-    key: adminTagsKeys.createTagMapping(),
+    key: adminTagsKeys.createMapping(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -30,7 +30,7 @@ export function useAdminCreateTagMapping(options: UseAdminCreateTagMappingOption
       // 태그 매핑 생성 성공 시 관련 쿼리 무효화
       // 태그 매핑 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagMappings({}).queryKey,
+        queryKey: adminTagsKeys.searchMappings({} as SearchPstTagMpngType).queryKey,
       });
     },
     errorCallback(error) {

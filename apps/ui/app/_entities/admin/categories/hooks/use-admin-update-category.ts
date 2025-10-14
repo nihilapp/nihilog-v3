@@ -23,18 +23,18 @@ export function useAdminUpdateCategory(ctgryNo: number, options: UseAdminUpdateC
     url: [
       'admin', 'categories', ctgryNo,
     ],
-    key: adminCategoriesKeys.updateCategory(ctgryNo),
+    key: adminCategoriesKeys.update(ctgryNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 카테고리 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminCategoriesKeys.categoryByNo(ctgryNo).queryKey,
+        queryKey: adminCategoriesKeys.byNo(ctgryNo).queryKey,
       });
       // 관리자 카테고리 목록도 무효화
       queryClient.invalidateQueries({
-        queryKey: adminCategoriesKeys.searchCategories().queryKey,
+        queryKey: adminCategoriesKeys.search().queryKey,
       });
     },
     errorCallback(error) {

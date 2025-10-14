@@ -8,43 +8,56 @@ import type { SearchPostType } from '@/_schemas/post.schema';
  */
 export const adminPostsKeys = createQueryKeys('adminPosts', {
   // ===== GET Queries =====
-  all: () => [ 'all', ], // 모든 관리자 게시글 관련 쿼리 무효화
-
-  // 게시글 관리
-  postList: (params: SearchPostType) => [
-    'postList', params,
+  search: (params: SearchPostType) => [
+    'admin', 'posts', 'search', params,
   ], // 게시글 목록 조회 (POST)
-  postByNo: (pstNo: number) => [
-    'postByNo', pstNo,
+  byNo: (pstNo: number) => [
+    'admin', 'posts', 'by-no', pstNo,
   ], // 게시글 번호로 조회
 
-  // ===== POST Mutations =====
-  createPost: () => [ 'createPost', ], // 게시글 생성
+  // ===== 통계 관련 GET Queries =====
+  analyzeAverageViews: () => [
+    'admin', 'posts', 'analyze', 'average-views',
+  ], // 평균 조회수
+  analyzeAverageBookmarks: () => [
+    'admin', 'posts', 'analyze', 'average-bookmarks',
+  ], // 평균 북마크 수
+  analyzeStatusRatio: () => [
+    'admin', 'posts', 'analyze', 'status-ratio',
+  ], // 상태별 비율
+
+  // ===== POST Mutations (통계) =====
   analyzeOverview: (params: AnalyzeStatType) => [
-    'analyzeOverview', params,
+    'admin', 'posts', 'analyze', 'overview', params,
   ], // 게시글 분석 통계
   analyzeShares: (pstNo?: number) => [
-    'analyzeShares', pstNo || 0,
+    'admin', 'posts', 'analyze', 'shares', pstNo || 0,
   ], // 공유 분석
-  analyzeAverageViews: () => [ 'analyzeAverageViews', ], // 평균 조회수
-  analyzeAverageBookmarks: () => [ 'analyzeAverageBookmarks', ], // 평균 북마크 수
   analyzeTopPopularPosts: (limit: number) => [
-    'analyzeTopPopularPosts', limit,
+    'admin', 'posts', 'analyze', 'top-popular-posts', limit,
   ], // 인기 게시글 TOP N
   analyzeTopCommentPosts: (limit: number) => [
-    'analyzeTopCommentPosts', limit,
+    'admin', 'posts', 'analyze', 'top-comment-posts', limit,
   ], // 댓글 많은 게시글 TOP N
-  analyzeStatusRatio: () => [ 'analyzeStatusRatio', ], // 상태별 비율
+
+  // ===== POST Mutations =====
+  create: () => [
+    'admin', 'posts', 'create',
+  ], // 게시글 생성
 
   // ===== PUT Mutations =====
-  updatePost: (pstNo: number) => [
-    'updatePost', pstNo,
+  update: (pstNo: number) => [
+    'admin', 'posts', 'update', pstNo,
   ], // 게시글 수정
-  multipleUpdatePost: () => [ 'multipleUpdatePost', ], // 다수 게시글 수정
+  updateMultiple: () => [
+    'admin', 'posts', 'update', 'multiple',
+  ], // 다수 게시글 수정
 
   // ===== DELETE Mutations =====
-  deletePost: (pstNo: number) => [
-    'deletePost', pstNo,
+  delete: (pstNo: number) => [
+    'admin', 'posts', 'delete', pstNo,
   ], // 게시글 삭제
-  multipleDeletePost: () => [ 'multipleDeletePost', ], // 다수 게시글 삭제
+  deleteMultiple: () => [
+    'admin', 'posts', 'delete', 'multiple',
+  ], // 다수 게시글 삭제
 });

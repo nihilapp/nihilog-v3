@@ -16,8 +16,10 @@ interface UseGetTagsOptions extends MutationOptionsType<ListType<SelectTagInfoLi
  */
 export function useGetTags(options: UseGetTagsOptions = {}) {
   const query = usePost<ListType<SelectTagInfoListItemType>, SearchTagType>({
-    url: [ 'tags', ],
-    key: tagsKeys.list({} as Record<string, any>), // 기본값으로 빈 객체 사용
+    url: [
+      'tags', 'search',
+    ],
+    key: tagsKeys.search({} as SearchTagType), // 기본값으로 빈 객체 사용
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

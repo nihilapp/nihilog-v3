@@ -19,7 +19,7 @@ export function useAdminGetCategoryByNo(ctgryNo: number, options: UseAdminGetCat
     url: [
       'admin', 'categories', ctgryNo,
     ],
-    key: adminCategoriesKeys.categoryByNo(ctgryNo),
+    key: adminCategoriesKeys.byNo(ctgryNo),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

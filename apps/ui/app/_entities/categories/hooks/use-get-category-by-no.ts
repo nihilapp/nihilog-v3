@@ -19,7 +19,7 @@ export function useGetCategoryByNo(ctgryNo: number, options: UseGetCategoryByNoO
     url: [
       'categories', ctgryNo,
     ],
-    key: categoriesKeys.categoryByNo(ctgryNo),
+    key: categoriesKeys.byNo(ctgryNo),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

@@ -19,7 +19,7 @@ export function useAdminGetUserByNo(userNo: number, options: UseAdminGetUserByNo
     url: [
       'admin', 'users', userNo,
     ],
-    key: adminUsersKeys.userByNo(userNo),
+    key: adminUsersKeys.byNo(userNo),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { postsKeys } from '@/_entities/posts/posts.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostViewLogType } from '@/_types';
 
 interface UseCreateViewLogOptions extends MutationOptionsType<SelectPostViewLogType> {
@@ -32,13 +33,13 @@ export function useCreateViewLog(options: UseCreateViewLogOptions = {}) {
       // 특정 게시글의 조회수만 무효화
       if (options.postNo) {
         queryClient.invalidateQueries({
-          queryKey: postsKeys.postByNo(options.postNo).queryKey,
+          queryKey: postsKeys.byNo(options.postNo).queryKey,
         });
       }
       else {
         // postNo가 없는 경우에만 전체 무효화 (fallback)
         queryClient.invalidateQueries({
-          queryKey: postsKeys.all().queryKey,
+          queryKey: postsKeys.search({} as SearchPostType).queryKey,
         });
       }
     },

@@ -18,7 +18,7 @@ export function useAdminGetTopTagsBySubscribers(options: UseAdminGetTopTagsBySub
     url: [
       'admin', 'tags', 'analyze', 'top-subscribers',
     ],
-    key: adminTagsKeys.topTagsBySubscribers(),
+    key: adminTagsKeys.analyzeTopTagsBySubscribers(),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

@@ -18,7 +18,7 @@ export function useAdminGetUnusedTags(options: UseAdminGetUnusedTagsOptions = {}
     url: [
       'admin', 'tags', 'analyze', 'unused',
     ],
-    key: adminTagsKeys.unusedTags(),
+    key: adminTagsKeys.analyzeUnusedTags(),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

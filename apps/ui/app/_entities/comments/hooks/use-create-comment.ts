@@ -21,7 +21,7 @@ export function useCreateComment(options: UseCreateCommentOptions = {}) {
 
   const mutation = usePost<SelectCommentType, any>({
     url: [ 'comments', ],
-    key: commentsKeys.createComment(),
+    key: commentsKeys.create(),
     callback() {
       toast.success('댓글이 작성되었습니다.', {
         style: getToastStyle('success'),
@@ -30,13 +30,13 @@ export function useCreateComment(options: UseCreateCommentOptions = {}) {
       // 특정 게시글의 댓글 목록만 무효화
       if (options.postNo) {
         queryClient.invalidateQueries({
-          queryKey: commentsKeys.commentList({ pstNo: options.postNo, }).queryKey,
+          queryKey: commentsKeys.search({ pstNo: options.postNo, }).queryKey,
         });
       }
       else {
         // postNo가 없는 경우에만 전체 무효화 (fallback)
         queryClient.invalidateQueries({
-          queryKey: commentsKeys.all().queryKey,
+          queryKey: commentsKeys.search({}).queryKey,
         });
       }
     },

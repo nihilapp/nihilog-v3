@@ -22,14 +22,14 @@ export function useUpdateSubscribe(options: UseUpdateSubscribeOptions = {}) {
     url: [
       'users', 'subscribe',
     ],
-    key: usersKeys.subscribe(),
+    key: usersKeys.updateSubscribe(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 구독 정보 업데이트 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: usersKeys.subscribe().queryKey,
+        queryKey: usersKeys.subscribeInfo().queryKey,
       });
     },
     errorCallback(error) {

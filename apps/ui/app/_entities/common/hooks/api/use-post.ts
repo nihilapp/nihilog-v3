@@ -45,14 +45,24 @@ export function usePost<TData = any, TVariables = any>({
     mutationFn: async (variables: TVariables) => {
       return await Api.postQuery<TData, TVariables>(fullUrl, variables);
     },
-    onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({ queryKey, });
-      callback?.(data, variables, context);
-    },
-    onError: (errorData, variables, context) => {
-      errorCallback?.(errorData, variables, context);
-    },
     ...options,
+    onSuccess: (data, variables, onMutateResult, mutationContext) => {
+      // 1. 쿼리 무효화 (기본 동작)
+      queryClient.invalidateQueries({ queryKey, });
+
+      // 2. options의 onSuccess 실행 (사용자 정의 options)
+      options?.onSuccess?.(data, variables, onMutateResult, mutationContext);
+
+      // 3. callback 실행 (훅 레벨의 기본 콜백)
+      callback?.(data, variables, onMutateResult);
+    },
+    onError: (errorData, variables, onMutateResult, mutationContext) => {
+      // 1. options의 onError 실행 (사용자 정의 options)
+      options?.onError?.(errorData, variables, onMutateResult, mutationContext);
+
+      // 2. errorCallback 실행 (훅 레벨의 기본 콜백)
+      errorCallback?.(errorData, variables, onMutateResult);
+    },
   });
 
   return {

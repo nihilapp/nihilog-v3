@@ -6,7 +6,7 @@ import { adminUsersKeys } from '@/_entities/admin/users/admin-users.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { getToastStyle } from '@/_libs';
-import type { CreateUserType } from '@/_schemas/user.schema';
+import type { CreateUserType, SearchUserType } from '@/_schemas/user.schema';
 import type { SelectUserInfoType } from '@/_types';
 
 interface UseAdminSignupOptions extends MutationOptionsType<SelectUserInfoType, CreateUserType> {}
@@ -31,7 +31,7 @@ export function useAdminSignup(options: UseAdminSignupOptions = {}) {
       });
       // 어드민 회원가입 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminUsersKeys.userList({}).queryKey,
+        queryKey: adminUsersKeys.search({} as SearchUserType).queryKey,
       });
 
       router.push('/');

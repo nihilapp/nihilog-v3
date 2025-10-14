@@ -9,10 +9,10 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerCategoriesEndpoints = () => {
-  // POST /categories - 카테고리 목록 조회
+  // POST /categories/search - 카테고리 목록 조회
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/categories',
+    path: '/categories/search',
     summary: '📁 카테고리 목록 조회',
     description: '전체 카테고리 목록을 조회합니다. 계층 구조 표시, 게시글 수 포함, 정렬순 적용',
     tags: [ 'categories', ],

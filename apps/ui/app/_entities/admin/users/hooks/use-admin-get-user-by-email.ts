@@ -19,7 +19,7 @@ export function useAdminGetUserByEmail(email: string, options: UseAdminGetUserBy
     url: [
       'admin', 'users', 'email', email,
     ],
-    key: adminUsersKeys.userByEmail(email),
+    key: adminUsersKeys.byEmail(email),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

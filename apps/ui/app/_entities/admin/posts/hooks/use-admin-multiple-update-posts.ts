@@ -5,7 +5,7 @@ import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { getToastStyle } from '@/_libs';
-import type { UpdatePostType } from '@/_schemas/post.schema';
+import type { UpdatePostType, SearchPostType } from '@/_schemas/post.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseAdminMultipleUpdatePostsOptions extends MutationOptionsType<MultipleResultType, UpdatePostType> {}
@@ -22,14 +22,14 @@ export function useAdminMultipleUpdatePosts(options: UseAdminMultipleUpdatePosts
     url: [
       'admin', 'posts', 'multiple',
     ],
-    key: adminPostsKeys.multipleUpdatePost(),
+    key: adminPostsKeys.updateMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 게시글 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminPostsKeys.postList({}).queryKey,
+        queryKey: adminPostsKeys.search({} as SearchPostType).queryKey,
       });
     },
     errorCallback(error) {

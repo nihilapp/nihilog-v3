@@ -6,7 +6,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
-import type { DeleteCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
+import type { DeleteCategorySubscribeType, SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 import type { MultipleResultType } from '@/_types/common.types';
 
 interface UseAdminDeleteMultipleCategorySubscribesOptions extends MutationOptionsType<MultipleResultType, DeleteCategorySubscribeType> {}
@@ -18,14 +18,14 @@ export function useAdminDeleteMultipleCategorySubscribes(options: UseAdminDelete
     url: [
       'admin', 'subscribes', 'categories', 'multiple',
     ],
-    key: adminCategorySubscribeKeys.deleteMultipleCategorySubscribes(),
+    key: adminCategorySubscribeKeys.deleteMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 카테고리 구독 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeList({}).queryKey,
+        queryKey: categorySubscribeKeys.search({} as SearchCategorySubscribeType).queryKey,
       });
     },
     errorCallback(error) {

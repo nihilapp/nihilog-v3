@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 import type { SelectTagSubscribeMappingType } from '@/_types';
 
 interface UseUpdateTagSubscribeOptions extends MutationOptionsType<SelectTagSubscribeMappingType> {}
@@ -22,7 +23,7 @@ export function useUpdateTagSubscribe(tagSbcrNo: number, options: UseUpdateTagSu
     url: [
       'users', 'subscribes', 'tags', tagSbcrNo,
     ],
-    key: tagSubscribeKeys.updateTagSubscribe(tagSbcrNo),
+    key: tagSubscribeKeys.update(tagSbcrNo),
     callback() {
       toast.success('태그 구독이 수정되었습니다.', {
         style: getToastStyle('success'),
@@ -30,7 +31,7 @@ export function useUpdateTagSubscribe(tagSbcrNo: number, options: UseUpdateTagSu
 
       // 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
     },
     errorCallback(error) {

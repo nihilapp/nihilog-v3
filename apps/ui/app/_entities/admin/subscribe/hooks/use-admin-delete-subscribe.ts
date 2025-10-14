@@ -21,7 +21,7 @@ export function useAdminDeleteSubscribe(sbcrNo: number, options: UseAdminDeleteS
     url: [
       'admin', 'subscribes', sbcrNo,
     ],
-    key: adminSubscribeKeys.deleteSubscribe(sbcrNo),
+    key: adminSubscribeKeys.delete(sbcrNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -29,7 +29,7 @@ export function useAdminDeleteSubscribe(sbcrNo: number, options: UseAdminDeleteS
       // 구독 삭제 성공 시 관련 쿼리 무효화
       // 관리자 구독 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminSubscribeKeys.searchSubscribes().queryKey,
+        queryKey: adminSubscribeKeys.search().queryKey,
       });
     },
     errorCallback(error) {

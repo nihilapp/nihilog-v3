@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 import type { SelectTagSubscribeMappingType } from '@/_types';
 
 interface UseCreateTagSubscribeOptions extends MutationOptionsType<SelectTagSubscribeMappingType> {}
@@ -22,7 +23,7 @@ export function useCreateTagSubscribe(tagNo: number, options: UseCreateTagSubscr
     url: [
       'users', 'subscribes', 'tags', tagNo,
     ],
-    key: tagSubscribeKeys.createTagSubscribe(tagNo),
+    key: tagSubscribeKeys.create(tagNo),
     callback() {
       toast.success('태그 구독이 설정되었습니다.', {
         style: getToastStyle('success'),
@@ -30,11 +31,11 @@ export function useCreateTagSubscribe(tagNo: number, options: UseCreateTagSubscr
 
       // 사용자의 태그 구독 목록 무효화 (기본 파라미터 사용)
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
       // 특정 태그 구독 상태도 무효화
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeByNo(tagNo, {}).queryKey,
+        queryKey: tagSubscribeKeys.byNo(tagNo, {} as SearchTagSubscribeType).queryKey,
       });
     },
     errorCallback(error) {

@@ -6,7 +6,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
-import type { CreateTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
+import type { CreateTagSubscribeType, SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 import type { MultipleResultType, SelectTagSubscribeMappingType } from '@/_types';
 
 interface UseAdminCreateMultipleTagSubscribesOptions extends MutationOptionsType<MultipleResultType<SelectTagSubscribeMappingType>, CreateTagSubscribeType[]> {}
@@ -23,14 +23,14 @@ export function useAdminCreateMultipleTagSubscribes(options: UseAdminCreateMulti
     url: [
       'admin', 'subscribes',
     ],
-    key: adminTagSubscribeKeys.createMultipleTagSubscribes(),
+    key: adminTagSubscribeKeys.createMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 태그 구독 생성 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
     },
     errorCallback(error) {

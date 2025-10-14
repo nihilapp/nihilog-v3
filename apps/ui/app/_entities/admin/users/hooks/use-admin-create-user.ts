@@ -5,7 +5,7 @@ import { adminUsersKeys } from '@/_entities/admin/users/admin-users.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { getToastStyle } from '@/_libs';
-import type { CreateUserType } from '@/_schemas/user.schema';
+import type { CreateUserType, SearchUserType } from '@/_schemas/user.schema';
 import type { SelectUserInfoType } from '@/_types';
 
 interface UseAdminCreateUserOptions extends MutationOptionsType<SelectUserInfoType, CreateUserType> {}
@@ -22,7 +22,7 @@ export function useAdminCreateUser(options: UseAdminCreateUserOptions = {}) {
     url: [
       'admin', 'users',
     ],
-    key: adminUsersKeys.createUser(),
+    key: adminUsersKeys.create(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -30,7 +30,7 @@ export function useAdminCreateUser(options: UseAdminCreateUserOptions = {}) {
       // 사용자 생성 성공 시 관련 쿼리 무효화
       // 관리자 사용자 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminUsersKeys.userList({}).queryKey,
+        queryKey: adminUsersKeys.search({} as SearchUserType).queryKey,
       });
     },
     errorCallback(error) {

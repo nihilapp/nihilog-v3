@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 import type { SelectCategorySubscribeMappingType } from '@/_types';
 
 interface UseUpdateCategorySubscribeOptions extends MutationOptionsType<SelectCategorySubscribeMappingType> {}
@@ -22,7 +23,7 @@ export function useUpdateCategorySubscribe(ctgrySbcrNo: number, options: UseUpda
     url: [
       'users', 'subscribes', 'categories', ctgrySbcrNo,
     ],
-    key: categorySubscribeKeys.updateCategorySubscribe(ctgrySbcrNo),
+    key: categorySubscribeKeys.update(ctgrySbcrNo),
     callback() {
       toast.success('카테고리 구독이 수정되었습니다.', {
         style: getToastStyle('success'),
@@ -30,7 +31,7 @@ export function useUpdateCategorySubscribe(ctgrySbcrNo: number, options: UseUpda
 
       // 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeList({}).queryKey,
+        queryKey: categorySubscribeKeys.search({} as SearchCategorySubscribeType).queryKey,
       });
     },
     errorCallback(error) {

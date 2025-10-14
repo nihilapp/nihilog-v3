@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseDeleteMultipleTagSubscribesOptions extends MutationOptionsType<MultipleResultType> {}
@@ -21,7 +22,7 @@ export function useDeleteMultipleTagSubscribes(options: UseDeleteMultipleTagSubs
     url: [
       'users', 'subscribes', 'tags', 'multiple',
     ],
-    key: tagSubscribeKeys.deleteMultipleTagSubscribe(),
+    key: tagSubscribeKeys.deleteMultiple(),
     callback() {
       toast.success('다수 태그 구독이 해제되었습니다.', {
         style: getToastStyle('success'),
@@ -29,7 +30,7 @@ export function useDeleteMultipleTagSubscribes(options: UseDeleteMultipleTagSubs
 
       // 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
     },
     errorCallback(error) {

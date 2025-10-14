@@ -21,19 +21,19 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
 export const subscribeKeys = createQueryKeys('subscribe', {
   // ===== GET Queries =====
   userSettings: (userId: number) => [
-    'user', 'settings', userId,
+    'users', 'subscribe', userId,
   ],
   categoryList: (userId: number) => [
-    'categories', 'list', userId,
+    'users', 'subscribes', 'categories', userId,
   ],
   categoryDetail: (userId: number, categoryId: number) => [
-    'categories', 'detail', userId, categoryId,
+    'users', 'subscribes', 'categories', userId, categoryId,
   ],
   tagList: (userId: number) => [
-    'tags', 'list', userId,
+    'users', 'subscribes', 'tags', userId,
   ],
   tagDetail: (userId: number, tagId: number) => [
-    'tags', 'detail', userId, tagId,
+    'users', 'subscribes', 'tags', userId, tagId,
   ],
 
   // ===== POST Mutations =====

@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePost } from '@/_entities/common/hooks/api/use-post';
 import { tagSubscribeKeys } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseCreateMultipleTagSubscribesOptions extends MutationOptionsType<MultipleResultType> {}
@@ -21,7 +22,7 @@ export function useCreateMultipleTagSubscribes(options: UseCreateMultipleTagSubs
     url: [
       'users', 'subscribes', 'tags', 'multiple',
     ],
-    key: tagSubscribeKeys.createMultipleTagSubscribe(),
+    key: tagSubscribeKeys.createMultiple(),
     callback() {
       toast.success('다수 태그 구독이 설정되었습니다.', {
         style: getToastStyle('success'),
@@ -29,7 +30,7 @@ export function useCreateMultipleTagSubscribes(options: UseCreateMultipleTagSubs
 
       // 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: tagSubscribeKeys.tagSubscribeList({}).queryKey,
+        queryKey: tagSubscribeKeys.search({} as SearchTagSubscribeType).queryKey,
       });
     },
     errorCallback(error) {

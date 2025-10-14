@@ -24,8 +24,8 @@ export class CategorySubscribeController {
    * @param req 요청 객체
    */
   @Endpoint({
-    endpoint: '/',
-    method: 'GET',
+    endpoint: '/search',
+    method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],
@@ -58,7 +58,7 @@ export class CategorySubscribeController {
    */
   @Endpoint({
     endpoint: '/:ctgryNo',
-    method: 'GET',
+    method: 'POST',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'USER', 'ADMIN', ],

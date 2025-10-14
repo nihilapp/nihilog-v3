@@ -22,7 +22,7 @@ export function useAdminCreateSubscribe(options: UseAdminCreateSubscribeOptions 
     url: [
       'admin', 'subscribes',
     ],
-    key: adminSubscribeKeys.createSubscribe(),
+    key: adminSubscribeKeys.create(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -30,7 +30,7 @@ export function useAdminCreateSubscribe(options: UseAdminCreateSubscribeOptions 
       // 구독 생성 성공 시 관련 쿼리 무효화
       // 관리자 구독 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminSubscribeKeys.searchSubscribes().queryKey,
+        queryKey: adminSubscribeKeys.search().queryKey,
       });
     },
     errorCallback(error) {

@@ -91,7 +91,7 @@ export function useGet<T = any>({
     ...(options as any),
   });
 
-  // 콜백 처리
+  // 콜백 실행 (React Query v5에서 onSuccess/onError가 제거되어 직접 처리)
   if (response && isSuccess && callback) {
     callback(response);
   }
@@ -204,7 +204,7 @@ export function useGetInfinite<T = any>({
     ...(options as any),
   });
 
-  // 콜백 처리
+  // 콜백 실행 (React Query v5에서 onSuccess/onError가 제거되어 직접 처리)
   if (response && isSuccess && callback) {
     callback(response);
   }

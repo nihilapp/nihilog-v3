@@ -23,7 +23,7 @@ export function useDeleteProfile(options: UseDeleteProfileOptions = {}) {
     url: [
       'users', 'profile',
     ],
-    key: usersKeys.profile(),
+    key: usersKeys.deleteProfile(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),

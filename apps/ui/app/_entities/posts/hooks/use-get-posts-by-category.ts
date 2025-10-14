@@ -20,7 +20,7 @@ export function useGetPostsByCategory(ctgryNo: number, options: UseGetPostsByCat
     url: [
       'posts', 'category', ctgryNo,
     ],
-    key: postsKeys.postListByCategory(ctgryNo, {} as SearchPostType), // 기본값으로 빈 객체 사용
+    key: postsKeys.listByCategory(ctgryNo, {} as SearchPostType), // 기본값으로 빈 객체 사용
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

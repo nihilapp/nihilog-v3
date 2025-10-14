@@ -19,7 +19,7 @@ export function useGetPostBySlug(pstCd: string, options: UseGetPostBySlugOptions
     url: [
       'posts', 'slug', pstCd,
     ],
-    key: postsKeys.postBySlug(pstCd),
+    key: postsKeys.bySlug(pstCd),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

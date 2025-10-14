@@ -21,7 +21,7 @@ export function useAdminDeleteCategory(ctgryNo: number, options: UseAdminDeleteC
     url: [
       'admin', 'categories', ctgryNo,
     ],
-    key: adminCategoriesKeys.deleteCategory(ctgryNo),
+    key: adminCategoriesKeys.delete(ctgryNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -29,7 +29,7 @@ export function useAdminDeleteCategory(ctgryNo: number, options: UseAdminDeleteC
       // 카테고리 삭제 성공 시 관련 쿼리 무효화
       // 관리자 카테고리 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminCategoriesKeys.searchCategories().queryKey,
+        queryKey: adminCategoriesKeys.search().queryKey,
       });
     },
     errorCallback(error) {

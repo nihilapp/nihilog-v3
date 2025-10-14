@@ -8,14 +8,13 @@ import type { SearchTagType } from '@/_schemas/tag.schema';
  */
 export const tagsKeys = createQueryKeys('tags', {
   // ===== GET Queries =====
-  all: () => [ 'all', ], // 모든 태그 관련 쿼리 무효화
-  list: (params: SearchTagType) => [
-    'list', params,
+  search: (searchData: SearchTagType) => [
+    'tags', 'search', searchData,
   ], // 태그 목록 조회 (POST)
-  detail: (tagNo: number) => [
-    'detail', tagNo,
+  byNo: (tagNo: number) => [
+    'tags', 'by-no', tagNo,
   ], // 태그 번호로 조회
   byName: (tagNm: string) => [
-    'byName', tagNm,
+    'tags', 'by-name', tagNm,
   ], // 태그명으로 조회
 });

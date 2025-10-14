@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { getToastStyle } from '@/_libs';
-import type { UpdateTagType } from '@/_schemas/tag.schema';
+import type { UpdateTagType, SearchTagType } from '@/_schemas/tag.schema';
 import type { SelectTagInfoType } from '@/_types';
 
 interface UseAdminUpdateTagOptions extends MutationOptionsType<SelectTagInfoType, UpdateTagType> {}
@@ -23,18 +23,18 @@ export function useAdminUpdateTag(tagNo: number, options: UseAdminUpdateTagOptio
     url: [
       'admin', 'tags',
     ],
-    key: adminTagsKeys.updateTag(tagNo),
+    key: adminTagsKeys.update(tagNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 태그 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagByNo(tagNo).queryKey,
+        queryKey: adminTagsKeys.byNo(tagNo).queryKey,
       });
       // 관리자 태그 목록도 무효화
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagList({}).queryKey,
+        queryKey: adminTagsKeys.search({} as SearchTagType).queryKey,
       });
     },
     errorCallback(error) {

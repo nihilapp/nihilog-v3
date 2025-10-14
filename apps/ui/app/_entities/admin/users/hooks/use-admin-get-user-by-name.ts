@@ -19,7 +19,7 @@ export function useAdminGetUserByName(name: string, options: UseAdminGetUserByNa
     url: [
       'admin', 'users', 'name', name,
     ],
-    key: adminUsersKeys.userByName(name),
+    key: adminUsersKeys.byName(name),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

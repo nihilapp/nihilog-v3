@@ -34,7 +34,14 @@ export class Api {
   private static ensureOk<T>(res: AxiosResponse<ResponseType<T>>): ResponseType<T> {
     const payload = res.data;
 
-    if (payload.error || payload.code !== RESPONSE_CODE.SUCCESS) {
+    // 성공 응답 코드 목록
+    const successCodes = [
+      RESPONSE_CODE.SUCCESS, // 200
+      RESPONSE_CODE.CREATED, // 201
+      RESPONSE_CODE.NO_CONTENT, // 204
+    ];
+
+    if (payload.error || !successCodes.includes(payload.code as any)) {
       // AxiosError 로 변환하여 React Query 등에서 에러 흐름으로 처리되도록 함
       const axiosError = new AxiosError(
         payload.message,

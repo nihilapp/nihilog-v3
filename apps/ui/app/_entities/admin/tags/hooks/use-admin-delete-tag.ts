@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
-import type { DeleteTagType } from '@/_schemas/tag.schema';
+import type { DeleteTagType, SearchTagType } from '@/_schemas/tag.schema';
 import type { SelectTagInfoType } from '@/_types';
 
 interface UseAdminDeleteTagOptions extends MutationOptionsType<SelectTagInfoType, DeleteTagType> {}
@@ -23,18 +23,18 @@ export function useAdminDeleteTag(tagNo: number, options: UseAdminDeleteTagOptio
     url: [
       'admin', 'tags',
     ],
-    key: adminTagsKeys.deleteTag(tagNo),
+    key: adminTagsKeys.delete(tagNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 태그 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagByNo(tagNo).queryKey,
+        queryKey: adminTagsKeys.byNo(tagNo).queryKey,
       });
       // 관리자 태그 목록도 무효화
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagList({}).queryKey,
+        queryKey: adminTagsKeys.search({} as SearchTagType).queryKey,
       });
     },
     errorCallback(error) {

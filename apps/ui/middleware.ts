@@ -11,8 +11,8 @@ const publicPaths = [
 ];
 
 export const config = {
-  // 미들웨어는 정적 파일과 Next.js 내부 파일을 제외한 모든 경로에서 실행됩니다.
-  matcher: [ '/((?!_next/static|_next/image|favicon.ico|api/auth|images).*)', ],
+  // 미들웨어는 정적 파일, Next.js 내부 파일, API 라우트를 제외한 모든 경로에서 실행됩니다.
+  matcher: [ '/((?!_next/static|_next/image|favicon.ico|api|images).*)', ],
 };
 
 /**

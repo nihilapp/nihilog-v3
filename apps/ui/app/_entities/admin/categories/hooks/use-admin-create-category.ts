@@ -22,7 +22,7 @@ export function useAdminCreateCategory(options: UseAdminCreateCategoryOptions = 
     url: [
       'admin', 'categories',
     ],
-    key: adminCategoriesKeys.createCategory(),
+    key: adminCategoriesKeys.create(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -30,7 +30,7 @@ export function useAdminCreateCategory(options: UseAdminCreateCategoryOptions = 
       // 카테고리 생성 성공 시 관련 쿼리 무효화
       // 관리자 카테고리 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminCategoriesKeys.searchCategories().queryKey,
+        queryKey: adminCategoriesKeys.search().queryKey,
       });
     },
     errorCallback(error) {

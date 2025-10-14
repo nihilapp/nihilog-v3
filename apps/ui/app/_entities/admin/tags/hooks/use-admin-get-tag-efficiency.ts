@@ -18,7 +18,7 @@ export function useAdminGetTagEfficiency(options: UseAdminGetTagEfficiencyOption
     url: [
       'admin', 'tags', 'analyze', 'efficiency',
     ],
-    key: adminTagsKeys.tagEfficiency(),
+    key: adminTagsKeys.analyzeTagEfficiency(),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

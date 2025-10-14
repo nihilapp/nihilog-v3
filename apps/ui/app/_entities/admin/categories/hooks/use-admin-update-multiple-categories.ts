@@ -17,14 +17,14 @@ export function useAdminUpdateMultipleCategories(options: UseAdminUpdateMultiple
     url: [
       'admin', 'categories', 'multiple',
     ],
-    key: adminCategoriesKeys.updateMultipleCategories(),
+    key: adminCategoriesKeys.updateMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 카테고리 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminCategoriesKeys.searchCategories().queryKey,
+        queryKey: adminCategoriesKeys.search().queryKey,
       });
     },
     errorCallback(error) {

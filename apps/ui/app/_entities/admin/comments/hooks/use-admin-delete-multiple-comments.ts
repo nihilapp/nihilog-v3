@@ -5,6 +5,7 @@ import { adminCommentsKeys } from '@/_entities/admin/comments/admin-comments.key
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
+import type { SearchCommentType } from '@/_schemas/comment.schema';
 import type { MultipleResultType } from '@/_types';
 
 interface UseAdminDeleteMultipleCommentsOptions extends MutationOptionsType<MultipleResultType<boolean>, number[]> {}
@@ -21,14 +22,14 @@ export function useAdminDeleteMultipleComments(options: UseAdminDeleteMultipleCo
     url: [
       'admin', 'comments', 'multiple',
     ],
-    key: adminCommentsKeys.deleteMultipleComments(),
+    key: adminCommentsKeys.deleteMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 댓글 삭제 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminCommentsKeys.commentList({}).queryKey,
+        queryKey: adminCommentsKeys.search({} as SearchCommentType).queryKey,
       });
     },
     errorCallback(error) {

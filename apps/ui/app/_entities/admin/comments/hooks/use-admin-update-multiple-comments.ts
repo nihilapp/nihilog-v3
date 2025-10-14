@@ -5,7 +5,7 @@ import { adminCommentsKeys } from '@/_entities/admin/comments/admin-comments.key
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { getToastStyle } from '@/_libs';
-import type { UpdateCommentType } from '@/_schemas/comment.schema';
+import type { UpdateCommentType, SearchCommentType } from '@/_schemas/comment.schema';
 import type { MultipleResultType, SelectCommentType } from '@/_types';
 
 interface UseAdminUpdateMultipleCommentsOptions extends MutationOptionsType<MultipleResultType<SelectCommentType>, UpdateCommentType[]> {}
@@ -22,14 +22,14 @@ export function useAdminUpdateMultipleComments(options: UseAdminUpdateMultipleCo
     url: [
       'admin', 'comments', 'multiple',
     ],
-    key: adminCommentsKeys.updateMultipleComments(),
+    key: adminCommentsKeys.updateMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 댓글 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminCommentsKeys.commentList({}).queryKey,
+        queryKey: adminCommentsKeys.search({} as SearchCommentType).queryKey,
       });
     },
     errorCallback(error) {

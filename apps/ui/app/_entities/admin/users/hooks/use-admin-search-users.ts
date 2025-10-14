@@ -19,7 +19,7 @@ export function useAdminSearchUsers(options: UseAdminSearchUsersOptions = {}) {
     url: [
       'admin', 'users', 'search',
     ],
-    key: adminUsersKeys.userList({} as SearchUserType),
+    key: adminUsersKeys.search({} as SearchUserType),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

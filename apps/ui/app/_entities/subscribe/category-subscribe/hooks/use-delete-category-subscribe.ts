@@ -5,6 +5,7 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 
 interface UseDeleteCategorySubscribeOptions extends MutationOptionsType<boolean> {
   ctgryNo?: number; // 카테고리 번호 (구독 상태 무효화용)
@@ -23,7 +24,7 @@ export function useDeleteCategorySubscribe(ctgrySbcrNo: number, options: UseDele
     url: [
       'users', 'subscribes', 'categories', ctgrySbcrNo,
     ],
-    key: categorySubscribeKeys.deleteCategorySubscribe(ctgrySbcrNo),
+    key: categorySubscribeKeys.delete(ctgrySbcrNo),
     callback() {
       toast.success('카테고리 구독이 해제되었습니다.', {
         style: getToastStyle('success'),
@@ -31,12 +32,12 @@ export function useDeleteCategorySubscribe(ctgrySbcrNo: number, options: UseDele
 
       // 사용자의 카테고리 구독 목록 무효화 (기본 파라미터 사용)
       queryClient.invalidateQueries({
-        queryKey: categorySubscribeKeys.categorySubscribeList({}).queryKey,
+        queryKey: categorySubscribeKeys.search({} as SearchCategorySubscribeType).queryKey,
       });
       // 특정 카테고리 구독 상태도 무효화
       if (options.ctgryNo) {
         queryClient.invalidateQueries({
-          queryKey: categorySubscribeKeys.categorySubscribeByNo(options.ctgryNo, {}).queryKey,
+          queryKey: categorySubscribeKeys.byNo(options.ctgryNo, {} as SearchCategorySubscribeType).queryKey,
         });
       }
     },

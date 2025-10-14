@@ -19,7 +19,7 @@ export function useGetComments(options: UseGetCommentsOptions = {}) {
     url: [
       'comments', 'search',
     ],
-    key: commentsKeys.commentList({} as SearchCommentType), // 기본값으로 빈 객체 사용
+    key: commentsKeys.search({} as SearchCommentType), // 기본값으로 빈 객체 사용
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

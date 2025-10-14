@@ -17,8 +17,8 @@ import { addGlobalResponses } from '../utils/global-responses';
 export const registerTagSubscribeEndpoints = () => {
   // 태그 구독 목록 조회
   openApiRegistry.registerPath({
-    method: 'get',
-    path: '/users/subscribes/tags',
+    method: 'post',
+    path: '/users/subscribes/tags/search',
     summary: '📋 태그 구독 목록 조회',
     description: '사용자가 구독한 태그 목록을 조회합니다.',
     tags: [ 'tag-subscribe', ],
@@ -66,7 +66,7 @@ export const registerTagSubscribeEndpoints = () => {
 
   // 특정 태그 구독 상태 조회
   openApiRegistry.registerPath({
-    method: 'get',
+    method: 'post',
     path: '/users/subscribes/tags/{tagNo}',
     summary: '📋 특정 태그 구독 상태 조회',
     description: '특정 태그의 구독 상태를 조회합니다.',

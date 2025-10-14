@@ -5,7 +5,7 @@ import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { getToastStyle } from '@/_libs';
-import type { UpdatePostType } from '@/_schemas/post.schema';
+import type { UpdatePostType, SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostType } from '@/_types';
 
 interface UseAdminUpdatePostOptions extends MutationOptionsType<SelectPostType, UpdatePostType> {}
@@ -23,18 +23,18 @@ export function useAdminUpdatePost(pstNo: number, options: UseAdminUpdatePostOpt
     url: [
       'admin', 'posts', pstNo,
     ],
-    key: adminPostsKeys.updatePost(pstNo),
+    key: adminPostsKeys.update(pstNo),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 게시글 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminPostsKeys.postByNo(pstNo).queryKey,
+        queryKey: adminPostsKeys.byNo(pstNo).queryKey,
       });
       // 관리자 게시글 목록도 무효화
       queryClient.invalidateQueries({
-        queryKey: adminPostsKeys.postList({}).queryKey,
+        queryKey: adminPostsKeys.search({} as SearchPostType).queryKey,
       });
     },
     errorCallback(error) {

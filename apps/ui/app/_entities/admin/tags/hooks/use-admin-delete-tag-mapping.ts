@@ -5,7 +5,7 @@ import { adminTagsKeys } from '@/_entities/admin/tags/admin-tags.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { getToastStyle } from '@/_libs';
-import type { DeletePstTagMpngType } from '@/_schemas/tag.schema';
+import type { DeletePstTagMpngType, SearchPstTagMpngType } from '@/_schemas/tag.schema';
 import type { SelectPostTagMappingType } from '@/_types';
 
 interface UseAdminDeleteTagMappingOptions extends MutationOptionsType<SelectPostTagMappingType, DeletePstTagMpngType> {}
@@ -22,7 +22,7 @@ export function useAdminDeleteTagMapping(options: UseAdminDeleteTagMappingOption
     url: [
       'admin', 'tags', 'mapping',
     ],
-    key: adminTagsKeys.deleteTagMapping(),
+    key: adminTagsKeys.deleteMapping(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
@@ -30,7 +30,7 @@ export function useAdminDeleteTagMapping(options: UseAdminDeleteTagMappingOption
       // 태그 매핑 삭제 성공 시 관련 쿼리 무효화
       // 태그 매핑 목록만 무효화 (전체 캐시 무효화 불필요)
       queryClient.invalidateQueries({
-        queryKey: adminTagsKeys.tagMappings({}).queryKey,
+        queryKey: adminTagsKeys.searchMappings({} as SearchPstTagMpngType).queryKey,
       });
     },
     errorCallback(error) {

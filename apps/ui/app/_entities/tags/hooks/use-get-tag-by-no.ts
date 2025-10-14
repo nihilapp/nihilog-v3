@@ -19,7 +19,7 @@ export function useGetTagByNo(tagNo: number, options: UseGetTagByNoOptions = {})
     url: [
       'tags', tagNo,
     ],
-    key: tagsKeys.detail(tagNo),
+    key: tagsKeys.byNo(tagNo),
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },

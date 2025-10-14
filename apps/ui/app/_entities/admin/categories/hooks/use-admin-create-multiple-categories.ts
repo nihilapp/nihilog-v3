@@ -17,14 +17,14 @@ export function useAdminCreateMultipleCategories(options: UseAdminCreateMultiple
     url: [
       'admin', 'categories', 'multiple',
     ],
-    key: adminCategoriesKeys.createMultipleCategories(),
+    key: adminCategoriesKeys.createMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 카테고리 생성 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminCategoriesKeys.searchCategories().queryKey,
+        queryKey: adminCategoriesKeys.search().queryKey,
       });
     },
     errorCallback(error) {

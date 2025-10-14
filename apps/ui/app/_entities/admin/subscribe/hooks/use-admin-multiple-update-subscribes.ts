@@ -22,14 +22,14 @@ export function useAdminMultipleUpdateSubscribes(options: UseAdminMultipleUpdate
     url: [
       'admin', 'subscribes', 'multiple',
     ],
-    key: adminSubscribeKeys.updateMultipleSubscribes(),
+    key: adminSubscribeKeys.updateMultiple(),
     callback(res) {
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
       // 다수 구독 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: adminSubscribeKeys.searchSubscribes().queryKey,
+        queryKey: adminSubscribeKeys.search().queryKey,
       });
     },
     errorCallback(error) {
