@@ -37,8 +37,8 @@ export function SignUpForm() {
 
   useEffect(() => {
     setAuthCardHeader({
-      title: '회원가입',
-      description: '회원가입 페이지입니다.',
+      title: '구독',
+      description: '구독해서 포스트 알림을 받으세요.',
     });
 
     form.trigger();

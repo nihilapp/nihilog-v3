@@ -3,8 +3,6 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
-import { AdminSide } from '@/(admin)/admin/_layouts/AdminSide';
-import { SidebarProvider, SidebarTrigger } from '@/(common)/_components/ui/sidebar';
 import { cn } from '@/_libs';
 
 interface Props
@@ -22,16 +20,16 @@ const cssVariants = cva(
   }
 );
 
-export function AdminLayout({ className, children, ...props }: Props) {
+export function AdminDashboard({ className, ...props }: Props) {
   return (
-    <>
-      <SidebarProvider>
-        <AdminSide />
-        <main>
-          <SidebarTrigger />
-          {children}
-        </main>
-      </SidebarProvider>
-    </>
+    <div
+      className={cn(
+        cssVariants({}),
+        className
+      )}
+      {...props}
+    >
+      content
+    </div>
   );
 }

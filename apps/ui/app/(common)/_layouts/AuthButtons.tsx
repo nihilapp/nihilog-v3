@@ -35,29 +35,28 @@ export function AuthButtons({ className, ...props }: Props) {
       {session
         ? (
           <>
-            <span className='hidden text-sm font-medium sm:inline'>
-              {session.data?.userNm || session.data?.emlAddr}
-              님
-            </span>
-            <Button variant='ghost' asChild>
+            <Button variant='outline' asChild>
               <Link href='/profile'>마이페이지</Link>
             </Button>
-            <Button variant='ghost' onClick={handleSignOut}>
+            <Button variant='outline' asChild>
+              <Link href='/admin/dashboard'>관리자 대시보드</Link>
+            </Button>
+            <Button onClick={handleSignOut}>
               로그아웃
             </Button>
           </>
         )
         : (
           <>
-            <Button variant='ghost' asChild>
+            <Button variant='outline' asChild>
               <Link href='/auth/signin'>로그인</Link>
             </Button>
             <Button asChild>
-              <Link href='/auth/signup'>회원가입</Link>
+              <Link href='/auth/signup'>구독</Link>
             </Button>
             {process.env.NODE_ENV === 'development' && (
               <Button asChild>
-                <Link href='/admin/signup'>관리자 회원가입</Link>
+                <Link href='/admin/signup'>관리자 계정생성</Link>
               </Button>
             )}
           </>

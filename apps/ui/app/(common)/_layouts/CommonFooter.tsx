@@ -14,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'text-md', ],
+  [ 'text-xs text-sidebar-foreground/70', ],
   {
     variants: {},
     defaultVariants: {},

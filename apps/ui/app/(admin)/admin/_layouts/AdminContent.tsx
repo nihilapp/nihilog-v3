@@ -3,8 +3,8 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
+import { AdminSidebar } from '@/(admin)/admin/_layouts/AdminSidebar';
 import { SidebarTrigger, useSidebar } from '@/(common)/_components/ui/sidebar';
-import { CommonSidebar } from '@/(common)/_layouts/CommonSidebar';
 import { cn } from '@/_libs';
 
 interface Props
@@ -25,7 +25,7 @@ const cssVariants = cva(
   }
 );
 
-export function CommonContent({ children, classNames, ...props }: Props) {
+export function AdminContent({ children, classNames, ...props }: Props) {
   const { toggleSidebar, } = useSidebar();
 
   const onToggleSidebar = () => {
@@ -40,7 +40,7 @@ export function CommonContent({ children, classNames, ...props }: Props) {
       )}
       {...props}
     >
-      <CommonSidebar />
+      <AdminSidebar />
       <div className='flex flex-row flex-1 transition-all duration-300 ease-in-out'>
         <div className='pt-4 pl-4'>
           <SidebarTrigger onClick={onToggleSidebar} />
