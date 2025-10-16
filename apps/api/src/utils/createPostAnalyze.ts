@@ -46,7 +46,7 @@ export class CreatePostAnalyze {
 
     return {
       pstNo: 1,
-      title: '인기 게시글 제목',
+      title: '인기 포스트 제목',
       viewCount: 1250,
       publishDate: timeToString(now.minus({ days: 5, })),
     } as TopPopularPostItemType;
@@ -57,7 +57,7 @@ export class CreatePostAnalyze {
 
     return {
       pstNo: 2,
-      title: '댓글이 많은 게시글 제목',
+      title: '댓글이 많은 포스트 제목',
       commentCount: 45,
       publishDate: timeToString(now.minus({ days: 3, })),
     } as TopCommentPostItemType;

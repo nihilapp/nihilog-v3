@@ -15,7 +15,7 @@ export type UserRoleType = z.infer<typeof userRoleSchema>;
 // 게시물 상태
 export const postStatusSchema = z.enum([
   'EMPTY', 'WRITING', 'FINISHED',
-], '올바른 게시글 상태를 입력해주세요.');
+], '올바른 포스트 상태를 입력해주세요.');
 export type PostStatusType = z.infer<typeof postStatusSchema>;
 
 // 공통 비밀번호 스키마

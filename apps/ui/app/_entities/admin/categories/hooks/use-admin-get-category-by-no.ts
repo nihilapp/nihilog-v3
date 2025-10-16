@@ -4,9 +4,9 @@ import { adminCategoriesKeys } from '@/_entities/admin/categories/admin-categori
 import type { QueryOptionType } from '@/_entities/common/common.types';
 import { useGet } from '@/_entities/common/hooks/api/use-get';
 import { getToastStyle } from '@/_libs';
-import type { SelectCategoryInfoType } from '@/_types';
+import type { SelectCategoryType } from '@/_types';
 
-interface UseAdminGetCategoryByNoOptions extends QueryOptionType<SelectCategoryInfoType> {}
+interface UseAdminGetCategoryByNoOptions extends QueryOptionType<SelectCategoryType> {}
 
 /**
  * @description 관리자용 카테고리 번호로 조회를 위한 커스텀 훅
@@ -15,7 +15,7 @@ interface UseAdminGetCategoryByNoOptions extends QueryOptionType<SelectCategoryI
  * @returns 카테고리 조회 쿼리 객체
  */
 export function useAdminGetCategoryByNo(ctgryNo: number, options: UseAdminGetCategoryByNoOptions = {}) {
-  const query = useGet<SelectCategoryInfoType>({
+  const query = useGet<SelectCategoryType>({
     url: [
       'admin', 'categories', ctgryNo,
     ],

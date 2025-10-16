@@ -32,7 +32,7 @@ export type AnalyzeCategoryStatItemType = {
   subscriberDecreaseCount: number; // 구독 해제 수
   activeSubscriberCount: number; // 활성 구독자 수
   // 카테고리 사용 통계
-  postCount: number; // 카테고리별 게시글 수
+  postCount: number; // 카테고리별 포스트 수
   viewCount: number; // 카테고리별 조회수 합계
   bookmarkCount: number; // 카테고리별 북마크 수
   shareCount: number; // 카테고리별 공유 수
@@ -87,7 +87,7 @@ export type CategoryHierarchyDistributionItemType = {
   ratio: number;
 };
 
-// 계층별 게시글 분포
+// 계층별 포스트 분포
 export type CategoryHierarchyPostDistributionItemType = {
   hierarchyLevel: 'ROOT' | 'CHILD';
   postCount: number;
@@ -118,7 +118,7 @@ export type CategoryCreatorStatItemType = {
   lastCreateDate: string;
 };
 
-// 미사용 카테고리 목록 (게시글이 없는 카테고리)
+// 미사용 카테고리 목록 (포스트가 없는 카테고리)
 export type UnusedCategoryItemType = {
   ctgryNo: number;
   ctgryNm: string;

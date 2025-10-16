@@ -73,7 +73,7 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
       },
       {
         name: 'posts',
-        description: '📖 게시글 공개 API - 조회 전용',
+        description: '📖 포스트 공개 API - 조회 전용',
       },
       {
         name: 'categories',
@@ -109,7 +109,7 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
       },
       {
         name: 'admin-posts',
-        description: '🛠️ 게시글 관리자 API - 생성/수정/삭제',
+        description: '🛠️ 포스트 관리자 API - 생성/수정/삭제',
       },
       {
         name: 'admin-categories',

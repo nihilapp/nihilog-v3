@@ -200,7 +200,7 @@ export class AdminCategoriesController {
   }
 
   /**
-   * @description 계층별 게시글 분포
+   * @description 계층별 포스트 분포
    */
   @Endpoint({
     endpoint: '/analyze/hierarchy-posts',

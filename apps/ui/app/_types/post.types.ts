@@ -1,4 +1,4 @@
-// 게시글 관련 타입 정의 (기본 구조)
+// 포스트 관련 타입 정의 (기본 구조)
 
 export interface PostInfoType {
   pstNo: number;

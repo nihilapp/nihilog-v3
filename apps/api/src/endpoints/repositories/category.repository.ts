@@ -458,7 +458,7 @@ export class CategoryRepository {
   }
 
   /**
-   * @description 계층별 게시글 분포
+   * @description 계층별 포스트 분포
    */
   async getCategoryHierarchyPostDistribution(): Promise<RepoResponseType<CategoryHierarchyPostDistributionItemType[]> | null> {
     try {
@@ -610,7 +610,7 @@ export class CategoryRepository {
   }
 
   /**
-   * @description 미사용 카테고리 목록 (게시글이 없는 카테고리)
+   * @description 미사용 카테고리 목록 (포스트가 없는 카테고리)
    */
   async getUnusedCategoriesList(): Promise<RepoResponseType<UnusedCategoryItemType[]> | null> {
     try {

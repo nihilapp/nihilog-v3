@@ -9,10 +9,10 @@ import type { SelectPostType } from '@/_types';
 interface UseGetPostByNoOptions extends QueryOptionType<SelectPostType> {}
 
 /**
- * @description 게시글 번호로 특정 게시글 조회를 위한 커스텀 훅
- * @param {number} pstNo - 조회할 게시글 번호
+ * @description 포스트 번호로 특정 포스트 조회를 위한 커스텀 훅
+ * @param {number} pstNo - 조회할 포스트 번호
  * @param {UseGetPostByNoOptions} [options] - 쿼리 옵션 (선택사항)
- * @returns 게시글 조회 쿼리 객체
+ * @returns 포스트 조회 쿼리 객체
  */
 export function useGetPostByNo(pstNo: number, options: UseGetPostByNoOptions = {}) {
   const query = useGet<SelectPostType>({

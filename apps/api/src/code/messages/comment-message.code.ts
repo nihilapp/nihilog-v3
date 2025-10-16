@@ -21,7 +21,7 @@ export const COMMENT_MESSAGES = {
     INVALID_STATUS: '유효하지 않은 댓글 상태입니다.',
     CONTENT_REQUIRED: '댓글 내용은 필수 입력 항목입니다.',
     CONTENT_TOO_LONG: '댓글 내용이 너무 깁니다. (최대 1000자)',
-    POST_NOT_FOUND: '댓글을 작성할 게시글을 찾을 수 없습니다.',
+    POST_NOT_FOUND: '댓글을 작성할 포스트를 찾을 수 없습니다.',
     PARENT_NOT_FOUND: '답글을 작성할 댓글을 찾을 수 없습니다.',
     UNAUTHORIZED: '댓글을 수정/삭제할 권한이 없습니다.',
   },

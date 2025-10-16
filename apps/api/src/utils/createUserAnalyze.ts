@@ -83,7 +83,7 @@ export class CreateUserAnalyze {
     ];
   }
 
-  // 사용자별 게시글 작성 수 TOP N 예시 데이터
+  // 사용자별 포스트 작성 수 TOP N 예시 데이터
   static createTopUsersByPostCountExample(): TopUsersByPostCountItemType[] {
     return [
       {

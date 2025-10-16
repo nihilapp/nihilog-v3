@@ -1,5 +1,6 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
+import type { SearchCategoryType } from '@/_schemas/category.schema';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 
 /**
@@ -7,8 +8,8 @@ import type { AnalyzeStatType } from '@/_schemas/common.schema';
  */
 export const adminCategoriesKeys = createQueryKeys('adminCategories', {
   // ===== GET Queries =====
-  search: () => [
-    'admin', 'categories', 'search',
+  search: (params: SearchCategoryType) => [
+    'admin', 'categories', 'search', params,
   ], // 카테고리 목록 조회 (POST)
   byNo: (ctgryNo: number) => [
     'admin', 'categories', 'by-no', ctgryNo,
@@ -38,7 +39,7 @@ export const adminCategoriesKeys = createQueryKeys('adminCategories', {
   ], // 계층 분포
   analyzeHierarchyPosts: () => [
     'admin', 'categories', 'analyze', 'hierarchy-posts',
-  ], // 계층별 게시글 수
+  ], // 계층별 포스트 수
   analyzeHierarchySubscribers: () => [
     'admin', 'categories', 'analyze', 'hierarchy-subscribers',
   ], // 계층별 구독자 수

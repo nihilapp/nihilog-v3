@@ -1,27 +1,26 @@
 import { toast } from 'sonner';
 
 import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
-import { usePost } from '@/_entities/common/hooks/api/use-post';
+import type { QueryOptionType } from '@/_entities/common/common.types';
+import { usePostQuery } from '@/_entities/common/hooks/api/use-post-query';
 import { getToastStyle } from '@/_libs';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 import type { SharePlatformStatItemType } from '@/_types/post.types';
 
-interface UseAdminAnalyzeSharesOptions extends MutationOptionsType<SharePlatformStatItemType[], AnalyzeStatType> {
+interface UseAdminAnalyzeSharesOptions extends QueryOptionType<SharePlatformStatItemType[]> {
   pstNo?: number;
+  searchParams?: AnalyzeStatType;
 }
 
 export function useAdminAnalyzeShares(options: UseAdminAnalyzeSharesOptions = {}) {
-  const { pstNo, ...restOptions } = options;
+  const { pstNo, searchParams, ...queryOptions } = options;
 
-  const query = usePost<SharePlatformStatItemType[], AnalyzeStatType>({
+  const query = usePostQuery<SharePlatformStatItemType[], AnalyzeStatType | undefined>({
     url: [
-      'admin', 'posts', 'analyze', 'shares',
+      'admin', 'posts', 'analyze', 'shares', pstNo,
     ],
     key: adminPostsKeys.analyzeShares(pstNo),
-    params: pstNo
-      ? { pstNo, }
-      : undefined,
+    body: searchParams,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -30,7 +29,7 @@ export function useAdminAnalyzeShares(options: UseAdminAnalyzeSharesOptions = {}
         style: getToastStyle('error'),
       });
     },
-    ...restOptions,
+    options: queryOptions,
   });
 
   return query;

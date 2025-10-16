@@ -117,7 +117,7 @@ export class AdminUserController {
   }
 
   /**
-   * @description 사용자별 게시글 작성 수 TOP N
+   * @description 사용자별 포스트 작성 수 TOP N
    * @param body 분석 통계 데이터 및 제한 수
    */
   @Endpoint({

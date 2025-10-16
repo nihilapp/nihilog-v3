@@ -70,7 +70,7 @@ export type TopUsersByContributionItemType = {
   lastActivityDate: string;
 };
 
-// 사용자별 게시글 작성 수 TOP N
+// 사용자별 포스트 작성 수 TOP N
 export type TopUsersByPostCountItemType = {
   userNo: number;
   userName: string;

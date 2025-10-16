@@ -10,9 +10,9 @@ import type { TopUsersByPostCountItemType } from '@/_types';
 interface UseAdminAnalyzeTopPostCountOptions extends MutationOptionsType<TopUsersByPostCountItemType[], AnalyzeStatType> {}
 
 /**
- * @description 관리자용 사용자별 게시글 작성 수 TOP N 분석을 위한 커스텀 훅
+ * @description 관리자용 사용자별 포스트 작성 수 TOP N 분석을 위한 커스텀 훅
  * @param {UseAdminAnalyzeTopPostCountOptions} [options] - 뮤테이션 옵션 (선택사항)
- * @returns 사용자별 게시글 작성 수 TOP N 분석 뮤테이션 객체
+ * @returns 사용자별 포스트 작성 수 TOP N 분석 뮤테이션 객체
  */
 export function useAdminAnalyzeTopPostCount(options: UseAdminAnalyzeTopPostCountOptions = {}) {
   const query = usePost<TopUsersByPostCountItemType[], AnalyzeStatType>({

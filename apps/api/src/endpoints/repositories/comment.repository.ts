@@ -38,7 +38,7 @@ export class CommentRepository {
   /**
    * @description 댓글 분석 통계 (9개 지표 통합) - 최적화된 버전
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택사항)
+   * @param pstNo 포스트 번호 (선택사항)
    */
   async getAnalyzeCommentData(
     analyzeStatData: AnalyzeStatDto,
@@ -202,7 +202,7 @@ export class CommentRepository {
   }
 
   /**
-   * @description 게시글별 댓글 수 TOP N
+   * @description 포스트별 댓글 수 TOP N
    * @param limit 제한 수
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -272,7 +272,7 @@ export class CommentRepository {
   }
 
   /**
-   * @description 평균 댓글 수 / 게시글 (최적화된 버전)
+   * @description 평균 댓글 수 / 포스트 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAverageCommentCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageCommentPerPostItemType[]> | null> {
@@ -504,7 +504,7 @@ export class CommentRepository {
   }
 
   /**
-   * @description 댓글 없는 게시글 목록 (최적화된 버전)
+   * @description 댓글 없는 포스트 목록 (최적화된 버전)
    */
   async getPostsWithoutComments(): Promise<RepoResponseType<PostsWithoutCommentsItemType[]> | null> {
     try {

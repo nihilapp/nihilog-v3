@@ -22,7 +22,7 @@ export const registerAdminCommentsEndpoints = () => {
     method: 'post',
     path: '/admin/comments/analyze/overview',
     summary: '📊 댓글 분석 통계',
-    description: 'ADMIN 권한으로 댓글 분석 통계를 조회합니다. (전체 또는 특정 게시글)',
+    description: 'ADMIN 권한으로 댓글 분석 통계를 조회합니다. (전체 또는 특정 포스트)',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
@@ -33,7 +33,7 @@ export const registerAdminCommentsEndpoints = () => {
           .positive()
           .optional()
           .openapi({
-            description: '게시글 번호 (선택사항 - 없으면 전체 댓글)',
+            description: '포스트 번호 (선택사항 - 없으면 전체 댓글)',
             example: 1,
           }),
       }),
@@ -70,12 +70,12 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/top-posts - 게시글별 댓글 수 TOP N
+  // POST /admin/comments/analyze/top-posts - 포스트별 댓글 수 TOP N
   openApiRegistry.registerPath({
     method: 'post',
     path: '/admin/comments/analyze/top-posts',
-    summary: '📊 게시글별 댓글 수 TOP N',
-    description: 'ADMIN 권한으로 댓글 수 기준 게시글 TOP N을 조회합니다.',
+    summary: '📊 포스트별 댓글 수 TOP N',
+    description: 'ADMIN 권한으로 댓글 수 기준 포스트 TOP N을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
@@ -106,11 +106,11 @@ export const registerAdminCommentsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '게시글별 댓글 수 TOP N 조회 성공',
+                summary: '포스트별 댓글 수 TOP N 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.topPostsByComment(), ]),
               },
               error: {
-                summary: '게시글별 댓글 수 TOP N 조회 실패',
+                summary: '포스트별 댓글 수 TOP N 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
               },
             }, {
@@ -176,12 +176,12 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/average-per-post - 평균 댓글 수 / 게시글
+  // POST /admin/comments/analyze/average-per-post - 평균 댓글 수 / 포스트
   openApiRegistry.registerPath({
     method: 'post',
     path: '/admin/comments/analyze/average-per-post',
-    summary: '📊 평균 댓글 수 / 게시글',
-    description: 'ADMIN 권한으로 게시글당 평균 댓글 수를 조회합니다.',
+    summary: '📊 평균 댓글 수 / 포스트',
+    description: 'ADMIN 권한으로 포스트당 평균 댓글 수를 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
@@ -201,11 +201,11 @@ export const registerAdminCommentsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '평균 댓글 수 / 게시글 조회 성공',
+                summary: '평균 댓글 수 / 포스트 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.averageCommentPerPost(), ]),
               },
               error: {
-                summary: '평균 댓글 수 / 게시글 조회 실패',
+                summary: '평균 댓글 수 / 포스트 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
               },
             }, {
@@ -419,12 +419,12 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // GET /admin/comments/analyze/posts-without-comments - 댓글 없는 게시글 목록
+  // GET /admin/comments/analyze/posts-without-comments - 댓글 없는 포스트 목록
   openApiRegistry.registerPath({
     method: 'get',
     path: '/admin/comments/analyze/posts-without-comments',
-    summary: '📊 댓글 없는 게시글 목록',
-    description: 'ADMIN 권한으로 댓글이 없는 게시글 목록을 조회합니다.',
+    summary: '📊 댓글 없는 포스트 목록',
+    description: 'ADMIN 권한으로 댓글이 없는 포스트 목록을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     responses: {
@@ -435,11 +435,11 @@ export const registerAdminCommentsEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '댓글 없는 게시글 목록 조회 성공',
+                summary: '댓글 없는 포스트 목록 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.postsWithoutComments(), ]),
               },
               error: {
-                summary: '댓글 없는 게시글 목록 조회 실패',
+                summary: '댓글 없는 포스트 목록 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
               },
             }, {

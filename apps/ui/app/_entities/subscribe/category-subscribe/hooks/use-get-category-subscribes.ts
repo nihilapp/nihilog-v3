@@ -1,13 +1,15 @@
 import { toast } from 'sonner';
 
 import type { QueryOptionType } from '@/_entities/common/common.types';
-import { usePost } from '@/_entities/common/hooks/api/use-post';
+import { usePostQuery } from '@/_entities/common/hooks/api/use-post-query';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 import type { ListType, SelectCategorySubscribeMappingListItemType } from '@/_types';
 
-interface UseGetCategorySubscribesOptions extends QueryOptionType<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType> {}
+interface UseGetCategorySubscribesOptions extends QueryOptionType<ListType<SelectCategorySubscribeMappingListItemType>> {
+  searchParams?: SearchCategorySubscribeType;
+}
 
 /**
  * @description 카테고리 구독 목록 조회를 위한 커스텀 훅 (POST 방식)
@@ -15,11 +17,14 @@ interface UseGetCategorySubscribesOptions extends QueryOptionType<ListType<Selec
  * @returns 카테고리 구독 목록 조회 쿼리 객체
  */
 export function useGetCategorySubscribes(options: UseGetCategorySubscribesOptions = {}) {
-  const query = usePost<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType>({
+  const { searchParams = {}, ...queryOptions } = options;
+
+  const query = usePostQuery<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType>({
     url: [
       'users', 'subscribes', 'categories', 'search',
     ],
-    key: categorySubscribeKeys.search({} as SearchCategorySubscribeType), // 기본값으로 빈 객체 사용
+    key: categorySubscribeKeys.search(searchParams),
+    body: searchParams,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -28,7 +33,7 @@ export function useGetCategorySubscribes(options: UseGetCategorySubscribesOption
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    options: queryOptions,
   });
 
   return query;

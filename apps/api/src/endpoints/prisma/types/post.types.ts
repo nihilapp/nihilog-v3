@@ -1,6 +1,6 @@
 import type { PstBkmrkMpng, PstInfo, PstShrnLog, PstViewLog } from '@prisma/client';
 
-// 단일 게시글 조회
+// 단일 포스트 조회
 export type SelectPostType = PstInfo;
 
 // 목록 조회 항목 (페이징 정보 포함)
@@ -9,7 +9,7 @@ export type SelectPostListItemType = SelectPostType & {
   rowNo: number;
 };
 
-// 단일 게시글 조회 로그
+// 단일 포스트 조회 로그
 export type SelectPostViewLogType = PstViewLog;
 
 // 목록 조회 항목 (페이징 정보 포함)
@@ -18,7 +18,7 @@ export type SelectPostViewLogListItemType = SelectPostViewLogType & {
   rowNo: number;
 };
 
-// 단일 게시글 공유 로그
+// 단일 포스트 공유 로그
 export type SelectPostShareLogType = PstShrnLog;
 
 // 목록 조회 항목 (페이징 정보 포함)
@@ -27,7 +27,7 @@ export type SelectPostShareLogListItemType = SelectPostShareLogType & {
   rowNo: number;
 };
 
-// 단일 게시글 북마크
+// 단일 포스트 북마크
 export type SelectPostBookmarkType = PstBkmrkMpng;
 
 // 목록 조회 항목 (페이징 정보 포함)
@@ -61,21 +61,21 @@ export type AnalyzePostItemType = {
   commentCount: number;
 };
 
-// 게시글 평균 조회수 통계
+// 포스트 평균 조회수 통계
 export type AverageViewStatItemType = {
   dateStart: string;
   dateEnd: string;
   avgViewCount: number;
 };
 
-// 게시글당 평균 북마크 수 통계
+// 포스트당 평균 북마크 수 통계
 export type AverageBookmarkStatItemType = {
   dateStart: string;
   dateEnd: string;
   avgBookmarkCount: number;
 };
 
-// 인기 게시글 TOP N (조회수 기준)
+// 인기 포스트 TOP N (조회수 기준)
 export type TopPopularPostItemType = {
   pstNo: number;
   title: string;
@@ -83,7 +83,7 @@ export type TopPopularPostItemType = {
   publishDate: string;
 };
 
-// 댓글 많은 게시글 TOP N
+// 댓글 많은 포스트 TOP N
 export type TopCommentPostItemType = {
   pstNo: number;
   title: string;
@@ -91,7 +91,7 @@ export type TopCommentPostItemType = {
   publishDate: string;
 };
 
-// 게시글 상태 비율
+// 포스트 상태 비율
 export type PostStatusRatioItemType = {
   status: 'EMPTY' | 'WRITING' | 'FINISHED';
   count: number;

@@ -10,7 +10,7 @@ interface UseAdminGetTagMappingOptions extends QueryOptionType<SelectPostTagMapp
 
 /**
  * @description 관리자용 태그 매핑 조회를 위한 커스텀 훅
- * @param {number} pstNo - 게시글 번호
+ * @param {number} pstNo - 포스트 번호
  * @param {number} tagNo - 태그 번호
  * @param {UseAdminGetTagMappingOptions} [options] - 쿼리 옵션 (선택사항)
  * @returns 태그 매핑 조회 쿼리 객체

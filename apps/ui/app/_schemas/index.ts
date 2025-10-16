@@ -43,7 +43,7 @@ export {
   type SearchUserType
 } from './user.schema';
 
-// 게시글 스키마 export
+// 포스트 스키마 export
 export {
   createPostSchema,
   updatePostSchema,

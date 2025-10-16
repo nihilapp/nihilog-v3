@@ -131,20 +131,20 @@ export const searchTagSchema = baseSearchSchema.extend({
     }),
   postCountMin: z.coerce
     .number()
-    .int('사용 게시글 수는 정수여야 합니다.')
-    .min(0, '사용 게시글 수는 0 이상이어야 합니다.')
+    .int('사용 포스트 수는 정수여야 합니다.')
+    .min(0, '사용 포스트 수는 0 이상이어야 합니다.')
     .optional()
     .openapi({
-      description: '사용 게시글 수 (최소)',
+      description: '사용 포스트 수 (최소)',
       example: 0,
     }),
   postCountMax: z.coerce
     .number()
-    .int('사용 게시글 수는 정수여야 합니다.')
-    .min(0, '사용 게시글 수는 0 이상이어야 합니다.')
+    .int('사용 포스트 수는 정수여야 합니다.')
+    .min(0, '사용 포스트 수는 0 이상이어야 합니다.')
     .optional()
     .openapi({
-      description: '사용 게시글 수 (최대)',
+      description: '사용 포스트 수 (최대)',
       example: 0,
     }),
   subscriberCountMin: z.coerce
@@ -188,10 +188,10 @@ export const pstTagMpngSchema = commonSchema.extend({
     }),
   pstNo: z.coerce
     .number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .openapi({
-      description: '게시글 번호',
+      description: '포스트 번호',
       example: 1,
     }),
   tagNo: z.coerce

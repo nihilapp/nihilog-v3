@@ -28,14 +28,14 @@ export class AdminCommentsService {
   /**
    * @description 댓글 분석 통계 (시간대별 합산)
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택적)
+   * @param pstNo 포스트 번호 (선택적)
    */
   async adminGetAnalyzeCommentData(analyzeStatData: AnalyzeStatDto, pstNo?: number): Promise<RepoResponseType<AnalyzeCommentStatItemType[]> | null> {
     return this.commentRepository.getAnalyzeCommentData(analyzeStatData, pstNo);
   }
 
   /**
-   * @description 게시글별 댓글 수 TOP N
+   * @description 포스트별 댓글 수 TOP N
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택적)
    */
@@ -53,7 +53,7 @@ export class AdminCommentsService {
   }
 
   /**
-   * @description 평균 댓글 수 / 게시글
+   * @description 평균 댓글 수 / 포스트
    * @param analyzeStatData 분석 통계 데이터
    */
   async adminGetAverageCommentCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageCommentPerPostItemType[]> | null> {
@@ -100,7 +100,7 @@ export class AdminCommentsService {
   }
 
   /**
-   * @description 댓글 없는 게시글 목록
+   * @description 댓글 없는 포스트 목록
    */
   async adminGetPostsWithoutComments(): Promise<RepoResponseType<PostsWithoutCommentsItemType[]> | null> {
     return this.commentRepository.getPostsWithoutComments();

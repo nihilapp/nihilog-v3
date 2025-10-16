@@ -9,11 +9,11 @@ import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostBookmarkType } from '@/_types';
 
 interface UseCreateBookmarkOptions extends MutationOptionsType<SelectPostBookmarkType> {
-  pstNo?: number; // 게시글 번호 (북마크 상태 및 목록 무효화용)
+  pstNo?: number; // 포스트 번호 (북마크 상태 및 목록 무효화용)
 }
 
 /**
- * @description 게시글 북마크 생성을 위한 커스텀 훅
+ * @description 포스트 북마크 생성을 위한 커스텀 훅
  * @param {UseCreateBookmarkOptions} [options] - 뮤테이션 옵션 (선택사항)
  * @returns 북마크 생성 뮤테이션 객체
  */
@@ -30,7 +30,7 @@ export function useCreateBookmark(options: UseCreateBookmarkOptions = {}) {
         style: getToastStyle('success'),
       });
 
-      // 특정 게시글의 북마크 상태 무효화
+      // 특정 포스트의 북마크 상태 무효화
       if (options.pstNo) {
         queryClient.invalidateQueries({
           queryKey: postsKeys.byNo(options.pstNo).queryKey,

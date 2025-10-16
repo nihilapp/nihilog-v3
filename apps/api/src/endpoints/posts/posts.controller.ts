@@ -15,7 +15,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) { }
 
   /**
-   * @description 게시글 목록 조회
+   * @description 포스트 목록 조회
    * @param searchData 검색 조건 DTO
    */
   @Endpoint({
@@ -40,8 +40,8 @@ export class PostsController {
   }
 
   /**
-   * @description 게시글 상세 조회
-   * @param pstNo 게시글 번호
+   * @description 포스트 상세 조회
+   * @param pstNo 포스트 번호
    */
   @Endpoint({
     endpoint: '/:pstNo',
@@ -65,8 +65,8 @@ export class PostsController {
   }
 
   /**
-   * @description 게시글 상세 조회
-   * @param pstCd 게시글 슬러그
+   * @description 포스트 상세 조회
+   * @param pstCd 포스트 슬러그
    */
   @Endpoint({
     endpoint: '/slug/:pstCd',
@@ -90,7 +90,7 @@ export class PostsController {
   }
 
   /**
-   * @description 태그별 게시글 목록 조회
+   * @description 태그별 포스트 목록 조회
    * @param tagNo 태그 번호
    * @param searchData 검색 조건
    */
@@ -119,7 +119,7 @@ export class PostsController {
   }
 
   /**
-   * @description 카테고리별 게시글 목록 조회
+   * @description 카테고리별 포스트 목록 조회
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 조건
    */
@@ -148,7 +148,7 @@ export class PostsController {
   }
 
   /**
-   * @description 년월별 게시글 목록 조회
+   * @description 년월별 포스트 목록 조회
    * @param date 날짜(yyyyMM)
    * @param searchData 검색 조건
    */
@@ -177,7 +177,7 @@ export class PostsController {
   }
 
   /**
-   * @description 고급 검색을 통한 게시글 목록 조회
+   * @description 고급 검색을 통한 포스트 목록 조회
    * @param searchData 고급 검색 조건 DTO
    */
   @Endpoint({
@@ -202,8 +202,8 @@ export class PostsController {
   }
 
   /**
-   * @description 게시글 조회 로그 기록
-   * @param pstNo 게시글 번호
+   * @description 포스트 조회 로그 기록
+   * @param pstNo 포스트 번호
    * @param ip 사용자 IP
    */
   @Endpoint({
@@ -231,7 +231,7 @@ export class PostsController {
   }
 
   /**
-   * @description 게시글 공유 로그 기록
+   * @description 포스트 공유 로그 기록
    * @param createData 공유 로그 생성 데이터
    */
   @Endpoint({
@@ -256,8 +256,8 @@ export class PostsController {
   }
 
   /**
-   * @description 게시글 북마크 생성
-   * @param pstNo 게시글 번호
+   * @description 포스트 북마크 생성
+   * @param pstNo 포스트 번호
    * @param createData 북마크 생성 데이터
    */
   @Endpoint({
@@ -288,8 +288,8 @@ export class PostsController {
   }
 
   /**
-   * @description 게시글 북마크 삭제
-   * @param pstNo 게시글 번호
+   * @description 포스트 북마크 삭제
+   * @param pstNo 포스트 번호
    * @param deleteData 북마크 삭제 데이터
    */
   @Endpoint({
@@ -320,7 +320,7 @@ export class PostsController {
   }
 
   /**
-   * @description 북마크한 게시글 목록 조회
+   * @description 북마크한 포스트 목록 조회
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */

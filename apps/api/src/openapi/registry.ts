@@ -22,7 +22,7 @@ import {
   partialUserInfoSchema,
   deleteMultipleUsersSchema,
 
-  // 게시글 관련 스키마
+  // 포스트 관련 스키마
   postSchema,
   updatePostSchema,
   deletePostSchema,
@@ -109,7 +109,7 @@ export const registerAllSchemas = () => {
   openApiRegistry.register('PartialUserInfo', partialUserInfoSchema);
   openApiRegistry.register('DeleteMultipleUsers', deleteMultipleUsersSchema);
 
-  // 게시글 관련 스키마 등록
+  // 포스트 관련 스키마 등록
   openApiRegistry.register('Post', postSchema);
   openApiRegistry.register('UpdatePost', updatePostSchema);
   openApiRegistry.register('DeletePost', deletePostSchema);

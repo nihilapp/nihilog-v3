@@ -364,12 +364,12 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // GET /admin/categories/analyze/hierarchy-posts - 계층별 게시글 분포
+  // GET /admin/categories/analyze/hierarchy-posts - 계층별 포스트 분포
   openApiRegistry.registerPath({
     method: 'get',
     path: '/admin/categories/analyze/hierarchy-posts',
-    summary: '📊 계층별 게시글 분포',
-    description: 'ADMIN 권한으로 계층별 게시글 분포를 조회합니다.',
+    summary: '📊 계층별 포스트 분포',
+    description: 'ADMIN 권한으로 계층별 포스트 분포를 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     responses: {
@@ -380,11 +380,11 @@ export const registerAdminCategoriesEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '계층별 게시글 분포 조회 성공',
+                summary: '계층별 포스트 분포 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchyPostDistribution(), ]),
               },
               error: {
-                summary: '계층별 게시글 분포 조회 실패',
+                summary: '계층별 포스트 분포 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
               },
             }, {
@@ -501,7 +501,7 @@ export const registerAdminCategoriesEndpoints = () => {
     method: 'get',
     path: '/admin/categories/analyze/unused',
     summary: '📊 미사용 카테고리 목록',
-    description: 'ADMIN 권한으로 게시글이 없는 미사용 카테고리 목록을 조회합니다.',
+    description: 'ADMIN 권한으로 포스트가 없는 미사용 카테고리 목록을 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     responses: {

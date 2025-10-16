@@ -105,7 +105,7 @@ export class CreateCategoryAnalyze {
     } as CategoryHierarchyDistributionItemType;
   }
 
-  // 계층별 게시글 분포
+  // 계층별 포스트 분포
   static categoryHierarchyPostDistribution() {
     return {
       hierarchyLevel: 'CHILD' as const,

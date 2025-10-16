@@ -86,12 +86,12 @@ export const searchTagSchema = baseSearchSchema.extend({
     .default('LATEST')
     .optional(),
   postCountMin: z.number()
-    .int('사용 게시글 수는 정수여야 합니다.')
-    .min(0, '사용 게시글 수는 0 이상이어야 합니다.')
+    .int('사용 포스트 수는 정수여야 합니다.')
+    .min(0, '사용 포스트 수는 0 이상이어야 합니다.')
     .optional(),
   postCountMax: z.number()
-    .int('사용 게시글 수는 정수여야 합니다.')
-    .min(0, '사용 게시글 수는 0 이상이어야 합니다.')
+    .int('사용 포스트 수는 정수여야 합니다.')
+    .min(0, '사용 포스트 수는 0 이상이어야 합니다.')
     .optional(),
   subscriberCountMin: z.number()
     .int('구독자 수는 정수여야 합니다.')
@@ -106,8 +106,8 @@ export const searchTagSchema = baseSearchSchema.extend({
 // 포스트-태그 매핑 생성 스키마
 export const createPstTagMpngSchema = z.object({
   pstNo: z.number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.'),
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.'),
   tagNo: z.number()
     .int('태그 번호는 정수여야 합니다.')
     .positive('태그 번호는 양수여야 합니다.'),
@@ -125,8 +125,8 @@ export const updatePstTagMpngSchema = z.object({
     .positive('태그 매핑 번호는 양수여야 합니다.')
     .optional(),
   pstNo: z.number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .optional(),
   tagNo: z.number()
     .int('태그 번호는 정수여야 합니다.')
@@ -157,8 +157,8 @@ export const deletePstTagMpngSchema = z.object({
 // 포스트-태그 매핑 검색 스키마
 export const searchPstTagMpngSchema = baseSearchSchema.extend({
   pstNo: z.number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .optional(),
   tagNo: z.number()
     .int('태그 번호는 정수여야 합니다.')

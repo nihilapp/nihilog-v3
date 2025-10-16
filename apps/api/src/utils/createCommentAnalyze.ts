@@ -39,7 +39,7 @@ export class CreateCommentAnalyze {
   }
 
   // 1. 댓글 활동 분석 (3개)
-  // 게시글별 댓글 수 TOP N
+  // 포스트별 댓글 수 TOP N
   static topPostsByComment() {
     const now = DateTime.now();
 
@@ -65,7 +65,7 @@ export class CreateCommentAnalyze {
     } as TopUsersByCommentItemType;
   }
 
-  // 평균 댓글 수 / 게시글
+  // 평균 댓글 수 / 포스트
   static averageCommentPerPost() {
     const now = DateTime.now();
 
@@ -138,7 +138,7 @@ export class CreateCommentAnalyze {
     } as CommentAverageDepthItemType;
   }
 
-  // 댓글 없는 게시글 목록
+  // 댓글 없는 포스트 목록
   static postsWithoutComments() {
     const now = DateTime.now();
 

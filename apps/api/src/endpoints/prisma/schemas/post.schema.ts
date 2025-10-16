@@ -8,25 +8,25 @@ import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
-// 게시글 상태 스키마 (에러 메시지 및 OpenAPI 설정 추가)
+// 포스트 상태 스키마 (에러 메시지 및 OpenAPI 설정 추가)
 const postStatusSchema = basePostStatusSchema
   .refine((val) => val === 'EMPTY' || val === 'WRITING' || val === 'FINISHED', {
-    message: '올바른 게시글 상태를 입력해주세요.',
+    message: '올바른 포스트 상태를 입력해주세요.',
   })
   .openapi({
     description: '게시물 상태 (EMPTY: 초안 없음, WRITING: 작성중, FINISHED: 작성완료)',
     example: 'EMPTY',
   });
 
-// 기본 게시글 스키마
+// 기본 포스트 스키마
 export const postSchema = commonSchema.extend({
   pstNo: z.coerce
     .number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .optional()
     .openapi({
-      description: '게시글 번호',
+      description: '포스트 번호',
       example: 1,
     }),
   userNo: z.coerce
@@ -49,34 +49,34 @@ export const postSchema = commonSchema.extend({
     }),
   pstTtl: z
     .string()
-    .min(1, '게시글 제목은 필수입니다.')
-    .max(255, '게시글 제목은 255자를 초과할 수 없습니다.')
+    .min(1, '포스트 제목은 필수입니다.')
+    .max(255, '포스트 제목은 255자를 초과할 수 없습니다.')
     .openapi({
-      description: '게시글 제목 (1-255자)',
-      example: '게시글 제목입니다',
+      description: '포스트 제목 (1-255자)',
+      example: '포스트 제목입니다',
     }),
   pstSmry: z
     .string()
-    .max(500, '게시글 요약은 500자를 초과할 수 없습니다.')
+    .max(500, '포스트 요약은 500자를 초과할 수 없습니다.')
     .nullable()
     .optional()
     .openapi({
-      description: '게시글 요약 (최대 500자)',
-      example: '게시글 요약입니다',
+      description: '포스트 요약 (최대 500자)',
+      example: '포스트 요약입니다',
     }),
   pstMtxt: z
-    .string('게시글 본문은 문자열이어야 합니다.')
+    .string('포스트 본문은 문자열이어야 합니다.')
     .openapi({
-      description: '게시글 본문 (Markdown 형식)',
-      example: '# 게시글 제목\n\n게시글 본문 내용입니다.',
+      description: '포스트 본문 (Markdown 형식)',
+      example: '# 포스트 제목\n\n포스트 본문 내용입니다.',
     }),
   pstCd: z
     .string()
-    .max(255, '게시글 코드는 255자를 초과할 수 없습니다.')
+    .max(255, '포스트 코드는 255자를 초과할 수 없습니다.')
     .nullable()
     .optional()
     .openapi({
-      description: '게시글 코드 (슬러그, 최대 255자)',
+      description: '포스트 코드 (슬러그, 최대 255자)',
       example: 'post-slug',
     }),
   pstThmbLink: z
@@ -155,16 +155,16 @@ export const postSchema = commonSchema.extend({
   pstNoList: z
     .array(z.coerce
       .number()
-      .int('게시글 번호는 정수여야 합니다.')
-      .positive('게시글 번호는 양수여야 합니다.'))
+      .int('포스트 번호는 정수여야 합니다.')
+      .positive('포스트 번호는 양수여야 합니다.'))
     .optional()
     .openapi({
-      description: '게시글 번호 목록 (다건 처리용)',
+      description: '포스트 번호 목록 (다건 처리용)',
       example: [ 1, 2, 3, ],
     }),
 });
 
-// 게시글 생성 스키마
+// 포스트 생성 스키마
 export const createPostSchema = postSchema.pick({
   pstTtl: true,
   pstSmry: true,
@@ -197,7 +197,7 @@ export const createPostSchema = postSchema.pick({
   delYn: true,
 });
 
-// 게시글 수정 스키마 (단일/다건 통합)
+// 포스트 수정 스키마 (단일/다건 통합)
 export const updatePostSchema = postSchema.partial().pick({
   pstNo: true,
   pstTtl: true,
@@ -222,7 +222,7 @@ export const updatePostSchema = postSchema.partial().pick({
   delDt: true,
 });
 
-// 게시글 검색 스키마 (기본 검색 스키마 확장)
+// 포스트 검색 스키마 (기본 검색 스키마 확장)
 export const searchPostSchema = baseSearchSchema.extend({
   ...postSchema.pick({
     delYn: true,
@@ -268,15 +268,15 @@ export const searchPostSchema = baseSearchSchema.extend({
     }),
 }).partial();
 
-// 게시글 삭제 스키마 (포스트 번호 또는 리스트 선택)
+// 포스트 삭제 스키마 (포스트 번호 또는 리스트 선택)
 export const deletePostSchema = postSchema.pick({
   pstNo: true,
   pstNoList: true,
 }).refine((data) => data.pstNo || data.pstNoList, {
-  message: '게시글 번호 또는 게시글 번호 목록 중 하나는 필수입니다.',
+  message: '포스트 번호 또는 포스트 번호 목록 중 하나는 필수입니다.',
 });
 
-// 게시글 북마크 스키마
+// 포스트 북마크 스키마
 export const postBookmarkSchema = commonSchema.extend({
   bkmrkNo: z.coerce
     .number()
@@ -296,10 +296,10 @@ export const postBookmarkSchema = commonSchema.extend({
     }),
   pstNo: z.coerce
     .number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .openapi({
-      description: '게시글 번호',
+      description: '포스트 번호',
       example: 1,
     }),
 });

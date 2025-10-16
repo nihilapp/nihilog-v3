@@ -9,10 +9,10 @@ import type { SelectPostType } from '@/_types';
 interface UseGetPostBySlugOptions extends QueryOptionType<SelectPostType> {}
 
 /**
- * @description 게시글 슬러그로 특정 게시글 조회를 위한 커스텀 훅
- * @param {string} pstCd - 조회할 게시글 슬러그
+ * @description 포스트 슬러그로 특정 포스트 조회를 위한 커스텀 훅
+ * @param {string} pstCd - 조회할 포스트 슬러그
  * @param {UseGetPostBySlugOptions} [options] - 쿼리 옵션 (선택사항)
- * @returns 게시글 조회 쿼리 객체
+ * @returns 포스트 조회 쿼리 객체
  */
 export function useGetPostBySlug(pstCd: string, options: UseGetPostBySlugOptions = {}) {
   const query = useGet<SelectPostType>({

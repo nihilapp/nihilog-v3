@@ -9,11 +9,11 @@ import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostShareLogType } from '@/_types';
 
 interface UseCreateShareLogOptions extends MutationOptionsType<SelectPostShareLogType> {
-  pstNo?: number; // 게시글 번호 (공유수 업데이트용)
+  pstNo?: number; // 포스트 번호 (공유수 업데이트용)
 }
 
 /**
- * @description 게시글 공유 로그 기록을 위한 커스텀 훅
+ * @description 포스트 공유 로그 기록을 위한 커스텀 훅
  * @param {UseCreateShareLogOptions} [options] - 뮤테이션 옵션 (선택사항)
  * @returns 공유 로그 기록 뮤테이션 객체
  */
@@ -30,7 +30,7 @@ export function useCreateShareLog(options: UseCreateShareLogOptions = {}) {
         style: getToastStyle('success'),
       });
 
-      // 특정 게시글의 공유수만 무효화
+      // 특정 포스트의 공유수만 무효화
       if (options.pstNo) {
         queryClient.invalidateQueries({
           queryKey: postsKeys.byNo(options.pstNo).queryKey,

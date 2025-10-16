@@ -11,9 +11,9 @@ import type { MultipleResultType } from '@/_types';
 interface UseAdminMultipleUpdatePostsOptions extends MutationOptionsType<MultipleResultType, UpdatePostType> {}
 
 /**
- * @description 관리자용 다수 게시글 일괄 수정을 위한 커스텀 훅
+ * @description 관리자용 다수 포스트 일괄 수정을 위한 커스텀 훅
  * @param {UseAdminMultipleUpdatePostsOptions} [options] - 뮤테이션 옵션 (선택사항)
- * @returns 다수 게시글 일괄 수정 뮤테이션 객체
+ * @returns 다수 포스트 일괄 수정 뮤테이션 객체
  */
 export function useAdminMultipleUpdatePosts(options: UseAdminMultipleUpdatePostsOptions = {}) {
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export function useAdminMultipleUpdatePosts(options: UseAdminMultipleUpdatePosts
       toast.success(res.message, {
         style: getToastStyle('success'),
       });
-      // 다수 게시글 수정 성공 시 관련 쿼리 무효화
+      // 다수 포스트 수정 성공 시 관련 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: adminPostsKeys.search({} as SearchPostType).queryKey,
       });

@@ -7,7 +7,7 @@ import { getToastStyle } from '@/_libs';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 import type { AnalyzeCategoryStatItemType } from '@/_types';
 
-interface UseAdminAnalyzeCategoryOverviewOptions extends MutationOptionsType<AnalyzeCategoryStatItemType, AnalyzeStatType> {
+interface UseAdminAnalyzeCategoryOverviewOptions extends MutationOptionsType<AnalyzeCategoryStatItemType[], AnalyzeStatType> {
   ctgryNo?: number;
 }
 
@@ -19,7 +19,7 @@ interface UseAdminAnalyzeCategoryOverviewOptions extends MutationOptionsType<Ana
 export function useAdminAnalyzeCategoryOverview(options: UseAdminAnalyzeCategoryOverviewOptions = {}) {
   const { ctgryNo, ...restOptions } = options;
 
-  const query = usePost<AnalyzeCategoryStatItemType, AnalyzeStatType>({
+  const query = usePost<AnalyzeCategoryStatItemType[], AnalyzeStatType>({
     url: [
       'admin', 'categories', 'analyze', 'overview',
     ],

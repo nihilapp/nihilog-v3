@@ -44,7 +44,7 @@ export const adminUsersKeys = createQueryKeys('adminUsers', {
   ], // 사용자별 기여도 TOP N
   analyzeTopPostCount: (params: AnalyzeStatType) => [
     'admin', 'users', 'analyze', 'top-post-count', params,
-  ], // 사용자별 게시글 작성 수 TOP N
+  ], // 사용자별 포스트 작성 수 TOP N
   analyzeTopCommentCount: (params: AnalyzeStatType) => [
     'admin', 'users', 'analyze', 'top-comment-count', params,
   ], // 사용자별 댓글 작성 수 TOP N

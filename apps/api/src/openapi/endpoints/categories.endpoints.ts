@@ -14,7 +14,7 @@ export const registerCategoriesEndpoints = () => {
     method: 'post',
     path: '/categories/search',
     summary: '📁 카테고리 목록 조회',
-    description: '전체 카테고리 목록을 조회합니다. 계층 구조 표시, 게시글 수 포함, 정렬순 적용',
+    description: '전체 카테고리 목록을 조회합니다. 계층 구조 표시, 포스트 수 포함, 정렬순 적용',
     tags: [ 'categories', ],
     request: {
       body: {
@@ -56,7 +56,7 @@ export const registerCategoriesEndpoints = () => {
     method: 'get',
     path: '/categories/{ctgryNo}',
     summary: '📁 카테고리 상세 조회',
-    description: '특정 카테고리의 상세 정보를 조회합니다. 하위 카테고리 포함, 게시글 목록',
+    description: '특정 카테고리의 상세 정보를 조회합니다. 하위 카테고리 포함, 포스트 목록',
     tags: [ 'categories', ],
     request: {
       params: z.object({

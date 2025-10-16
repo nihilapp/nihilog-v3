@@ -80,7 +80,7 @@ export class AdminCategoriesService {
   }
 
   /**
-   * @description 계층별 게시글 분포
+   * @description 계층별 포스트 분포
    */
   async adminGetCategoryHierarchyPostDistribution(): Promise<RepoResponseType<CategoryHierarchyPostDistributionItemType[]> | null> {
     return this.categoryRepository.getCategoryHierarchyPostDistribution();

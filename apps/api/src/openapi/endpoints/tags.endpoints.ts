@@ -52,7 +52,7 @@ export const registerTagsEndpoints = () => {
     method: 'get',
     path: '/tags/{tagNo}',
     summary: '🏷️ 태그 상세 조회',
-    description: '특정 태그의 상세 정보를 조회합니다. 태그된 게시글 목록, 관련 태그 추천 포함',
+    description: '특정 태그의 상세 정보를 조회합니다. 태그된 포스트 목록, 관련 태그 추천 포함',
     tags: [ 'tags', ],
     request: {
       params: z.object({

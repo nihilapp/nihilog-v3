@@ -8,10 +8,10 @@
 
 ## 콘텐츠 관리
 
-- 📝 게시글 관리
+- 📝 포스트 관리
 
-  - 게시글 목록 → `/admin/dashboard/posts` (일괄 관리 포함)
-  - 게시글 작성/수정 → `/admin/posts/edit?pstCd={id}` (새글: 빈값 또는 null, 수정: 실제 ID)
+  - 포스트 목록 → `/admin/dashboard/posts` (일괄 관리 포함)
+  - 포스트 작성/수정 → `/admin/posts/edit?pstCd={id}` (새글: 빈값 또는 null, 수정: 실제 ID)
 
 - 📂 카테고리 관리
 
@@ -41,13 +41,13 @@
 
 ## 분석 통계
 
-- 📊 게시글 통계
+- 📊 포스트 통계
 
-  - 게시글 분석 개요 → `/admin/dashboard/analytics/posts`
+  - 포스트 분석 개요 → `/admin/dashboard/analytics/posts`
   - 조회수 통계 → `/admin/dashboard/analytics/posts/views`
   - 북마크 통계 → `/admin/dashboard/analytics/posts/bookmarks`
   - 공유 통계 → `/admin/dashboard/analytics/posts/shares`
-  - 인기 게시글 TOP N → `/admin/dashboard/analytics/posts/popular`
+  - 인기 포스트 TOP N → `/admin/dashboard/analytics/posts/popular`
 
 - 📈 카테고리 통계
 
@@ -99,11 +99,11 @@
 
 - `(admin)/admin/dashboard/*` → `/admin/dashboard/*` (실 기능 관리 페이지)
 - `(admin)/admin/dashboard/analytics/*` → `/admin/dashboard/analytics/*` (통계 분석 페이지)
-- `(admin-posts)/admin/posts/edit/*` → `/admin/posts/edit/*` (게시글 편집만 별도 레이아웃)
+- `(admin-posts)/admin/posts/edit/*` → `/admin/posts/edit/*` (포스트 편집만 별도 레이아웃)
 
 ### 특별한 라우팅
 
-- **게시글 편집**: `(admin-posts)` 그룹을 사용하여 별도 레이아웃 적용
+- **포스트 편집**: `(admin-posts)` 그룹을 사용하여 별도 레이아웃 적용
 - **실 기능과 통계 분리**:
   - 실 기능: `/admin/dashboard/` 하위 (목록, 생성, 수정, 일괄 관리)
   - 통계 분석: `/admin/dashboard/analytics/` 하위로 별도 그룹화

@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 
 import { adminCategoriesKeys } from '@/_entities/admin/categories/admin-categories.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
-import { usePut } from '@/_entities/common/hooks/api/use-put';
+import { usePatch } from '@/_entities/common/hooks/api/use-patch';
 import { getToastStyle } from '@/_libs';
 import type { UpdateCategoryType } from '@/_schemas/category.schema';
 import type { MultipleResultType } from '@/_types/common.types';
@@ -13,7 +13,7 @@ interface UseAdminUpdateMultipleCategoriesOptions extends MutationOptionsType<Mu
 export function useAdminUpdateMultipleCategories(options: UseAdminUpdateMultipleCategoriesOptions = {}) {
   const queryClient = useQueryClient();
 
-  const query = usePut<MultipleResultType, UpdateCategoryType & { ctgryNoList: number[] }>({
+  const query = usePatch<MultipleResultType, UpdateCategoryType & { ctgryNoList: number[] }>({
     url: [
       'admin', 'categories', 'multiple',
     ],

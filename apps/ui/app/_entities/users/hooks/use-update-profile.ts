@@ -7,10 +7,10 @@ import { usePut } from '@/_entities/common/hooks/api/use-put';
 import { usersKeys } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
 import type { UpdateUserType } from '@/_schemas/user.schema';
-import type { UserInfoType } from '@/_types';
+import type { SelectUserInfoType } from '@/_types';
 
 interface UseUpdateProfileOptions
-  extends MutationOptionsType<UserInfoType, UpdateUserType> { }
+  extends MutationOptionsType<SelectUserInfoType, UpdateUserType> { }
 
 /**
  * @description 사용자 프로필 정보 수정을 위한 커스텀 훅
@@ -20,7 +20,7 @@ interface UseUpdateProfileOptions
 export function useUpdateProfile(options: UseUpdateProfileOptions = {}) {
   const queryClient = useQueryClient();
 
-  const query = usePut<UserInfoType, UpdateUserType>({
+  const query = usePut<SelectUserInfoType, UpdateUserType>({
     url: [
       'users', 'profile',
     ],

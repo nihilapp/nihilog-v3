@@ -6,10 +6,8 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks/api/use-delete';
 import { usersKeys } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
-import type { WithdrawType } from '@/_schemas/user.schema';
-import type { SelectUserInfoType } from '@/_types';
 
-interface UseDeleteProfileOptions extends MutationOptionsType<SelectUserInfoType, WithdrawType> {}
+interface UseDeleteProfileOptions extends MutationOptionsType<boolean, void> {}
 
 /**
  * @description 사용자 프로필 삭제(회원탈퇴)를 위한 커스텀 훅
@@ -19,7 +17,7 @@ interface UseDeleteProfileOptions extends MutationOptionsType<SelectUserInfoType
 export function useDeleteProfile(options: UseDeleteProfileOptions = {}) {
   const queryClient = useQueryClient();
 
-  const query = useDelete<SelectUserInfoType, WithdrawType>({
+  const query = useDelete<boolean, void>({
     url: [
       'users', 'profile',
     ],

@@ -37,7 +37,7 @@ export class PostRepository {
   // ===== 일반 사용자 기능 =====
 
   /**
-   * @description 공개 게시글 목록 조회 (통합 검색)
+   * @description 공개 포스트 목록 조회 (통합 검색)
    * @param searchData 검색 데이터
    */
   async getPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
@@ -82,8 +82,8 @@ export class PostRepository {
   }
 
   /**
-   * @description 특정 게시글 상세 조회
-   * @param pstNo 게시글 번호
+   * @description 특정 포스트 상세 조회
+   * @param pstNo 포스트 번호
    */
   async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostType> | null> {
     try {
@@ -99,8 +99,8 @@ export class PostRepository {
   }
 
   /**
-   * @description SEO 친화적 URL로 게시글 조회
-   * @param pstCd 게시글 슬러그
+   * @description SEO 친화적 URL로 포스트 조회
+   * @param pstCd 포스트 슬러그
    */
   async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostType> | null> {
     try {
@@ -116,7 +116,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 태그별 게시글 목록 조회
+   * @description 태그별 포스트 목록 조회
    * @param tagNo 태그 번호
    * @param searchData 검색 데이터
    */
@@ -171,7 +171,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 카테고리별 게시글 목록 조회
+   * @description 카테고리별 포스트 목록 조회
    * @param ctgryNo 카테고리 번호
    * @param searchData 검색 데이터
    */
@@ -224,7 +224,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 년월별 게시글 목록 조회
+   * @description 년월별 포스트 목록 조회
    * @param date 날짜(yyyy-MM)
    * @param searchData 검색 데이터
    */
@@ -284,8 +284,8 @@ export class PostRepository {
 
   // ===== 사용자 상호작용 기능 =====
   /**
-   * @description 게시글 분석 데이터 조회 (최적화된 버전)
-   * @param pstNo 게시글 번호
+   * @description 포스트 분석 데이터 조회 (최적화된 버전)
+   * @param pstNo 포스트 번호
    */
   async getAnalyzePostData(analyzeStatData: AnalyzeStatDto, pstNo?: number): Promise<RepoResponseType<AnalyzePostItemType[]> | null> {
     try {
@@ -423,7 +423,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글별 평균 조회수 조회 (시간대별)
+   * @description 포스트별 평균 조회수 조회 (시간대별)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAverageForPostView(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageViewStatItemType[]> | null> {
@@ -462,7 +462,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글당 평균 북마크 수 조회 (시간대별)
+   * @description 포스트당 평균 북마크 수 조회 (시간대별)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAverageBookmarkCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageBookmarkStatItemType[]> | null> {
@@ -502,7 +502,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 인기 게시글 TOP N (조회수 기준)
+   * @description 인기 포스트 TOP N (조회수 기준)
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -549,7 +549,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 댓글 많은 게시글 TOP N
+   * @description 댓글 많은 포스트 TOP N
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -589,7 +589,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 상태 비율 조회 (최적화된 버전)
+   * @description 포스트 상태 비율 조회 (최적화된 버전)
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
   async getPostStatusRatio(analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<PostStatusRatioItemType[]> | null> {
@@ -636,7 +636,7 @@ export class PostRepository {
   /**
    * @description 플랫폼별 공유 통계 조회
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택사항 - 없으면 전체 게시글)
+   * @param pstNo 포스트 번호 (선택사항 - 없으면 전체 포스트)
    */
   async getPostShareStatsByPlatform(
     analyzeStatData: AnalyzeStatDto,
@@ -677,8 +677,8 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 조회 로그 기록
-   * @param pstNo 게시글 번호
+   * @description 포스트 조회 로그 기록
+   * @param pstNo 포스트 번호
    * @param ip 사용자 IP
    */
   async createPostViewLog(pstNo: number, ip: string): Promise<RepoResponseType<SelectPostViewLogType> | null> {
@@ -699,7 +699,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 공유 로그 기록
+   * @description 포스트 공유 로그 기록
    * @param createData 공유 로그 생성 데이터
    */
   async createPostShareLog(createData: CreatePostShareLogDto): Promise<RepoResponseType<SelectPostShareLogType> | null> {
@@ -720,7 +720,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 북마크 생성
+   * @description 포스트 북마크 생성
    * @param createData 북마크 생성 데이터
    */
   async createPostBookmark(createData: CreatePostBookmarkDto): Promise<RepoResponseType<SelectPostBookmarkType> | null> {
@@ -740,7 +740,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 북마크 삭제
+   * @description 포스트 북마크 삭제
    * @param deleteData 북마크 삭제 데이터
    */
   async deletePostBookmark(deleteData: DeletePostBookmarkDto): Promise<RepoResponseType<boolean> | null> {
@@ -759,7 +759,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 북마크한 게시글 목록 조회
+   * @description 북마크한 포스트 목록 조회
    * @param userNo 사용자 번호
    * @param searchData 검색 데이터
    */
@@ -773,7 +773,7 @@ export class PostRepository {
       const where: Prisma.PstBkmrkMpngWhereInput = {
         userNo,
         delYn: delYn || 'N',
-        // 특정 게시글의 번호로 조회를 한다.
+        // 특정 포스트의 번호로 조회를 한다.
         post: {
           is: {
             pstNo: {
@@ -806,7 +806,7 @@ export class PostRepository {
   }
 
   /**
-   * @description 고급 검색을 통한 게시글 목록 조회
+   * @description 고급 검색을 통한 포스트 목록 조회
    * @param searchData 고급 검색 데이터
    */
   async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
@@ -831,7 +831,7 @@ export class PostRepository {
             mode: 'insensitive',
           },
         }),
-        // 게시글 상태
+        // 포스트 상태
         ...(pstStts === 'EMPTY' && {
           pstStts: 'EMPTY',
         }),
@@ -852,7 +852,7 @@ export class PostRepository {
       const { offset: skip, limit: take, } = pageHelper(page, strtRow, endRow);
 
       const [ list, totalCnt, ] = await this.prisma.$transaction([
-        // 관리자 관점에서는 모든 게시글을 조회해야 하고 사용자 관점에서는 공개된 글만 조회 해야 함. 둘 다 기능해야 하므로 플래그로 조작하는 것으로 진행.
+        // 관리자 관점에서는 모든 포스트를 조회해야 하고 사용자 관점에서는 공개된 글만 조회 해야 함. 둘 다 기능해야 하므로 플래그로 조작하는 것으로 진행.
         this.prisma.pstInfo.findMany({
           where,
           orderBy: {
@@ -889,9 +889,9 @@ export class PostRepository {
   // ===== 관리자 기능 (작성자) =====
 
   /**
-   * @description 새 게시글 작성
+   * @description 새 포스트 작성
    * @param userNo 사용자 번호
-   * @param createData 게시글 생성 데이터
+   * @param createData 포스트 생성 데이터
    */
   async createPost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     try {
@@ -918,9 +918,9 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 수정
+   * @description 포스트 수정
    * @param userNo 사용자 번호
-   * @param updateData 게시글 수정 데이터
+   * @param updateData 포스트 수정 데이터
    */
   async updatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     try {
@@ -943,9 +943,9 @@ export class PostRepository {
   }
 
   /**
-   * @description 다수 게시글 일괄 수정
+   * @description 다수 포스트 일괄 수정
    * @param userNo 사용자 번호
-   * @param updateData 게시글 일괄 수정 데이터
+   * @param updateData 포스트 일괄 수정 데이터
    */
   async multipleUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
@@ -979,9 +979,9 @@ export class PostRepository {
   }
 
   /**
-   * @description 게시글 삭제
+   * @description 포스트 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 게시글 삭제 데이터
+   * @param deleteData 포스트 삭제 데이터
    */
   async deletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<boolean> | null> {
     try {
@@ -1007,9 +1007,9 @@ export class PostRepository {
   }
 
   /**
-   * @description 다수 게시글 일괄 삭제
+   * @description 다수 포스트 일괄 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 게시글 일괄 삭제 데이터
+   * @param deleteData 포스트 일괄 삭제 데이터
    */
   async multipleDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
     try {

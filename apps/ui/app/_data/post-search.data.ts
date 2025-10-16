@@ -1,11 +1,11 @@
 import type { SearchPostType } from '@/_schemas/post.schema';
 
 /**
- * @description 게시글 검색을 위한 기본 데이터
+ * @description 포스트 검색을 위한 기본 데이터
  */
 export const postSearchData = {
   /**
-   * @description 기본 게시글 검색 파라미터
+   * @description 기본 포스트 검색 파라미터
    */
   defaultSearchParams: {
     page: 1,
@@ -15,7 +15,7 @@ export const postSearchData = {
   } satisfies Partial<SearchPostType>,
 
   /**
-   * @description 관리자 대시보드용 게시글 검색 파라미터
+   * @description 관리자 대시보드용 포스트 검색 파라미터
    */
   adminSearchParams: {
     page: 1,
@@ -26,7 +26,7 @@ export const postSearchData = {
   } satisfies Partial<SearchPostType>,
 
   /**
-   * @description 게시글 상태별 검색 파라미터
+   * @description 포스트 상태별 검색 파라미터
    */
   statusSearchParams: {
     draft: {
@@ -65,7 +65,7 @@ export const postSearchData = {
   ] as const,
 
   /**
-   * @description 게시글 상태 옵션
+   * @description 포스트 상태 옵션
    */
   statusOptions: [
     { value: 'EMPTY', label: '초안', color: 'outline' as const, },
@@ -85,7 +85,7 @@ export const postSearchData = {
 } as const;
 
 /**
- * @description 게시글 검색 파라미터 생성 헬퍼 함수
+ * @description 포스트 검색 파라미터 생성 헬퍼 함수
  */
 export const createPostSearchParams = {
   /**

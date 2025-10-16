@@ -11,9 +11,9 @@ export class AdminPostsService {
   constructor(private readonly postRepository: PostRepository) {}
 
   /**
-   * @description 게시글 분석 데이터 조회
+   * @description 포스트 분석 데이터 조회
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택사항 - 없으면 전체 게시글)
+   * @param pstNo 포스트 번호 (선택사항 - 없으면 전체 포스트)
    */
   async getAnalyzePostData(
     analyzeStatData: AnalyzeStatDto,
@@ -25,7 +25,7 @@ export class AdminPostsService {
   /**
    * @description 플랫폼별 공유 통계 조회
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택사항 - 없으면 전체 게시글)
+   * @param pstNo 포스트 번호 (선택사항 - 없으면 전체 포스트)
    */
   async getPostShareStatsByPlatform(
     analyzeStatData: AnalyzeStatDto,
@@ -35,7 +35,7 @@ export class AdminPostsService {
   }
 
   /**
-   * @description 게시글별 평균 조회수 조회 (시간대별)
+   * @description 포스트별 평균 조회수 조회 (시간대별)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAverageForPostView(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageViewStatItemType[]> | null> {
@@ -43,7 +43,7 @@ export class AdminPostsService {
   }
 
   /**
-   * @description 게시글당 평균 북마크 수 조회 (시간대별)
+   * @description 포스트당 평균 북마크 수 조회 (시간대별)
    * @param analyzeStatData 분석 통계 데이터
    */
   async getAverageBookmarkCountPerPost(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<AverageBookmarkStatItemType[]> | null> {
@@ -51,7 +51,7 @@ export class AdminPostsService {
   }
 
   /**
-   * @description 인기 게시글 TOP N (조회수 기준)
+   * @description 인기 포스트 TOP N (조회수 기준)
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -60,7 +60,7 @@ export class AdminPostsService {
   }
 
   /**
-   * @description 댓글 많은 게시글 TOP N
+   * @description 댓글 많은 포스트 TOP N
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -69,7 +69,7 @@ export class AdminPostsService {
   }
 
   /**
-   * @description 게시글 상태 비율 조회
+   * @description 포스트 상태 비율 조회
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
   async getPostStatusRatio(analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<PostStatusRatioItemType[]> | null> {
@@ -77,45 +77,45 @@ export class AdminPostsService {
   }
 
   /**
-   * @desc 새 게시글 작성
+   * @desc 새 포스트 작성
    * @param userNo 사용자 번호
-   * @param createData 게시글 생성 데이터
+   * @param createData 포스트 생성 데이터
    */
   async adminCreatePost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.createPost(userNo, createData);
   }
 
   /**
-   * @desc 게시글 수정
+   * @desc 포스트 수정
    * @param userNo 사용자 번호
-   * @param updateData 게시글 수정 데이터
+   * @param updateData 포스트 수정 데이터
    */
   async adminUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.updatePost(userNo, updateData);
   }
 
   /**
-   * @desc 다수 게시글 일괄 수정
+   * @desc 다수 포스트 일괄 수정
    * @param userNo 사용자 번호
-   * @param updateData 게시글 일괄 수정 데이터
+   * @param updateData 포스트 일괄 수정 데이터
    */
   async adminMultipleUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.postRepository.multipleUpdatePost(userNo, updateData);
   }
 
   /**
-   * @desc 게시글 삭제
+   * @desc 포스트 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 게시글 삭제 데이터
+   * @param deleteData 포스트 삭제 데이터
    */
   async adminDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<boolean> | null> {
     return this.postRepository.deletePost(userNo, deleteData);
   }
 
   /**
-   * @desc 다수 게시글 일괄 삭제
+   * @desc 다수 포스트 일괄 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 게시글 일괄 삭제 데이터
+   * @param deleteData 포스트 일괄 삭제 데이터
    */
   async adminMultipleDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.postRepository.multipleDeletePost(userNo, deleteData);

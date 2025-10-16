@@ -33,7 +33,7 @@ export class AdminCommentsController {
   /**
    * @description 댓글 분석 통계
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택적, 쿼리 스트링)
+   * @param pstNo 포스트 번호 (선택적, 쿼리 스트링)
    */
   @Endpoint({
     endpoint: '/analyze/overview',
@@ -60,7 +60,7 @@ export class AdminCommentsController {
   }
 
   /**
-   * @description 게시글별 댓글 수 TOP N
+   * @description 포스트별 댓글 수 TOP N
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택적)
    */
@@ -118,7 +118,7 @@ export class AdminCommentsController {
   }
 
   /**
-   * @description 평균 댓글 수 / 게시글
+   * @description 평균 댓글 수 / 포스트
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
@@ -267,7 +267,7 @@ export class AdminCommentsController {
   }
 
   /**
-   * @description 댓글 없는 게시글 목록
+   * @description 댓글 없는 포스트 목록
    */
   @Endpoint({
     endpoint: '/analyze/posts-without-comments',

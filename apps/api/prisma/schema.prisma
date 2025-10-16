@@ -377,7 +377,7 @@ model PstTagMpng {
   @@schema("nihilog")
 }
 
-// 게시글 조회 로그 테이블
+// 포스트 조회 로그 테이블
 model PstViewLog {
   viewNo   Int     @id @default(autoincrement()) @map("view_no")
   pstNo    Int     @map("pst_no")
@@ -393,7 +393,7 @@ model PstViewLog {
   @@schema("nihilog")
 }
 
-// 게시글 공유 로그 테이블
+// 포스트 공유 로그 테이블
 model PstShrnLog {
   shrnNo   Int    @id @default(autoincrement()) @map("shrn_no")
   pstNo    Int    @map("pst_no")
@@ -409,7 +409,7 @@ model PstShrnLog {
   @@schema("nihilog")
 }
 
-// 게시글 북마크 매핑 테이블
+// 포스트 북마크 매핑 테이블
 model PstBkmrkMpng {
   bkmrkNo Int      @id @default(autoincrement()) @map("bkmrk_no")
   userNo  Int      @map("user_no")

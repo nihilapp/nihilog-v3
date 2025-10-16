@@ -18,7 +18,7 @@ export const adminCommentsKeys = createQueryKeys('adminComments', {
   ], // 댓글 상태 분포
   analyzePostsWithoutComments: () => [
     'admin', 'comments', 'analyze', 'posts-without-comments',
-  ], // 댓글 없는 게시글
+  ], // 댓글 없는 포스트
 
   // ===== POST Mutations (통계) =====
   analyzeOverview: (params: AnalyzeStatType) => [
@@ -26,13 +26,13 @@ export const adminCommentsKeys = createQueryKeys('adminComments', {
   ], // 댓글 분석 통계
   analyzeTopPostsByComments: (limit: number) => [
     'admin', 'comments', 'analyze', 'top-posts-by-comments', limit,
-  ], // 댓글 많은 게시글 TOP N
+  ], // 댓글 많은 포스트 TOP N
   analyzeTopUsersByComments: (limit: number) => [
     'admin', 'comments', 'analyze', 'top-users-by-comments', limit,
   ], // 댓글 많은 사용자 TOP N
   analyzeAverageCommentsPerPost: () => [
     'admin', 'comments', 'analyze', 'average-comments-per-post',
-  ], // 게시글당 평균 댓글 수
+  ], // 포스트당 평균 댓글 수
   analyzeCommentApprovalRate: () => [
     'admin', 'comments', 'analyze', 'comment-approval-rate',
   ], // 댓글 승인율

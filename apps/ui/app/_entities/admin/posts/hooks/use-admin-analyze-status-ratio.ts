@@ -1,20 +1,25 @@
 import { toast } from 'sonner';
 
 import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
-import { usePost } from '@/_entities/common/hooks/api/use-post';
+import type { QueryOptionType } from '@/_entities/common/common.types';
+import { usePostQuery } from '@/_entities/common/hooks/api/use-post-query';
 import { getToastStyle } from '@/_libs';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 import type { PostStatusRatioItemType } from '@/_types/post.types';
 
-interface UseAdminAnalyzeStatusRatioOptions extends MutationOptionsType<PostStatusRatioItemType[], AnalyzeStatType> {}
+interface UseAdminAnalyzeStatusRatioOptions extends QueryOptionType<PostStatusRatioItemType[]> {
+  searchParams?: AnalyzeStatType;
+}
 
 export function useAdminAnalyzeStatusRatio(options: UseAdminAnalyzeStatusRatioOptions = {}) {
-  const query = usePost<PostStatusRatioItemType[], AnalyzeStatType>({
+  const { searchParams, ...queryOptions } = options;
+
+  const query = usePostQuery<PostStatusRatioItemType[], AnalyzeStatType | undefined>({
     url: [
       'admin', 'posts', 'analyze', 'status-ratio',
     ],
     key: adminPostsKeys.analyzeStatusRatio(),
+    body: searchParams,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -23,7 +28,7 @@ export function useAdminAnalyzeStatusRatio(options: UseAdminAnalyzeStatusRatioOp
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    options: queryOptions,
   });
 
   return query;

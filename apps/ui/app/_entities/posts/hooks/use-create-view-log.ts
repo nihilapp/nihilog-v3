@@ -9,11 +9,11 @@ import type { SearchPostType } from '@/_schemas/post.schema';
 import type { SelectPostViewLogType } from '@/_types';
 
 interface UseCreateViewLogOptions extends MutationOptionsType<SelectPostViewLogType> {
-  pstNo?: number; // 게시글 번호 (조회수 업데이트용)
+  pstNo?: number; // 포스트 번호 (조회수 업데이트용)
 }
 
 /**
- * @description 게시글 조회 로그 기록을 위한 커스텀 훅
+ * @description 포스트 조회 로그 기록을 위한 커스텀 훅
  * @param {UseCreateViewLogOptions} [options] - 뮤테이션 옵션 (선택사항)
  * @returns 조회 로그 기록 뮤테이션 객체
  */
@@ -30,7 +30,7 @@ export function useCreateViewLog(options: UseCreateViewLogOptions = {}) {
         style: getToastStyle('success'),
       });
 
-      // 특정 게시글의 조회수만 무효화
+      // 특정 포스트의 조회수만 무효화
       if (options.pstNo) {
         queryClient.invalidateQueries({
           queryKey: postsKeys.byNo(options.pstNo).queryKey,

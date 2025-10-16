@@ -13,10 +13,10 @@ export const postViewLogSchema = z.object({
     }),
   pstNo: z.coerce
     .number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .openapi({
-      description: '게시글 번호',
+      description: '포스트 번호',
       example: 1,
     }),
   viewerIp: z.string()

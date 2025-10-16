@@ -73,7 +73,7 @@ const adminMenu: Menu[] = [
     children: [
       {
         icon: FaList,
-        label: '게시글 관리',
+        label: '포스트 관리',
         href: '/admin/dashboard/posts',
       },
       {
@@ -121,7 +121,7 @@ const adminMenu: Menu[] = [
     label: '분석 통계',
     children: [
       {
-        label: '게시글 통계',
+        label: '포스트 통계',
         href: '/admin/dashboard/analytics/posts',
       },
       {

@@ -1,13 +1,15 @@
 import { toast } from 'sonner';
 
 import type { QueryOptionType } from '@/_entities/common/common.types';
-import { usePost } from '@/_entities/common/hooks/api/use-post';
+import { usePostQuery } from '@/_entities/common/hooks/api/use-post-query';
 import { categorySubscribeKeys } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
 import type { ListType, SelectCategorySubscribeMappingListItemType } from '@/_types';
 
-interface UseGetCategorySubscribeByNoOptions extends QueryOptionType<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType> {}
+interface UseGetCategorySubscribeByNoOptions extends QueryOptionType<ListType<SelectCategorySubscribeMappingListItemType>> {
+  searchParams?: SearchCategorySubscribeType;
+}
 
 /**
  * @description 특정 카테고리 구독 상태 조회를 위한 커스텀 훅 (POST 방식)
@@ -16,11 +18,14 @@ interface UseGetCategorySubscribeByNoOptions extends QueryOptionType<ListType<Se
  * @returns 특정 카테고리 구독 상태 조회 쿼리 객체
  */
 export function useGetCategorySubscribeByNo(ctgryNo: number, options: UseGetCategorySubscribeByNoOptions = {}) {
-  const query = usePost<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType>({
+  const { searchParams = {}, ...queryOptions } = options;
+
+  const query = usePostQuery<ListType<SelectCategorySubscribeMappingListItemType>, SearchCategorySubscribeType>({
     url: [
       'users', 'subscribes', 'categories', ctgryNo, 'search',
     ],
-    key: categorySubscribeKeys.byNo(ctgryNo, {} as SearchCategorySubscribeType), // 기본값으로 빈 객체 사용
+    key: categorySubscribeKeys.byNo(ctgryNo, searchParams),
+    body: searchParams,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -29,7 +34,7 @@ export function useGetCategorySubscribeByNo(ctgryNo: number, options: UseGetCate
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    options: queryOptions,
   });
 
   return query;

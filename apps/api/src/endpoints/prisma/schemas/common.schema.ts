@@ -80,7 +80,7 @@ export const commonSchema = z.object({
     }),
 });
 
-// 게시글 조회수 통계 스키마
+// 포스트 조회수 통계 스키마
 export const analyzeStatSchema = z.object({
   mode: z.enum([ 'day', 'week', 'month', 'year', ])
     .default('day')
@@ -97,5 +97,14 @@ export const analyzeStatSchema = z.object({
     .openapi({
       description: '종료 날짜',
       example: '2024-01-01',
+    }),
+  limit: z.coerce.number()
+    .int('제한 수는 정수여야 합니다.')
+    .min(1, '제한 수는 1 이상이어야 합니다.')
+    .max(1000, '제한 수는 1000 이하여야 합니다.')
+    .optional()
+    .openapi({
+      description: '결과 제한 수 (TOP N)',
+      example: 10,
     }),
 });

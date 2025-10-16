@@ -36,7 +36,7 @@ export type AnalyzeSubscribeStatItemType = {
   activeSubscriptionCount: number; // 활성 구독 설정 수
   // 알림 설정별 통계
   emailNotificationCount: number; // 이메일 알림 활성 수
-  newPostNotificationCount: number; // 새 게시글 알림 활성 수
+  newPostNotificationCount: number; // 새 포스트 알림 활성 수
   commentReplyNotificationCount: number; // 댓글 답글 알림 활성 수
 };
 

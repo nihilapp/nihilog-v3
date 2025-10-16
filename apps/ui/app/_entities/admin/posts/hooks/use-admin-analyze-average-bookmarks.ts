@@ -1,20 +1,25 @@
 import { toast } from 'sonner';
 
 import { adminPostsKeys } from '@/_entities/admin/posts/admin-posts.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
-import { usePost } from '@/_entities/common/hooks/api/use-post';
+import type { QueryOptionType } from '@/_entities/common/common.types';
+import { usePostQuery } from '@/_entities/common/hooks/api/use-post-query';
 import { getToastStyle } from '@/_libs';
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 import type { AverageBookmarkStatItemType } from '@/_types/post.types';
 
-interface UseAdminAnalyzeAverageBookmarksOptions extends MutationOptionsType<AverageBookmarkStatItemType[], AnalyzeStatType> {}
+interface UseAdminAnalyzeAverageBookmarksOptions extends QueryOptionType<AverageBookmarkStatItemType[]> {
+  searchParams?: AnalyzeStatType;
+}
 
 export function useAdminAnalyzeAverageBookmarks(options: UseAdminAnalyzeAverageBookmarksOptions = {}) {
-  const query = usePost<AverageBookmarkStatItemType[], AnalyzeStatType>({
+  const { searchParams, ...queryOptions } = options;
+
+  const query = usePostQuery<AverageBookmarkStatItemType[], AnalyzeStatType>({
     url: [
       'admin', 'posts', 'analyze', 'average-bookmarks',
     ],
     key: adminPostsKeys.analyzeAverageBookmarks(),
+    body: searchParams,
     callback() {
       // 성공 시 토스트 메시지는 필요에 따라 추가
     },
@@ -23,7 +28,7 @@ export function useAdminAnalyzeAverageBookmarks(options: UseAdminAnalyzeAverageB
         style: getToastStyle('error'),
       });
     },
-    ...options,
+    options: queryOptions,
   });
 
   return query;

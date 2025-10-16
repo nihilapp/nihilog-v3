@@ -19,7 +19,7 @@ export const registerAdminUsersEndpoints = () => {
     method: 'post',
     path: '/admin/users/analyze/overview',
     summary: '📊 사용자 분석 통계',
-    description: '사용자 가입/삭제/활성, 로그인, 게시글/댓글/북마크, 태그/카테고리 구독 통계를 조회합니다.',
+    description: '사용자 가입/삭제/활성, 로그인, 포스트/댓글/북마크, 태그/카테고리 구독 통계를 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
@@ -103,7 +103,7 @@ export const registerAdminUsersEndpoints = () => {
     method: 'post',
     path: '/admin/users/analyze/top-contribution',
     summary: '🏆 사용자별 기여도 TOP N',
-    description: '게시글 + 댓글 + 북마크 가중치 합산 기준으로 기여도가 높은 사용자 TOP N을 조회합니다.',
+    description: '포스트 + 댓글 + 북마크 가중치 합산 기준으로 기여도가 높은 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
@@ -145,12 +145,12 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/top-posts - 사용자별 게시글 작성 수 TOP N
+  // POST /admin/users/analyze/top-posts - 사용자별 포스트 작성 수 TOP N
   openApiRegistry.registerPath({
     method: 'post',
     path: '/admin/users/analyze/top-posts',
-    summary: '📝 사용자별 게시글 작성 수 TOP N',
-    description: '게시글을 가장 많이 작성한 사용자 TOP N을 조회합니다.',
+    summary: '📝 사용자별 포스트 작성 수 TOP N',
+    description: '포스트를 가장 많이 작성한 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
@@ -175,11 +175,11 @@ export const registerAdminUsersEndpoints = () => {
             schema: z.looseObject({}),
             examples: addGlobalResponses({
               success: {
-                summary: '사용자별 게시글 작성 수 TOP N 조회 성공',
+                summary: '사용자별 포스트 작성 수 TOP N 조회 성공',
                 value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS, CreateUserAnalyze.createTopUsersByPostCountExample()),
               },
               error: {
-                summary: '사용자별 게시글 작성 수 TOP N 조회 실패',
+                summary: '사용자별 포스트 작성 수 TOP N 조회 실패',
                 value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_ERROR),
               },
             }, {

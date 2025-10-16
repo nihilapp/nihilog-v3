@@ -8,8 +8,8 @@ import { ynEnumSchema, baseSearchSchema } from './common.schema';
 // 댓글 생성 스키마
 export const createCommentSchema = z.object({
   pstNo: z.number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.'),
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.'),
   cmntCntnt: z.string()
     .min(1, '댓글 내용은 필수입니다.')
     .max(1000, '댓글 내용은 1000자를 초과할 수 없습니다.'),
@@ -74,8 +74,8 @@ export const deleteCommentSchema = z.object({
 // 댓글 검색 스키마
 export const searchCommentSchema = baseSearchSchema.extend({
   pstNo: z.number()
-    .int('게시글 번호는 정수여야 합니다.')
-    .positive('게시글 번호는 양수여야 합니다.')
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
     .optional(),
   cmntNo: z.number()
     .int('댓글 번호는 정수여야 합니다.')

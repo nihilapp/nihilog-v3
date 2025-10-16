@@ -24,7 +24,7 @@ export type {
   UserRetentionRateItemType
 } from './user.types';
 
-// 게시글 타입 export
+// 포스트 타입 export
 export type {
   PostInfoType,
   PostViewLogType,

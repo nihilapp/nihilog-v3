@@ -27,7 +27,7 @@ export type SelectCommentListItemType = SelectCommentType & {
 // ========================================================
 
 // 댓글 분석 통계 (시간대별 합산) - 9개 지표 통합
-// - cmntNo 또는 pstNo 없으면 전체, 있으면 해당 댓글/게시글만
+// - cmntNo 또는 pstNo 없으면 전체, 있으면 해당 댓글/포스트만
 export type AnalyzeCommentStatItemType = {
   dateStart: string;
   dateEnd: string;
@@ -50,7 +50,7 @@ export type AnalyzeCommentStatItemType = {
 // ========================================================
 
 // 1. 댓글 활동 분석 (3개)
-// 게시글별 댓글 수 TOP N
+// 포스트별 댓글 수 TOP N
 export type TopPostsByCommentItemType = {
   pstNo: number;
   pstTtl: string;
@@ -68,7 +68,7 @@ export type TopUsersByCommentItemType = {
   lastCommentDate: string;
 };
 
-// 평균 댓글 수 / 게시글
+// 평균 댓글 수 / 포스트
 export type AverageCommentPerPostItemType = {
   dateStart: string;
   dateEnd: string;
@@ -119,7 +119,7 @@ export type CommentAverageDepthItemType = {
   maxDepth: number;
 };
 
-// 댓글 없는 게시글 목록
+// 댓글 없는 포스트 목록
 export type PostsWithoutCommentsItemType = {
   pstNo: number;
   pstTtl: string;

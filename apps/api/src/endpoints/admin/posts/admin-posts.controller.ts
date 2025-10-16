@@ -17,9 +17,9 @@ export class AdminPostsController {
   constructor(private readonly postsService: AdminPostsService) {}
 
   /**
-   * @description 관리자 - 게시글 분석 데이터 조회
+   * @description 관리자 - 포스트 분석 데이터 조회
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (쿼리 파라미터, 선택사항)
+   * @param pstNo 포스트 번호 (쿼리 파라미터, 선택사항)
    */
   @Endpoint({
     endpoint: '/analyze/overview',
@@ -57,7 +57,7 @@ export class AdminPostsController {
   /**
    * @description 관리자 - 플랫폼별 공유 통계 조회
    * @param analyzeStatData 분석 통계 데이터
-   * @param pstNo 게시글 번호 (선택사항)
+   * @param pstNo 포스트 번호 (선택사항)
    */
   @Endpoint({
     endpoint: '/analyze/shares',
@@ -93,7 +93,7 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 게시글별 평균 조회수 조회 (시간대별)
+   * @description 관리자 - 포스트별 평균 조회수 조회 (시간대별)
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
@@ -129,7 +129,7 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 게시글당 평균 북마크 수 조회 (시간대별)
+   * @description 관리자 - 포스트당 평균 북마크 수 조회 (시간대별)
    * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
@@ -165,7 +165,7 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 인기 게시글 TOP N (조회수 기준)
+   * @description 관리자 - 인기 포스트 TOP N (조회수 기준)
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -203,7 +203,7 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 댓글 많은 게시글 TOP N
+   * @description 관리자 - 댓글 많은 포스트 TOP N
    * @param limit 상위 N개
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
@@ -241,7 +241,7 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 게시글 상태 비율 조회
+   * @description 관리자 - 포스트 상태 비율 조회
    * @param analyzeStatData 분석 통계 데이터 (선택사항)
    */
   @Endpoint({
@@ -277,8 +277,8 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 새 게시글 작성
-   * @param createData 게시글 생성 데이터
+   * @description 관리자 - 새 포스트 작성
+   * @param createData 포스트 생성 데이터
    */
   @Endpoint({
     endpoint: '/',
@@ -309,8 +309,8 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 게시글 수정
-   * @param updateData 게시글 수정 데이터
+   * @description 관리자 - 포스트 수정
+   * @param updateData 포스트 수정 데이터
    */
   @Endpoint({
     endpoint: '/:pstNo',
@@ -341,8 +341,8 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 다수 게시글 일괄 수정
-   * @param updateData 게시글 일괄 수정 데이터
+   * @description 관리자 - 다수 포스트 일괄 수정
+   * @param updateData 포스트 일괄 수정 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
@@ -370,8 +370,8 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 게시글 삭제
-   * @param deleteData 게시글 삭제 데이터
+   * @description 관리자 - 포스트 삭제
+   * @param deleteData 포스트 삭제 데이터
    */
   @Endpoint({
     endpoint: '/:pstNo',
@@ -399,8 +399,8 @@ export class AdminPostsController {
   }
 
   /**
-   * @description 관리자 - 다수 게시글 일괄 삭제
-   * @param deleteData 게시글 일괄 삭제 데이터
+   * @description 관리자 - 다수 포스트 일괄 삭제
+   * @param deleteData 포스트 일괄 삭제 데이터
    */
   @Endpoint({
     endpoint: '/multiple',

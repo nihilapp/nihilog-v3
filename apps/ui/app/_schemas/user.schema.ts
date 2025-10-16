@@ -25,6 +25,7 @@ export const updateUserSchema = z.object({
     .min(2, '사용자명은 2자 이상이어야 합니다.')
     .max(30, '사용자명은 30자 이하여야 합니다.')
     .optional(),
+  userRole: userRoleSchema.optional(),
   proflImg: z
     .url('올바른 URL 형식을 입력해주세요.')
     .max(1024, '프로필 이미지 URL은 1024자 이하여야 합니다.')
