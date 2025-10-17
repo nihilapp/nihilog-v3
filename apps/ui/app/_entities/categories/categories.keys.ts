@@ -16,4 +16,5 @@ export const categoriesKeys = createQueryKeys('categories', {
   byName: (name: string) => [
     'categories', 'by-name', name,
   ], // 카테고리명으로 조회
+
 });

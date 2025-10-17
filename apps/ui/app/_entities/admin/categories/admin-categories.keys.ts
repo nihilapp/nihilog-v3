@@ -1,7 +1,6 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import type { SearchCategoryType } from '@/_schemas/category.schema';
-import type { AnalyzeStatType } from '@/_schemas/common.schema';
 
 /**
  * 관리자 카테고리 관련 쿼리 키 정의
@@ -22,9 +21,6 @@ export const adminCategoriesKeys = createQueryKeys('adminCategories', {
   analyzeTopSubscribers: (limit: number) => [
     'admin', 'categories', 'analyze', 'top-subscribers', limit,
   ], // 구독자 많은 카테고리 TOP N
-  analyzeNoSubscribers: () => [
-    'admin', 'categories', 'analyze', 'no-subscribers',
-  ], // 구독자 없는 카테고리
   analyzeStatusDistribution: () => [
     'admin', 'categories', 'analyze', 'status-distribution',
   ], // 카테고리 상태 분포
@@ -44,8 +40,8 @@ export const adminCategoriesKeys = createQueryKeys('adminCategories', {
     'admin', 'categories', 'analyze', 'hierarchy-subscribers',
   ], // 계층별 구독자 수
 
-  // ===== POST Mutations (통계) =====
-  analyzeOverview: (params: AnalyzeStatType) => [
+  // ===== GET Queries (통계) =====
+  analyzeOverview: (params: { dateStart?: string; dateEnd?: string; period?: string; limit?: number; ctgryNo?: number }) => [
     'admin', 'categories', 'analyze', 'overview', params,
   ], // 카테고리 분석 통계
   analyzeTopPopularCategories: (limit: number) => [

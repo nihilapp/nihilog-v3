@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 // 공통 스키마 import
 import { ynEnumSchema, baseSearchSchema } from './common.schema';
+import { dateTimeRegex } from './common.schema';
 
 // 카테고리 요청 스키마들
 
@@ -18,10 +19,12 @@ export const createCategorySchema = z.object({
     .regex(/^#[0-9A-Fa-f]{6}$/, '색상은 #RRGGBB 형식이어야 합니다.')
     .nullable()
     .optional(),
-  ctgryStp: z.number()
+  ctgryStp: z.coerce
+    .number()
     .int('카테고리 정렬순은 정수여야 합니다.')
     .positive('카테고리 정렬순은 양수여야 합니다.'),
-  upCtgryNo: z.number()
+  upCtgryNo: z.coerce
+    .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
     .positive('상위 카테고리 번호는 양수여야 합니다.'),
   useYn: ynEnumSchema.default('Y'),
@@ -39,7 +42,8 @@ export const createCategorySchema = z.object({
 
 // 카테고리 수정 스키마
 export const updateCategorySchema = z.object({
-  ctgryNo: z.number()
+  ctgryNo: z.coerce
+    .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.')
     .optional(),
@@ -55,11 +59,13 @@ export const updateCategorySchema = z.object({
     .regex(/^#[0-9A-Fa-f]{6}$/, '색상은 #RRGGBB 형식이어야 합니다.')
     .nullable()
     .optional(),
-  ctgryStp: z.number()
+  ctgryStp: z.coerce
+    .number()
     .int('카테고리 정렬순은 정수여야 합니다.')
     .positive('카테고리 정렬순은 양수여야 합니다.')
     .optional(),
-  upCtgryNo: z.number()
+  upCtgryNo: z.coerce
+    .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
     .positive('상위 카테고리 번호는 양수여야 합니다.')
     .optional(),
@@ -69,11 +75,13 @@ export const updateCategorySchema = z.object({
 
 // 카테고리 삭제 스키마
 export const deleteCategorySchema = z.object({
-  ctgryNo: z.number()
+  ctgryNo: z.coerce
+    .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.')
     .optional(),
-  ctgryNoList: z.array(z.number()
+  ctgryNoList: z.array(z.coerce
+    .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.'))
     .optional(),
@@ -91,7 +99,8 @@ export const searchCategorySchema = baseSearchSchema.extend({
     .regex(/^#[0-9A-Fa-f]{6}$/, '색상은 #RRGGBB 형식이어야 합니다.')
     .nullable()
     .optional(),
-  upCtgryNo: z.number()
+  upCtgryNo: z.coerce
+    .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
     .positive('상위 카테고리 번호는 양수여야 합니다.')
     .optional(),
@@ -106,10 +115,10 @@ export const searchCategorySchema = baseSearchSchema.extend({
     error: '정렬 옵션은 LATEST, OLDEST, NAME_ASC, NAME_DESC, STP_ASC, STP_DESC 중 하나여야 합니다.',
   }).optional(),
   crtDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(dateTimeRegex, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .optional(),
   crtDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(dateTimeRegex, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
     .optional(),
 }).partial();
 

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+// 날짜시간 정규식
+export const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+
 // Y/N 플래그
 export const ynEnumSchema = z.enum([
   'Y', 'N',
@@ -50,9 +53,9 @@ export const baseSearchSchema = z.object({
 // 통계 분석 스키마
 export const analyzeStatSchema = z.object({
   dateStart: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'),
+    .regex(dateTimeRegex, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'),
   dateEnd: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'),
+    .regex(dateTimeRegex, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'),
   period: z.enum([
     'DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY',
   ], {
