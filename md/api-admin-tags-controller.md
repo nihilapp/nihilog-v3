@@ -11,10 +11,9 @@
 ### 1. adminGetAnalyzeTagData (통계)
 
 - **메소드명:** adminGetAnalyzeTagData
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/tags/analyze/overview`
-- **요청 데이터 (Body):** AnalyzeStatDto
-- **요청 데이터 (Query):** tagNo (선택적, number)
+- **요청 데이터 (Query):** AnalyzeStatDto, tagNo (선택적, number)
 - **반환 타입:** ResponseDto<AnalyzeTagStatItemType[]>
 - **설명:** 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -24,10 +23,9 @@
 ### 2. adminGetTopUsedTagsByCount (통계)
 
 - **메소드명:** adminGetTopUsedTagsByCount
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/tags/analyze/top-used`
-- **요청 데이터 (Query):** limit (number)
-- **요청 데이터 (Body):** AnalyzeStatDto (선택적)
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopUsedTagItemType[]>
 - **설명:** 태그별 사용 횟수 TOP N
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -37,9 +35,9 @@
 ### 3. adminGetTagUsageTrend (통계)
 
 - **메소드명:** adminGetTagUsageTrend
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/tags/analyze/usage-trend`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TagUsageTrendItemType[]>
 - **설명:** 태그별 사용 추이
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -73,9 +71,9 @@
 ### 6. adminGetTagSubscriberGrowthRate (통계)
 
 - **메소드명:** adminGetTagSubscriberGrowthRate
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/tags/analyze/subscriber-growth`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TagSubscriberGrowthRateItemType[]>
 - **설명:** 태그별 구독자 성장률
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -109,9 +107,9 @@
 ### 9. adminGetTagAverageUsageFrequency (통계)
 
 - **메소드명:** adminGetTagAverageUsageFrequency
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/tags/analyze/frequency`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TagAverageUsageFrequencyItemType[]>
 - **설명:** 태그별 평균 사용 빈도
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -243,9 +241,9 @@
 ### 20. adminGetTagMapping
 
 - **메소드명:** adminGetTagMapping
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/tags/mapping/search`
-- **요청 데이터 (Body):** SearchPstTagMpngDto
+- **요청 데이터 (Query):** SearchPstTagMpngDto의 모든 필드들을 Query 파라미터로
 - **반환 타입:** ResponseDto<ListType<SelectPstTagMpngListItemType>>
 - **설명:** 태그 매핑 조회
 - **인증:** JWT 인증 필요 (ADMIN)

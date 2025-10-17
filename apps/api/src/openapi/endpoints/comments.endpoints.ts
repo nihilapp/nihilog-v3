@@ -14,21 +14,15 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerCommentsEndpoints = () => {
-  // POST /comments/search - 댓글 목록 조회
+  // GET /comments/search - 댓글 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/comments/search',
     summary: '💬 댓글 목록 조회',
     description: '댓글 목록을 조회합니다.',
     tags: [ 'comments', ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchCommentSchema,
-          },
-        },
-      },
+      query: searchCommentSchema,
     },
     responses: {
       200: {

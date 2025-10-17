@@ -49,14 +49,14 @@ export class AdminCategoriesController {
    */
   @Endpoint({
     endpoint: '/analyze/overview',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
   async adminGetAnalyzeCategoryData(
-    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query() analyzeStatData: AnalyzeStatDto,
     @Query('ctgryNo') ctgryNo?: number
   ): Promise<ResponseDto<AnalyzeCategoryStatItemType[]>> {
     const result = await this.adminCategoriesService.adminGetAnalyzeCategoryData(analyzeStatData, ctgryNo);
@@ -73,22 +73,18 @@ export class AdminCategoriesController {
 
   /**
    * @description 카테고리별 인기 지수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/popular-index',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetTopPopularCategoriesByIndex(
-    @Query('limit') limit: number,
-    @Body() analyzeStatData?: AnalyzeStatDto
-  ): Promise<ResponseDto<TopPopularCategoryItemType[]>> {
-    const result = await this.adminCategoriesService.adminGetTopPopularCategoriesByIndex(limit || 10, analyzeStatData);
+  async adminGetTopPopularCategoriesByIndex(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopPopularCategoryItemType[]>> {
+    const result = await this.adminCategoriesService.adminGetTopPopularCategoriesByIndex(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -131,13 +127,13 @@ export class AdminCategoriesController {
    */
   @Endpoint({
     endpoint: '/analyze/average-bookmarks',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetAverageBookmarkCountPerCategory(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageBookmarkPerCategoryItemType[]>> {
+  async adminGetAverageBookmarkCountPerCategory(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageBookmarkPerCategoryItemType[]>> {
     const result = await this.adminCategoriesService.adminGetAverageBookmarkCountPerCategory(analyzeStatData);
 
     if (!result?.success) {
@@ -156,13 +152,13 @@ export class AdminCategoriesController {
    */
   @Endpoint({
     endpoint: '/analyze/average-views',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetAverageViewCountPerCategory(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageViewPerCategoryItemType[]>> {
+  async adminGetAverageViewCountPerCategory(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageViewPerCategoryItemType[]>> {
     const result = await this.adminCategoriesService.adminGetAverageViewCountPerCategory(analyzeStatData);
 
     if (!result?.success) {
@@ -325,13 +321,13 @@ export class AdminCategoriesController {
    */
   @Endpoint({
     endpoint: '/analyze/subscriber-growth',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetCategorySubscriberGrowthRate(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CategorySubscriberGrowthRateItemType[]>> {
+  async adminGetCategorySubscriberGrowthRate(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CategorySubscriberGrowthRateItemType[]>> {
     const result = await this.adminCategoriesService.adminGetCategorySubscriberGrowthRate(analyzeStatData);
 
     if (!result?.success) {
@@ -378,9 +374,9 @@ export class AdminCategoriesController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
   })
-  async adminGetCategoryList(@Body() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {
+  async adminGetCategoryList(@Query() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {
     const result = await this.adminCategoriesService.adminGetCategoryList(searchData);
 
     if (!result?.success) {

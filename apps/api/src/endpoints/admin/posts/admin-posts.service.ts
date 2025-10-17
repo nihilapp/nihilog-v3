@@ -52,20 +52,18 @@ export class AdminPostsService {
 
   /**
    * @description 인기 포스트 TOP N (조회수 기준)
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async getTopPopularPostsByViewCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopPopularPostItemType[]> | null> {
-    return this.postRepository.getTopPopularPostsByViewCount(limit, analyzeStatData);
+  async getTopPopularPostsByViewCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopPopularPostItemType[]> | null> {
+    return this.postRepository.getTopPopularPostsByViewCount(analyzeStatData.limit || 10, analyzeStatData);
   }
 
   /**
    * @description 댓글 많은 포스트 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async getTopPostsByCommentCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopCommentPostItemType[]> | null> {
-    return this.postRepository.getTopPostsByCommentCount(limit, analyzeStatData);
+  async getTopPostsByCommentCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopCommentPostItemType[]> | null> {
+    return this.postRepository.getTopPostsByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
   }
 
   /**

@@ -15,22 +15,16 @@ export const registerAdminSubscribeEndpoints = () => {
   // 구독 설정 통계 관련 엔드포인트
   // ========================================================
 
-  // POST /admin/subscribes/analyze/overview - 구독 설정 분석 통계
+  // GET /admin/subscribes/analyze/overview - 구독 설정 분석 통계
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/subscribes/analyze/overview',
     summary: '📊 구독 설정 분석 통계',
     description: 'ADMIN 권한으로 구독 설정 분석 통계를 조회합니다.',
     tags: [ 'admin-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -94,22 +88,16 @@ export const registerAdminSubscribeEndpoints = () => {
     },
   });
 
-  // POST /admin/subscribes/analyze/active-users - 전체 알림 활성 사용자 수 통계
+  // GET /admin/subscribes/analyze/active-users - 전체 알림 활성 사용자 수 통계
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/subscribes/analyze/active-users',
     summary: '📊 전체 알림 활성 사용자 수 통계',
     description: 'ADMIN 권한으로 전체 알림 활성 사용자 수 통계를 조회합니다.',
     tags: [ 'admin-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -138,22 +126,16 @@ export const registerAdminSubscribeEndpoints = () => {
     },
   });
 
-  // POST /admin/subscribes/analyze/inactive-users - 전체 알림 비활성 사용자 수 통계
+  // GET /admin/subscribes/analyze/inactive-users - 전체 알림 비활성 사용자 수 통계
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/subscribes/analyze/inactive-users',
     summary: '📊 전체 알림 비활성 사용자 수 통계',
     description: 'ADMIN 권한으로 전체 알림 비활성 사용자 수 통계를 조회합니다.',
     tags: [ 'admin-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -186,22 +168,16 @@ export const registerAdminSubscribeEndpoints = () => {
   // 기존 구독 설정 관리 엔드포인트
   // ========================================================
 
-  // POST /admin/subscribes - 구독 설정 목록 조회
+  // GET /admin/subscribes/search - 구독 설정 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/subscribes/search',
     summary: '📋 구독 설정 목록 조회',
     description: '전체 사용자의 구독 설정 목록을 조회합니다.',
     tags: [ 'admin-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchSubscribeSchema,
-          },
-        },
-      },
+      query: searchSubscribeSchema,
     },
     responses: {
       200: {

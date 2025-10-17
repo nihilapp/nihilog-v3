@@ -37,14 +37,14 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/analyze/overview',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
   async adminGetAnalyzeCommentData(
-    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query() analyzeStatData: AnalyzeStatDto,
     @Query('pstNo') pstNo?: number
   ): Promise<ResponseDto<AnalyzeCommentStatItemType[]>> {
     const result = await this.adminCommentsService.adminGetAnalyzeCommentData(analyzeStatData, pstNo);
@@ -61,22 +61,18 @@ export class AdminCommentsController {
 
   /**
    * @description 포스트별 댓글 수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-posts',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetTopPostsByCommentCount(
-    @Query('limit') limit: number,
-    @Body() analyzeStatData?: AnalyzeStatDto
-  ): Promise<ResponseDto<TopPostsByCommentItemType[]>> {
-    const result = await this.adminCommentsService.adminGetTopPostsByCommentCount(limit || 10, analyzeStatData);
+  async adminGetTopPostsByCommentCount(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopPostsByCommentItemType[]>> {
+    const result = await this.adminCommentsService.adminGetTopPostsByCommentCount(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -90,22 +86,18 @@ export class AdminCommentsController {
 
   /**
    * @description 사용자별 댓글 작성 수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-users',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetTopUsersByCommentCount(
-    @Query('limit') limit: number,
-    @Body() analyzeStatData?: AnalyzeStatDto
-  ): Promise<ResponseDto<TopUsersByCommentItemType[]>> {
-    const result = await this.adminCommentsService.adminGetTopUsersByCommentCount(limit || 10, analyzeStatData);
+  async adminGetTopUsersByCommentCount(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByCommentItemType[]>> {
+    const result = await this.adminCommentsService.adminGetTopUsersByCommentCount(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -123,13 +115,13 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/analyze/average-per-post',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetAverageCommentCountPerPost(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageCommentPerPostItemType[]>> {
+  async adminGetAverageCommentCountPerPost(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AverageCommentPerPostItemType[]>> {
     const result = await this.adminCommentsService.adminGetAverageCommentCountPerPost(analyzeStatData);
 
     if (!result?.success) {
@@ -172,13 +164,13 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/analyze/approval-rate',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetCommentApprovalRate(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentApprovalRateItemType[]>> {
+  async adminGetCommentApprovalRate(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentApprovalRateItemType[]>> {
     const result = await this.adminCommentsService.adminGetCommentApprovalRate(analyzeStatData);
 
     if (!result?.success) {
@@ -197,13 +189,13 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/analyze/spam-rate',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetCommentSpamRate(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentSpamRateItemType[]>> {
+  async adminGetCommentSpamRate(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentSpamRateItemType[]>> {
     const result = await this.adminCommentsService.adminGetCommentSpamRate(analyzeStatData);
 
     if (!result?.success) {
@@ -222,13 +214,13 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/analyze/reply-ratio',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetCommentReplyRatio(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentReplyRatioItemType[]>> {
+  async adminGetCommentReplyRatio(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentReplyRatioItemType[]>> {
     const result = await this.adminCommentsService.adminGetCommentReplyRatio(analyzeStatData);
 
     if (!result?.success) {
@@ -247,13 +239,13 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/analyze/average-depth',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetCommentAverageDepth(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentAverageDepthItemType[]>> {
+  async adminGetCommentAverageDepth(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<CommentAverageDepthItemType[]>> {
     const result = await this.adminCommentsService.adminGetCommentAverageDepth(analyzeStatData);
 
     if (!result?.success) {

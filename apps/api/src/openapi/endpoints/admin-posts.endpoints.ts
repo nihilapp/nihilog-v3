@@ -11,9 +11,9 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminPostsEndpoints = () => {
-  // POST /admin/posts/analyze/overview - 포스트 분석 데이터 조회
+  // GET /admin/posts/analyze/overview - 포스트 분석 데이터 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/overview',
     summary: '📊 포스트 분석 데이터 조회',
     description: '관리자가 포스트의 종합 분석 데이터를 조회합니다. (발행/수정/삭제/조회/북마크/공유/댓글 수)',
@@ -30,14 +30,8 @@ export const registerAdminPostsEndpoints = () => {
             description: '포스트 번호 (선택사항 - 없으면 전체 포스트)',
             example: 1,
           }),
+        ...analyzeStatSchema.shape,
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {
@@ -64,9 +58,9 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // POST /admin/posts/analyze/shares - 플랫폼별 공유 통계 조회
+  // GET /admin/posts/analyze/shares - 플랫폼별 공유 통계 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/shares',
     summary: '📊 플랫폼별 공유 통계 조회',
     description: '관리자가 플랫폼별 공유 통계를 조회합니다.',
@@ -83,14 +77,8 @@ export const registerAdminPostsEndpoints = () => {
             description: '포스트 번호 (선택사항 - 없으면 전체 포스트)',
             example: 1,
           }),
+        ...analyzeStatSchema.shape,
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {
@@ -117,22 +105,16 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // POST /admin/posts/analyze/average-views - 포스트별 평균 조회수 조회
+  // GET /admin/posts/analyze/average-views - 포스트별 평균 조회수 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/average-views',
     summary: '📊 포스트별 평균 조회수 조회 (시간대별)',
     description: '관리자가 시간대별 포스트 평균 조회수를 조회합니다.',
     tags: [ 'admin-posts', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -159,22 +141,16 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // POST /admin/posts/analyze/average-bookmarks - 포스트당 평균 북마크 수 조회
+  // GET /admin/posts/analyze/average-bookmarks - 포스트당 평균 북마크 수 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/average-bookmarks',
     summary: '📊 포스트당 평균 북마크 수 조회 (시간대별)',
     description: '관리자가 시간대별 포스트당 평균 북마크 수를 조회합니다.',
     tags: [ 'admin-posts', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -201,30 +177,16 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // POST /admin/posts/analyze/top-popular - 인기 포스트 TOP N
+  // GET /admin/posts/analyze/top-popular - 인기 포스트 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/top-popular',
     summary: '📊 인기 포스트 TOP N (조회수 기준)',
     description: '관리자가 조회수 기준 인기 포스트 TOP N을 조회합니다.',
     tags: [ 'admin-posts', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              limit: z.number().int().positive().openapi({
-                description: '상위 N개',
-                example: 10,
-              }),
-              analyzeStatData: analyzeStatSchema.optional().openapi({
-                description: '분석 통계 데이터 (선택사항)',
-              }),
-            }),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -251,30 +213,16 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // POST /admin/posts/analyze/top-comments - 댓글 많은 포스트 TOP N
+  // GET /admin/posts/analyze/top-comments - 댓글 많은 포스트 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/top-comments',
     summary: '📊 댓글 많은 포스트 TOP N',
     description: '관리자가 댓글 수 기준 포스트 TOP N을 조회합니다.',
     tags: [ 'admin-posts', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              limit: z.number().int().positive().openapi({
-                description: '상위 N개',
-                example: 10,
-              }),
-              analyzeStatData: analyzeStatSchema.optional().openapi({
-                description: '분석 통계 데이터 (선택사항)',
-              }),
-            }),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -301,22 +249,16 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // POST /admin/posts/analyze/status-ratio - 포스트 상태 비율 조회
+  // GET /admin/posts/analyze/status-ratio - 포스트 상태 비율 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/posts/analyze/status-ratio',
     summary: '📊 포스트 상태 비율 조회',
     description: '관리자가 포스트 상태별 비율을 조회합니다.',
     tags: [ 'admin-posts', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.optional(),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {

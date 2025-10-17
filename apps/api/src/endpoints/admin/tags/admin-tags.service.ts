@@ -45,11 +45,10 @@ export class AdminTagsService {
 
   /**
    * @description 태그별 사용 횟수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async adminGetTopUsedTagsByCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopUsedTagItemType[]> | null> {
-    return this.tagRepository.getTopUsedTagsByCount(limit, analyzeStatData);
+  async adminGetTopUsedTagsByCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopUsedTagItemType[]> | null> {
+    return this.tagRepository.getTopUsedTagsByCount(analyzeStatData.limit || 10, analyzeStatData);
   }
 
   /**

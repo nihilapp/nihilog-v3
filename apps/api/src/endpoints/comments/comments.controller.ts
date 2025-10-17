@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Req } from '@nestjs/common';
+import { Body, Controller, Param, Query, Req } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -18,9 +18,9 @@ export class CommentsController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
   })
-  async getCommentList(@Body() searchData: SearchCommentDto): Promise<ResponseDto<ListType<SelectCommentListItemType>>> {
+  async getCommentList(@Query() searchData: SearchCommentDto): Promise<ResponseDto<ListType<SelectCommentListItemType>>> {
     const result = await this.commentsService.getCommentList(searchData);
 
     if (!result?.success) {

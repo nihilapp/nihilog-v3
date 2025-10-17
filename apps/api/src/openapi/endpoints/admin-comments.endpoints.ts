@@ -17,9 +17,9 @@ export const registerAdminCommentsEndpoints = () => {
   // 댓글 통계 관련 엔드포인트
   // ========================================================
 
-  // POST /admin/comments/analyze/overview - 댓글 분석 통계
+  // GET /admin/comments/analyze/overview - 댓글 분석 통계
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/overview',
     summary: '📊 댓글 분석 통계',
     description: 'ADMIN 권한으로 댓글 분석 통계를 조회합니다. (전체 또는 특정 포스트)',
@@ -36,14 +36,8 @@ export const registerAdminCommentsEndpoints = () => {
             description: '포스트 번호 (선택사항 - 없으면 전체 댓글)',
             example: 1,
           }),
+        ...analyzeStatSchema.shape,
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {
@@ -70,33 +64,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/top-posts - 포스트별 댓글 수 TOP N
+  // GET /admin/comments/analyze/top-posts - 포스트별 댓글 수 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/top-posts',
     summary: '📊 포스트별 댓글 수 TOP N',
     description: 'ADMIN 권한으로 댓글 수 기준 포스트 TOP N을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      query: z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .positive()
-          .optional()
-          .openapi({
-            description: '상위 N개 (기본값: 10)',
-            example: 10,
-          }),
-      }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.optional(),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -123,33 +100,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/top-users - 사용자별 댓글 작성 수 TOP N
+  // GET /admin/comments/analyze/top-users - 사용자별 댓글 작성 수 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/top-users',
     summary: '📊 사용자별 댓글 작성 수 TOP N',
     description: 'ADMIN 권한으로 댓글 작성 수 기준 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      query: z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .positive()
-          .optional()
-          .openapi({
-            description: '상위 N개 (기본값: 10)',
-            example: 10,
-          }),
-      }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.optional(),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -176,22 +136,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/average-per-post - 평균 댓글 수 / 포스트
+  // GET /admin/comments/analyze/average-per-post - 평균 댓글 수 / 포스트
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/average-per-post',
     summary: '📊 평균 댓글 수 / 포스트',
     description: 'ADMIN 권한으로 포스트당 평균 댓글 수를 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -251,22 +205,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/approval-rate - 댓글 승인율
+  // GET /admin/comments/analyze/approval-rate - 댓글 승인율
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/approval-rate',
     summary: '📊 댓글 승인율',
     description: 'ADMIN 권한으로 댓글 승인율을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -293,22 +241,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/spam-rate - 스팸 댓글 비율
+  // GET /admin/comments/analyze/spam-rate - 스팸 댓글 비율
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/spam-rate',
     summary: '📊 스팸 댓글 비율',
     description: 'ADMIN 권한으로 스팸 댓글 비율을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -335,22 +277,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/reply-ratio - 답글 비율
+  // GET /admin/comments/analyze/reply-ratio - 답글 비율
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/reply-ratio',
     summary: '📊 답글 비율',
     description: 'ADMIN 권한으로 답글 비율을 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -377,22 +313,16 @@ export const registerAdminCommentsEndpoints = () => {
     },
   });
 
-  // POST /admin/comments/analyze/average-depth - 평균 답글 깊이
+  // GET /admin/comments/analyze/average-depth - 평균 답글 깊이
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/comments/analyze/average-depth',
     summary: '📊 평균 답글 깊이',
     description: 'ADMIN 권한으로 평균 답글 깊이를 조회합니다.',
     tags: [ 'admin-comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {

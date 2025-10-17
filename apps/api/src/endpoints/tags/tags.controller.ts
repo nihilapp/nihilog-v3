@@ -1,7 +1,7 @@
 import {
   Controller,
-  Body,
-  Param
+  Param,
+  Query
 } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
@@ -24,9 +24,9 @@ export class TagController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
   })
-  async getTagList(@Body() searchData: SearchTagDto): Promise<ResponseDto<ListType<SelectTagInfoListItemType>>> {
+  async getTagList(@Query() searchData: SearchTagDto): Promise<ResponseDto<ListType<SelectTagInfoListItemType>>> {
     const result = await this.tagService.getTagList(searchData);
 
     if (!result?.success) {

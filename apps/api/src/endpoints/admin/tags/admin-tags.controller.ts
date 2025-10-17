@@ -45,7 +45,7 @@ export class AdminTagsController {
    */
   @Endpoint({
     endpoint: '/analyze/overview',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -53,7 +53,7 @@ export class AdminTagsController {
   })
   async adminGetAnalyzeTagData(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query() analyzeStatData: AnalyzeStatDto,
     @Query('tagNo') tagNo?: number
   ): Promise<ResponseDto<AnalyzeTagStatItemType[]>> {
     if (req.errorResponse) {
@@ -79,12 +79,11 @@ export class AdminTagsController {
   /**
    * @description 태그별 사용 횟수 TOP N
    * @param req 요청 객체
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-used',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -92,14 +91,13 @@ export class AdminTagsController {
   })
   async adminGetTopUsedTagsByCount(
     @Req() req: AuthRequest,
-    @Query('limit') limit: number,
-    @Body() analyzeStatData?: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<TopUsedTagItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminGetTopUsedTagsByCount(limit, analyzeStatData);
+    const result = await this.adminTagsService.adminGetTopUsedTagsByCount(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -122,7 +120,7 @@ export class AdminTagsController {
    */
   @Endpoint({
     endpoint: '/analyze/usage-trend',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -130,7 +128,7 @@ export class AdminTagsController {
   })
   async adminGetTagUsageTrend(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<TagUsageTrendItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -229,7 +227,7 @@ export class AdminTagsController {
    */
   @Endpoint({
     endpoint: '/analyze/subscriber-growth',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -237,7 +235,7 @@ export class AdminTagsController {
   })
   async adminGetTagSubscriberGrowthRate(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<TagSubscriberGrowthRateItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -332,7 +330,7 @@ export class AdminTagsController {
    */
   @Endpoint({
     endpoint: '/analyze/frequency',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -340,7 +338,7 @@ export class AdminTagsController {
   })
   async adminGetTagAverageUsageFrequency(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<TagAverageUsageFrequencyItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -727,7 +725,7 @@ export class AdminTagsController {
    */
   @Endpoint({
     endpoint: '/mapping/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -735,7 +733,7 @@ export class AdminTagsController {
   })
   async adminGetTagMapping(
     @Req() req: AuthRequest,
-    @Body() searchData: SearchPstTagMpngDto
+    @Query() searchData: SearchPstTagMpngDto
   ): Promise<ResponseDto<ListType<SelectPstTagMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;

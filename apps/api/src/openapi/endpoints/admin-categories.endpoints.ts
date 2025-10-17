@@ -20,9 +20,9 @@ export const registerAdminCategoriesEndpoints = () => {
   // 카테고리 통계 관련 엔드포인트
   // ========================================================
 
-  // POST /admin/categories/analyze/overview - 카테고리 분석 통계
+  // GET /admin/categories/analyze/overview - 카테고리 분석 통계
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/categories/analyze/overview',
     summary: '📊 카테고리 분석 통계',
     description: 'ADMIN 권한으로 카테고리 분석 통계를 조회합니다. (전체 또는 개별 카테고리)',
@@ -39,14 +39,8 @@ export const registerAdminCategoriesEndpoints = () => {
             description: '카테고리 번호 (선택사항 - 없으면 전체 카테고리)',
             example: 1,
           }),
+        ...analyzeStatSchema.shape,
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {
@@ -73,22 +67,16 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/analyze/subscriber-growth - 카테고리별 구독자 성장률 (시계열)
+  // GET /admin/categories/analyze/subscriber-growth - 카테고리별 구독자 성장률 (시계열)
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/categories/analyze/subscriber-growth',
     summary: '📊 카테고리별 구독자 성장률 (시계열)',
     description: 'ADMIN 권한으로 시간대별 카테고리 구독자 성장률을 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -148,33 +136,16 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/analyze/popular-index - 카테고리별 인기 지수 TOP N
+  // GET /admin/categories/analyze/popular-index - 카테고리별 인기 지수 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/categories/analyze/popular-index',
     summary: '📊 카테고리별 인기 지수 TOP N',
     description: 'ADMIN 권한으로 인기 지수 기준 카테고리 TOP N을 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      query: z.object({
-        limit: z.coerce
-          .number()
-          .int()
-          .positive()
-          .optional()
-          .openapi({
-            description: '상위 N개 (기본값: 10)',
-            example: 10,
-          }),
-      }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.optional(),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -247,22 +218,16 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/analyze/average-bookmarks - 평균 북마크 수 / 카테고리
+  // GET /admin/categories/analyze/average-bookmarks - 평균 북마크 수 / 카테고리
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/categories/analyze/average-bookmarks',
     summary: '📊 평균 북마크 수 / 카테고리 (시간대별)',
     description: 'ADMIN 권한으로 시간대별 카테고리당 평균 북마크 수를 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -289,22 +254,16 @@ export const registerAdminCategoriesEndpoints = () => {
     },
   });
 
-  // POST /admin/categories/analyze/average-views - 카테고리별 평균 조회수
+  // GET /admin/categories/analyze/average-views - 카테고리별 평균 조회수
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/categories/analyze/average-views',
     summary: '📊 카테고리별 평균 조회수 (시간대별)',
     description: 'ADMIN 권한으로 시간대별 카테고리당 평균 조회수를 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -533,22 +492,16 @@ export const registerAdminCategoriesEndpoints = () => {
   // 카테고리 CRUD 엔드포인트
   // ========================================================
 
-  // POST /admin/categories/search - 카테고리 목록 조회
+  // GET /admin/categories/search - 카테고리 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/categories/search',
     summary: '📁 관리자 카테고리 목록 조회',
     description: 'ADMIN 권한으로 카테고리 목록을 조회합니다.',
     tags: [ 'admin-categories', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchCategorySchema,
-          },
-        },
-      },
+      query: searchCategorySchema,
     },
     responses: {
       200: {

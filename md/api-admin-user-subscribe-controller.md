@@ -11,9 +11,9 @@
 ### 1. adminGetAnalyzeSubscribeData (통계)
 
 - **메소드명:** adminGetAnalyzeSubscribeData
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/subscribes/analyze/overview`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<AnalyzeSubscribeStatItemType[]>
 - **설명:** 구독 설정 분석 통계
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -35,9 +35,9 @@
 ### 3. adminGetTotalActiveNotificationUsers (통계)
 
 - **메소드명:** adminGetTotalActiveNotificationUsers
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/subscribes/analyze/active-users`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TotalActiveNotificationUsersItemType[]>
 - **설명:** 전체 알림 활성 사용자 수 통계
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -47,9 +47,9 @@
 ### 4. adminGetTotalInactiveNotificationUsers (통계)
 
 - **메소드명:** adminGetTotalInactiveNotificationUsers
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/subscribes/analyze/inactive-users`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TotalInactiveNotificationUsersItemType[]>
 - **설명:** 전체 알림 비활성 사용자 수 통계
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -61,9 +61,9 @@
 ### 5. adminGetUserSubscribeList
 
 - **메소드명:** adminGetUserSubscribeList
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/subscribes/search`
-- **요청 데이터 (Body):** SearchSubscribeDto
+- **요청 데이터 (Query):** SearchSubscribeDto의 모든 필드들을 Query 파라미터로
 - **반환 타입:** ResponseDto<ListDto<UserSubscribeDto>>
 - **설명:** 전체 사용자 구독 설정 목록 조회
 - **인증:** JWT 인증 필요 (ADMIN)

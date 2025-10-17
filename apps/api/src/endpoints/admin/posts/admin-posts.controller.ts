@@ -23,7 +23,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/analyze/overview',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -31,7 +31,7 @@ export class AdminPostsController {
   })
   async adminGetAnalyzePostData(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto,
+    @Query() analyzeStatData: AnalyzeStatDto,
     @Query('pstNo') pstNo?: number
   ): Promise<ResponseDto<AnalyzePostItemType[]>> {
     if (req.errorResponse) {
@@ -61,7 +61,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/analyze/shares',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -69,8 +69,8 @@ export class AdminPostsController {
   })
   async adminGetPostShareStatsByPlatform(
     @Req() req: AuthRequest,
-    @Query('pstNo') pstNo: number | undefined,
-    @Body() analyzeStatData: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto,
+    @Query('pstNo') pstNo?: number
   ): Promise<ResponseDto<SharePlatformStatItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -98,7 +98,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/analyze/average-views',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -106,7 +106,7 @@ export class AdminPostsController {
   })
   async adminGetAverageForPostView(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<AverageViewStatItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -134,7 +134,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/analyze/average-bookmarks',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -142,7 +142,7 @@ export class AdminPostsController {
   })
   async adminGetAverageBookmarkCountPerPost(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<AverageBookmarkStatItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -166,12 +166,11 @@ export class AdminPostsController {
 
   /**
    * @description 관리자 - 인기 포스트 TOP N (조회수 기준)
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-popular',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -179,14 +178,13 @@ export class AdminPostsController {
   })
   async adminGetTopPopularPostsByViewCount(
     @Req() req: AuthRequest,
-    @Body() body: { limit: number; analyzeStatData?: AnalyzeStatDto }
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<TopPopularPostItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const { limit, analyzeStatData, } = body;
-    const result = await this.postsService.getTopPopularPostsByViewCount(limit, analyzeStatData);
+    const result = await this.postsService.getTopPopularPostsByViewCount(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -204,12 +202,11 @@ export class AdminPostsController {
 
   /**
    * @description 관리자 - 댓글 많은 포스트 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택사항)
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-comments',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -217,14 +214,13 @@ export class AdminPostsController {
   })
   async adminGetTopPostsByCommentCount(
     @Req() req: AuthRequest,
-    @Body() body: { limit: number; analyzeStatData?: AnalyzeStatDto }
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<TopCommentPostItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const { limit, analyzeStatData, } = body;
-    const result = await this.postsService.getTopPostsByCommentCount(limit, analyzeStatData);
+    const result = await this.postsService.getTopPostsByCommentCount(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -246,7 +242,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/analyze/status-ratio',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -254,7 +250,7 @@ export class AdminPostsController {
   })
   async adminGetPostStatusRatio(
     @Req() req: AuthRequest,
-    @Body() analyzeStatData?: AnalyzeStatDto
+    @Query() analyzeStatData: AnalyzeStatDto
   ): Promise<ResponseDto<PostStatusRatioItemType[]>> {
     if (req.errorResponse) {
       return req.errorResponse;

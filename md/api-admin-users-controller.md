@@ -11,9 +11,9 @@
 ### 1. getAnalyzeUserData (통계)
 
 - **메소드명:** getAnalyzeUserData
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/overview`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<AnalyzeUserStatItemType[]>
 - **설명:** 사용자 분석 통계 (9개 지표 통합)
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -23,9 +23,9 @@
 ### 2. getActiveUserAnalysis (통계)
 
 - **메소드명:** getActiveUserAnalysis
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/active-users`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<ActiveUserAnalysisItemType[]>
 - **설명:** 활성 사용자 분석
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -35,9 +35,9 @@
 ### 3. getTopUsersByContribution (통계)
 
 - **메소드명:** getTopUsersByContribution
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/top-contribution`
-- **요청 데이터 (Body):** AnalyzeStatDto & { limit?: number }
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopUsersByContributionItemType[]>
 - **설명:** 사용자별 기여도 TOP N
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -47,9 +47,9 @@
 ### 4. getTopUsersByPostCount (통계)
 
 - **메소드명:** getTopUsersByPostCount
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/top-post-count`
-- **요청 데이터 (Body):** AnalyzeStatDto & { limit?: number }
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopUsersByPostCountItemType[]>
 - **설명:** 사용자별 포스트 작성 수 TOP N
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -59,9 +59,9 @@
 ### 5. getTopUsersByCommentCount (통계)
 
 - **메소드명:** getTopUsersByCommentCount
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/top-comment-count`
-- **요청 데이터 (Body):** AnalyzeStatDto & { limit?: number }
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopUsersByCommentCountItemType[]>
 - **설명:** 사용자별 댓글 작성 수 TOP N
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -107,9 +107,9 @@
 ### 9. getUserGrowthRate (통계)
 
 - **메소드명:** getUserGrowthRate
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/growth-rate`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<UserGrowthRateItemType[]>
 - **설명:** 사용자 성장률
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -119,9 +119,9 @@
 ### 10. getUserRetentionRate (통계)
 
 - **메소드명:** getUserRetentionRate
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/analyze/retention-rate`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<UserRetentionRateItemType[]>
 - **설명:** 사용자 유지율
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -133,9 +133,9 @@
 ### 11. adminGetUserList
 
 - **메소드명:** adminGetUserList
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/users/search`
-- **요청 데이터 (Body):** SearchUserDto
+- **요청 데이터 (Query):** SearchUserDto의 모든 필드들을 Query 파라미터로
 - **반환 타입:** ResponseDto<ListType<SelectUserInfoListItemType>>
 - **설명:** 사용자 목록 검색
 - **인증:** JWT 인증 필요 (ADMIN)

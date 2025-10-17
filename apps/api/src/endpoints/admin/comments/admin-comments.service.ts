@@ -36,20 +36,18 @@ export class AdminCommentsService {
 
   /**
    * @description 포스트별 댓글 수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async adminGetTopPostsByCommentCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopPostsByCommentItemType[]> | null> {
-    return this.commentRepository.getTopPostsByCommentCount(limit, analyzeStatData);
+  async adminGetTopPostsByCommentCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopPostsByCommentItemType[]> | null> {
+    return this.commentRepository.getTopPostsByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
   }
 
   /**
    * @description 사용자별 댓글 작성 수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async adminGetTopUsersByCommentCount(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopUsersByCommentItemType[]> | null> {
-    return this.commentRepository.getTopUsersByCommentCount(limit, analyzeStatData);
+  async adminGetTopUsersByCommentCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopUsersByCommentItemType[]> | null> {
+    return this.commentRepository.getTopUsersByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
   }
 
   /**

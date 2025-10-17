@@ -41,11 +41,10 @@ export class AdminCategoriesService {
 
   /**
    * @description 카테고리별 인기 지수 TOP N
-   * @param limit 상위 N개
-   * @param analyzeStatData 분석 통계 데이터 (선택적)
+   * @param analyzeStatData 분석 통계 데이터
    */
-  async adminGetTopPopularCategoriesByIndex(limit: number, analyzeStatData?: AnalyzeStatDto): Promise<RepoResponseType<TopPopularCategoryItemType[]> | null> {
-    return this.categoryRepository.getTopPopularCategoriesByIndex(limit, analyzeStatData);
+  async adminGetTopPopularCategoriesByIndex(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopPopularCategoryItemType[]> | null> {
+    return this.categoryRepository.getTopPopularCategoriesByIndex(analyzeStatData.limit || 10, analyzeStatData);
   }
 
   /**

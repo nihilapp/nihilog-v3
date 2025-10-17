@@ -15,21 +15,15 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerPostsEndpoints = () => {
-  // POST /posts/search - 포스트 목록 조회
+  // GET /posts/search - 포스트 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/posts/search',
     summary: '📋 포스트 목록 조회',
     description: '포스트 목록을 조회합니다.',
     tags: [ 'posts', ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchPostSchema,
-          },
-        },
-      },
+      query: searchPostSchema,
     },
     responses: {
       200: {

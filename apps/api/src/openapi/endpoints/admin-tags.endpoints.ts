@@ -9,9 +9,9 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminTagsEndpoints = () => {
-  // POST /admin/tags/analyze/overview - 태그 분석 데이터 조회
+  // GET /admin/tags/analyze/overview - 태그 분석 데이터 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/tags/analyze/overview',
     summary: '📊 태그 분석 데이터 조회',
     description: '관리자가 태그의 종합 분석 데이터를 조회합니다. (생성/삭제/활성/매핑/구독 통계)',
@@ -28,14 +28,8 @@ export const registerAdminTagsEndpoints = () => {
             description: '태그 번호 (선택사항 - 없으면 전체 태그)',
             example: 1,
           }),
+        ...analyzeStatSchema.shape,
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {
@@ -66,30 +60,16 @@ export const registerAdminTagsEndpoints = () => {
   // 사용량 분석 (3개)
   // ========================================================
 
-  // POST /admin/tags/analyze/top-used - TOP N 사용 태그
+  // GET /admin/tags/analyze/top-used - TOP N 사용 태그
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/tags/analyze/top-used',
     summary: '📊 태그별 사용 횟수 TOP N',
     description: '관리자가 태그별 사용 횟수 TOP N을 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: z.object({
-              limit: z.number().int().positive().openapi({
-                description: '상위 N개',
-                example: 10,
-              }),
-              analyzeStatData: analyzeStatSchema.optional().openapi({
-                description: '분석 통계 데이터 (선택사항)',
-              }),
-            }),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -116,22 +96,16 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/analyze/usage-trend - 사용 추이
+  // GET /admin/tags/analyze/usage-trend - 사용 추이
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/tags/analyze/usage-trend',
     summary: '📊 태그별 사용 추이',
     description: '관리자가 태그별 사용 추이를 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -240,22 +214,16 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/analyze/subscriber-growth - 구독자 성장률
+  // GET /admin/tags/analyze/subscriber-growth - 구독자 성장률
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/tags/analyze/subscriber-growth',
     summary: '📊 태그별 구독자 성장률',
     description: '관리자가 태그별 구독자 성장률을 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -352,22 +320,16 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // POST /admin/tags/analyze/frequency - 평균 사용 빈도
+  // GET /admin/tags/analyze/frequency - 평균 사용 빈도
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/tags/analyze/frequency',
     summary: '📊 태그별 평균 사용 빈도',
     description: '관리자가 태그별 평균 사용 빈도를 조회합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {

@@ -14,22 +14,16 @@ import { addGlobalResponses } from '../utils/global-responses';
 export const registerAdminUsersEndpoints = () => {
   // ===== 사용자 통계 엔드포인트 (최상단) =====
 
-  // POST /admin/users/analyze/overview - 사용자 분석 통계
+  // GET /admin/users/analyze/overview - 사용자 분석 통계
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/overview',
     summary: '📊 사용자 분석 통계',
     description: '사용자 가입/삭제/활성, 로그인, 포스트/댓글/북마크, 태그/카테고리 구독 통계를 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -56,22 +50,16 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/active-users - 활성 사용자 분석
+  // GET /admin/users/analyze/active-users - 활성 사용자 분석
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/active-users',
     summary: '👥 활성 사용자 분석',
     description: '최근 7일/30일 로그인한 활성 사용자 수 및 비율을 분석합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -98,27 +86,16 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/top-contribution - 사용자별 기여도 TOP N
+  // GET /admin/users/analyze/top-contribution - 사용자별 기여도 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/top-contribution',
     summary: '🏆 사용자별 기여도 TOP N',
     description: '포스트 + 댓글 + 북마크 가중치 합산 기준으로 기여도가 높은 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.extend({
-              limit: z.coerce.number().int().positive().optional().openapi({
-                description: '조회할 상위 사용자 수 (기본값: 10)',
-                example: 10,
-              }),
-            }),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -145,27 +122,16 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/top-posts - 사용자별 포스트 작성 수 TOP N
+  // GET /admin/users/analyze/top-posts - 사용자별 포스트 작성 수 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/top-posts',
     summary: '📝 사용자별 포스트 작성 수 TOP N',
     description: '포스트를 가장 많이 작성한 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.extend({
-              limit: z.coerce.number().int().positive().optional().openapi({
-                description: '조회할 상위 사용자 수 (기본값: 10)',
-                example: 10,
-              }),
-            }),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -192,27 +158,16 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/top-comments - 사용자별 댓글 작성 수 TOP N
+  // GET /admin/users/analyze/top-comments - 사용자별 댓글 작성 수 TOP N
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/top-comments',
     summary: '💬 사용자별 댓글 작성 수 TOP N',
     description: '댓글을 가장 많이 작성한 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.extend({
-              limit: z.coerce.number().int().positive().optional().openapi({
-                description: '조회할 상위 사용자 수 (기본값: 10)',
-                example: 10,
-              }),
-            }),
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -352,22 +307,16 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/growth-rate - 사용자 성장률
+  // GET /admin/users/analyze/growth-rate - 사용자 성장률
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/growth-rate',
     summary: '📈 사용자 성장률',
     description: '신규 가입 추이를 기반으로 사용자 성장률을 계산합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -394,22 +343,16 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/retention-rate - 사용자 유지율
+  // GET /admin/users/analyze/retention-rate - 사용자 유지율
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/retention-rate',
     summary: '🔄 사용자 유지율',
     description: '가입 대비 활성 사용자 비율을 기반으로 사용자 유지율을 계산합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema,
-          },
-        },
-      },
+      query: analyzeStatSchema,
     },
     responses: {
       200: {
@@ -438,22 +381,16 @@ export const registerAdminUsersEndpoints = () => {
 
   // ===== 기존 사용자 관리 엔드포인트 =====
 
-  // POST /admin/users/search - 사용자 목록 검색
+  // GET /admin/users/search - 사용자 목록 검색
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/search',
     summary: '🔎 사용자 목록 검색',
     description: '부분 일치(ILIKE) 기반으로 사용자 목록을 검색합니다. delYn이 제공되지 않으면 기본값 N으로 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchUserSchema,
-          },
-        },
-      },
+      query: searchUserSchema,
     },
     responses: {
       200: {

@@ -1,7 +1,7 @@
 import {
   Controller,
-  Body,
-  Param
+  Param,
+  Query
 } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
@@ -24,9 +24,9 @@ export class CategoriesController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
   })
-  async getCategoryList(@Body() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {
+  async getCategoryList(@Query() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {
     const result = await this.categoriesService.getCategoryList(searchData);
 
     if (!result?.success) {

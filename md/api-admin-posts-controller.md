@@ -11,10 +11,9 @@
 ### 1. adminGetAnalyzePostData (통계)
 
 - **메소드명:** adminGetAnalyzePostData
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/overview`
-- **요청 데이터 (Body):** AnalyzeStatDto
-- **요청 데이터 (Query):** pstNo (선택적, number)
+- **요청 데이터 (Query):** AnalyzeStatDto, pstNo (선택적, number)
 - **반환 타입:** ResponseDto<AnalyzePostItemType[]>
 - **설명:** 관리자 - 포스트 분석 데이터 조회
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -24,10 +23,9 @@
 ### 2. adminGetPostShareStatsByPlatform (통계)
 
 - **메소드명:** adminGetPostShareStatsByPlatform
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/shares`
-- **요청 데이터 (Body):** AnalyzeStatDto
-- **요청 데이터 (Query):** pstNo (선택적, number)
+- **요청 데이터 (Query):** AnalyzeStatDto, pstNo (선택적, number)
 - **반환 타입:** ResponseDto<SharePlatformStatItemType[]>
 - **설명:** 관리자 - 플랫폼별 공유 통계 조회
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -37,9 +35,9 @@
 ### 3. adminGetAverageForPostView (통계)
 
 - **메소드명:** adminGetAverageForPostView
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/average-views`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<AverageViewStatItemType[]>
 - **설명:** 관리자 - 포스트별 평균 조회수 조회 (시간대별)
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -49,9 +47,9 @@
 ### 4. adminGetAverageBookmarkCountPerPost (통계)
 
 - **메소드명:** adminGetAverageBookmarkCountPerPost
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/average-bookmarks`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<AverageBookmarkStatItemType[]>
 - **설명:** 관리자 - 포스트당 평균 북마크 수 조회 (시간대별)
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -61,9 +59,9 @@
 ### 5. adminGetTopPopularPostsByViewCount (통계)
 
 - **메소드명:** adminGetTopPopularPostsByViewCount
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/top-popular`
-- **요청 데이터 (Body):** { limit: number; analyzeStatData?: AnalyzeStatDto }
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopPopularPostItemType[]>
 - **설명:** 관리자 - 인기 포스트 TOP N (조회수 기준)
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -73,9 +71,9 @@
 ### 6. adminGetTopPostsByCommentCount (통계)
 
 - **메소드명:** adminGetTopPostsByCommentCount
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/top-comments`
-- **요청 데이터 (Body):** { limit: number; analyzeStatData?: AnalyzeStatDto }
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopCommentPostItemType[]>
 - **설명:** 관리자 - 댓글 많은 포스트 TOP N
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -85,9 +83,9 @@
 ### 7. adminGetPostStatusRatio (통계)
 
 - **메소드명:** adminGetPostStatusRatio
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/posts/analyze/status-ratio`
-- **요청 데이터 (Body):** AnalyzeStatDto (선택적)
+- **요청 데이터 (Query):** mode (선택적, string), startDt (선택적, string), endDt (선택적, string), limit (선택적, number)
 - **반환 타입:** ResponseDto<PostStatusRatioItemType[]>
 - **설명:** 관리자 - 포스트 상태 비율 조회
 - **인증:** JWT 인증 필요 (ADMIN)

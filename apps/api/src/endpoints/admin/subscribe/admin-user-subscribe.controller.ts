@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Param,
+  Query,
   Req,
   UseGuards
 } from '@nestjs/common';
@@ -43,13 +44,13 @@ export class AdminSubscribeController {
    */
   @Endpoint({
     endpoint: '/analyze/overview',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetAnalyzeSubscribeData(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AnalyzeSubscribeStatItemType[]>> {
+  async adminGetAnalyzeSubscribeData(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AnalyzeSubscribeStatItemType[]>> {
     const result = await this.subscribeService.adminGetAnalyzeSubscribeData(analyzeStatData);
 
     if (!result?.success) {
@@ -100,13 +101,13 @@ export class AdminSubscribeController {
    */
   @Endpoint({
     endpoint: '/analyze/active-users',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetTotalActiveNotificationUsers(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TotalActiveNotificationUsersItemType[]>> {
+  async adminGetTotalActiveNotificationUsers(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TotalActiveNotificationUsersItemType[]>> {
     const result = await this.subscribeService.adminGetTotalActiveNotificationUsers(analyzeStatData);
 
     if (!result?.success) {
@@ -129,13 +130,13 @@ export class AdminSubscribeController {
    */
   @Endpoint({
     endpoint: '/analyze/inactive-users',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetTotalInactiveNotificationUsers(@Body() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TotalInactiveNotificationUsersItemType[]>> {
+  async adminGetTotalInactiveNotificationUsers(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TotalInactiveNotificationUsersItemType[]>> {
     const result = await this.subscribeService.adminGetTotalInactiveNotificationUsers(analyzeStatData);
 
     if (!result?.success) {
@@ -161,13 +162,13 @@ export class AdminSubscribeController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async adminGetUserSubscribeList(@Body() searchData: SearchSubscribeDto): Promise<ResponseDto<ListDto<UserSubscribeDto>>> {
+  async adminGetUserSubscribeList(@Query() searchData: SearchSubscribeDto): Promise<ResponseDto<ListDto<UserSubscribeDto>>> {
     const result = await this.subscribeService.adminGetUserSubscribeList(searchData);
 
     if (!result?.success) {

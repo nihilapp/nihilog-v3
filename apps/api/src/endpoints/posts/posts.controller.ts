@@ -1,4 +1,4 @@
-import { Body, Controller, Ip, Param, Req } from '@nestjs/common';
+import { Body, Controller, Ip, Param, Query, Req } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -20,9 +20,9 @@ export class PostsController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
   })
-  async getPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
+  async getPostList(@Query() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostList(searchData);
 
     if (!result?.success) {

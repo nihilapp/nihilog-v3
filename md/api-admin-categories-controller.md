@@ -11,10 +11,9 @@
 ### 1. adminGetAnalyzeCategoryData (통계)
 
 - **메소드명:** adminGetAnalyzeCategoryData
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/categories/analyze/overview`
-- **요청 데이터 (Body):** AnalyzeStatDto
-- **요청 데이터 (Query):** ctgryNo (선택적, number)
+- **요청 데이터 (Query):** AnalyzeStatDto, ctgryNo (선택적, number)
 - **반환 타입:** ResponseDto<AnalyzeCategoryStatItemType[]>
 - **설명:** 카테고리 분석 통계
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -24,10 +23,9 @@
 ### 2. adminGetTopPopularCategoriesByIndex (통계)
 
 - **메소드명:** adminGetTopPopularCategoriesByIndex
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/categories/analyze/popular-index`
-- **요청 데이터 (Query):** limit (number)
-- **요청 데이터 (Body):** AnalyzeStatDto (선택적)
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<TopPopularCategoryItemType[]>
 - **설명:** 카테고리별 인기 지수 TOP N
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -49,9 +47,9 @@
 ### 4. adminGetAverageBookmarkCountPerCategory (통계)
 
 - **메소드명:** adminGetAverageBookmarkCountPerCategory
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/categories/analyze/average-bookmarks`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<AverageBookmarkPerCategoryItemType[]>
 - **설명:** 평균 북마크 수 / 카테고리
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -61,9 +59,9 @@
 ### 5. adminGetAverageViewCountPerCategory (통계)
 
 - **메소드명:** adminGetAverageViewCountPerCategory
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/categories/analyze/average-views`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<AverageViewPerCategoryItemType[]>
 - **설명:** 카테고리별 평균 조회수
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -145,9 +143,9 @@
 ### 12. adminGetCategorySubscriberGrowthRate (통계)
 
 - **메소드명:** adminGetCategorySubscriberGrowthRate
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/categories/analyze/subscriber-growth`
-- **요청 데이터 (Body):** AnalyzeStatDto
+- **요청 데이터 (Query):** AnalyzeStatDto
 - **반환 타입:** ResponseDto<CategorySubscriberGrowthRateItemType[]>
 - **설명:** 카테고리별 구독자 성장률 (시계열)
 - **인증:** JWT 인증 필요 (ADMIN)
@@ -171,9 +169,9 @@
 ### 14. adminGetCategoryList
 
 - **메소드명:** adminGetCategoryList
-- **요청 메소드:** POST
+- **요청 메소드:** GET
 - **요청 주소:** `/admin/categories/search`
-- **요청 데이터 (Body):** SearchCategoryDto
+- **요청 데이터 (Query):** SearchCategoryDto의 모든 필드들을 Query 파라미터로
 - **반환 타입:** ResponseDto<ListType<SelectCategoryListItemType>>
 - **설명:** 카테고리 목록 조회
 

@@ -42,18 +42,18 @@ export class AdminUserController {
 
   /**
    * @description 사용자 분석 통계 (9개 지표 통합)
-   * @param body 분석 통계 데이터
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/overview',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getAnalyzeUserData(@Body() body: AnalyzeStatDto): Promise<ResponseDto<AnalyzeUserStatItemType[]>> {
-    const result = await this.usersService.getAnalyzeUserData(body);
+  async getAnalyzeUserData(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<AnalyzeUserStatItemType[]>> {
+    const result = await this.usersService.getAnalyzeUserData(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -67,18 +67,18 @@ export class AdminUserController {
 
   /**
    * @description 활성 사용자 분석
-   * @param body 분석 통계 데이터
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/active-users',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getActiveUserAnalysis(@Body() body: AnalyzeStatDto): Promise<ResponseDto<ActiveUserAnalysisItemType[]>> {
-    const result = await this.usersService.getActiveUserAnalysis(body);
+  async getActiveUserAnalysis(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<ActiveUserAnalysisItemType[]>> {
+    const result = await this.usersService.getActiveUserAnalysis(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -92,19 +92,18 @@ export class AdminUserController {
 
   /**
    * @description 사용자별 기여도 TOP N
-   * @param body 분석 통계 데이터 및 제한 수
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-contribution',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getTopUsersByContribution(@Body() body: AnalyzeStatDto & { limit?: number }): Promise<ResponseDto<TopUsersByContributionItemType[]>> {
-    const { limit = 10, ...analyzeStatData } = body;
-    const result = await this.usersService.getTopUsersByContribution(limit, analyzeStatData);
+  async getTopUsersByContribution(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByContributionItemType[]>> {
+    const result = await this.usersService.getTopUsersByContribution(analyzeStatData.limit || 10, analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -118,19 +117,18 @@ export class AdminUserController {
 
   /**
    * @description 사용자별 포스트 작성 수 TOP N
-   * @param body 분석 통계 데이터 및 제한 수
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-post-count',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getTopUsersByPostCount(@Body() body: AnalyzeStatDto & { limit?: number }): Promise<ResponseDto<TopUsersByPostCountItemType[]>> {
-    const { limit = 10, ...analyzeStatData } = body;
-    const result = await this.usersService.getTopUsersByPostCount(limit, analyzeStatData);
+  async getTopUsersByPostCount(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByPostCountItemType[]>> {
+    const result = await this.usersService.getTopUsersByPostCount(analyzeStatData.limit || 10, analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -144,19 +142,18 @@ export class AdminUserController {
 
   /**
    * @description 사용자별 댓글 작성 수 TOP N
-   * @param body 분석 통계 데이터 및 제한 수
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/top-comment-count',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getTopUsersByCommentCount(@Body() body: AnalyzeStatDto & { limit?: number }): Promise<ResponseDto<TopUsersByCommentCountItemType[]>> {
-    const { limit = 10, ...analyzeStatData } = body;
-    const result = await this.usersService.getTopUsersByCommentCount(limit, analyzeStatData);
+  async getTopUsersByCommentCount(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByCommentCountItemType[]>> {
+    const result = await this.usersService.getTopUsersByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -243,18 +240,18 @@ export class AdminUserController {
 
   /**
    * @description 사용자 성장률
-   * @param body 분석 통계 데이터
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/growth-rate',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getUserGrowthRate(@Body() body: AnalyzeStatDto): Promise<ResponseDto<UserGrowthRateItemType[]>> {
-    const result = await this.usersService.getUserGrowthRate(body);
+  async getUserGrowthRate(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<UserGrowthRateItemType[]>> {
+    const result = await this.usersService.getUserGrowthRate(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -268,18 +265,18 @@ export class AdminUserController {
 
   /**
    * @description 사용자 유지율
-   * @param body 분석 통계 데이터
+   * @param analyzeStatData 분석 통계 데이터
    */
   @Endpoint({
     endpoint: '/analyze/retention-rate',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
     },
   })
-  async getUserRetentionRate(@Body() body: AnalyzeStatDto): Promise<ResponseDto<UserRetentionRateItemType[]>> {
-    const result = await this.usersService.getUserRetentionRate(body);
+  async getUserRetentionRate(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<UserRetentionRateItemType[]>> {
+    const result = await this.usersService.getUserRetentionRate(analyzeStatData);
 
     if (!result?.success) {
       return createError(
@@ -298,11 +295,11 @@ export class AdminUserController {
   /**
    * @description 사용자 목록 검색
    * @param req 요청 객체
-   * @param body 검색 조건
+   * @param searchData 검색 조건
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -310,13 +307,13 @@ export class AdminUserController {
   })
   async adminGetUserList(
     @Req() req: AuthRequest,
-    @Body() body: SearchUserDto
+    @Query() searchData: SearchUserDto
   ): Promise<ResponseDto<ListType<SelectUserInfoListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.getUserList(body);
+    const result = await this.usersService.getUserList(searchData);
 
     if (!result?.success) {
       return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.SEARCH_ERROR);
