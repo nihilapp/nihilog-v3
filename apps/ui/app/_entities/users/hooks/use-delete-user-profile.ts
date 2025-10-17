@@ -1,0 +1,41 @@
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import type { MutationOptionsType } from '@/_entities/common/common.types';
+import { useDelete } from '@/_entities/common/hooks';
+import { usersKeys } from '@/_entities/users/users.keys';
+import { getToastStyle } from '@/_libs';
+
+interface UseDeleteUserProfileOptions extends MutationOptionsType<boolean> {}
+
+/**
+ * @description 내 프로필을 삭제하는 커스텀 훅
+ * @param {UseDeleteUserProfileOptions} [options] - 뮤테이션 옵션 (선택사항)
+ */
+export function useDeleteUserProfile(options: UseDeleteUserProfileOptions = {}) {
+  const queryClient = useQueryClient();
+
+  const mutation = useDelete<boolean>({
+    url: [
+      'users', 'profile',
+    ],
+    callback() {
+      toast.success('프로필이 삭제되었습니다.', {
+        style: getToastStyle('success'),
+      });
+
+      // 모든 사용자 관련 쿼리 무효화
+      queryClient.invalidateQueries({
+        queryKey: usersKeys._def,
+      });
+    },
+    errorCallback(error) {
+      toast.error(error.message, {
+        style: getToastStyle('error'),
+      });
+    },
+    ...options,
+  });
+
+  return mutation;
+}
