@@ -10,9 +10,12 @@ extendZodWithOpenApi(z);
 
 // 포스트 상태 스키마 (에러 메시지 및 OpenAPI 설정 추가)
 const postStatusSchema = basePostStatusSchema
-  .refine((val) => val === 'EMPTY' || val === 'WRITING' || val === 'FINISHED', {
-    message: '올바른 포스트 상태를 입력해주세요.',
-  })
+  .refine(
+    (val) => val === 'EMPTY' || val === 'WRITING' || val === 'FINISHED',
+    {
+      message: '올바른 포스트 상태를 입력해주세요.',
+    }
+  )
   .openapi({
     description: '게시물 상태 (EMPTY: 초안 없음, WRITING: 작성중, FINISHED: 작성완료)',
     example: 'EMPTY',
@@ -49,15 +52,24 @@ export const postSchema = commonSchema.extend({
     }),
   pstTtl: z
     .string()
-    .min(1, '포스트 제목은 필수입니다.')
-    .max(255, '포스트 제목은 255자를 초과할 수 없습니다.')
+    .min(
+      1,
+      '포스트 제목은 필수입니다.'
+    )
+    .max(
+      255,
+      '포스트 제목은 255자를 초과할 수 없습니다.'
+    )
     .openapi({
       description: '포스트 제목 (1-255자)',
       example: '포스트 제목입니다',
     }),
   pstSmry: z
     .string()
-    .max(500, '포스트 요약은 500자를 초과할 수 없습니다.')
+    .max(
+      500,
+      '포스트 요약은 500자를 초과할 수 없습니다.'
+    )
     .nullable()
     .optional()
     .openapi({
@@ -72,7 +84,10 @@ export const postSchema = commonSchema.extend({
     }),
   pstCd: z
     .string()
-    .max(255, '포스트 코드는 255자를 초과할 수 없습니다.')
+    .max(
+      255,
+      '포스트 코드는 255자를 초과할 수 없습니다.'
+    )
     .nullable()
     .optional()
     .openapi({
@@ -90,7 +105,10 @@ export const postSchema = commonSchema.extend({
   pstView: z.coerce
     .number()
     .int('조회수는 정수여야 합니다.')
-    .min(0, '조회수는 0 이상이어야 합니다.')
+    .min(
+      0,
+      '조회수는 0 이상이어야 합니다.'
+    )
     .default(0)
     .openapi({
       description: '조회수',
@@ -99,7 +117,10 @@ export const postSchema = commonSchema.extend({
   pstStts: postStatusSchema.default('EMPTY'),
   publDt: z
     .string()
-    .max(50, '발행 일시는 50자를 초과할 수 없습니다.')
+    .max(
+      50,
+      '발행 일시는 50자를 초과할 수 없습니다.'
+    )
     .nullable()
     .optional()
     .openapi({
@@ -127,7 +148,10 @@ export const postSchema = commonSchema.extend({
     }),
   pstPswd: z
     .string()
-    .max(255, '게시물 비밀번호는 255자를 초과할 수 없습니다.')
+    .max(
+      255,
+      '게시물 비밀번호는 255자를 초과할 수 없습니다.'
+    )
     .nullable()
     .optional()
     .openapi({
@@ -160,7 +184,11 @@ export const postSchema = commonSchema.extend({
     .optional()
     .openapi({
       description: '포스트 번호 목록 (다건 처리용)',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
 });
 
@@ -230,9 +258,15 @@ export const searchPostSchema = baseSearchSchema.extend({
     rlsYn: true,
     archYn: true,
   }).shape,
-  srchType: z.enum([ 'pstTtl', 'pstSmry', ], {
-    error: '검색 타입은 pstTtl 또는 pstSmry 여야 합니다.',
-  })
+  srchType: z.enum(
+    [
+      'pstTtl',
+      'pstSmry',
+    ],
+    {
+      error: '검색 타입은 pstTtl 또는 pstSmry 여야 합니다.',
+    }
+  )
     .optional()
     .openapi({
       description: '검색 타입 (pstTtl: 제목, pstSmry: 요약)',
@@ -247,7 +281,11 @@ export const searchPostSchema = baseSearchSchema.extend({
     .optional()
     .openapi({
       description: '태그 번호 목록 (AND 조건)',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
   ctgryNoList: z.array(z.coerce
     .number()
@@ -256,11 +294,18 @@ export const searchPostSchema = baseSearchSchema.extend({
     .optional()
     .openapi({
       description: '카테고리 번호 목록 (OR 조건)',
-      example: [ 1, 2, ],
+      example: [
+        1,
+        2,
+      ],
     }),
 
   // 정렬 옵션
-  orderBy: z.enum([ 'LATEST', 'POPULAR', 'OLDEST', ])
+  orderBy: z.enum([
+    'LATEST',
+    'POPULAR',
+    'OLDEST',
+  ])
     .default('LATEST')
     .openapi({
       description: '정렬 기준 (LATEST: 최신순, POPULAR: 인기순, OLDEST: 오래된 순)',
@@ -272,9 +317,12 @@ export const searchPostSchema = baseSearchSchema.extend({
 export const deletePostSchema = postSchema.pick({
   pstNo: true,
   pstNoList: true,
-}).refine((data) => data.pstNo || data.pstNoList, {
-  message: '포스트 번호 또는 포스트 번호 목록 중 하나는 필수입니다.',
-});
+}).refine(
+  (data) => data.pstNo || data.pstNoList,
+  {
+    message: '포스트 번호 또는 포스트 번호 목록 중 하나는 필수입니다.',
+  }
+);
 
 // 포스트 북마크 스키마
 export const postBookmarkSchema = commonSchema.extend({

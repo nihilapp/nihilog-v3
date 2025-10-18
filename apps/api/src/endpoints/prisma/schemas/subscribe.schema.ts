@@ -65,7 +65,11 @@ const userSubscribeBaseSchema = commonSchema.extend({
     .optional()
     .openapi({
       description: '구독 번호 목록',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
 });
 
@@ -104,9 +108,12 @@ export const updateSubscribeSchema = rawUserSubscribeSchema.pick({
 export const deleteSubscribeSchema = rawUserSubscribeSchema.pick({
   sbcrNo: true,
   sbcrNoList: true,
-}).refine((data) => data.sbcrNo || data.sbcrNoList, {
-  message: '구독 번호 또는 구독 번호 목록 중 하나는 필수입니다.',
-});
+}).refine(
+  (data) => data.sbcrNo || data.sbcrNoList,
+  {
+    message: '구독 번호 또는 구독 번호 목록 중 하나는 필수입니다.',
+  }
+);
 
 // 구독 설정 조회용 스키마 (user 정보 포함)
 export const userSubscribeSchema = selectUserSubscribeSchema.extend({
@@ -146,30 +153,52 @@ export const searchSubscribeSchema = baseSearchSchema.extend({
     newPstNtfyYn: true,
     cmntRplNtfyYn: true,
   }).shape,
-  srchType: z.enum([ 'userNm', 'emlAddr', ], {
-    error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
-  }).optional()
+  srchType: z.enum(
+    [
+      'userNm',
+      'emlAddr',
+    ],
+    {
+      error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
+    }
+  ).optional()
     .openapi({
       description: '검색 타입 (userNm: 사용자명, emlAddr: 이메일 주소)',
       example: 'userNm',
     }),
   crtDtFrom: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-01-01 00:00:00',
     }),
   crtDtTo: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-12-31 23:59:59',
     }),
-  orderBy: z.enum([ 'SBSCR_LATEST', 'SBSCR_OLDEST', 'USER_NAME_ASC', 'USER_NAME_DESC', 'EMAIL_ASC', 'EMAIL_DESC', ], {
-    error: '정렬 옵션은 SBSCR_LATEST, SBSCR_OLDEST, USER_NAME_ASC, USER_NAME_DESC, EMAIL_ASC, EMAIL_DESC 중 하나여야 합니다.',
-  }).optional()
+  orderBy: z.enum(
+    [
+      'SBSCR_LATEST',
+      'SBSCR_OLDEST',
+      'USER_NAME_ASC',
+      'USER_NAME_DESC',
+      'EMAIL_ASC',
+      'EMAIL_DESC',
+    ],
+    {
+      error: '정렬 옵션은 SBSCR_LATEST, SBSCR_OLDEST, USER_NAME_ASC, USER_NAME_DESC, EMAIL_ASC, EMAIL_DESC 중 하나여야 합니다.',
+    }
+  ).optional()
     .openapi({
       description: '정렬 옵션 (SBSCR_LATEST: 구독 최신순, SBSCR_OLDEST: 구독 오래된순, USER_NAME_ASC: 사용자명 순, USER_NAME_DESC: 사용자명 역순, EMAIL_ASC: 이메일 주소 순, EMAIL_DESC: 이메일 주소 역순)',
       example: 'SBSCR_LATEST',

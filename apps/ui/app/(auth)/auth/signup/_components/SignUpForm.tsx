@@ -35,22 +35,25 @@ export function SignUpForm() {
     createUser.mutate(data);
   };
 
-  useEffect(() => {
-    setAuthCardHeader({
-      title: '구독',
-      description: '구독해서 포스트 알림을 받으세요.',
-    });
+  useEffect(
+    () => {
+      setAuthCardHeader({
+        title: '구독',
+        description: '구독해서 포스트 알림을 받으세요.',
+      });
 
-    form.trigger();
+      form.trigger();
 
-    return () => {
-      resetAuthCardHeader();
-    };
-  }, [
-    setAuthCardHeader,
-    resetAuthCardHeader,
-    form,
-  ]);
+      return () => {
+        resetAuthCardHeader();
+      };
+    },
+    [
+      setAuthCardHeader,
+      resetAuthCardHeader,
+      form,
+    ]
+  );
 
   return (
     <div className='flex flex-col gap-5'>

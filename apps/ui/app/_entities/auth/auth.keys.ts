@@ -1,34 +1,29 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
- * 인증 관련 쿼리 키 정의
+ * 인증 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * 인증 관련 작업 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const authKeys = createQueryKeys('auth', {
-  // ===== GET Queries =====
-  session: () => [
-    'auth', 'session',
-  ], // 현재 로그인된 사용자의 세션 정보
+export function useInvalidateAuthCache() {
+  const queryClient = useQueryClient();
 
-  // ===== POST Mutations =====
-  signin: () => [
-    'auth', 'create', 'signin',
-  ], // 로그인
-  signout: () => [
-    'auth', 'create', 'signout',
-  ], // 로그아웃
-  withdraw: () => [
-    'auth', 'delete', 'withdraw',
-  ], // 회원탈퇴
-  forgotPassword: () => [
-    'auth', 'create', 'forgot-password',
-  ], // 비밀번호 재설정 요청
-  resetPassword: () => [
-    'auth', 'update', 'reset-password',
-  ], // 비밀번호 재설정
-  changePassword: () => [
-    'auth', 'update', 'change-password',
-  ], // 비밀번호 변경
-  refresh: () => [
-    'auth', 'create', 'refresh',
-  ], // 토큰 갱신
-});
+  return () => {
+    // 1. auth로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [ 'auth', ],
+    });
+
+    // 2. users로 시작하는 모든 쿼리 무효화 (로그인 후 사용자 정보 갱신)
+    queryClient.invalidateQueries({
+      queryKey: [ 'users', ],
+    });
+
+    // 3. admin/users로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'users',
+      ],
+    });
+  };
+}

@@ -38,9 +38,12 @@ export const deleteSubscribeSchema = z.object({
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.'))
     .optional(),
-}).refine((data) => data.sbcrNo || data.sbcrNoList, {
-  message: '구독 번호 또는 구독 번호 목록 중 하나는 필수입니다.',
-});
+}).refine(
+  (data) => data.sbcrNo || data.sbcrNoList,
+  {
+    message: '구독 번호 또는 구독 번호 목록 중 하나는 필수입니다.',
+  }
+);
 
 // 구독 설정 검색 스키마
 export const searchSubscribeSchema = baseSearchSchema.extend({
@@ -49,22 +52,40 @@ export const searchSubscribeSchema = baseSearchSchema.extend({
   emlNtfyYn: ynEnumSchema.optional(),
   newPstNtfyYn: ynEnumSchema.optional(),
   cmntRplNtfyYn: ynEnumSchema.optional(),
-  srchType: z.enum([
-    'userNm', 'emlAddr',
-  ], {
-    error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
-  }).optional(),
+  srchType: z.enum(
+    [
+      'userNm',
+      'emlAddr',
+    ],
+    {
+      error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
+    }
+  ).optional(),
   crtDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   crtDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
-  orderBy: z.enum([
-    'SBSCR_LATEST', 'SBSCR_OLDEST', 'USER_NAME_ASC', 'USER_NAME_DESC', 'EMAIL_ASC', 'EMAIL_DESC',
-  ], {
-    error: '정렬 옵션은 SBSCR_LATEST, SBSCR_OLDEST, USER_NAME_ASC, USER_NAME_DESC, EMAIL_ASC, EMAIL_DESC 중 하나여야 합니다.',
-  }).optional(),
+  orderBy: z.enum(
+    [
+      'SBSCR_LATEST',
+      'SBSCR_OLDEST',
+      'USER_NAME_ASC',
+      'USER_NAME_DESC',
+      'EMAIL_ASC',
+      'EMAIL_DESC',
+    ],
+    {
+      error: '정렬 옵션은 SBSCR_LATEST, SBSCR_OLDEST, USER_NAME_ASC, USER_NAME_DESC, EMAIL_ASC, EMAIL_DESC 중 하나여야 합니다.',
+    }
+  ).optional(),
 }).partial();
 
 // 타입 추출

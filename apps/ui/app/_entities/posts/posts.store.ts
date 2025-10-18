@@ -26,19 +26,17 @@ const initialState = {
 };
 
 // Posts 스토어 생성
-export const usePostsStore = create<PostsState>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+export const usePostsStore = create<PostsState>()(devtools(
+  (set) => ({
+    ...initialState,
 
-      setSelectedPost: (postId) => set({ selectedPost: postId, }),
-      setCreating: (isCreating) => set({ isCreating, }),
-      setUpdating: (isUpdating) => set({ isUpdating, }),
-      setDeleting: (isDeleting) => set({ isDeleting, }),
-      reset: () => set(initialState),
-    }),
-    {
-      name: 'posts-store',
-    }
-  )
-);
+    setSelectedPost: (postId) => set({ selectedPost: postId, }),
+    setCreating: (isCreating) => set({ isCreating, }),
+    setUpdating: (isUpdating) => set({ isUpdating, }),
+    setDeleting: (isDeleting) => set({ isDeleting, }),
+    reset: () => set(initialState),
+  }),
+  {
+    name: 'posts-store',
+  }
+));

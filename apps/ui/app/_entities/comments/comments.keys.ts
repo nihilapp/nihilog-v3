@@ -1,31 +1,49 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import type { SearchCommentType } from '@/_schemas/comment.schema';
-
+import { useQueryClient } from '@tanstack/react-query';
 /**
- * 댓글 관련 쿼리 키 정의
+ * 댓글 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * 댓글 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const commentsKeys = createQueryKeys('comments', {
-  // ===== GET Queries =====
-  search: (params: SearchCommentType) => [
-    'comments', 'search', params,
-  ], // 댓글 목록 조회 (POST /comments/search)
-  byNo: (cmntNo: number) => [
-    'comments', 'by-no', cmntNo,
-  ], // 댓글 번호로 조회
+export function useInvalidateCommentsCache() {
+  const queryClient = useQueryClient();
 
-  // ===== POST Mutations =====
-  create: () => [
-    'comments', 'create',
-  ], // 댓글 생성
+  return () => {
+    // 1. comments로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [ 'comments', ],
+    });
 
-  // ===== PUT Mutations =====
-  update: (cmntNo: number) => [
-    'comments', 'update', cmntNo,
-  ], // 댓글 수정
+    // 2. admin/comments로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'comments',
+      ],
+    });
 
-  // ===== DELETE Mutations =====
-  delete: (cmntNo: number) => [
-    'comments', 'delete', cmntNo,
-  ], // 댓글 삭제
-});
+    // 3. posts로 시작하는 모든 쿼리 무효화 (댓글 수 변경)
+    queryClient.invalidateQueries({
+      queryKey: [ 'posts', ],
+    });
+
+    // 4. admin/posts로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'posts',
+      ],
+    });
+
+    // 5. users로 시작하는 모든 쿼리 무효화 (댓글 작성자 정보)
+    queryClient.invalidateQueries({
+      queryKey: [ 'users', ],
+    });
+
+    // 6. admin/users로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'users',
+      ],
+    });
+  };
+}

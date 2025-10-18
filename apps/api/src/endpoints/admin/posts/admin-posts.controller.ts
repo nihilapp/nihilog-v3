@@ -38,7 +38,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.getAnalyzePostData(analyzeStatData, pstNo);
+    const result = await this.postsService.getAnalyzePostData(
+      analyzeStatData,
+      pstNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -76,7 +79,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.getPostShareStatsByPlatform(analyzeStatData, pstNo);
+    const result = await this.postsService.getPostShareStatsByPlatform(
+      analyzeStatData,
+      pstNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -292,7 +298,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.adminCreatePost(req.user.userNo, createData);
+    const result = await this.postsService.adminCreatePost(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -301,7 +310,11 @@ export class AdminPostsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -324,7 +337,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.adminUpdatePost(req.user.userNo, updateData);
+    const result = await this.postsService.adminUpdatePost(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -333,7 +349,11 @@ export class AdminPostsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -353,7 +373,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.adminMultipleUpdatePost(req.user.userNo, updateData);
+    const result = await this.postsService.adminMultipleUpdatePost(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -362,7 +385,11 @@ export class AdminPostsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -382,7 +409,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.adminDeletePost(req.user.userNo, deleteData);
+    const result = await this.postsService.adminDeletePost(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -391,7 +421,11 @@ export class AdminPostsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.DELETE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -411,7 +445,10 @@ export class AdminPostsController {
       return req.errorResponse;
     }
 
-    const result = await this.postsService.adminMultipleDeletePost(req.user.userNo, deleteData);
+    const result = await this.postsService.adminMultipleDeletePost(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -420,6 +457,10 @@ export class AdminPostsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.POST.ADMIN.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.POST.ADMIN.DELETE_SUCCESS,
+      result.data
+    );
   }
 }

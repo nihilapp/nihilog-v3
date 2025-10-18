@@ -48,14 +48,22 @@ export class AuthService {
     const result = await this.userRepository.getUserByNo(userNo);
 
     if (!result?.success) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.NOT_FOUND);
+      return prismaResponse(
+        false,
+        null,
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.NOT_FOUND
+      );
     }
 
     const userToReturn = cloneDeep(result.data);
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return prismaResponse(true, userToReturn);
+    return prismaResponse(
+      true,
+      userToReturn
+    );
   }
 
   /**
@@ -69,16 +77,29 @@ export class AuthService {
     const userResult = await this.userRepository.getUserByEmail(emlAddr);
 
     if (!userResult?.success || !userResult.data) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
+      return prismaResponse(
+        false,
+        null,
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.INVALID_CREDENTIALS
+      );
     }
 
     const user = userResult.data;
 
     // 비밀번호 검증
-    const isPasswordMatching = await bcrypt.compare(password, user.encptPswd);
+    const isPasswordMatching = await bcrypt.compare(
+      password,
+      user.encptPswd
+    );
 
     if (!isPasswordMatching) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
+      return prismaResponse(
+        false,
+        null,
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.INVALID_CREDENTIALS
+      );
     }
 
     // JWT 페이로드 생성
@@ -90,15 +111,24 @@ export class AuthService {
     };
 
     // 토큰 생성
-    const [ acsToken, reshToken, ] = await Promise.all([
-      this.jwtService.signAsync(payload, {
-        secret: this.env.get('jwt.access.secret'),
-        expiresIn: this.env.get('jwt.access.expiresIn'),
-      }),
-      this.jwtService.signAsync(payload, {
-        secret: this.env.get('jwt.refresh.secret'),
-        expiresIn: this.env.get('jwt.refresh.expiresIn'),
-      }),
+    const [
+      acsToken,
+      reshToken,
+    ] = await Promise.all([
+      this.jwtService.signAsync(
+        payload,
+        {
+          secret: this.env.get('jwt.access.secret'),
+          expiresIn: this.env.get('jwt.access.expiresIn'),
+        }
+      ),
+      this.jwtService.signAsync(
+        payload,
+        {
+          secret: this.env.get('jwt.refresh.secret'),
+          expiresIn: this.env.get('jwt.refresh.expiresIn'),
+        }
+      ),
     ]);
 
     // 리프레시 토큰과 마지막 로그인 시간 업데이트
@@ -112,7 +142,12 @@ export class AuthService {
     );
 
     if (!updateResult?.success) {
-      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_IN_ERROR);
+      return prismaResponse(
+        false,
+        null,
+        'INTERNAL_SERVER_ERROR',
+        MESSAGE.AUTH.SIGN_IN_ERROR
+      );
     }
 
     // AccessToken 만료시간 계산
@@ -123,12 +158,15 @@ export class AuthService {
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return prismaResponse(true, {
-      user: userToReturn,
-      acsToken,
-      reshToken,
-      accessTokenExpiresAt,
-    });
+    return prismaResponse(
+      true,
+      {
+        user: userToReturn,
+        acsToken,
+        reshToken,
+        accessTokenExpiresAt,
+      }
+    );
   }
 
   /**
@@ -137,18 +175,31 @@ export class AuthService {
    */
   async refresh(token: string): Promise<RepoResponseType<SignInResponseType> | null> {
     if (!token) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND);
+      return prismaResponse(
+        false,
+        null,
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND
+      );
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: this.env.get('jwt.refresh.secret'),
-      });
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(
+        token,
+        {
+          secret: this.env.get('jwt.refresh.secret'),
+        }
+      );
 
       const userResult = await this.userRepository.getUserByNo(payload.userNo);
 
       if (!userResult?.success || userResult.data.reshToken !== token) {
-        return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_REFRESH_TOKEN);
+        return prismaResponse(
+          false,
+          null,
+          'UNAUTHORIZED',
+          MESSAGE.AUTH.INVALID_REFRESH_TOKEN
+        );
       }
 
       const user = userResult.data;
@@ -158,15 +209,24 @@ export class AuthService {
         userNm: user.userNm,
         userRole: user.userRole,
       };
-      const [ newAcsToken, newReshToken, ] = await Promise.all([
-        this.jwtService.signAsync(newPayload, {
-          secret: this.env.get('jwt.access.secret'),
-          expiresIn: this.env.get('jwt.access.expiresIn'),
-        }),
-        this.jwtService.signAsync(newPayload, {
-          secret: this.env.get('jwt.refresh.secret'),
-          expiresIn: this.env.get('jwt.refresh.expiresIn'),
-        }),
+      const [
+        newAcsToken,
+        newReshToken,
+      ] = await Promise.all([
+        this.jwtService.signAsync(
+          newPayload,
+          {
+            secret: this.env.get('jwt.access.secret'),
+            expiresIn: this.env.get('jwt.access.expiresIn'),
+          }
+        ),
+        this.jwtService.signAsync(
+          newPayload,
+          {
+            secret: this.env.get('jwt.refresh.secret'),
+            expiresIn: this.env.get('jwt.refresh.expiresIn'),
+          }
+        ),
       ]);
 
       const updateResult = await this.userRepository.updateUser(
@@ -176,7 +236,12 @@ export class AuthService {
       );
 
       if (!updateResult?.success) {
-        return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.AUTH.TOKEN_REFRESH_ERROR);
+        return prismaResponse(
+          false,
+          null,
+          'INTERNAL_SERVER_ERROR',
+          MESSAGE.AUTH.TOKEN_REFRESH_ERROR
+        );
       }
 
       // AccessToken 만료시간 계산
@@ -186,15 +251,23 @@ export class AuthService {
       userToReturn.encptPswd = null;
       userToReturn.reshToken = null;
 
-      return prismaResponse(true, {
-        user: userToReturn,
-        acsToken: newAcsToken,
-        reshToken: newReshToken,
-        accessTokenExpiresAt,
-      });
+      return prismaResponse(
+        true,
+        {
+          user: userToReturn,
+          acsToken: newAcsToken,
+          reshToken: newReshToken,
+          accessTokenExpiresAt,
+        }
+      );
     }
     catch {
-      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_REFRESH_TOKEN);
+      return prismaResponse(
+        false,
+        null,
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.INVALID_REFRESH_TOKEN
+      );
     }
   }
 
@@ -222,10 +295,18 @@ export class AuthService {
     );
 
     if (!isPasswordMatching) {
-      return prismaResponse(false, null, 'UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS);
+      return prismaResponse(
+        false,
+        null,
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.INVALID_CREDENTIALS
+      );
     }
 
-    const newEncptPswd = await bcrypt.hash(newPassword, 10);
+    const newEncptPswd = await bcrypt.hash(
+      newPassword,
+      10
+    );
 
     // 하나의 쿼리로 업데이트 + 조회
     const updatedUserResult = await this.userRepository.updateUser(
@@ -243,7 +324,10 @@ export class AuthService {
     userToReturn.encptPswd = null;
     userToReturn.reshToken = null;
 
-    return prismaResponse(true, userToReturn);
+    return prismaResponse(
+      true,
+      userToReturn
+    );
   }
 
   /**
@@ -264,15 +348,26 @@ export class AuthService {
         );
 
         if (!updateResult?.success) {
-          return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_OUT_ERROR);
+          return prismaResponse(
+            false,
+            null,
+            'INTERNAL_SERVER_ERROR',
+            MESSAGE.AUTH.SIGN_OUT_ERROR
+          );
         }
       }
 
-      return prismaResponse(true, true);
+      return prismaResponse(
+        true,
+        true
+      );
     }
     catch {
       // 로그아웃은 토큰이 유효하지 않아도 성공으로 처리
-      return prismaResponse(true, true);
+      return prismaResponse(
+        true,
+        true
+      );
     }
   }
 
@@ -283,9 +378,12 @@ export class AuthService {
   async extractUserFromToken(token: string): Promise<JwtPayload | null> {
     try {
       const payload = await this.jwtService
-        .verifyAsync<JwtPayload>(token, {
-          secret: this.env.get('jwt.access.secret'),
-        });
+        .verifyAsync<JwtPayload>(
+          token,
+          {
+            secret: this.env.get('jwt.access.secret'),
+          }
+        );
       return payload;
     }
     catch {

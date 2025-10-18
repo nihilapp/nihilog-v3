@@ -97,15 +97,15 @@ apps/ui/app/_entities/users/
   - `use-get-post-list.ts` (GET /posts/search) - Query: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
   - `use-get-post-by-no.ts` (GET /posts/:pstNo) - Path: `{ pstNo: number }` → `ResponseDto<SelectPostType>`
   - `use-get-post-by-slug.ts` (GET /posts/slug/:pstCd) - Path: `{ pstCd: string }` → `ResponseDto<SelectPostType>`
-  - `use-get-posts-by-tag.ts` (POST /posts/tag/:tagNo) - Path: `{ tagNo: number }` + Body: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
-  - `use-get-posts-by-category.ts` (POST /posts/category/:ctgryNo) - Path: `{ ctgryNo: number }` + Body: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
-  - `use-get-posts-by-archive.ts` (POST /posts/archive/:date) - Path: `{ date: string }` + Body: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
-  - `use-get-advanced-post-list.ts` (POST /posts/advanced-search) - Body: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
+  - `use-get-post-list-by-tag-no.ts` (GET /posts/tag/:tagNo) - Path: `{ tagNo: number }` + Query: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
+  - `use-get-post-list-by-ctgry-no.ts` (GET /posts/category/:ctgryNo) - Path: `{ ctgryNo: number }` + Query: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
+  - `use-get-post-list-from-archive.ts` (GET /posts/archive/:date) - Path: `{ date: string }` + Query: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
+  - `use-get-advanced-post-list.ts` (GET /posts/advanced-search) - Query: `SearchPostDto` → `ResponseDto<ListType<SelectPostListItemType>>`
   - `use-create-post-view-log.ts` (POST /posts/:pstNo/view) - Path: `{ pstNo: number }` → `ResponseDto<SelectPostViewLogType>`
   - `use-create-post-share-log.ts` (POST /posts/:pstNo/share) - Body: `CreatePostShareLogDto` → `ResponseDto<SelectPostShareLogType>`
   - `use-create-post-bookmark.ts` (POST /posts/:pstNo/bookmark) - Path: `{ pstNo: number }` + Body: `CreatePostBookmarkDto` → `ResponseDto<SelectPostBookmarkType>`
   - `use-delete-post-bookmark.ts` (DELETE /posts/:pstNo/bookmark) - Path: `{ pstNo: number }` + Body: `DeletePostBookmarkDto` → `ResponseDto<boolean>`
-  - `use-get-bookmarked-posts.ts` (POST /posts/bookmarked) - Body: `SearchPostBookmarkDto` → `ResponseDto<ListType<SelectPostBookmarkListItemType>>`
+  - `use-get-bookmarked-post-list-by-user-no.ts` (GET /posts/bookmarked) - Query: `SearchPostBookmarkDto` → `ResponseDto<ListType<SelectPostBookmarkListItemType>>`
   - `posts.keys.ts`
   - `index.ts`
 
@@ -127,8 +127,8 @@ apps/ui/app/_entities/users/
 - **API 컨트롤러**: `apps/api/src/endpoints/auth/auth.controller.ts`
 - **UI 엔티티**: `apps/ui/app/_entities/auth/`
 - **구현할 훅**:
-  - `use-signin.ts` (POST /auth/signin) - Body: `SignInDto` → `ResponseDto<SelectUserInfoType>`
-  - `use-signout.ts` (POST /auth/signout) - 없음 → `ResponseDto<null>`
+  - `use-sign-in.ts` (POST /auth/signin) - Body: `SignInDto` → `ResponseDto<SelectUserInfoType>`
+  - `use-sign-out.ts` (POST /auth/signout) - 없음 → `ResponseDto<null>`
   - `use-refresh-token.ts` (POST /auth/refresh) - 없음 → `ResponseDto<SelectUserInfoType>`
   - `use-get-session.ts` (GET /auth/session) - 없음 → `ResponseDto<UserInfoDto>`
   - `use-change-password.ts` (POST /auth/change-password) - Body: `ChangePasswordDto` → `ResponseDto<SelectUserInfoType>`
@@ -138,33 +138,33 @@ apps/ui/app/_entities/users/
 #### 2.2 Category Subscribe 엔티티
 
 - **API 컨트롤러**: `apps/api/src/endpoints/subscribe/category-subscribe/category-subscribe.controller.ts`
-- **UI 엔티티**: `apps/ui/app/_entities/category-subscribes/`
+- **UI 엔티티**: `apps/ui/app/_entities/subscribe/category-subscribe/`
 - **구현할 훅**:
-  - `use-get-category-subscribe-list.ts` (POST /users/subscribes/categories/search) - Body: `SearchCategorySubscribeDto` → `ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>`
-  - `use-get-category-subscribe-by-no.ts` (POST /users/subscribes/categories/:ctgryNo/search) - Path: `{ ctgryNo: number }` + Body: `SearchCategorySubscribeDto` → `ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>`
+  - `use-get-category-subscribe-list.ts` (GET /users/subscribes/categories/search) - Query: `SearchCategorySubscribeDto` → `ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>`
+  - `use-get-category-subscribe-by-ctgry-no.ts` (GET /users/subscribes/categories/:ctgryNo/search) - Path: `{ ctgryNo: number }` + Query: `SearchCategorySubscribeDto` → `ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>`
   - `use-create-category-subscribe.ts` (POST /users/subscribes/categories/:ctgryNo) - Path: `{ ctgryNo: number }` + Body: `CreateCategorySubscribeDto` → `ResponseDto<SelectCtgrySbcrMpngType>`
   - `use-multiple-create-category-subscribe.ts` (POST /users/subscribes/categories/multiple) - Body: `CreateCategorySubscribeDto` → `ResponseDto<MultipleResultType>`
   - `use-update-category-subscribe.ts` (PUT /users/subscribes/categories/:ctgrySbcrNo) - Path: `{ ctgrySbcrNo: number }` + Body: `UpdateCategorySubscribeDto` → `ResponseDto<SelectCtgrySbcrMpngType>`
   - `use-multiple-update-category-subscribe.ts` (PUT /users/subscribes/categories/multiple) - Body: `UpdateCategorySubscribeDto` → `ResponseDto<MultipleResultType>`
   - `use-delete-category-subscribe.ts` (DELETE /users/subscribes/categories/:ctgrySbcrNo) - Path: `{ ctgrySbcrNo: number }` → `ResponseDto<boolean>`
   - `use-multiple-delete-category-subscribe.ts` (DELETE /users/subscribes/categories/multiple) - Body: `DeleteCategorySubscribeDto` → `ResponseDto<MultipleResultType>`
-  - `category-subscribes.keys.ts`
+  - `category-subscribe.keys.ts`
   - `index.ts`
 
 #### 2.3 Tag Subscribe 엔티티
 
 - **API 컨트롤러**: `apps/api/src/endpoints/subscribe/tag-subscribe/tag-subscribe.controller.ts`
-- **UI 엔티티**: `apps/ui/app/_entities/tag-subscribes/`
+- **UI 엔티티**: `apps/ui/app/_entities/subscribe/tag-subscribe/`
 - **구현할 훅**:
-  - `use-get-tag-subscribe-list.ts` (POST /users/subscribes/tags/search) - Body: `SearchTagSubscribeDto` → `ResponseDto<ListType<SelectTagSbcrMpngListItemType>>`
-  - `use-get-tag-subscribe-by-no.ts` (POST /users/subscribes/tags/:tagNo/search) - Path: `{ tagNo: number }` + Body: `SearchTagSubscribeDto` → `ResponseDto<ListType<SelectTagSbcrMpngListItemType>>`
+  - `use-get-tag-subscribe-list.ts` (GET /users/subscribes/tags/search) - Query: `SearchTagSubscribeDto` → `ResponseDto<ListType<SelectTagSbcrMpngListItemType>>`
+  - `use-get-tag-subscribe-by-tag-no.ts` (GET /users/subscribes/tags/:tagNo/search) - Path: `{ tagNo: number }` + Query: `SearchTagSubscribeDto` → `ResponseDto<ListType<SelectTagSbcrMpngListItemType>>`
   - `use-create-tag-subscribe.ts` (POST /users/subscribes/tags/:tagNo) - Path: `{ tagNo: number }` + Body: `CreateTagSubscribeDto` → `ResponseDto<SelectTagSbcrMpngType>`
   - `use-multiple-create-tag-subscribe.ts` (POST /users/subscribes/tags/multiple) - Body: `CreateTagSubscribeDto` → `ResponseDto<MultipleResultType>`
   - `use-update-tag-subscribe.ts` (PUT /users/subscribes/tags/:tagSbcrNo) - Path: `{ tagSbcrNo: number }` + Body: `UpdateTagSubscribeDto` → `ResponseDto<SelectTagSbcrMpngType>`
   - `use-multiple-update-tag-subscribe.ts` (PUT /users/subscribes/tags/multiple) - Body: `UpdateTagSubscribeDto` → `ResponseDto<MultipleResultType>`
   - `use-delete-tag-subscribe.ts` (DELETE /users/subscribes/tags/:tagSbcrNo) - Path: `{ tagSbcrNo: number }` → `ResponseDto<boolean>`
   - `use-multiple-delete-tag-subscribe.ts` (DELETE /users/subscribes/tags/multiple) - Body: `DeleteTagSubscribeDto` → `ResponseDto<MultipleResultType>`
-  - `tag-subscribes.keys.ts`
+  - `tag-subscribe.keys.ts`
   - `index.ts`
 
 ### 3단계: 관리자 엔티티 (7개)
@@ -370,8 +370,10 @@ interface UseGetEntityOptions extends QueryOptionType<ResponseType> {}
 export function useGetEntity(options: UseGetEntityOptions = {}) {
   const query = useGet<ResponseType>({
     url: ["entity", "action"],
-    callback() {
-      // 성공 시 토스트 메시지는 필요에 따라 추가
+    callback(res) {
+      toast.success(res.message, {
+        style: getToastStyle("success"),
+      });
     },
     errorCallback(error) {
       toast.error(error.message, {
@@ -385,15 +387,14 @@ export function useGetEntity(options: UseGetEntityOptions = {}) {
 }
 ```
 
-#### POST 훅 템플릿
+#### POST 훅 템플릿 (개선된 버전)
 
 ```typescript
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import type { MutationOptionsType } from "@/_entities/common/common.types";
 import { usePost } from "@/_entities/common/hooks";
-import { entityKeys } from "@/_entities/entity/entity.keys";
+import { useInvalidateEntityCache } from "@/_entities/entity/entity.keys";
 import { getToastStyle } from "@/_libs";
 import type { CreateEntityType } from "@/_schemas";
 import type { ResponseType } from "@/_types";
@@ -406,19 +407,17 @@ interface UseCreateEntityOptions
  * @param {UseCreateEntityOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
 export function useCreateEntity(options: UseCreateEntityOptions = {}) {
-  const queryClient = useQueryClient();
+  const invalidateCache = useInvalidateEntityCache();
 
   const mutation = usePost<ResponseType, CreateEntityType>({
     url: ["entity"],
-    callback() {
-      toast.success("엔티티가 생성되었습니다.", {
+    callback(res) {
+      toast.success(res.message, {
         style: getToastStyle("success"),
       });
 
-      // 관련 쿼리 무효화
-      queryClient.invalidateQueries({
-        queryKey: entityKeys._def,
-      });
+      // 엔티티 관련 캐시 무효화
+      invalidateCache();
     },
     errorCallback(error) {
       toast.error(error.message, {
@@ -432,46 +431,116 @@ export function useCreateEntity(options: UseCreateEntityOptions = {}) {
 }
 ```
 
-### 4. Keys 파일 템플릿
+### 4. 메시지 처리 방식
+
+#### 4.1 성공 메시지 처리 원칙
+
+**모든 훅에서 서버 응답의 `res.message`를 사용하여 성공 메시지를 표시합니다.**
+
+- **하드코딩 금지**: 절대로 하드코딩된 메시지를 사용하지 않습니다.
+- **서버 응답 활용**: `callback(res)` 함수에서 `res.message`를 사용합니다.
+- **다국어 지원**: 서버에서 내려주는 메시지를 사용하므로 다국어 지원이 가능합니다.
+- **일관성 보장**: 모든 훅에서 동일한 패턴을 사용합니다.
+
+#### 4.2 구현 패턴
 
 ```typescript
-import { createQueryKeys } from "@lukemorales/query-key-factory";
+// ✅ 올바른 패턴
+callback(res) {
+  toast.success(res.message, {
+    style: getToastStyle("success"),
+  });
+}
+
+// ❌ 잘못된 패턴 (하드코딩)
+callback() {
+  toast.success("엔티티가 생성되었습니다.", {
+    style: getToastStyle("success"),
+  });
+}
+```
+
+#### 4.3 적용 범위
+
+- **GET 훅**: 모든 GET 훅에서 `callback(res)` 사용
+- **POST 훅**: 모든 POST 훅에서 `callback(res)` 사용
+- **PUT 훅**: 모든 PUT 훅에서 `callback(res)` 사용
+- **DELETE 훅**: 모든 DELETE 훅에서 `callback(res)` 사용
+- **PATCH 훅**: 모든 PATCH 훅에서 `callback(res)` 사용
+
+#### 4.4 에러 메시지 처리
+
+에러 메시지는 기존과 동일하게 `error.message`를 사용합니다:
+
+```typescript
+errorCallback(error) {
+  toast.error(error.message, {
+    style: getToastStyle("error"),
+  });
+}
+```
+
+### 5. Keys 파일 템플릿 (개선된 버전)
+
+**주의**: GET 전용 엔티티(Categories, Tags 등)는 keys.ts 파일이 필요하지 않습니다.
+
+```typescript
+import { useQueryClient } from "@tanstack/react-query";
 
 /**
- * 엔티티 관련 쿼리 키 정의
+ * 엔티티 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * 엔티티 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const entityKeys = createQueryKeys("entity", {
-  // ===== GET Queries =====
-  list: (searchData?: SearchEntityType) => ["entity", "search", searchData], // 엔티티 목록 조회
-  byNo: (entityNo: number) => ["entity", "by-no", entityNo], // 엔티티 번호로 조회
-  byName: (name: string) => ["entity", "by-name", name], // 엔티티명으로 조회
+export function useInvalidateEntityCache() {
+  const queryClient = useQueryClient();
 
-  // ===== POST Mutations =====
-  create: () => ["entity", "create"], // 엔티티 생성
+  return () => {
+    // 1. entity로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: ["entity"],
+    });
 
-  // ===== PUT Mutations =====
-  update: () => ["entity", "update"], // 엔티티 수정
+    // 2. admin/entity로 시작하는 모든 쿼리 무효화 (관리자 관련)
+    queryClient.invalidateQueries({
+      queryKey: ["admin", "entity"],
+    });
 
-  // ===== DELETE Mutations =====
-  delete: () => ["entity", "delete"], // 엔티티 삭제
-});
+    // 3. 관련 엔티티들도 무효화 (예: posts, users 등)
+    // 엔티티별로 필요한 패턴 추가
+  };
+}
+
+/**
+ * 특수한 무효화 로직이 필요한 경우 별도 함수 생성
+ * 예: 구독 관련, 통계 관련 등
+ */
+export function useInvalidateEntitySpecialCache() {
+  const queryClient = useQueryClient();
+
+  return () => {
+    // 특수한 무효화 패턴들
+    queryClient.invalidateQueries({
+      queryKey: ["entity", "special"],
+    });
+  };
+}
 ```
 
 ## 작업 체크리스트
 
 ### 1단계: 기본 엔티티 (5개)
 
-- [x] Users 엔티티 hooks 구현 (6개 훅)
-- [x] Categories 엔티티 hooks 구현 (3개 훅)
-- [ ] Comments 엔티티 hooks 구현 (5개 훅)
-- [ ] Posts 엔티티 hooks 구현 (12개 훅)
-- [x] Tags 엔티티 hooks 구현 (3개 훅)
+- [x] Users 엔티티 hooks 구현 (6개 훅) + **캐시 무효화 로직 개선 완료**
+- [x] Categories 엔티티 hooks 구현 (3개 훅) + **GET 전용으로 keys.ts 삭제 완료**
+- [x] Comments 엔티티 hooks 구현 (5개 훅) + **캐시 무효화 로직 개선 완료**
+- [x] Posts 엔티티 hooks 구현 (12개 훅) + **실제 API와 완벽히 일치 확인 완료**
+- [x] Tags 엔티티 hooks 구현 (3개 훅) + **GET 전용으로 keys.ts 삭제 완료**
 
 ### 2단계: 인증 및 구독 엔티티 (3개)
 
-- [ ] Auth 엔티티 hooks 구현 (5개 훅)
-- [ ] Category Subscribe 엔티티 hooks 구현 (8개 훅)
-- [ ] Tag Subscribe 엔티티 hooks 구현 (8개 훅)
+- [x] Auth 엔티티 hooks 구현 (5개 훅) + **캐시 무효화 로직 개선 완료**
+- [x] Category Subscribe 엔티티 hooks 구현 (8개 훅) + **캐시 무효화 로직 개선 완료**
+- [x] Tag Subscribe 엔티티 hooks 구현 (8개 훅) + **캐시 무효화 로직 개선 완료**
 
 ### 3단계: 관리자 엔티티 (7개)
 
@@ -491,42 +560,166 @@ export const entityKeys = createQueryKeys("entity", {
 4. **에러 처리**: 일관된 에러 처리 및 토스트 메시지 적용
 5. **캐싱 전략**: 적절한 staleTime과 gcTime 설정
 6. **쿼리 무효화**: 데이터 변경 시 관련 쿼리들이 올바르게 무효화되는지 확인
+7. **캐시 무효화 패턴**: 엔티티별로 공통 무효화 로직을 keys 파일에 구현하여 중복 제거
+8. **패턴 기반 무효화**: `queryClient.invalidateQueries({ queryKey: ['entity'] })` 패턴 사용
+9. **메시지 처리**: **모든 훅에서 `callback(res)` 사용하여 `res.message`로 성공 메시지 표시**
+10. **하드코딩 금지**: 절대로 하드코딩된 성공 메시지를 사용하지 않음
+11. **다국어 지원**: 서버 응답 메시지 사용으로 다국어 지원 가능
+
+## 현재 진행 상황 (2024년 12월 기준)
+
+### 📊 **전체 진행률**
+
+- **완료**: 50개 훅 (46.3%)
+- **미완료**: 58개 훅 (53.7%)
+- **총 목표**: 108개 커스텀 훅
+
+### ✅ **완료된 엔티티 (8개)**
+
+- **Users**: 6개 훅 ✅
+- **Categories**: 3개 훅 ✅
+- **Comments**: 5개 훅 ✅
+- **Posts**: 12개 훅 ✅
+- **Tags**: 3개 훅 ✅
+- **Auth**: 5개 훅 ✅ **← 2단계 완료!**
+- **Category Subscribe**: 8개 훅 ✅ **← 2단계 완료!**
+- **Tag Subscribe**: 8개 훅 ✅ **← 2단계 완료!**
+
+### ❌ **미완료된 엔티티 (9개)**
+
+- **Admin 엔티티들**: 7개 엔티티, 총 58개 훅
+
+### 🚀 **다음 우선순위**
+
+1. **Admin 엔티티** (1개 훅) - 관리자 기본 기능
+2. **Admin Categories 엔티티** (22개 훅) - 가장 많은 훅 수
+3. **Admin Users 엔티티** (20개 훅) - 사용자 관리
 
 ## 완료 기준
 
 - [ ] 모든 17개 컨트롤러의 엔드포인트에 대응하는 커스텀 훅 구현
-- [ ] 총 108개 커스텀 훅 구현 완료 (1단계: 29개, 2단계: 21개, 3단계: 58개)
+- [ ] 총 108개 커스텀 훅 구현 완료 (1단계: 29개 ✅, 2단계: 21개 ✅, 3단계: 58개)
 - [ ] 일관된 네이밍 규칙과 구조 적용
 - [ ] 타입 안정성 보장 (TypeScript 컴파일 에러 없음)
 - [ ] 에러 처리 및 사용자 피드백 구현
 - [ ] React Query 키 관리 체계 구축
 - [ ] 실제 API 호출 테스트 통과
 - [ ] 기존 users 엔티티와 동일한 품질 수준 달성
+- [x] **캐시 무효화 로직 개선**: 패턴 기반 무효화 및 공통 로직 구현
+- [x] **코드 중복 제거**: 엔티티별 공통 무효화 함수 구현
+- [x] **1단계 기본 엔티티 완료**: Users, Categories, Comments, Posts, Tags (29개 훅)
+- [x] **2단계 인증 및 구독 엔티티 완료**: Auth, Category Subscribe, Tag Subscribe (21개 훅)
+- [x] **메시지 처리 방식 통일**: 모든 훅에서 `callback(res)` 사용하여 `res.message`로 성공 메시지 표시
+- [x] **하드코딩 제거**: 모든 하드코딩된 성공 메시지 제거 완료
+- [x] **다국어 지원 기반 구축**: 서버 응답 메시지 사용으로 다국어 지원 가능
 
 ## 훅 개수 요약
 
-### 1단계: 기본 엔티티 (29개 훅)
+### 1단계: 기본 엔티티 (29개 훅) ✅ **완료**
 
-- Users: 6개 훅
-- Categories: 3개 훅
-- Comments: 5개 훅
-- Posts: 12개 훅
-- Tags: 3개 훅
+- Users: 6개 훅 ✅
+- Categories: 3개 훅 ✅
+- Comments: 5개 훅 ✅
+- Posts: 12개 훅 ✅
+- Tags: 3개 훅 ✅
 
-### 2단계: 인증 및 구독 엔티티 (21개 훅)
+### 2단계: 인증 및 구독 엔티티 (21개 훅) ✅ **완료**
 
-- Auth: 5개 훅
-- Category Subscribe: 8개 훅
-- Tag Subscribe: 8개 훅
+- Auth: 5개 훅 ✅
+- Category Subscribe: 8개 훅 ✅
+- Tag Subscribe: 8개 훅 ✅
 
-### 3단계: 관리자 엔티티 (58개 훅)
+### 3단계: 관리자 엔티티 (58개 훅) ❌ **미완료**
 
-- Admin: 1개 훅
-- Admin Categories: 22개 훅
-- Admin Comments: 12개 훅
-- Admin Posts: 12개 훅
-- Admin Tags: 25개 훅
-- Admin Users: 20개 훅
-- Admin Subscribe: 10개 훅
+- Admin: 1개 훅 ❌
+- Admin Categories: 22개 훅 ❌
+- Admin Comments: 12개 훅 ❌
+- Admin Posts: 12개 훅 ❌
+- Admin Tags: 25개 훅 ❌
+- Admin Users: 20개 훅 ❌
+- Admin Subscribe: 10개 훅 ❌
 
 **총 108개 커스텀 훅 구현 예정**
+
+## 실제 API 엔드포인트에 맞춘 수정사항
+
+### 주요 수정 내용
+
+1. **Posts 엔드포인트 수정**:
+
+   - `use-get-posts-by-tag.ts` → `use-get-post-list-by-tag-no.ts` (GET /posts/tag/:tagNo)
+   - `use-get-posts-by-category.ts` → `use-get-post-list-by-ctgry-no.ts` (GET /posts/category/:ctgryNo)
+   - `use-get-posts-by-archive.ts` → `use-get-post-list-from-archive.ts` (GET /posts/archive/:date)
+   - `use-get-advanced-post-list.ts` (GET /posts/advanced-search) - POST에서 GET으로 수정
+   - `use-get-bookmarked-posts.ts` → `use-get-bookmarked-post-list-by-user-no.ts` (GET /posts/bookmarked)
+
+2. **Auth 엔드포인트 수정**:
+
+   - `use-signin.ts` → `use-sign-in.ts` (POST /auth/signin)
+   - `use-signout.ts` → `use-sign-out.ts` (POST /auth/signout)
+
+3. **Subscribe 엔티티 구조 수정**:
+   - UI 엔티티 경로: `_entities/category-subscribes/` → `_entities/subscribe/category-subscribe/`
+   - UI 엔티티 경로: `_entities/tag-subscribes/` → `_entities/subscribe/tag-subscribe/`
+   - HTTP 메소드: POST → GET (search 엔드포인트들)
+   - 훅 이름: `use-get-category-subscribe-by-no.ts` → `use-get-category-subscribe-by-ctgry-no.ts`
+   - 훅 이름: `use-get-tag-subscribe-by-no.ts` → `use-get-tag-subscribe-by-tag-no.ts`
+
+## 캐시 무효화 개선사항
+
+### 적용된 개선사항
+
+1. **패턴 기반 무효화**: `queryClient.invalidateQueries({ queryKey: ['entity'] })` 패턴 사용
+2. **공통 무효화 로직**: 엔티티별 keys 파일에 `useInvalidateEntityCache()` 함수 구현
+3. **코드 중복 제거**: 각 뮤테이션 훅에서 공통 무효화 함수 사용
+4. **유지보수성 향상**: 무효화 로직 변경 시 한 곳만 수정하면 됨
+5. **GET 전용 엔티티 정리**: Categories, Tags 등 GET 전용 엔티티의 불필요한 keys.ts 파일 삭제
+
+### 구현 예시
+
+#### Comments 엔티티
+
+```typescript
+// comments.keys.ts
+export function useInvalidateCommentsCache() {
+  const queryClient = useQueryClient();
+  return () => {
+    queryClient.invalidateQueries({ queryKey: ["comments"] });
+    queryClient.invalidateQueries({ queryKey: ["admin", "comments"] });
+    queryClient.invalidateQueries({ queryKey: ["posts"] });
+    queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+  };
+}
+```
+
+#### Users 엔티티
+
+```typescript
+// users.keys.ts
+export function useInvalidateUsersCache() {
+  const queryClient = useQueryClient();
+  return () => {
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+  };
+}
+
+export function useInvalidateUserSubscribeCache() {
+  const queryClient = useQueryClient();
+  return () => {
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    queryClient.invalidateQueries({ queryKey: ["admin", "subscribes"] });
+    queryClient.invalidateQueries({ queryKey: ["users", "subscribes"] });
+  };
+}
+```
+
+### 장점
+
+1. **코드 중복 제거**: 6개 패턴의 무효화 코드가 한 곳에 집중
+2. **유지보수성 향상**: 무효화 로직 변경 시 한 곳만 수정
+3. **일관성 보장**: 모든 뮤테이션에서 동일한 무효화 로직 사용
+4. **가독성 개선**: 각 훅의 핵심 로직에 집중 가능
+5. **확장성**: 새로운 무효화 패턴 추가가 용이

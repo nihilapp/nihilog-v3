@@ -76,19 +76,35 @@ export const searchCategorySubscribeSchema = baseSearchSchema.extend({
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.')
     .optional(),
-  srchType: z.enum([
-    'ctgryNm', 'userNm', 'ctgryExpln',
-  ], {
-    error: '검색 타입은 ctgryNm, userNm, ctgryExpln 중 하나여야 합니다.',
-  }).optional(),
+  srchType: z.enum(
+    [
+      'ctgryNm',
+      'userNm',
+      'ctgryExpln',
+    ],
+    {
+      error: '검색 타입은 ctgryNm, userNm, ctgryExpln 중 하나여야 합니다.',
+    }
+  ).optional(),
   crtDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   crtDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   orderBy: z.enum([
-    'CTGRY_SBCR_LATEST', 'CTGRY_SBCR_OLDEST', 'CTGRY_NAME_ASC', 'CTGRY_NAME_DESC', 'USER_NAME_ASC', 'USER_NAME_DESC',
+    'CTGRY_SBCR_LATEST',
+    'CTGRY_SBCR_OLDEST',
+    'CTGRY_NAME_ASC',
+    'CTGRY_NAME_DESC',
+    'USER_NAME_ASC',
+    'USER_NAME_DESC',
   ])
     .default('CTGRY_SBCR_LATEST')
     .optional(),

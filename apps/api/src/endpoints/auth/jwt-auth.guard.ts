@@ -20,7 +20,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
         if (!result) {
           // JWT 검증 실패 시 에러 응답 설정
-          request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+          request.errorResponse = createError(
+            'UNAUTHORIZED',
+            MESSAGE.AUTH.UNAUTHORIZED
+          );
           return true; // 가드는 통과시키되 에러 응답을 설정
         }
 
@@ -28,7 +31,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       }
       catch {
         // JWT 파싱 에러 등 발생 시
-        request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+        request.errorResponse = createError(
+          'UNAUTHORIZED',
+          MESSAGE.AUTH.UNAUTHORIZED
+        );
         return true; // 가드는 통과시키되 에러 응답을 설정
       }
     }

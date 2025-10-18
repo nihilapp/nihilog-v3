@@ -92,8 +92,18 @@ export class CreateExample {
       emlNtfyYn: 'Y',
       newPstNtfyYn: 'Y',
       cmntRplNtfyYn: 'Y',
-      sbcrCtgryList: [ { ctgryNo: 1, ctgryNm: '카테고리1', }, ],
-      sbcrTagList: [ { tagNo: 1, tagNm: '태그1', }, ],
+      sbcrCtgryList: [
+        {
+          ctgryNo: 1,
+          ctgryNm: '카테고리1',
+        },
+      ],
+      sbcrTagList: [
+        {
+          tagNo: 1,
+          tagNm: '태그1',
+        },
+      ],
       useYn: 'Y',
       delYn: 'N',
       crtNo: 1,

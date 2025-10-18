@@ -36,7 +36,11 @@ export class CategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.USER.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.USER.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -57,7 +61,11 @@ export class CategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.USER.GET_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.USER.GET_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -78,6 +86,10 @@ export class CategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.USER.GET_BY_NAME_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.USER.GET_BY_NAME_SUCCESS,
+      result.data
+    );
   }
 }

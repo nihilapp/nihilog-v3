@@ -54,10 +54,21 @@ export class PostRepository {
         }),
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.pstInfo.findMany({
           where,
           orderBy: { pstNo: 'desc', },
@@ -67,14 +78,17 @@ export class PostRepository {
         this.prisma.pstInfo.count({ where, }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -91,7 +105,10 @@ export class PostRepository {
         where: { pstNo, },
       });
 
-      return prismaResponse(true, post);
+      return prismaResponse(
+        true,
+        post
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -108,7 +125,10 @@ export class PostRepository {
         where: { pstCd, },
       });
 
-      return prismaResponse(true, post);
+      return prismaResponse(
+        true,
+        post
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -143,27 +163,44 @@ export class PostRepository {
         },
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.pstInfo.findMany({
           where,
           orderBy: { pstNo: 'desc', },
           skip,
           take,
         }),
-        this.prisma.pstInfo.count({ where, orderBy: { pstNo: 'desc', }, }),
+        this.prisma.pstInfo.count({
+          where,
+          orderBy: { pstNo: 'desc', },
+        }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -193,10 +230,21 @@ export class PostRepository {
         }),
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.pstInfo.findMany({
           where,
           orderBy: { pstNo: 'desc', },
@@ -209,14 +257,17 @@ export class PostRepository {
         }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -248,10 +299,21 @@ export class PostRepository {
         }),
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.pstInfo.findMany({
           where,
           orderBy: {
@@ -268,14 +330,17 @@ export class PostRepository {
         }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -292,7 +357,11 @@ export class PostRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzePostItemType[]>`
-        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+        WITH date_series AS ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )},
 
         -- 모든 통계를 하나의 CTE로 통합
         all_stats AS (
@@ -415,7 +484,10 @@ export class PostRepository {
         ORDER BY ds.date_start
       `;
 
-      return prismaResponse(true, analyzeData);
+      return prismaResponse(
+        true,
+        analyzeData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -431,7 +503,11 @@ export class PostRepository {
       const { startDt, endDt, mode, } = analyzeStatData;
 
       const dataList = await this.prisma.$queryRaw<AverageViewStatItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -454,7 +530,10 @@ export class PostRepository {
           b.date_start
       `;
 
-      return prismaResponse(true, dataList);
+      return prismaResponse(
+        true,
+        dataList
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -470,7 +549,11 @@ export class PostRepository {
       const { startDt, endDt, mode, } = analyzeStatData;
 
       const dataList = await this.prisma.$queryRaw<AverageBookmarkStatItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -494,7 +577,10 @@ export class PostRepository {
           b.date_start
       `;
 
-      return prismaResponse(true, dataList);
+      return prismaResponse(
+        true,
+        dataList
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -541,7 +627,10 @@ export class PostRepository {
         publishDate: post.publDt,
       }));
 
-      return prismaResponse(true, formattedPosts);
+      return prismaResponse(
+        true,
+        formattedPosts
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -581,7 +670,10 @@ export class PostRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, topPosts);
+      return prismaResponse(
+        true,
+        topPosts
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -626,7 +718,10 @@ export class PostRepository {
         ORDER BY sc.count DESC
       `;
 
-      return prismaResponse(true, statusRatio);
+      return prismaResponse(
+        true,
+        statusRatio
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -669,7 +764,10 @@ export class PostRepository {
         count: item._count.shrnSite,
       }));
 
-      return prismaResponse(true, formattedStats);
+      return prismaResponse(
+        true,
+        formattedStats
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -691,7 +789,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, viewLog);
+      return prismaResponse(
+        true,
+        viewLog
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -712,7 +813,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, shareLog);
+      return prismaResponse(
+        true,
+        shareLog
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -732,7 +836,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, bookmark);
+      return prismaResponse(
+        true,
+        bookmark
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -751,7 +858,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, true);
+      return prismaResponse(
+        true,
+        true
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -783,22 +893,40 @@ export class PostRepository {
         },
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
-        this.prisma.pstBkmrkMpng.findMany({ where, skip, take, }),
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
+        this.prisma.pstBkmrkMpng.findMany({
+          where,
+          skip,
+          take,
+        }),
         this.prisma.pstBkmrkMpng.count({ where, }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -849,9 +977,16 @@ export class PostRepository {
         ...(ctgryNoList && { ctgryNo: { in: ctgryNoList, }, }),
       };
 
-      const { offset: skip, limit: take, } = pageHelper(page, strtRow, endRow);
+      const { offset: skip, limit: take, } = pageHelper(
+        page,
+        strtRow,
+        endRow
+      );
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         // 관리자 관점에서는 모든 포스트를 조회해야 하고 사용자 관점에서는 공개된 글만 조회 해야 함. 둘 다 기능해야 하므로 플래그로 조작하는 것으로 진행.
         this.prisma.pstInfo.findMany({
           where,
@@ -872,14 +1007,17 @@ export class PostRepository {
         this.prisma.pstInfo.count({ where, }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -910,7 +1048,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, newPost);
+      return prismaResponse(
+        true,
+        newPost
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -935,7 +1076,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, updatePost);
+      return prismaResponse(
+        true,
+        updatePost
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -967,11 +1111,14 @@ export class PostRepository {
 
       const failNoList = updateData.pstNoList.filter((item) => !updatePost.some((updatePostItem) => updatePostItem.pstNo === item));
 
-      return prismaResponse(true, {
-        successCnt: updatePost.length,
-        failCnt: updateData.pstNoList.length - updatePost.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: updatePost.length,
+          failCnt: updateData.pstNoList.length - updatePost.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -999,7 +1146,10 @@ export class PostRepository {
         },
       });
 
-      return prismaResponse(true, !!deletePost);
+      return prismaResponse(
+        true,
+        !!deletePost
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1034,11 +1184,14 @@ export class PostRepository {
 
       const failNoList = deleteData.pstNoList.filter((item) => !deletePost.some((deletePostItem) => deletePostItem.pstNo === item));
 
-      return prismaResponse(true, {
-        successCnt: deletePost.length,
-        failCnt: deleteData.pstNoList.length - deletePost.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: deletePost.length,
+          failCnt: deleteData.pstNoList.length - deletePost.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

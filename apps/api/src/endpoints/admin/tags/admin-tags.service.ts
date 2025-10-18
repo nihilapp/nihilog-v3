@@ -40,7 +40,10 @@ export class AdminTagsService {
    * @param tagNo 태그 번호 (선택적, 없으면 전체/있으면 해당 태그만)
    */
   async adminGetAnalyzeTagData(analyzeStatData: AnalyzeStatDto, tagNo?: number): Promise<RepoResponseType<AnalyzeTagStatItemType[]> | null> {
-    return this.tagRepository.getAnalyzeTagData(analyzeStatData, tagNo);
+    return this.tagRepository.getAnalyzeTagData(
+      analyzeStatData,
+      tagNo
+    );
   }
 
   /**
@@ -48,7 +51,10 @@ export class AdminTagsService {
    * @param analyzeStatData 분석 통계 데이터
    */
   async adminGetTopUsedTagsByCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopUsedTagItemType[]> | null> {
-    return this.tagRepository.getTopUsedTagsByCount(analyzeStatData.limit || 10, analyzeStatData);
+    return this.tagRepository.getTopUsedTagsByCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
   }
 
   /**
@@ -146,10 +152,18 @@ export class AdminTagsService {
     const findTag = await this.tagRepository.getTagByTagNm(createData.tagNm);
 
     if (findTag?.success && findTag.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.TAG.ADMIN.NAME_IN_USE
+      );
     }
 
-    return this.tagRepository.createTag(userNo, createData);
+    return this.tagRepository.createTag(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -162,11 +176,19 @@ export class AdminTagsService {
     for (const item of createData) {
       const findTag = await this.tagRepository.getTagByTagNm(item.tagNm);
       if (findTag?.success && findTag.data) {
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.NAME_IN_USE);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.TAG.ADMIN.NAME_IN_USE
+        );
       }
     }
 
-    return this.tagRepository.multipleCreateTag(userNo, createData);
+    return this.tagRepository.multipleCreateTag(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -177,7 +199,10 @@ export class AdminTagsService {
   async adminUpdateTag(userNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<SelectTagInfoType> | null> {
     // 태그는 이름을 바꿀 이유가 별로 없음.
 
-    return this.tagRepository.updateTag(userNo, updateData);
+    return this.tagRepository.updateTag(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -188,7 +213,10 @@ export class AdminTagsService {
   async adminMultipleUpdateTag(userNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<MultipleResultType> | null> {
     // 태그는 이름을 바꿀 이유가 별로 없음.
 
-    return this.tagRepository.multipleUpdateTag(userNo, updateData);
+    return this.tagRepository.multipleUpdateTag(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -197,7 +225,10 @@ export class AdminTagsService {
    * @param deleteData 태그 삭제 데이터
    */
   async adminDeleteTag(userNo: number, deleteData: DeleteTagDto): Promise<RepoResponseType<boolean> | null> {
-    return this.tagRepository.deleteTag(userNo, deleteData);
+    return this.tagRepository.deleteTag(
+      userNo,
+      deleteData
+    );
   }
 
   /**
@@ -206,7 +237,10 @@ export class AdminTagsService {
    * @param deleteData 다수 태그 삭제 데이터
    */
   async adminMultipleDeleteTag(userNo: number, deleteData: DeleteTagDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.tagRepository.multipleDeleteTag(userNo, deleteData);
+    return this.tagRepository.multipleDeleteTag(
+      userNo,
+      deleteData
+    );
   }
 
   /**
@@ -223,7 +257,10 @@ export class AdminTagsService {
    * @param pstNo 포스트 번호
    */
   async adminGetTagMappingByTagNo(tagNo: number, pstNo: number): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
-    return this.tagRepository.getPostTagMappingByTagNo(tagNo, pstNo);
+    return this.tagRepository.getPostTagMappingByTagNo(
+      tagNo,
+      pstNo
+    );
   }
 
   /**
@@ -234,12 +271,23 @@ export class AdminTagsService {
   async adminAddTagMapping(userNo: number, createData: CreatePstTagMpngDto): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
     // 태그 중복
     const findTag = await this.tagRepository
-      .getPostTagMappingByTagNo(createData.tagNo, createData.pstNo);
+      .getPostTagMappingByTagNo(
+        createData.tagNo,
+        createData.pstNo
+      );
     if (findTag?.success && findTag.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS
+      );
     }
 
-    return this.tagRepository.addTagToPost(userNo, createData);
+    return this.tagRepository.addTagToPost(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -250,12 +298,23 @@ export class AdminTagsService {
   async adminMultipleAddTagMapping(userNo: number, createData: CreatePstTagMpngDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
     for (const item of createData) {
       const findTag = await this.tagRepository
-        .getPostTagMappingByTagNo(item.tagNo, item.pstNo);
+        .getPostTagMappingByTagNo(
+          item.tagNo,
+          item.pstNo
+        );
       if (findTag?.success && findTag.data) {
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS
+        );
       }
     }
-    return this.tagRepository.multipleAddTagToPost(userNo, createData);
+    return this.tagRepository.multipleAddTagToPost(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -264,7 +323,10 @@ export class AdminTagsService {
    * @param deleteData 태그 매핑 삭제 데이터
    */
   async adminDeleteTagMapping(userNo: number, deleteData: DeletePstTagMpngDto): Promise<RepoResponseType<boolean> | null> {
-    return this.tagRepository.removeTagFromPost(userNo, deleteData);
+    return this.tagRepository.removeTagFromPost(
+      userNo,
+      deleteData
+    );
   }
 
   /**
@@ -273,6 +335,9 @@ export class AdminTagsService {
    * @param deleteData 다수 태그 매핑 삭제 데이터
    */
   async adminMultipleDeleteTagMapping(userNo: number, deleteData: DeletePstTagMpngDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.tagRepository.multipleRemoveTagFromPost(userNo, deleteData);
+    return this.tagRepository.multipleRemoveTagFromPost(
+      userNo,
+      deleteData
+    );
   }
 }

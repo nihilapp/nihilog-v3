@@ -3,7 +3,8 @@ import {
   Body,
   Req,
   Param,
-  ParseIntPipe
+  ParseIntPipe,
+  Query
 } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
@@ -25,15 +26,18 @@ export class CategorySubscribeController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async getCategorySubscribeList(
     @Req() req: AuthRequest,
-    @Body() body: SearchCategorySubscribeDto
+    @Query() body: SearchCategorySubscribeDto
   ): Promise<ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -48,7 +52,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -58,22 +66,31 @@ export class CategorySubscribeController {
    */
   @Endpoint({
     endpoint: '/:ctgryNo/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async getCategorySubscribeByCtgryNo(
     @Req() req: AuthRequest,
-    @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
-    @Body() body: SearchCategorySubscribeDto
+    @Param(
+      'ctgryNo',
+      ParseIntPipe
+    ) ctgryNo: number,
+    @Query() body: SearchCategorySubscribeDto
   ): Promise<ResponseDto<ListType<SelectCtgrySbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.getCategorySubscribeByCtgryNo(ctgryNo, body);
+    const result = await this.categorySubscribeService.getCategorySubscribeByCtgryNo(
+      ctgryNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -82,7 +99,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -95,19 +116,31 @@ export class CategorySubscribeController {
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async createCategorySubscribe(
     @Req() req: AuthRequest,
-    @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
+    @Param(
+      'ctgryNo',
+      ParseIntPipe
+    ) ctgryNo: number,
     @Body() body: CreateCategorySubscribeDto
   ): Promise<ResponseDto<SelectCtgrySbcrMpngType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.createCategorySubscribe(req.user.userNo, { ...body, ctgryNo, });
+    const result = await this.categorySubscribeService.createCategorySubscribe(
+      req.user.userNo,
+      {
+        ...body,
+        ctgryNo,
+      }
+    );
 
     if (!result?.success) {
       return createError(
@@ -116,7 +149,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -129,7 +166,10 @@ export class CategorySubscribeController {
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async multipleCreateCategorySubscribe(
@@ -140,7 +180,10 @@ export class CategorySubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.multipleCreateCategorySubscribe(req.user.userNo, body);
+    const result = await this.categorySubscribeService.multipleCreateCategorySubscribe(
+      req.user.userNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -149,7 +192,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -163,12 +210,18 @@ export class CategorySubscribeController {
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async updateCategorySubscribe(
     @Req() req: AuthRequest,
-    @Param('ctgrySbcrNo', ParseIntPipe) ctgrySbcrNo: number,
+    @Param(
+      'ctgrySbcrNo',
+      ParseIntPipe
+    ) ctgrySbcrNo: number,
     @Body() body: UpdateCategorySubscribeDto
   ): Promise<ResponseDto<SelectCtgrySbcrMpngType>> {
     if (req.errorResponse) {
@@ -177,7 +230,10 @@ export class CategorySubscribeController {
 
     const result = await this.categorySubscribeService.updateCategorySubscribe(
       req.user.userNo,
-      { ...body, ctgrySbcrNo, }
+      {
+        ...body,
+        ctgrySbcrNo,
+      }
     );
 
     if (!result?.success) {
@@ -187,7 +243,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -200,7 +260,10 @@ export class CategorySubscribeController {
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async multipleUpdateCategorySubscribe(
@@ -211,7 +274,10 @@ export class CategorySubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.multipleUpdateCategorySubscribe(req.user.userNo, body);
+    const result = await this.categorySubscribeService.multipleUpdateCategorySubscribe(
+      req.user.userNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -220,7 +286,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -233,18 +303,27 @@ export class CategorySubscribeController {
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async deleteCategorySubscribe(
     @Req() req: AuthRequest,
-    @Param('ctgrySbcrNo', ParseIntPipe) ctgrySbcrNo: number
+    @Param(
+      'ctgrySbcrNo',
+      ParseIntPipe
+    ) ctgrySbcrNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.deleteCategorySubscribe(req.user.userNo, ctgrySbcrNo);
+    const result = await this.categorySubscribeService.deleteCategorySubscribe(
+      req.user.userNo,
+      ctgrySbcrNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -253,7 +332,11 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.DELETE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -266,7 +349,10 @@ export class CategorySubscribeController {
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async multipleDeleteCategorySubscribe(
@@ -277,7 +363,10 @@ export class CategorySubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.multipleDeleteCategorySubscribe(req.user.userNo, body);
+    const result = await this.categorySubscribeService.multipleDeleteCategorySubscribe(
+      req.user.userNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -286,6 +375,10 @@ export class CategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.MULTIPLE_DELETE_SUCCESS,
+      result.data
+    );
   }
 }

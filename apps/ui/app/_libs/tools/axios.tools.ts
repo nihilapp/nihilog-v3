@@ -73,18 +73,24 @@ export class Api {
 
           // 개발 환경에서 요청 로깅
           if (process.env.NODE_ENV === 'development') {
-            console.log('[API Request]', {
-              method: config.method?.toUpperCase(),
-              url: config.url,
-              baseURL: config.baseURL,
-              withCredentials: config.withCredentials,
-            });
+            console.log(
+              '[API Request]',
+              {
+                method: config.method?.toUpperCase(),
+                url: config.url,
+                baseURL: config.baseURL,
+                withCredentials: config.withCredentials,
+              }
+            );
           }
 
           return config;
         },
         (error) => {
-          console.error('[API Request Error]', error);
+          console.error(
+            '[API Request Error]',
+            error
+          );
           return Promise.reject(error);
         }
       );
@@ -94,13 +100,16 @@ export class Api {
         (response) => response,
         (error) => {
           if (process.env.NODE_ENV === 'development') {
-            console.error('[API Response Error]', {
-              message: error.message,
-              code: error.code,
-              status: error.response?.status,
-              url: error.config?.url,
-              isCorsError: error.message?.includes('CORS') || error.message?.includes('Network Error'),
-            });
+            console.error(
+              '[API Response Error]',
+              {
+                message: error.message,
+                code: error.code,
+                status: error.response?.status,
+                url: error.config?.url,
+                isCorsError: error.message?.includes('CORS') || error.message?.includes('Network Error'),
+              }
+            );
           }
           return Promise.reject(error);
         }
@@ -113,7 +122,10 @@ export class Api {
    * GET 요청을 수행합니다.
    */
   static async get<T>(restApi: string, config?: AxiosRequestConfig) {
-    return this.getInstance().get<ResponseType<T>>(restApi, config);
+    return this.getInstance().get<ResponseType<T>>(
+      restApi,
+      config
+    );
   }
 
   /**
@@ -128,7 +140,11 @@ export class Api {
       T,
       AxiosResponse<ResponseType<T>, P>,
       P
-    >(restApi, data, config);
+    >(
+      restApi,
+      data,
+      config
+    );
   }
 
   /**
@@ -143,12 +159,16 @@ export class Api {
       T,
       AxiosResponse<ResponseType<T>, P>,
       P
-    >(restApi, data, {
-      ...config,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    >(
+      restApi,
+      data,
+      {
+        ...config,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
   }
 
   /**
@@ -163,7 +183,11 @@ export class Api {
       T,
       AxiosResponse<ResponseType<T>, P>,
       P
-    >(restApi, data, config);
+    >(
+      restApi,
+      data,
+      config
+    );
   }
 
   /**
@@ -178,14 +202,21 @@ export class Api {
       T,
       AxiosResponse<ResponseType<T>, P>,
       P
-    >(restApi, data, config);
+    >(
+      restApi,
+      data,
+      config
+    );
   }
 
   /**
    * DELETE 요청을 수행합니다.
    */
   static async delete<T>(restApi: string, config?: AxiosRequestConfig) {
-    return this.getInstance().delete<ResponseType<T>>(restApi, config);
+    return this.getInstance().delete<ResponseType<T>>(
+      restApi,
+      config
+    );
   }
 
   /**
@@ -200,7 +231,10 @@ export class Api {
    * POST 요청을 수행하고 응답 데이터만 반환합니다.
    */
   static async postQuery<D, P>(url: string, postData: P) {
-    const res = await this.post<D, P>(url, postData);
+    const res = await this.post<D, P>(
+      url,
+      postData
+    );
     return this.ensureOk<D>(res);
   }
 
@@ -208,7 +242,10 @@ export class Api {
    * PATCH 요청을 수행하고 응답 데이터만 반환합니다.
    */
   static async patchQuery<D, P>(url: string, patchData: P) {
-    const res = await this.patch<D, P>(url, patchData);
+    const res = await this.patch<D, P>(
+      url,
+      patchData
+    );
     return this.ensureOk<D>(res);
   }
 
@@ -216,7 +253,10 @@ export class Api {
    * PUT 요청을 수행하고 응답 데이터만 반환합니다.
    */
   static async putQuery<D, P>(url: string, putData: P) {
-    const res = await this.put<D, P>(url, putData);
+    const res = await this.put<D, P>(
+      url,
+      putData
+    );
     return this.ensureOk<D>(res);
   }
 
@@ -232,9 +272,12 @@ export class Api {
    * 데이터와 함께 DELETE 요청을 수행하고 응답 데이터만 반환합니다.
    */
   static async deleteWithDataQuery<D, P>(url: string, postData: P) {
-    const res = await this.delete<D>(url, {
-      data: postData,
-    });
+    const res = await this.delete<D>(
+      url,
+      {
+        data: postData,
+      }
+    );
     return this.ensureOk<D>(res);
   }
 
@@ -242,9 +285,12 @@ export class Api {
    * 여러 데이터를 삭제하는 DELETE 요청을 수행하고 응답 데이터만 반환합니다.
    */
   static async deletesQuery<D, P>(url: string, deleteData: P) {
-    const res = await this.delete<D>(url, {
-      data: deleteData,
-    });
+    const res = await this.delete<D>(
+      url,
+      {
+        data: deleteData,
+      }
+    );
     return this.ensureOk<D>(res);
   }
 }

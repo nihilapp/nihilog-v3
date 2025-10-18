@@ -20,7 +20,12 @@ export class CategorySubscribeService {
     const safeData = searchCategorySubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
     return this.categorySubscribeRepository.getCategorySubscribeList(safeData.data);
@@ -35,10 +40,18 @@ export class CategorySubscribeService {
     const safeData = searchCategorySubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
-    return this.categorySubscribeRepository.getCategorySubscribeByUserNo(userNo, safeData.data);
+    return this.categorySubscribeRepository.getCategorySubscribeByUserNo(
+      userNo,
+      safeData.data
+    );
   }
 
   /**
@@ -50,10 +63,18 @@ export class CategorySubscribeService {
     const safeData = searchCategorySubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
-    return this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(ctgryNo, safeData.data);
+    return this.categorySubscribeRepository.getCategorySubscribeByCtgryNo(
+      ctgryNo,
+      safeData.data
+    );
   }
 
   /**
@@ -63,13 +84,24 @@ export class CategorySubscribeService {
    */
   async createCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<RepoResponseType<SelectCtgrySbcrMpngType> | null> {
     // 카테고리 구독 중복 체크
-    const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(createData.sbcrNo, createData.ctgryNo);
+    const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(
+      createData.sbcrNo,
+      createData.ctgryNo
+    );
 
     if (existingSubscribe?.success && existingSubscribe.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS
+      );
     }
 
-    return this.categorySubscribeRepository.createCategorySubscribe(userNo, createData);
+    return this.categorySubscribeRepository.createCategorySubscribe(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -80,14 +112,25 @@ export class CategorySubscribeService {
   async multipleCreateCategorySubscribe(userNo: number, createData: CreateCategorySubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
     // 각 카테고리별로 중복 체크
     for (const ctgryNo of createData.ctgryNoList) {
-      const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(createData.sbcrNo, ctgryNo);
+      const existingSubscribe = await this.categorySubscribeRepository.getCategorySubscribeBySbcrNoAndCtgryNo(
+        createData.sbcrNo,
+        ctgryNo
+      );
 
       if (existingSubscribe?.success && existingSubscribe.data) {
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS
+        );
       }
     }
 
-    return this.categorySubscribeRepository.multipleCreateCategorySubscribe(userNo, createData);
+    return this.categorySubscribeRepository.multipleCreateCategorySubscribe(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -100,10 +143,18 @@ export class CategorySubscribeService {
     const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(updateData.ctgrySbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND);
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND
+      );
     }
 
-    return this.categorySubscribeRepository.updateCategorySubscribe(userNo, updateData);
+    return this.categorySubscribeRepository.updateCategorySubscribe(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -112,7 +163,10 @@ export class CategorySubscribeService {
    * @param updateData 카테고리 구독 수정 데이터
    */
   async multipleUpdateCategorySubscribe(userNo: number, updateData: UpdateCategorySubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.categorySubscribeRepository.multipleUpdateCategorySubscribe(userNo, updateData);
+    return this.categorySubscribeRepository.multipleUpdateCategorySubscribe(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -125,10 +179,18 @@ export class CategorySubscribeService {
     const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND);
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND
+      );
     }
 
-    return this.categorySubscribeRepository.deleteCategorySubscribe(userNo, ctgrySbcrNo);
+    return this.categorySubscribeRepository.deleteCategorySubscribe(
+      userNo,
+      ctgrySbcrNo
+    );
   }
 
   /**
@@ -142,10 +204,18 @@ export class CategorySubscribeService {
       const subscribe = await this.categorySubscribeRepository.getCategorySubscribeByCtgrySbcrNo(ctgrySbcrNo);
 
       if (!subscribe.data) {
-        return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND);
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND
+        );
       }
     }
 
-    return this.categorySubscribeRepository.multipleDeleteCategorySubscribe(userNo, deleteData);
+    return this.categorySubscribeRepository.multipleDeleteCategorySubscribe(
+      userNo,
+      deleteData
+    );
   }
 }

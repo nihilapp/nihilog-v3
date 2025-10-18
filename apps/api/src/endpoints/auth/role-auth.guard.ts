@@ -22,7 +22,10 @@ interface RequestWithUser {
 export const ROLES_KEY = 'roles';
 
 // 롤 데코레이터
-export const Roles = (...roles: UserRoleType[]) => SetMetadata(ROLES_KEY, roles);
+export const Roles = (...roles: UserRoleType[]) => SetMetadata(
+  ROLES_KEY,
+  roles
+);
 
 @Injectable()
 export class RoleAuthGuard extends AuthGuard('jwt') {
@@ -38,22 +41,31 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const jwtResult = await super.canActivate(context);
 
       if (!jwtResult) {
-        request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+        request.errorResponse = createError(
+          'UNAUTHORIZED',
+          MESSAGE.AUTH.UNAUTHORIZED
+        );
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       const user = request.user;
 
       if (!user) {
-        request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+        request.errorResponse = createError(
+          'UNAUTHORIZED',
+          MESSAGE.AUTH.UNAUTHORIZED
+        );
         return true;
       }
 
       // 메타데이터에서 필요한 롤들 가져오기
-      const requiredRoles = this.reflector.getAllAndOverride<UserRoleType[]>(ROLES_KEY, [
-        context.getHandler(),
-        context.getClass(),
-      ]);
+      const requiredRoles = this.reflector.getAllAndOverride<UserRoleType[]>(
+        ROLES_KEY,
+        [
+          context.getHandler(),
+          context.getClass(),
+        ]
+      );
 
       // 롤이 지정되지 않은 경우 통과
       if (!requiredRoles || requiredRoles.length === 0) {
@@ -64,14 +76,20 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const hasRequiredRole = requiredRoles.includes(user.userRole);
 
       if (!hasRequiredRole) {
-        request.errorResponse = createError('FORBIDDEN', MESSAGE.AUTH.FORBIDDEN);
+        request.errorResponse = createError(
+          'FORBIDDEN',
+          MESSAGE.AUTH.FORBIDDEN
+        );
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       return true;
     }
     catch {
-      request.errorResponse = createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+      request.errorResponse = createError(
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.UNAUTHORIZED
+      );
       return true; // Guard를 통과시키되 에러 응답을 설정
     }
   }

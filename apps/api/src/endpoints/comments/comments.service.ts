@@ -20,7 +20,12 @@ export class CommentsService {
     const safeData = searchCommentSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
     return this.commentRepository.getCommentList(safeData.data);
@@ -40,7 +45,10 @@ export class CommentsService {
    * @param createData 생성 데이터
    */
   async createComment(userNo: number, createData: CreateCommentDto): Promise<RepoResponseType<SelectCommentType> | null> {
-    return this.commentRepository.createComment(userNo, createData);
+    return this.commentRepository.createComment(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -49,7 +57,10 @@ export class CommentsService {
    * @param updateData 수정 데이터
    */
   async updateComment(userNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<SelectCommentType> | null> {
-    return this.commentRepository.updateComment(userNo, updateData);
+    return this.commentRepository.updateComment(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -58,6 +69,9 @@ export class CommentsService {
    * @param deleteData 삭제 데이터
    */
   async deleteComment(userNo: number, deleteData: DeleteCommentDto): Promise<RepoResponseType<boolean> | null> {
-    return this.commentRepository.deleteComment(userNo, deleteData);
+    return this.commentRepository.deleteComment(
+      userNo,
+      deleteData
+    );
   }
 }

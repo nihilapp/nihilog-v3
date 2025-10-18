@@ -18,15 +18,25 @@ export function useGetCategoryByNo(options: UseGetCategoryByNoOptions) {
 
   const query = useGet<SelectCategoryType>({
     url: [
-      'categories', ctgryNo.toString(),
+      'categories',
+      ctgryNo.toString(),
     ],
-    callback() {
-      // 성공 시 토스트 메시지는 필요에 따라 추가
+    enabled: !!ctgryNo,
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
     },
     errorCallback(error) {
-      toast.error(error.message, {
-        style: getToastStyle('error'),
-      });
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
     },
     ...queryOptions,
   });

@@ -47,7 +47,10 @@ export class AdminCommentsController {
     @Query() analyzeStatData: AnalyzeStatDto,
     @Query('pstNo') pstNo?: number
   ): Promise<ResponseDto<AnalyzeCommentStatItemType[]>> {
-    const result = await this.adminCommentsService.adminGetAnalyzeCommentData(analyzeStatData, pstNo);
+    const result = await this.adminCommentsService.adminGetAnalyzeCommentData(
+      analyzeStatData,
+      pstNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -56,7 +59,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.ANALYZE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.ANALYZE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -81,7 +88,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -106,7 +117,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -131,7 +146,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -155,7 +174,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -180,7 +203,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -205,7 +232,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -230,7 +261,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -255,7 +290,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -279,7 +318,11 @@ export class AdminCommentsController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   // ========================================================
@@ -307,7 +350,10 @@ export class AdminCommentsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminCommentsService.adminMultipleUpdateComment(req.user.userNo, updateData);
+    const result = await this.adminCommentsService.adminMultipleUpdateComment(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -344,7 +390,10 @@ export class AdminCommentsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminCommentsService.adminMultipleDeleteComment(req.user.userNo, deleteData);
+    const result = await this.adminCommentsService.adminMultipleDeleteComment(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(

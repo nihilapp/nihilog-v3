@@ -10,9 +10,12 @@ export const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 export const dateTimeMessage = 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.';
 
 // Y/N enum 스키마 (에러 메시지 추가)
-export const ynEnumSchema = ynSchema.refine((val) => val === 'Y' || val === 'N', {
-  message: 'Y 또는 N 값을 입력해주세요.',
-});
+export const ynEnumSchema = ynSchema.refine(
+  (val) => val === 'Y' || val === 'N',
+  {
+    message: 'Y 또는 N 값을 입력해주세요.',
+  }
+);
 
 // 타입 추출
 export type YnType = z.infer<typeof ynEnumSchema>;
@@ -39,7 +42,10 @@ export const commonSchema = z.object({
       example: 1,
     }),
   crtDt: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .nullable()
     .optional()
     .openapi({
@@ -55,7 +61,10 @@ export const commonSchema = z.object({
       example: 1,
     }),
   updtDt: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .nullable()
     .optional()
     .openapi({
@@ -71,7 +80,10 @@ export const commonSchema = z.object({
       example: 1,
     }),
   delDt: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .nullable()
     .optional()
     .openapi({
@@ -82,7 +94,12 @@ export const commonSchema = z.object({
 
 // 포스트 조회수 통계 스키마
 export const analyzeStatSchema = z.object({
-  mode: z.enum([ 'day', 'week', 'month', 'year', ])
+  mode: z.enum([
+    'day',
+    'week',
+    'month',
+    'year',
+  ])
     .default('day')
     .openapi({
       description: '모드 (day: 일간, week: 주간, month: 월간, year: 연간)',
@@ -100,8 +117,14 @@ export const analyzeStatSchema = z.object({
     }),
   limit: z.coerce.number()
     .int('제한 수는 정수여야 합니다.')
-    .min(1, '제한 수는 1 이상이어야 합니다.')
-    .max(1000, '제한 수는 1000 이하여야 합니다.')
+    .min(
+      1,
+      '제한 수는 1 이상이어야 합니다.'
+    )
+    .max(
+      1000,
+      '제한 수는 1000 이하여야 합니다.'
+    )
     .optional()
     .openapi({
       description: '결과 제한 수 (TOP N)',

@@ -14,14 +14,23 @@ const categoryInfoSchema = commonSchema.extend({
       example: 1,
     }),
   ctgryNm: z.string()
-    .min(1, '카테고리명은 필수입니다.')
-    .max(100, '카테고리명은 100자를 초과할 수 없습니다.')
+    .min(
+      1,
+      '카테고리명은 필수입니다.'
+    )
+    .max(
+      100,
+      '카테고리명은 100자를 초과할 수 없습니다.'
+    )
     .openapi({
       description: '카테고리명 (1-100자)',
       example: 'JavaScript',
     }),
   ctgryExpln: z.string()
-    .max(200, '카테고리 설명은 200자를 초과할 수 없습니다.')
+    .max(
+      200,
+      '카테고리 설명은 200자를 초과할 수 없습니다.'
+    )
     .nullable()
     .optional()
     .openapi({
@@ -29,7 +38,10 @@ const categoryInfoSchema = commonSchema.extend({
       example: 'JavaScript 프로그래밍 언어',
     }),
   ctgryColr: z.string()
-    .regex(/^#[0-9A-Fa-f]{6}$/, '색상은 #RRGGBB 형식이어야 합니다.')
+    .regex(
+      /^#[0-9A-Fa-f]{6}$/,
+      '색상은 #RRGGBB 형식이어야 합니다.'
+    )
     .nullable()
     .optional()
     .openapi({
@@ -77,7 +89,11 @@ const categoryInfoSchema = commonSchema.extend({
     .optional()
     .openapi({
       description: '카테고리 번호 목록',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
 });
 
@@ -116,27 +132,49 @@ export const searchCategorySchema = baseSearchSchema.partial().extend({
     ctgryColr: true,
     upCtgryNo: true,
   }).shape,
-  srchType: z.enum([ 'ctgryNm', 'ctgryExpln', ], {
-    error: '검색 타입은 ctgryNm, ctgryExpln 중 하나여야 합니다.',
-  }).optional().openapi({
+  srchType: z.enum(
+    [
+      'ctgryNm',
+      'ctgryExpln',
+    ],
+    {
+      error: '검색 타입은 ctgryNm, ctgryExpln 중 하나여야 합니다.',
+    }
+  ).optional().openapi({
     description: '검색 타입 (ctgryNm: 카테고리명, ctgryExpln: 카테고리 설명)',
     example: 'ctgryNm',
   }),
-  orderBy: z.enum([ 'LATEST', 'OLDEST', 'NAME_ASC', 'NAME_DESC', 'STP_ASC', 'STP_DESC', ], {
-    error: '정렬 옵션은 LATEST, OLDEST, NAME_ASC, NAME_DESC, STP_ASC, STP_DESC 중 하나여야 합니다.',
-  }).optional().openapi({
+  orderBy: z.enum(
+    [
+      'LATEST',
+      'OLDEST',
+      'NAME_ASC',
+      'NAME_DESC',
+      'STP_ASC',
+      'STP_DESC',
+    ],
+    {
+      error: '정렬 옵션은 LATEST, OLDEST, NAME_ASC, NAME_DESC, STP_ASC, STP_DESC 중 하나여야 합니다.',
+    }
+  ).optional().openapi({
     description: '정렬 옵션 (LATEST: 최신순, OLDEST: 오래된순, NAME_ASC: 이름순, NAME_DESC: 이름역순, STP_ASC: 정렬순, STP_DESC: 정렬역순)',
     example: 'LATEST',
   }),
   crtDtFrom: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-01-01 00:00:00',
     }),
   crtDtTo: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',

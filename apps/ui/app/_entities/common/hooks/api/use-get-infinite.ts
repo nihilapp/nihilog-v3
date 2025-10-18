@@ -5,6 +5,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import type { InfiniteQueryOptionType, OkType } from '@/_entities/common/common.types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
+import type { ErrorType } from '@/_types';
 
 interface UseGetInfiniteOptions<TPageData = unknown, TPageParam = unknown> extends Omit<InfiniteQueryOptionType<TPageData, TPageParam>, 'getNextPageParam' | 'getPreviousPageParam'> {
   url: string[];
@@ -15,16 +16,14 @@ interface UseGetInfiniteOptions<TPageData = unknown, TPageParam = unknown> exten
   getNextPageParam?: (lastPage: OkType<TPageData>, allPages: OkType<TPageData>[]) => TPageParam | undefined;
   getPreviousPageParam?: (firstPage: OkType<TPageData>, allPages: OkType<TPageData>[]) => TPageParam | undefined;
   callback?: (response: OkType<TPageData>) => void;
-  errorCallback?: (error: any) => void;
+  errorCallback?: (error: ErrorType) => void;
 }
 
 /**
  * 무한 스크롤을 위한 GET 요청 커스텀 훅
  * @param options - 무한 쿼리 옵션
  */
-export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(
-  options: UseGetInfiniteOptions<TPageData, TPageParam>
-) {
+export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(options: UseGetInfiniteOptions<TPageData, TPageParam>) {
   const {
     url,
     params = {},
@@ -49,7 +48,10 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(
     ],
     queryFn: async ({ pageParam, }: { pageParam: TPageParam }) => {
       // 페이지 파라미터를 쿼리 파라미터에 추가
-      const queryParams = { ...params, page: String(pageParam), };
+      const queryParams = {
+        ...params,
+        page: String(pageParam),
+      };
       const queryString = new URLSearchParams(queryParams).toString();
       const finalUrl = queryString
         ? `${fullUrl}?${queryString}`
@@ -67,8 +69,14 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(
   } as any);
 
   // loading과 done 상태 계산
-  const loading = useLoading(query.isLoading, query.isFetching);
-  const done = useDone(loading, query.isSuccess);
+  const loading = useLoading(
+    query.isLoading,
+    query.isFetching
+  );
+  const done = useDone(
+    loading,
+    query.isSuccess
+  );
 
   // 콜백 실행
   if (query.data && callback) {
@@ -76,7 +84,7 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(
   }
 
   if (query.error && errorCallback) {
-    errorCallback(query.error);
+    errorCallback(query.error as ErrorType);
   }
 
   return {

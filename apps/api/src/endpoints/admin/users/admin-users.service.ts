@@ -42,7 +42,10 @@ export class AdminUserService {
     analyzeStatData: AnalyzeStatDto,
     userNo?: number
   ): Promise<RepoResponseType<AnalyzeUserStatItemType[]> | null> {
-    return this.userRepository.getAnalyzeUserData(analyzeStatData, userNo);
+    return this.userRepository.getAnalyzeUserData(
+      analyzeStatData,
+      userNo
+    );
   }
 
   /**
@@ -62,7 +65,10 @@ export class AdminUserService {
     limit: number,
     analyzeStatData?: AnalyzeStatDto
   ): Promise<RepoResponseType<TopUsersByContributionItemType[]> | null> {
-    return this.userRepository.getTopUsersByContribution(limit, analyzeStatData);
+    return this.userRepository.getTopUsersByContribution(
+      limit,
+      analyzeStatData
+    );
   }
 
   /**
@@ -74,7 +80,10 @@ export class AdminUserService {
     limit: number,
     analyzeStatData?: AnalyzeStatDto
   ): Promise<RepoResponseType<TopUsersByPostCountItemType[]> | null> {
-    return this.userRepository.getTopUsersByPostCount(limit, analyzeStatData);
+    return this.userRepository.getTopUsersByPostCount(
+      limit,
+      analyzeStatData
+    );
   }
 
   /**
@@ -86,7 +95,10 @@ export class AdminUserService {
     limit: number,
     analyzeStatData?: AnalyzeStatDto
   ): Promise<RepoResponseType<TopUsersByCommentCountItemType[]> | null> {
-    return this.userRepository.getTopUsersByCommentCount(limit, analyzeStatData);
+    return this.userRepository.getTopUsersByCommentCount(
+      limit,
+      analyzeStatData
+    );
   }
 
   /**
@@ -144,7 +156,12 @@ export class AdminUserService {
     const safeData = searchUserSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
     const result = await this.userRepository.getUserList({
@@ -188,10 +205,18 @@ export class AdminUserService {
     // 이메일 중복 확인
     const findUser = await this.userRepository.getUserByEmail(createUserDataWithoutPassword.emlAddr);
 
-    console.log('findUser', findUser);
+    console.log(
+      'findUser',
+      findUser
+    );
 
     if (findUser?.success && findUser.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.USER.USER.EMAIL_EXISTS
+      );
     }
 
     // 비밀번호 해시화
@@ -227,7 +252,12 @@ export class AdminUserService {
       const existingUser = await this.userRepository.getUserByName(updateUserData.userNm);
 
       if (existingUser?.success && existingUser.data && existingUser.data.userNo !== targetUserNo) {
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.NAME_EXISTS);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.USER.USER.NAME_EXISTS
+        );
       }
     }
 
@@ -244,7 +274,10 @@ export class AdminUserService {
    * @param updateUserDto 사용자 수정 정보
    */
   async multipleUpdateUser(adminUserNo: number, updateUserDto: UpdateUserDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.userRepository.adminMultipleUpdateUser(adminUserNo, updateUserDto);
+    return this.userRepository.adminMultipleUpdateUser(
+      adminUserNo,
+      updateUserDto
+    );
   }
 
   /**
@@ -257,10 +290,18 @@ export class AdminUserService {
     const findUser = await this.userRepository.getUserByNo(targetUserNo);
 
     if (!findUser?.success) {
-      return prismaResponse(false, null, findUser?.error?.code, findUser?.error?.message);
+      return prismaResponse(
+        false,
+        null,
+        findUser?.error?.code,
+        findUser?.error?.message
+      );
     }
 
-    return this.userRepository.deleteUser(adminUserNo, targetUserNo);
+    return this.userRepository.deleteUser(
+      adminUserNo,
+      targetUserNo
+    );
   }
 
   /**
@@ -270,9 +311,17 @@ export class AdminUserService {
    */
   async adminMultipleDeleteUser(adminUserNo: number, userNoList: number[]): Promise<RepoResponseType<MultipleResultType> | null> {
     if (!userNoList || userNoList.length === 0) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
-    return this.userRepository.adminMultipleDeleteUser(adminUserNo, userNoList);
+    return this.userRepository.adminMultipleDeleteUser(
+      adminUserNo,
+      userNoList
+    );
   }
 }

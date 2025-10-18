@@ -7,7 +7,7 @@ import {
   deletePostSchema,
   searchPostBookmarkSchema,
   searchPostSchema,
-  updatePostSchema,
+  updatePostSchema
 } from '@/endpoints/prisma/schemas/post.schema';
 
 // 포스트 생성 DTO

@@ -7,7 +7,7 @@ export async function useGetUsers() {
     body: {}, // 요청 데이터가 있을 경우 여기에 넣음.
     options: {
       ttl: 60, // 분 단위의 캐시 유지 시간.
-      enable: true, // 요청 여부를 결정하는 옵션. true 일 경우 요청 실행, false 일 경우 요청 실행하지 않음.
+      enabled: true, // 요청 여부를 결정하는 옵션. true 일 경우 요청 실행, false 일 경우 요청 실행하지 않음.
       callback(res) {
         // res = 요청 성공시 얻는 응답 객체
       },

@@ -9,30 +9,51 @@ import { ynEnumSchema, userRoleSchema, passwordSchema, baseSearchSchema } from '
 export const createUserSchema = z.object({
   emlAddr: z.email('올바른 이메일 형식을 입력해주세요.'),
   userNm: z.string()
-    .min(2, '사용자명은 2자 이상이어야 합니다.')
-    .max(30, '사용자명은 30자 이하여야 합니다.'),
+    .min(
+      2,
+      '사용자명은 2자 이상이어야 합니다.'
+    )
+    .max(
+      30,
+      '사용자명은 30자 이하여야 합니다.'
+    ),
   userRole: userRoleSchema,
   password: passwordSchema,
   passwordConfirm: passwordSchema,
-}).refine((data) => data.password === data.passwordConfirm, {
-  message: '비밀번호가 일치하지 않습니다.',
-  path: [ 'passwordConfirm', ],
-});
+}).refine(
+  (data) => data.password === data.passwordConfirm,
+  {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: [ 'passwordConfirm', ],
+  }
+);
 
 // 사용자 수정 스키마
 export const updateUserSchema = z.object({
   userNm: z.string()
-    .min(2, '사용자명은 2자 이상이어야 합니다.')
-    .max(30, '사용자명은 30자 이하여야 합니다.')
+    .min(
+      2,
+      '사용자명은 2자 이상이어야 합니다.'
+    )
+    .max(
+      30,
+      '사용자명은 30자 이하여야 합니다.'
+    )
     .optional(),
   userRole: userRoleSchema.optional(),
   proflImg: z
     .url('올바른 URL 형식을 입력해주세요.')
-    .max(1024, '프로필 이미지 URL은 1024자 이하여야 합니다.')
+    .max(
+      1024,
+      '프로필 이미지 URL은 1024자 이하여야 합니다.'
+    )
     .nullable()
     .optional(),
   userBiogp: z.string()
-    .max(500, '자기소개는 500자 이하여야 합니다.')
+    .max(
+      500,
+      '자기소개는 500자 이하여야 합니다.'
+    )
     .nullable()
     .optional(),
 }).partial();
@@ -40,7 +61,10 @@ export const updateUserSchema = z.object({
 // 로그인 스키마
 export const signInSchema = z.object({
   emlAddr: z.email('올바른 이메일 형식을 입력해주세요.'),
-  password: z.string().min(1, '비밀번호를 입력해주세요.'),
+  password: z.string().min(
+    1,
+    '비밀번호를 입력해주세요.'
+  ),
 });
 
 // 비밀번호 찾기 스키마
@@ -50,62 +74,107 @@ export const forgotPasswordSchema = z.object({
 
 // 비밀번호 변경 스키마
 export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, '현재 비밀번호를 입력해주세요.'),
+  currentPassword: z.string().min(
+    1,
+    '현재 비밀번호를 입력해주세요.'
+  ),
   newPassword: passwordSchema,
   newPasswordConfirm: passwordSchema,
-}).refine((data) => data.newPassword === data.newPasswordConfirm, {
-  message: '새 비밀번호가 일치하지 않습니다.',
-  path: [ 'newPasswordConfirm', ],
-});
+}).refine(
+  (data) => data.newPassword === data.newPasswordConfirm,
+  {
+    message: '새 비밀번호가 일치하지 않습니다.',
+    path: [ 'newPasswordConfirm', ],
+  }
+);
 
 // 비밀번호 리셋 스키마
 export const resetPasswordSchema = z.object({
-  resetToken: z.string().min(1, '리셋 토큰을 입력해주세요.'),
+  resetToken: z.string().min(
+    1,
+    '리셋 토큰을 입력해주세요.'
+  ),
   newPassword: passwordSchema,
   newPasswordConfirm: passwordSchema,
-}).refine((data) => data.newPassword === data.newPasswordConfirm, {
-  message: '새 비밀번호가 일치하지 않습니다.',
-  path: [ 'newPasswordConfirm', ],
-});
+}).refine(
+  (data) => data.newPassword === data.newPasswordConfirm,
+  {
+    message: '새 비밀번호가 일치하지 않습니다.',
+    path: [ 'newPasswordConfirm', ],
+  }
+);
 
 // 회원탈퇴 스키마
 export const withdrawSchema = z.object({
-  password: z.string().min(1, '비밀번호를 입력해주세요.'),
-  passwordConfirm: z.string().min(1, '비밀번호를 확인해주세요.'),
-}).refine((data) => data.password === data.passwordConfirm, {
-  message: '비밀번호가 일치하지 않습니다.',
-  path: [ 'passwordConfirm', ],
-});
+  password: z.string().min(
+    1,
+    '비밀번호를 입력해주세요.'
+  ),
+  passwordConfirm: z.string().min(
+    1,
+    '비밀번호를 확인해주세요.'
+  ),
+}).refine(
+  (data) => data.password === data.passwordConfirm,
+  {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: [ 'passwordConfirm', ],
+  }
+);
 
 // 사용자 검색 스키마
 export const searchUserSchema = baseSearchSchema.extend({
   delYn: ynEnumSchema.optional(),
   useYn: ynEnumSchema.optional(),
   userRole: userRoleSchema.optional(),
-  srchType: z.enum([
-    'userNm', 'emlAddr',
-  ], {
-    error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
-  }).optional(),
+  srchType: z.enum(
+    [
+      'userNm',
+      'emlAddr',
+    ],
+    {
+      error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
+    }
+  ).optional(),
   // 날짜 범위 필터
   crtDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   crtDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   lastLgnDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   lastLgnDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   // 정렬 옵션
-  orderBy: z.enum([
-    'NAME_ASC', 'NAME_DESC', 'SUBSCRIBE_LATEST', 'SUBSCRIBE_OLDEST', 'LOGIN_LATEST', 'LOGIN_OLDEST',
-  ], {
-    error: '정렬 옵션은 NAME_ASC, NAME_DESC, SUBSCRIBE_LATEST, SUBSCRIBE_OLDEST, LOGIN_LATEST, LOGIN_OLDEST 중 하나여야 합니다.',
-  }).optional(),
+  orderBy: z.enum(
+    [
+      'NAME_ASC',
+      'NAME_DESC',
+      'SUBSCRIBE_LATEST',
+      'SUBSCRIBE_OLDEST',
+      'LOGIN_LATEST',
+      'LOGIN_OLDEST',
+    ],
+    {
+      error: '정렬 옵션은 NAME_ASC, NAME_DESC, SUBSCRIBE_LATEST, SUBSCRIBE_OLDEST, LOGIN_LATEST, LOGIN_OLDEST 중 하나여야 합니다.',
+    }
+  ).optional(),
 }).partial();
 
 // 타입 추출

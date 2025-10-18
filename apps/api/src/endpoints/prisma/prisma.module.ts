@@ -13,6 +13,9 @@ export const PRISMA = Symbol('prisma_connection');
       useExisting: PrismaService,
     },
   ],
-  exports: [ PRISMA, PrismaService, ],
+  exports: [
+    PRISMA,
+    PrismaService,
+  ],
 })
 export class PrismaModule {}

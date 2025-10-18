@@ -25,9 +25,12 @@ const cssVariants = cva(
 export function PostEdit({ className, pstCd, ...props }: Props) {
   const { response, loading, done, } = useGetPostBySlug(pstCd);
 
-  const post = useMemo(() => {
-    return response?.data;
-  }, [ response, ]);
+  const post = useMemo(
+    () => {
+      return response?.data;
+    },
+    [ response, ]
+  );
 
   return (
     <div

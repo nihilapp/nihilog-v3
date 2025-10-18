@@ -77,19 +77,35 @@ export const searchTagSubscribeSchema = baseSearchSchema.extend({
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.')
     .optional(),
-  srchType: z.enum([
-    'tagNm', 'userNm', 'tagExpln',
-  ], {
-    error: '검색 타입은 tagNm, userNm 중 하나여야 합니다.',
-  }).optional(),
+  srchType: z.enum(
+    [
+      'tagNm',
+      'userNm',
+      'tagExpln',
+    ],
+    {
+      error: '검색 타입은 tagNm, userNm 중 하나여야 합니다.',
+    }
+  ).optional(),
   crtDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   crtDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   orderBy: z.enum([
-    'TAG_SBCR_LATEST', 'TAG_SBCR_OLDEST', 'TAG_NAME_ASC', 'TAG_NAME_DESC', 'USER_NAME_ASC', 'USER_NAME_DESC',
+    'TAG_SBCR_LATEST',
+    'TAG_SBCR_OLDEST',
+    'TAG_NAME_ASC',
+    'TAG_NAME_DESC',
+    'USER_NAME_ASC',
+    'USER_NAME_DESC',
   ])
     .default('TAG_SBCR_LATEST')
     .optional(),

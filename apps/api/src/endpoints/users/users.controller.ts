@@ -28,7 +28,10 @@ export class UserController {
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async getUserProfile(@Req() req: AuthRequest): Promise<ResponseDto<SelectUserInfoType>> {
@@ -46,7 +49,11 @@ export class UserController {
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
-    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.GET_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.PROFILE.GET_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -74,7 +81,11 @@ export class UserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.USER.FETCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.USER.FETCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -85,7 +96,10 @@ export class UserController {
     endpoint: '',
     method: 'POST',
     options: {
-      throttle: [ 3, 60000, ],
+      throttle: [
+        3,
+        60000,
+      ],
       serialize: true,
     },
   })
@@ -101,7 +115,11 @@ export class UserController {
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, userToReturn);
+    return createResponse(
+      'CREATED',
+      MESSAGE.USER.USER.CREATE_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -114,7 +132,10 @@ export class UserController {
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async updateUserProfile(
@@ -125,7 +146,10 @@ export class UserController {
       return req.errorResponse;
     }
 
-    const result = await this.userService.updateUserProfile(req.user, updateData);
+    const result = await this.userService.updateUserProfile(
+      req.user,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -135,7 +159,11 @@ export class UserController {
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
-    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.UPDATE_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -148,7 +176,10 @@ export class UserController {
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async updateUserSubscribe(
@@ -159,7 +190,10 @@ export class UserController {
       return req.errorResponse;
     }
 
-    const result = await this.userService.updateUserSubscribe(req.user, updateData);
+    const result = await this.userService.updateUserSubscribe(
+      req.user,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -168,7 +202,11 @@ export class UserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.USER.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.USER.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -180,7 +218,10 @@ export class UserController {
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async deleteUserProfile(@Req() req: AuthRequest): Promise<ResponseDto<boolean>> {
@@ -197,6 +238,10 @@ export class UserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.PROFILE.DELETE_SUCCESS,
+      result.data
+    );
   }
 }

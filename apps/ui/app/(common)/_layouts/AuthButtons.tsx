@@ -29,7 +29,10 @@ export function AuthButtons({ className, ...props }: Props) {
 
   return (
     <div
-      className={cn(cssVariants({}), className)}
+      className={cn(
+        cssVariants({}),
+        className
+      )}
       {...props}
     >
       {session

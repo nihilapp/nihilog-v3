@@ -19,16 +19,25 @@ export function useGetCategoryList(options: UseGetCategoryListOptions = {}) {
 
   const query = useGet<ListType<SelectCategoryListItemType>>({
     url: [
-      'categories', 'search',
+      'categories',
+      'search',
     ],
     params: searchData,
-    callback() {
-      // 성공 시 토스트 메시지는 필요에 따라 추가
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
     },
     errorCallback(error) {
-      toast.error(error.message, {
-        style: getToastStyle('error'),
-      });
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
     },
     ...queryOptions,
   });

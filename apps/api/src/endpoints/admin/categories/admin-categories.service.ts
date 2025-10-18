@@ -36,7 +36,10 @@ export class AdminCategoriesService {
    * @param ctgryNo 카테고리 번호 (선택적)
    */
   async adminGetAnalyzeCategoryData(analyzeStatData: AnalyzeStatDto, ctgryNo?: number): Promise<RepoResponseType<AnalyzeCategoryStatItemType[]> | null> {
-    return this.categoryRepository.getAnalyzeCategoryData(analyzeStatData, ctgryNo);
+    return this.categoryRepository.getAnalyzeCategoryData(
+      analyzeStatData,
+      ctgryNo
+    );
   }
 
   /**
@@ -44,7 +47,10 @@ export class AdminCategoriesService {
    * @param analyzeStatData 분석 통계 데이터
    */
   async adminGetTopPopularCategoriesByIndex(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopPopularCategoryItemType[]> | null> {
-    return this.categoryRepository.getTopPopularCategoriesByIndex(analyzeStatData.limit || 10, analyzeStatData);
+    return this.categoryRepository.getTopPopularCategoriesByIndex(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
   }
 
   /**
@@ -163,7 +169,10 @@ export class AdminCategoriesService {
   async adminCreateCategory(createData: CreateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
     // TODO: 관리자 권한 확인 로직 추가
     const adminUserNo = 1; // 임시 관리자 번호
-    return this.categoryRepository.createCategory(adminUserNo, createData);
+    return this.categoryRepository.createCategory(
+      adminUserNo,
+      createData
+    );
   }
 
   /**
@@ -173,7 +182,10 @@ export class AdminCategoriesService {
   async adminMultipleCreateCategory(createData: CreateCategoryDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
     // TODO: 관리자 권한 확인 로직 추가
     const adminUserNo = 1; // 임시 관리자 번호
-    return this.categoryRepository.multipleCreateCategory(adminUserNo, createData);
+    return this.categoryRepository.multipleCreateCategory(
+      adminUserNo,
+      createData
+    );
   }
 
   /**
@@ -184,7 +196,13 @@ export class AdminCategoriesService {
   async adminUpdateCategory(ctgryNo: number, updateData: UpdateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
     // TODO: 관리자 권한 확인 로직 추가
     const adminUserNo = 1; // 임시 관리자 번호
-    return this.categoryRepository.updateCategory(adminUserNo, { ...updateData, ctgryNo, });
+    return this.categoryRepository.updateCategory(
+      adminUserNo,
+      {
+        ...updateData,
+        ctgryNo,
+      }
+    );
   }
 
   /**
@@ -194,7 +212,10 @@ export class AdminCategoriesService {
   async adminMultipleUpdateCategory(updateData: UpdateCategoryDto & { ctgryNoList: number[] }): Promise<RepoResponseType<MultipleResultType> | null> {
     // TODO: 관리자 권한 확인 로직 추가
     const adminUserNo = 1; // 임시 관리자 번호
-    return this.categoryRepository.multipleUpdateCategory(adminUserNo, updateData);
+    return this.categoryRepository.multipleUpdateCategory(
+      adminUserNo,
+      updateData
+    );
   }
 
   /**
@@ -204,7 +225,10 @@ export class AdminCategoriesService {
   async adminDeleteCategory(ctgryNo: number): Promise<RepoResponseType<boolean> | null> {
     // TODO: 관리자 권한 확인 로직 추가
     const adminUserNo = 1; // 임시 관리자 번호
-    return this.categoryRepository.deleteCategory(adminUserNo, { ctgryNo, });
+    return this.categoryRepository.deleteCategory(
+      adminUserNo,
+      { ctgryNo, }
+    );
   }
 
   /**
@@ -214,6 +238,9 @@ export class AdminCategoriesService {
   async adminMultipleDeleteCategory(deleteData: DeleteCategoryDto): Promise<RepoResponseType<MultipleResultType> | null> {
     // TODO: 관리자 권한 확인 로직 추가
     const adminUserNo = 1; // 임시 관리자 번호
-    return this.categoryRepository.multipleDeleteCategory(adminUserNo, deleteData);
+    return this.categoryRepository.multipleDeleteCategory(
+      adminUserNo,
+      deleteData
+    );
   }
 }

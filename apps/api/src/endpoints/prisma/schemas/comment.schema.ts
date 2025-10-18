@@ -21,13 +21,24 @@ const commentSchema = commonSchema.extend({
       example: 1,
     }),
   cmntCntnt: z.string()
-    .min(1, '댓글 내용은 필수입니다.')
-    .max(1000, '댓글 내용은 1000자를 초과할 수 없습니다.')
+    .min(
+      1,
+      '댓글 내용은 필수입니다.'
+    )
+    .max(
+      1000,
+      '댓글 내용은 1000자를 초과할 수 없습니다.'
+    )
     .openapi({
       description: '댓글 내용',
       example: '댓글 내용입니다.',
     }),
-  cmntSts: z.enum([ 'PENDING', 'APPROVED', 'SPAM', 'REJECTED', ])
+  cmntSts: z.enum([
+    'PENDING',
+    'APPROVED',
+    'SPAM',
+    'REJECTED',
+  ])
     .default('PENDING')
     .optional()
     .openapi({
@@ -69,7 +80,11 @@ const commentSchema = commonSchema.extend({
     .optional()
     .openapi({
       description: '댓글 번호 목록',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
 });
 
@@ -111,9 +126,16 @@ export const searchCommentSchema = baseSearchSchema.partial().extend({
     delYn: true,
     useYn: true,
   }).shape,
-  srchType: z.enum([ 'userEmlAddr', 'cmntCntnt', 'userNm', ], {
-    error: '검색 타입은 userEmlAddr, cmntCntnt, userNm 중 하나여야 합니다.',
-  })
+  srchType: z.enum(
+    [
+      'userEmlAddr',
+      'cmntCntnt',
+      'userNm',
+    ],
+    {
+      error: '검색 타입은 userEmlAddr, cmntCntnt, userNm 중 하나여야 합니다.',
+    }
+  )
     .default('userEmlAddr')
     .optional()
     .openapi({
@@ -121,22 +143,34 @@ export const searchCommentSchema = baseSearchSchema.partial().extend({
       example: 'userEmlAddr',
     }),
   crtDtFrom: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-01-01 00:00:00',
     }),
   crtDtTo: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-12-31 23:59:59',
     }),
-  orderBy: z.enum([ 'LATEST', 'OLDEST', ], {
-    error: '정렬 옵션은 LATEST, OLDEST 중 하나여야 합니다.',
-  })
+  orderBy: z.enum(
+    [
+      'LATEST',
+      'OLDEST',
+    ],
+    {
+      error: '정렬 옵션은 LATEST, OLDEST 중 하나여야 합니다.',
+    }
+  )
     .default('LATEST')
     .optional()
     .openapi({

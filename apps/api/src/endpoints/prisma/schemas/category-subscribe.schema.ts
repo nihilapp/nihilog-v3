@@ -32,7 +32,10 @@ export const categorySubscribeSchema = commonSchema.extend({
       example: 1,
     }),
   ctgryNm: z.string()
-    .max(100, '카테고리 이름은 100자 이하여야 합니다.')
+    .max(
+      100,
+      '카테고리 이름은 100자 이하여야 합니다.'
+    )
     .optional()
     .openapi({
       description: '카테고리 이름',
@@ -60,7 +63,11 @@ export const categorySubscribeSchema = commonSchema.extend({
     .optional()
     .openapi({
       description: '카테고리 번호 목록',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
   ctgrySbcrNoList: z.array(z.coerce.number()
     .int('카테고리 구독 번호는 정수여야 합니다.')
@@ -68,7 +75,11 @@ export const categorySubscribeSchema = commonSchema.extend({
     .optional()
     .openapi({
       description: '카테고리 구독 번호 목록',
-      example: [ 1, 2, 3, ],
+      example: [
+        1,
+        2,
+        3,
+      ],
     }),
 });
 
@@ -112,27 +123,47 @@ export const searchCategorySubscribeSchema = baseSearchSchema.extend({
     ctgryNo: true,
     sbcrNo: true,
   }).shape,
-  srchType: z.enum([ 'ctgryNm', 'userNm', 'ctgryExpln', ], {
-    error: '검색 타입은 ctgryNm, userNm, ctgryExpln 중 하나여야 합니다.',
-  }).optional().openapi({
+  srchType: z.enum(
+    [
+      'ctgryNm',
+      'userNm',
+      'ctgryExpln',
+    ],
+    {
+      error: '검색 타입은 ctgryNm, userNm, ctgryExpln 중 하나여야 합니다.',
+    }
+  ).optional().openapi({
     description: '검색 타입 (ctgryNm: 카테고리명, userNm: 사용자명, ctgryExpln: 카테고리 설명)',
     example: 'ctgryNm',
   }),
   crtDtFrom: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 시작 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-01-01 00:00:00',
     }),
   crtDtTo: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .optional()
     .openapi({
       description: '생성 날짜 끝 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-12-31 23:59:59',
     }),
-  orderBy: z.enum([ 'CTGRY_SBCR_LATEST', 'CTGRY_SBCR_OLDEST', 'CTGRY_NAME_ASC', 'CTGRY_NAME_DESC', 'USER_NAME_ASC', 'USER_NAME_DESC', ])
+  orderBy: z.enum([
+    'CTGRY_SBCR_LATEST',
+    'CTGRY_SBCR_OLDEST',
+    'CTGRY_NAME_ASC',
+    'CTGRY_NAME_DESC',
+    'USER_NAME_ASC',
+    'USER_NAME_DESC',
+  ])
     .default('CTGRY_SBCR_LATEST')
     .optional().openapi({
       description: '정렬 기준 (CTGRY_SBCR_LATEST: 카테고리 구독 최신순, CTGRY_SBCR_OLDEST: 카테고리 구독 오래된순, CTGRY_NAME_ASC: 카테고리명 순, CTGRY_NAME_DESC: 카테고리명 역순, USER_NAME_ASC: 사용자명 순, USER_NAME_DESC: 사용자명 역순)',

@@ -29,7 +29,10 @@ export function AdminAuthButtons({ className, ...props }: Props) {
 
   return (
     <div
-      className={cn(cssVariants({}), className)}
+      className={cn(
+        cssVariants({}),
+        className
+      )}
       {...props}
     >
       <Button variant='outline' asChild>

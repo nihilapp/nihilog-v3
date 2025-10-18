@@ -18,23 +18,42 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
  * - subscribeTag: 태그 구독
  * - unsubscribeTag: 태그 구독 해제
  */
-export const subscribeKeys = createQueryKeys('subscribe', {
+export const subscribeKeys = createQueryKeys(
+  'subscribe',
+  {
   // ===== GET Queries =====
-  userSettings: (userId: number) => [
-    'users', 'subscribe', userId,
-  ],
-  categoryList: (userId: number) => [
-    'users', 'subscribes', 'categories', userId,
-  ],
-  categoryDetail: (userId: number, categoryId: number) => [
-    'users', 'subscribes', 'categories', userId, categoryId,
-  ],
-  tagList: (userId: number) => [
-    'users', 'subscribes', 'tags', userId,
-  ],
-  tagDetail: (userId: number, tagId: number) => [
-    'users', 'subscribes', 'tags', userId, tagId,
-  ],
+    userSettings: (userId: number) => [
+      'users',
+      'subscribe',
+      userId,
+    ],
+    categoryList: (userId: number) => [
+      'users',
+      'subscribes',
+      'categories',
+      userId,
+    ],
+    categoryDetail: (userId: number, categoryId: number) => [
+      'users',
+      'subscribes',
+      'categories',
+      userId,
+      categoryId,
+    ],
+    tagList: (userId: number) => [
+      'users',
+      'subscribes',
+      'tags',
+      userId,
+    ],
+    tagDetail: (userId: number, tagId: number) => [
+      'users',
+      'subscribes',
+      'tags',
+      userId,
+      tagId,
+    ],
 
   // ===== POST Mutations =====
-});
+  }
+);

@@ -50,14 +50,14 @@ export interface SiteMetadata {
 // React Query 옵션 타입들
 export type QueryOptionType<TData = unknown, TError = AxiosError<ErrorType>> = Omit<
   UseQueryOptions<OkType<TData>, TError, OkType<TData>>,
-  'queryKey' | 'queryFn'
+  'queryKey' | 'queryFn' | 'enabled'
 >;
 
 export type MutationOptionsType<
   TData = unknown,
   TVariables = unknown,
   TError = AxiosError<ErrorType>
-> = Omit<UseMutationOptions<OkType<TData>, TError, TVariables>, 'mutationFn'>;
+> = Omit<UseMutationOptions<OkType<TData>, TError, TVariables>, 'mutationFn' | 'enabled'>;
 
 export type InfiniteQueryOptionType<
   TPageData = unknown,
@@ -71,5 +71,5 @@ export type InfiniteQueryOptionType<
     QueryKey,
     TPageParam
   >,
-  'queryKey' | 'queryFn'
+  'queryKey' | 'queryFn' | 'enabled'
 >;

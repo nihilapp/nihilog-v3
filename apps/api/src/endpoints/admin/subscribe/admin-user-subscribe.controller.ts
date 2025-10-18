@@ -215,7 +215,11 @@ export class AdminSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.ADMIN.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -239,7 +243,10 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.subscribeService.adminCreateUserSubscribe(req.user.userNo, createData);
+    const result = await this.subscribeService.adminCreateUserSubscribe(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -248,7 +255,11 @@ export class AdminSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.ADMIN.CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -272,7 +283,10 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.subscribeService.adminMultipleUpdateUserSubscribe(req.user.userNo, updateData);
+    const result = await this.subscribeService.adminMultipleUpdateUserSubscribe(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -281,7 +295,11 @@ export class AdminSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -305,7 +323,10 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.subscribeService.adminDeleteUserSubscribe(req.user.userNo, sbcrNo);
+    const result = await this.subscribeService.adminDeleteUserSubscribe(
+      req.user.userNo,
+      sbcrNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -314,7 +335,11 @@ export class AdminSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.ADMIN.DELETE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -338,7 +363,10 @@ export class AdminSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.subscribeService.adminMultipleDeleteUserSubscribe(req.user.userNo, deleteData);
+    const result = await this.subscribeService.adminMultipleDeleteUserSubscribe(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -347,6 +375,10 @@ export class AdminSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.ADMIN.MULTIPLE_DELETE_SUCCESS,
+      result.data
+    );
   }
 }

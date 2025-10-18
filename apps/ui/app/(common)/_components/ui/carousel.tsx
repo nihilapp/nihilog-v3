@@ -52,7 +52,8 @@ function Carousel({
   ...props
 }: React.ComponentProps<'div'> & CarouselProps) {
   const [
-    carouselRef, api,
+    carouselRef,
+    api,
   ] = useEmblaCarousel(
     {
       ...opts,
@@ -63,25 +64,36 @@ function Carousel({
     plugins
   );
   const [
-    canScrollPrev, setCanScrollPrev,
+    canScrollPrev,
+    setCanScrollPrev,
   ] = React.useState(false);
   const [
-    canScrollNext, setCanScrollNext,
+    canScrollNext,
+    setCanScrollNext,
   ] = React.useState(false);
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
-    if (!api) return;
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
-  }, []);
+  const onSelect = React.useCallback(
+    (api: CarouselApi) => {
+      if (!api) return;
+      setCanScrollPrev(api.canScrollPrev());
+      setCanScrollNext(api.canScrollNext());
+    },
+    []
+  );
 
-  const scrollPrev = React.useCallback(() => {
-    api?.scrollPrev();
-  }, [ api, ]);
+  const scrollPrev = React.useCallback(
+    () => {
+      api?.scrollPrev();
+    },
+    [ api, ]
+  );
 
-  const scrollNext = React.useCallback(() => {
-    api?.scrollNext();
-  }, [ api, ]);
+  const scrollNext = React.useCallback(
+    () => {
+      api?.scrollNext();
+    },
+    [ api, ]
+  );
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -95,29 +107,47 @@ function Carousel({
       }
     },
     [
-      scrollPrev, scrollNext,
+      scrollPrev,
+      scrollNext,
     ]
   );
 
-  React.useEffect(() => {
-    if (!api || !setApi) return;
-    setApi(api);
-  }, [
-    api, setApi,
-  ]);
+  React.useEffect(
+    () => {
+      if (!api || !setApi) return;
+      setApi(api);
+    },
+    [
+      api,
+      setApi,
+    ]
+  );
 
-  React.useEffect(() => {
-    if (!api) return;
-    onSelect(api);
-    api.on('reInit', onSelect);
-    api.on('select', onSelect);
+  React.useEffect(
+    () => {
+      if (!api) return;
+      onSelect(api);
+      api.on(
+        'reInit',
+        onSelect
+      );
+      api.on(
+        'select',
+        onSelect
+      );
 
-    return () => {
-      api?.off('select', onSelect);
-    };
-  }, [
-    api, onSelect,
-  ]);
+      return () => {
+        api?.off(
+          'select',
+          onSelect
+        );
+      };
+    },
+    [
+      api,
+      onSelect,
+    ]
+  );
 
   return (
     <CarouselContext.Provider
@@ -137,7 +167,10 @@ function Carousel({
     >
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn('relative', className)}
+        className={cn(
+          'relative',
+          className
+        )}
         role='region'
         aria-roledescription='carousel'
         data-slot='carousel'

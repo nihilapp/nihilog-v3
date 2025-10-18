@@ -25,9 +25,7 @@ type FormFieldContextValue<
   name: TName;
 };
 
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
-);
+const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFieldContextValue);
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -47,7 +45,10 @@ const useFormField = () => {
   const itemContext = React.useContext(FormItemContext);
   const { getFieldState, } = useFormContext();
   const formState = useFormState({ name: fieldContext.name, });
-  const fieldState = getFieldState(fieldContext.name, formState);
+  const fieldState = getFieldState(
+    fieldContext.name,
+    formState
+  );
 
   if (!fieldContext) {
     throw new Error('useFormField should be used within <FormField>');
@@ -69,9 +70,7 @@ type FormItemContextValue = {
   id: string;
 };
 
-const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
-);
+const FormItemContext = React.createContext<FormItemContextValue>({} as FormItemContextValue);
 
 function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
   const id = React.useId();
@@ -80,7 +79,10 @@ function FormItem({ className, ...props }: React.ComponentProps<'div'>) {
     <FormItemContext.Provider value={{ id, }}>
       <div
         data-slot='form-item'
-        className={cn('grid gap-2', className)}
+        className={cn(
+          'grid gap-2',
+          className
+        )}
         {...props}
       />
     </FormItemContext.Provider>
@@ -97,7 +99,10 @@ function FormLabel({
     <Label
       data-slot='form-label'
       data-error={!!error}
-      className={cn('data-[error=true]:text-destructive', className)}
+      className={cn(
+        'data-[error=true]:text-destructive',
+        className
+      )}
       htmlFor={formItemId}
       {...props}
     />
@@ -129,7 +134,10 @@ function FormDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot='form-description'
       id={formDescriptionId}
-      className={cn('text-muted-foreground text-sm', className)}
+      className={cn(
+        'text-muted-foreground text-sm',
+        className
+      )}
       {...props}
     />
   );
@@ -149,7 +157,10 @@ function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot='form-message'
       id={formMessageId}
-      className={cn('text-destructive text-sm', className)}
+      className={cn(
+        'text-destructive text-sm',
+        className
+      )}
       {...props}
     >
       {body}

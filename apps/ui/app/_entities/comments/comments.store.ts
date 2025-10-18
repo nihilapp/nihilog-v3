@@ -32,21 +32,19 @@ const initialState = {
 };
 
 // Comments 스토어 생성
-export const useCommentsStore = create<CommentsState>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+export const useCommentsStore = create<CommentsState>()(devtools(
+  (set) => ({
+    ...initialState,
 
-      setSelectedComment: (commentId) => set({ selectedComment: commentId, }),
-      setCreating: (isCreating) => set({ isCreating, }),
-      setUpdating: (isUpdating) => set({ isUpdating, }),
-      setDeleting: (isDeleting) => set({ isDeleting, }),
-      setApproving: (isApproving) => set({ isApproving, }),
-      setRejecting: (isRejecting) => set({ isRejecting, }),
-      reset: () => set(initialState),
-    }),
-    {
-      name: 'comments-store',
-    }
-  )
-);
+    setSelectedComment: (commentId) => set({ selectedComment: commentId, }),
+    setCreating: (isCreating) => set({ isCreating, }),
+    setUpdating: (isUpdating) => set({ isUpdating, }),
+    setDeleting: (isDeleting) => set({ isDeleting, }),
+    setApproving: (isApproving) => set({ isApproving, }),
+    setRejecting: (isRejecting) => set({ isRejecting, }),
+    reset: () => set(initialState),
+  }),
+  {
+    name: 'comments-store',
+  }
+));

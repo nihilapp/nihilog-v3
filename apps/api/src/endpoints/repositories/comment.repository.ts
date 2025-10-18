@@ -48,7 +48,11 @@ export class CommentRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeCommentStatItemType[]>`
-        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+        WITH date_series AS ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )},
 
         -- 모든 통계를 하나의 CTE로 통합
         all_stats AS (
@@ -194,7 +198,10 @@ export class CommentRepository {
         ORDER BY ds.date_start
       `;
 
-      return prismaResponse(true, analyzeData);
+      return prismaResponse(
+        true,
+        analyzeData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -229,7 +236,10 @@ export class CommentRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -264,7 +274,10 @@ export class CommentRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -305,7 +318,10 @@ export class CommentRepository {
         FROM post_comment_stats
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -342,7 +358,10 @@ export class CommentRepository {
         ORDER BY sc.count DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -374,7 +393,10 @@ export class CommentRepository {
           AND crt_dt <= ${endDt}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -406,7 +428,10 @@ export class CommentRepository {
           AND crt_dt <= ${endDt}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -438,7 +463,10 @@ export class CommentRepository {
           AND crt_dt <= ${endDt}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -496,7 +524,10 @@ export class CommentRepository {
         WHERE depth > 0
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -527,7 +558,10 @@ export class CommentRepository {
         LIMIT 50
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -589,9 +623,16 @@ export class CommentRepository {
         }),
       };
 
-      const { offset: skip, limit: take, } = pageHelper(page, strtRow, endRow);
+      const { offset: skip, limit: take, } = pageHelper(
+        page,
+        strtRow,
+        endRow
+      );
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.cmntInfo.findMany({
           where,
           skip,
@@ -614,14 +655,17 @@ export class CommentRepository {
         this.prisma.cmntInfo.count({ where, }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -646,7 +690,10 @@ export class CommentRepository {
         },
       });
 
-      return prismaResponse(true, comment);
+      return prismaResponse(
+        true,
+        comment
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -683,7 +730,10 @@ export class CommentRepository {
         },
       });
 
-      return prismaResponse(true, newComment);
+      return prismaResponse(
+        true,
+        newComment
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -714,7 +764,10 @@ export class CommentRepository {
         },
       });
 
-      return prismaResponse(true, updateComment);
+      return prismaResponse(
+        true,
+        updateComment
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -742,7 +795,10 @@ export class CommentRepository {
         },
       });
 
-      return prismaResponse(true, !!deleteComment);
+      return prismaResponse(
+        true,
+        !!deleteComment
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -776,11 +832,14 @@ export class CommentRepository {
 
       const failNoList = updateData.cmntNoList.filter((item) => !updatedComments.some((updatedComment) => updatedComment.cmntNo === item));
 
-      return prismaResponse(true, {
-        successCnt: updatedComments.length,
-        failCnt: updateData.cmntNoList.length - updatedComments.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: updatedComments.length,
+          failCnt: updateData.cmntNoList.length - updatedComments.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -813,11 +872,14 @@ export class CommentRepository {
 
       const failNoList = deleteData.cmntNoList.filter((item) => !deletedComments.some((deletedComment) => deletedComment.cmntNo === item));
 
-      return prismaResponse(true, {
-        successCnt: deletedComments.length,
-        failCnt: deleteData.cmntNoList.length - deletedComments.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: deletedComments.length,
+          failCnt: deleteData.cmntNoList.length - deletedComments.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

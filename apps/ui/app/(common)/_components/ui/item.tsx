@@ -10,7 +10,10 @@ function ItemGroup({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       role='list'
       data-slot='item-group'
-      className={cn('group/item-group flex flex-col', className)}
+      className={cn(
+        'group/item-group flex flex-col',
+        className
+      )}
       {...props}
     />
   );
@@ -24,7 +27,10 @@ function ItemSeparator({
     <Separator
       data-slot='item-separator'
       orientation='horizontal'
-      className={cn('my-0', className)}
+      className={cn(
+        'my-0',
+        className
+      )}
       {...props}
     />
   );
@@ -67,7 +73,11 @@ function Item({
       data-slot='item'
       data-variant={variant}
       data-size={size}
-      className={cn(itemVariants({ variant, size, className, }))}
+      className={cn(itemVariants({
+        variant,
+        size,
+        className,
+      }))}
       {...props}
     />
   );
@@ -99,7 +109,10 @@ function ItemMedia({
     <div
       data-slot='item-media'
       data-variant={variant}
-      className={cn(itemMediaVariants({ variant, className, }))}
+      className={cn(itemMediaVariants({
+        variant,
+        className,
+      }))}
       {...props}
     />
   );
@@ -149,7 +162,10 @@ function ItemActions({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='item-actions'
-      className={cn('flex items-center gap-2', className)}
+      className={cn(
+        'flex items-center gap-2',
+        className
+      )}
       {...props}
     />
   );

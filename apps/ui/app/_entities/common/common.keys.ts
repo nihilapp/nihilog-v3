@@ -8,8 +8,11 @@ import { createQueryKeys } from '@lukemorales/query-key-factory';
  *
  * POST 뮤테이션:
  */
-export const commonKeys = createQueryKeys('common', {
+export const commonKeys = createQueryKeys(
+  'common',
+  {
   // ===== GET Queries =====
 
   // ===== POST Mutations =====
-});
+  }
+);

@@ -52,7 +52,13 @@ export function MenuLink({
   return (
     <Button
       asChild
-      className={cn(cssVariants({ variant, size, }), className)}
+      className={cn(
+        cssVariants({
+          variant,
+          size,
+        }),
+        className
+      )}
     >
       <Link href={href} {...props}>
         {Icon && <Icon />}

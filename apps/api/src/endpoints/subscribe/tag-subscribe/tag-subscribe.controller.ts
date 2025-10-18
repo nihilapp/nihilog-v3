@@ -3,7 +3,8 @@ import {
   Body,
   Req,
   Param,
-  ParseIntPipe
+  ParseIntPipe,
+  Query
 } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
@@ -25,15 +26,18 @@ export class TagSubscribeController {
    */
   @Endpoint({
     endpoint: '/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async getTagSubscribeList(
     @Req() req: AuthRequest,
-    @Body() body: SearchTagSubscribeDto
+    @Query() body: SearchTagSubscribeDto
   ): Promise<ResponseDto<ListType<SelectTagSbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -48,7 +52,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -58,22 +66,31 @@ export class TagSubscribeController {
    */
   @Endpoint({
     endpoint: '/:tagNo/search',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async getTagSubscribeByTagNo(
     @Req() req: AuthRequest,
-    @Param('tagNo', ParseIntPipe) tagNo: number,
-    @Body() body: SearchTagSubscribeDto
+    @Param(
+      'tagNo',
+      ParseIntPipe
+    ) tagNo: number,
+    @Query() body: SearchTagSubscribeDto
   ): Promise<ResponseDto<ListType<SelectTagSbcrMpngListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.tagSubscribeService.getTagSubscribeByTagNo(tagNo, body);
+    const result = await this.tagSubscribeService.getTagSubscribeByTagNo(
+      tagNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -82,7 +99,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -95,19 +116,31 @@ export class TagSubscribeController {
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async createTagSubscribe(
     @Req() req: AuthRequest,
-    @Param('tagNo', ParseIntPipe) tagNo: number,
+    @Param(
+      'tagNo',
+      ParseIntPipe
+    ) tagNo: number,
     @Body() body: CreateTagSubscribeDto
   ): Promise<ResponseDto<SelectTagSbcrMpngType>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.tagSubscribeService.createTagSubscribe(req.user.userNo, { ...body, tagNo, });
+    const result = await this.tagSubscribeService.createTagSubscribe(
+      req.user.userNo,
+      {
+        ...body,
+        tagNo,
+      }
+    );
 
     if (!result?.success) {
       return createError(
@@ -116,7 +149,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -129,7 +166,10 @@ export class TagSubscribeController {
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async multipleCreateTagSubscribe(
@@ -140,7 +180,10 @@ export class TagSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.tagSubscribeService.multipleCreateTagSubscribe(req.user.userNo, body);
+    const result = await this.tagSubscribeService.multipleCreateTagSubscribe(
+      req.user.userNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -149,7 +192,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -163,12 +210,18 @@ export class TagSubscribeController {
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async updateTagSubscribe(
     @Req() req: AuthRequest,
-    @Param('tagSbcrNo', ParseIntPipe) tagSbcrNo: number,
+    @Param(
+      'tagSbcrNo',
+      ParseIntPipe
+    ) tagSbcrNo: number,
     @Body() body: UpdateTagSubscribeDto
   ): Promise<ResponseDto<SelectTagSbcrMpngType>> {
     if (req.errorResponse) {
@@ -177,7 +230,10 @@ export class TagSubscribeController {
 
     const result = await this.tagSubscribeService.updateTagSubscribe(
       req.user.userNo,
-      { ...body, tagSbcrNo, }
+      {
+        ...body,
+        tagSbcrNo,
+      }
     );
 
     if (!result?.success) {
@@ -187,7 +243,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -200,7 +260,10 @@ export class TagSubscribeController {
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async multipleUpdateTagSubscribe(
@@ -211,7 +274,10 @@ export class TagSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.tagSubscribeService.multipleUpdateTagSubscribe(req.user.userNo, body);
+    const result = await this.tagSubscribeService.multipleUpdateTagSubscribe(
+      req.user.userNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -220,7 +286,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -233,18 +303,27 @@ export class TagSubscribeController {
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async deleteTagSubscribe(
     @Req() req: AuthRequest,
-    @Param('tagSbcrNo', ParseIntPipe) tagSbcrNo: number
+    @Param(
+      'tagSbcrNo',
+      ParseIntPipe
+    ) tagSbcrNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
-    const result = await this.tagSubscribeService.deleteTagSubscribe(req.user.userNo, tagSbcrNo);
+    const result = await this.tagSubscribeService.deleteTagSubscribe(
+      req.user.userNo,
+      tagSbcrNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -253,7 +332,11 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.DELETE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -266,7 +349,10 @@ export class TagSubscribeController {
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async multipleDeleteTagSubscribe(
@@ -277,7 +363,10 @@ export class TagSubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.tagSubscribeService.multipleDeleteTagSubscribe(req.user.userNo, body);
+    const result = await this.tagSubscribeService.multipleDeleteTagSubscribe(
+      req.user.userNo,
+      body
+    );
 
     if (!result?.success) {
       return createError(
@@ -286,6 +375,10 @@ export class TagSubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_SUCCESS,
+      result.data
+    );
   }
 }

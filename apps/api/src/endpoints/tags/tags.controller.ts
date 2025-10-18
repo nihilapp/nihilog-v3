@@ -36,7 +36,11 @@ export class TagController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.TAG.USER.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.TAG.USER.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -57,7 +61,11 @@ export class TagController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.TAG.USER.GET_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.TAG.USER.GET_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -78,6 +86,10 @@ export class TagController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.TAG.USER.GET_BY_NAME_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.TAG.USER.GET_BY_NAME_SUCCESS,
+      result.data
+    );
   }
 }

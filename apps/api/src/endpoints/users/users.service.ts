@@ -44,16 +44,33 @@ export class UserService {
     const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
 
     if (findUser?.success && findUser.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.USER.USER.EMAIL_EXISTS
+      );
     }
 
     try {
-      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+      const hashedPassword = await bcrypt.hash(
+        createUserDto.password,
+        10
+      );
 
-      return this.userRepository.createUser(null, createUserDto, hashedPassword);
+      return this.userRepository.createUser(
+        null,
+        createUserDto,
+        hashedPassword
+      );
     }
     catch {
-      return prismaResponse(false, null, 'INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR);
+      return prismaResponse(
+        false,
+        null,
+        'INTERNAL_SERVER_ERROR',
+        MESSAGE.USER.USER.CREATE_ERROR
+      );
     }
   }
 
@@ -77,11 +94,20 @@ export class UserService {
       const existingUser = await this.userRepository.getUserByName(updateData.userNm);
 
       if (existingUser?.success && existingUser.data && existingUser.data.userNo !== user.userNo) {
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.NAME_EXISTS);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.USER.USER.NAME_EXISTS
+        );
       }
     }
 
-    return this.userRepository.updateUser(user.userNo, user.userNo, updateData);
+    return this.userRepository.updateUser(
+      user.userNo,
+      user.userNo,
+      updateData
+    );
   }
 
   /**
@@ -97,10 +123,18 @@ export class UserService {
 
     // 사용자가 존재하지 않으면 에러
     if (!findUser?.success) {
-      return prismaResponse(false, null, findUser?.error?.code, findUser?.error?.message);
+      return prismaResponse(
+        false,
+        null,
+        findUser?.error?.code,
+        findUser?.error?.message
+      );
     }
 
-    return this.subscribeRepository.updateUserSubscribe(user.userNo, updateData);
+    return this.subscribeRepository.updateUserSubscribe(
+      user.userNo,
+      updateData
+    );
   }
 
   /**
@@ -111,9 +145,17 @@ export class UserService {
     const findUser = await this.userRepository.getUserByNo(user.userNo);
 
     if (!findUser?.success) {
-      return prismaResponse(false, null, findUser?.error?.code, findUser?.error?.message);
+      return prismaResponse(
+        false,
+        null,
+        findUser?.error?.code,
+        findUser?.error?.message
+      );
     }
 
-    return this.userRepository.deleteUser(user.userNo, user.userNo);
+    return this.userRepository.deleteUser(
+      user.userNo,
+      user.userNo
+    );
   }
 }

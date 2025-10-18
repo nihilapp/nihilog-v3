@@ -20,7 +20,12 @@ export class TagSubscribeService {
     const safeData = searchTagSubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
     return this.tagSubscribeRepository.getTagSubscribeList(safeData.data);
@@ -35,10 +40,18 @@ export class TagSubscribeService {
     const safeData = searchTagSubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
-    return this.tagSubscribeRepository.getTagSubscribeByUserNo(userNo, safeData.data);
+    return this.tagSubscribeRepository.getTagSubscribeByUserNo(
+      userNo,
+      safeData.data
+    );
   }
 
   /**
@@ -50,10 +63,18 @@ export class TagSubscribeService {
     const safeData = searchTagSubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
-    return this.tagSubscribeRepository.getTagSubscribeByTagNo(tagNo, safeData.data);
+    return this.tagSubscribeRepository.getTagSubscribeByTagNo(
+      tagNo,
+      safeData.data
+    );
   }
 
   /**
@@ -63,13 +84,24 @@ export class TagSubscribeService {
    */
   async createTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<RepoResponseType<SelectTagSbcrMpngType> | null> {
     // 태그 구독 중복 체크
-    const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, createData.tagNo);
+    const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(
+      createData.sbcrNo,
+      createData.tagNo
+    );
 
     if (existingSubscribe?.success && existingSubscribe.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS
+      );
     }
 
-    return this.tagSubscribeRepository.createTagSubscribe(userNo, createData);
+    return this.tagSubscribeRepository.createTagSubscribe(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -80,14 +112,25 @@ export class TagSubscribeService {
   async multipleCreateTagSubscribe(userNo: number, createData: CreateTagSubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
     // 각 태그별로 중복 체크
     for (const tagNo of createData.tagNoList) {
-      const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(createData.sbcrNo, tagNo);
+      const existingSubscribe = await this.tagSubscribeRepository.getTagSubscribeBySbcrNoAndTagNo(
+        createData.sbcrNo,
+        tagNo
+      );
 
       if (existingSubscribe?.success && existingSubscribe.data) {
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.SUBSCRIBE.TAG.ALREADY_EXISTS
+        );
       }
     }
 
-    return this.tagSubscribeRepository.multipleCreateTagSubscribe(userNo, createData);
+    return this.tagSubscribeRepository.multipleCreateTagSubscribe(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -100,10 +143,18 @@ export class TagSubscribeService {
     const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(updateData.tagSbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.SUBSCRIBE.TAG.NOT_FOUND
+      );
     }
 
-    return this.tagSubscribeRepository.updateTagSubscribe(userNo, updateData);
+    return this.tagSubscribeRepository.updateTagSubscribe(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -117,11 +168,19 @@ export class TagSubscribeService {
       const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
 
       if (!subscribe.data) {
-        return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.SUBSCRIBE.TAG.NOT_FOUND
+        );
       }
     }
 
-    return this.tagSubscribeRepository.multipleUpdateTagSubscribe(userNo, updateData);
+    return this.tagSubscribeRepository.multipleUpdateTagSubscribe(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -134,10 +193,18 @@ export class TagSubscribeService {
     const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
 
     if (!subscribe.data) {
-      return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.SUBSCRIBE.TAG.NOT_FOUND
+      );
     }
 
-    return this.tagSubscribeRepository.deleteTagSubscribe(userNo, tagSbcrNo);
+    return this.tagSubscribeRepository.deleteTagSubscribe(
+      userNo,
+      tagSbcrNo
+    );
   }
 
   /**
@@ -151,10 +218,18 @@ export class TagSubscribeService {
       const subscribe = await this.tagSubscribeRepository.getTagSubscribeByTagSbcrNo(tagSbcrNo);
 
       if (!subscribe.data) {
-        return prismaResponse(false, null, 'NOT_FOUND', MESSAGE.SUBSCRIBE.TAG.NOT_FOUND);
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.SUBSCRIBE.TAG.NOT_FOUND
+        );
       }
     }
 
-    return this.tagSubscribeRepository.multipleDeleteTagSubscribe(userNo, deleteData);
+    return this.tagSubscribeRepository.multipleDeleteTagSubscribe(
+      userNo,
+      deleteData
+    );
   }
 }

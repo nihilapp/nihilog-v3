@@ -45,7 +45,10 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.multipleCreateCategorySubscribe(req.user.userNo, createData);
+    const result = await this.categorySubscribeService.multipleCreateCategorySubscribe(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -54,7 +57,11 @@ export class AdminCategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -78,7 +85,10 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.multipleUpdateCategorySubscribe(req.user.userNo, updateData);
+    const result = await this.categorySubscribeService.multipleUpdateCategorySubscribe(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -87,7 +97,11 @@ export class AdminCategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -111,7 +125,10 @@ export class AdminCategorySubscribeController {
       return req.errorResponse;
     }
 
-    const result = await this.categorySubscribeService.multipleDeleteCategorySubscribe(req.user.userNo, deleteData);
+    const result = await this.categorySubscribeService.multipleDeleteCategorySubscribe(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -120,6 +137,10 @@ export class AdminCategorySubscribeController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_SUCCESS,
+      result.data
+    );
   }
 }

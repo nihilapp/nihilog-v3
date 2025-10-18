@@ -40,7 +40,10 @@ export function Endpoint({
   };
 
   const decorators = [
-    getHttpMethodDecorator(method, endpoint),
+    getHttpMethodDecorator(
+      method,
+      endpoint
+    ),
     HttpCode(HttpStatus.OK),
   ];
 
@@ -57,8 +60,16 @@ export function Endpoint({
 
   // 스로틀링 추가
   if (options?.throttle) {
-    const [ limit, ttl, ] = options.throttle;
-    decorators.push(Throttle({ default: { limit, ttl, }, }));
+    const [
+      limit,
+      ttl,
+    ] = options.throttle;
+    decorators.push(Throttle({
+      default: {
+        limit,
+        ttl,
+      },
+    }));
   }
 
   // 직렬화 인터셉터 추가

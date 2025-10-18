@@ -60,7 +60,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminGetAnalyzeTagData(analyzeStatData, tagNo);
+    const result = await this.adminTagsService.adminGetAnalyzeTagData(
+      analyzeStatData,
+      tagNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -517,7 +520,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminCreateTag(req.user.userNo, createData);
+    const result = await this.adminTagsService.adminCreateTag(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -554,7 +560,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminMultipleCreateTag(req.user.userNo, createData);
+    const result = await this.adminTagsService.adminMultipleCreateTag(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -591,7 +600,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminUpdateTag(req.user.userNo, updateData);
+    const result = await this.adminTagsService.adminUpdateTag(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -628,7 +640,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminMultipleUpdateTag(req.user.userNo, updateData);
+    const result = await this.adminTagsService.adminMultipleUpdateTag(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -665,7 +680,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminDeleteTag(req.user.userNo, deleteData);
+    const result = await this.adminTagsService.adminDeleteTag(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -702,7 +720,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminMultipleDeleteTag(req.user.userNo, deleteData);
+    const result = await this.adminTagsService.adminMultipleDeleteTag(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -778,7 +799,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminGetTagMappingByTagNo(tagNo, pstNo);
+    const result = await this.adminTagsService.adminGetTagMappingByTagNo(
+      tagNo,
+      pstNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -815,7 +839,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminAddTagMapping(req.user.userNo, createData);
+    const result = await this.adminTagsService.adminAddTagMapping(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -852,7 +879,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminMultipleAddTagMapping(req.user.userNo, createData);
+    const result = await this.adminTagsService.adminMultipleAddTagMapping(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -889,7 +919,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminDeleteTagMapping(req.user.userNo, deleteData);
+    const result = await this.adminTagsService.adminDeleteTagMapping(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(
@@ -926,7 +959,10 @@ export class AdminTagsController {
       return req.errorResponse;
     }
 
-    const result = await this.adminTagsService.adminMultipleDeleteTagMapping(req.user.userNo, deleteData);
+    const result = await this.adminTagsService.adminMultipleDeleteTagMapping(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(

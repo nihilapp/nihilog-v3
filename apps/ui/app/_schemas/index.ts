@@ -51,12 +51,16 @@ export {
   searchPostSchema,
   createPostBookmarkSchema,
   deletePostBookmarkSchema,
+  searchPostBookmarkSchema,
+  createPostShareLogSchema,
   type CreatePostType,
   type UpdatePostType,
   type DeletePostType,
   type SearchPostType,
   type CreatePostBookmarkType,
-  type DeletePostBookmarkType
+  type DeletePostBookmarkType,
+  type SearchPostBookmarkType,
+  type CreatePostShareLogType
 } from './post.schema';
 
 // 카테고리 스키마 export

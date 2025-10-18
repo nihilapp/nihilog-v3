@@ -46,11 +46,17 @@ export const registerAuthEndpoints = () => {
               },
               invalidCredentials: {
                 summary: '인증 실패',
-                value: createError('UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS),
+                value: createError(
+                  'UNAUTHORIZED',
+                  MESSAGE.AUTH.INVALID_CREDENTIALS
+                ),
               },
               userUpdateError: {
                 summary: '사용자 정보 업데이트 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_IN_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.AUTH.SIGN_IN_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -84,19 +90,31 @@ export const registerAuthEndpoints = () => {
               },
               invalidRefreshToken: {
                 summary: '리프레시 토큰이 유효하지 않음',
-                value: createError('UNAUTHORIZED', MESSAGE.AUTH.INVALID_REFRESH_TOKEN),
+                value: createError(
+                  'UNAUTHORIZED',
+                  MESSAGE.AUTH.INVALID_REFRESH_TOKEN
+                ),
               },
               refreshTokenNotFound: {
                 summary: '리프레시 토큰이 없음',
-                value: createError('UNAUTHORIZED', MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND),
+                value: createError(
+                  'UNAUTHORIZED',
+                  MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND
+                ),
               },
               tokenRefreshError: {
                 summary: '토큰 재발급 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.TOKEN_REFRESH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.AUTH.TOKEN_REFRESH_ERROR
+                ),
               },
               userUpdateError: {
                 summary: '사용자 정보 업데이트 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.TOKEN_REFRESH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.AUTH.TOKEN_REFRESH_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -121,11 +139,18 @@ export const registerAuthEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '로그아웃 성공',
-                value: createResponse('SUCCESS', MESSAGE.AUTH.SIGN_OUT_SUCCESS, null),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.AUTH.SIGN_OUT_SUCCESS,
+                  null
+                ),
               },
               signOutError: {
                 summary: '로그아웃 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.SIGN_OUT_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.AUTH.SIGN_OUT_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -148,22 +173,28 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '세션 조회 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.AUTH.SESSION_GET_SUCCESS,
-                  CreateExample.user('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '세션 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.AUTH.SESSION_GET_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                sessionNotFound: {
+                  summary: '세션 조회 실패',
+                  value: createError(
+                    'UNAUTHORIZED',
+                    MESSAGE.AUTH.SESSION_NOT_FOUND
+                  ),
+                },
               },
-              sessionNotFound: {
-                summary: '세션 조회 실패',
-                value: createError('UNAUTHORIZED', MESSAGE.AUTH.SESSION_NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -193,30 +224,42 @@ export const registerAuthEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '비밀번호 변경 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.AUTH.PASSWORD_CHANGE_SUCCESS,
-                  CreateExample.user('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '비밀번호 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.AUTH.PASSWORD_CHANGE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                invalidCredentials: {
+                  summary: '현재 비밀번호가 올바르지 않음',
+                  value: createError(
+                    'UNAUTHORIZED',
+                    MESSAGE.AUTH.INVALID_CREDENTIALS
+                  ),
+                },
+                userUpdateError: {
+                  summary: '비밀번호 업데이트 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.AUTH.PASSWORD_CHANGE_ERROR
+                  ),
+                },
+                passwordChangeError: {
+                  summary: '비밀번호 변경 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.AUTH.PASSWORD_CHANGE_ERROR
+                  ),
+                },
               },
-              invalidCredentials: {
-                summary: '현재 비밀번호가 올바르지 않음',
-                value: createError('UNAUTHORIZED', MESSAGE.AUTH.INVALID_CREDENTIALS),
-              },
-              userUpdateError: {
-                summary: '비밀번호 업데이트 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.PASSWORD_CHANGE_ERROR),
-              },
-              passwordChangeError: {
-                summary: '비밀번호 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.AUTH.PASSWORD_CHANGE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },

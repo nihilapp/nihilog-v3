@@ -5,24 +5,27 @@ import { useMutation } from '@tanstack/react-query';
 import type { MutationOptionsType, OkType } from '@/_entities/common/common.types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
+import type { ErrorType } from '@/_types';
 
 interface UseDeleteOptions<TData = unknown, TVariables = unknown> extends MutationOptionsType<TData, TVariables> {
   url: string[];
   params?: Record<string, any>;
+  body?: TVariables;
+  enabled?: boolean;
   callback?: (response: OkType<TData>) => void;
-  errorCallback?: (error: any) => void;
+  errorCallback?: (error: ErrorType) => void;
 }
 
 /**
  * DELETE 요청을 위한 커스텀 훅
  * @param options - 뮤테이션 옵션
  */
-export function useDelete<TData = unknown, TVariables = unknown>(
-  options: UseDeleteOptions<TData, TVariables>
-) {
+export function useDelete<TData = unknown, TVariables = unknown>(options: UseDeleteOptions<TData, TVariables>) {
   const {
     url,
     params = {},
+    body,
+    enabled = true,
     callback,
     errorCallback,
     ...mutationOptions
@@ -46,8 +49,14 @@ export function useDelete<TData = unknown, TVariables = unknown>(
   });
 
   // loading과 done 상태 계산
-  const loading = useLoading(mutation.isPending, mutation.isPending);
-  const done = useDone(loading, mutation.isSuccess);
+  const loading = useLoading(
+    mutation.isPending,
+    mutation.isPending
+  );
+  const done = useDone(
+    loading,
+    mutation.isSuccess
+  );
 
   // 콜백 실행
   if (mutation.data && callback) {
@@ -55,7 +64,7 @@ export function useDelete<TData = unknown, TVariables = unknown>(
   }
 
   if (mutation.error && errorCallback) {
-    errorCallback(mutation.error);
+    errorCallback(mutation.error as ErrorType);
   }
 
   return {
@@ -63,5 +72,11 @@ export function useDelete<TData = unknown, TVariables = unknown>(
     loading,
     done,
     ...mutation,
+    mutate: enabled
+      ? mutation.mutate
+      : (..._args: any[]) => undefined as any,
+    mutateAsync: enabled
+      ? mutation.mutateAsync
+      : async (..._args: any[]) => undefined as any,
   };
 }

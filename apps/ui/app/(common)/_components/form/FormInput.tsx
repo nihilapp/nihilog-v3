@@ -117,8 +117,16 @@ export function FormInput({
           : variant;
 
         return (
-          <FormItem className={cn(itemVariants({ variant: currentVariant, }), classNames?.container)}>
-            <FormLabel className={cn(labelVariants({ variant: currentVariant, }), classNames?.label)}>
+          <FormItem className={cn(
+            itemVariants({ variant: currentVariant, }),
+            classNames?.container
+          )}
+          >
+            <FormLabel className={cn(
+              labelVariants({ variant: currentVariant, }),
+              classNames?.label
+            )}
+            >
               {label}
             </FormLabel>
             <FormControl>

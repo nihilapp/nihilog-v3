@@ -37,19 +37,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 분석 데이터 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.analyzeTag(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 분석 데이터 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.analyzeTag(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그 분석 데이터 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 분석 데이터 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -77,19 +87,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그별 사용 횟수 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.topUsedTag(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그별 사용 횟수 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.topUsedTag(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그별 사용 횟수 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그별 사용 횟수 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -113,19 +133,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그별 사용 추이 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagUsageTrend(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그별 사용 추이 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagUsageTrend(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그별 사용 추이 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그별 사용 추이 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -146,19 +176,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '미사용 태그 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.unusedTag(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '미사용 태그 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.unusedTag(), ]
+                  ),
+                },
+                error: {
+                  summary: '미사용 태그 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '미사용 태그 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -195,19 +235,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그별 구독자 수 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.topTagsBySubscriber(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그별 구독자 수 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.topTagsBySubscriber(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그별 구독자 수 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그별 구독자 수 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -231,19 +281,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그별 구독자 성장률 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagSubscriberGrowthRate(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그별 구독자 성장률 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagSubscriberGrowthRate(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그별 구독자 성장률 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그별 구독자 성장률 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -264,19 +324,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '구독자 없는 태그 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagWithoutSubscribers(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '구독자 없는 태그 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagWithoutSubscribers(), ]
+                  ),
+                },
+                error: {
+                  summary: '구독자 없는 태그 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '구독자 없는 태그 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -301,19 +371,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그별 사용 효율성 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagUsageEfficiency(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그별 사용 효율성 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagUsageEfficiency(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그별 사용 효율성 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그별 사용 효율성 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -337,19 +417,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그별 평균 사용 빈도 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagAverageUsageFrequency(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그별 평균 사용 빈도 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagAverageUsageFrequency(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그별 평균 사용 빈도 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그별 평균 사용 빈도 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -370,19 +460,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 생명주기 분석 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagLifecycle(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 생명주기 분석 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagLifecycle(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그 생명주기 분석 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 생명주기 분석 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -407,19 +507,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 상태별 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagStatusDistribution(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 상태별 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagStatusDistribution(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그 상태별 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 상태별 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -440,19 +550,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 생성자별 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagCreatorStat(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 생성자별 통계 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagCreatorStat(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그 생성자별 통계 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 생성자별 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -473,19 +593,29 @@ export const registerAdminTagsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 정리 권장 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS, [ CreateTagAnalyze.tagCleanupRecommendation(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 정리 권장 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.TAG.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateTagAnalyze.tagCleanupRecommendation(), ]
+                  ),
+                },
+                error: {
+                  summary: '태그 정리 권장 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.TAG.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 정리 권장 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.TAG.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

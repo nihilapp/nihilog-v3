@@ -48,7 +48,11 @@ export class CategoryRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeCategoryStatItemType[]>`
-        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+        WITH date_series AS ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )},
 
         -- 모든 통계를 하나의 CTE로 통합
         all_stats AS (
@@ -217,7 +221,10 @@ export class CategoryRepository {
         ORDER BY ds.date_start
       `;
 
-      return prismaResponse(true, analyzeData);
+      return prismaResponse(
+        true,
+        analyzeData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -278,7 +285,10 @@ export class CategoryRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, topCategories);
+      return prismaResponse(
+        true,
+        topCategories
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -323,7 +333,10 @@ export class CategoryRepository {
         ORDER BY tsc.subscriber_count DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -339,7 +352,11 @@ export class CategoryRepository {
       const { startDt, endDt, mode, } = analyzeStatData;
 
       const dataList = await this.prisma.$queryRaw<AverageBookmarkPerCategoryItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -366,7 +383,10 @@ export class CategoryRepository {
           b.date_start
       `;
 
-      return prismaResponse(true, dataList);
+      return prismaResponse(
+        true,
+        dataList
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -382,7 +402,11 @@ export class CategoryRepository {
       const { startDt, endDt, mode, } = analyzeStatData;
 
       const dataList = await this.prisma.$queryRaw<AverageViewPerCategoryItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -408,7 +432,10 @@ export class CategoryRepository {
           b.date_start
       `;
 
-      return prismaResponse(true, dataList);
+      return prismaResponse(
+        true,
+        dataList
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -450,7 +477,10 @@ export class CategoryRepository {
         ORDER BY hc.count DESC
       `;
 
-      return prismaResponse(true, hierarchyDistribution);
+      return prismaResponse(
+        true,
+        hierarchyDistribution
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -492,7 +522,10 @@ export class CategoryRepository {
         ORDER BY hpc.post_count DESC
       `;
 
-      return prismaResponse(true, postDistribution);
+      return prismaResponse(
+        true,
+        postDistribution
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -534,7 +567,10 @@ export class CategoryRepository {
         ORDER BY hsc.subscriber_count DESC
       `;
 
-      return prismaResponse(true, subscriberDistribution);
+      return prismaResponse(
+        true,
+        subscriberDistribution
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -577,7 +613,10 @@ export class CategoryRepository {
         ORDER BY sc.count DESC
       `;
 
-      return prismaResponse(true, statusDistribution);
+      return prismaResponse(
+        true,
+        statusDistribution
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -602,7 +641,10 @@ export class CategoryRepository {
         ORDER BY "categoryCount" DESC
       `;
 
-      return prismaResponse(true, creatorStats);
+      return prismaResponse(
+        true,
+        creatorStats
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -648,7 +690,10 @@ export class CategoryRepository {
         };
       });
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -666,7 +711,11 @@ export class CategoryRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const growthRate = await this.prisma.$queryRaw<CategorySubscriberGrowthRateItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -693,7 +742,10 @@ export class CategoryRepository {
         ORDER BY b.date_start, c.ctgry_no
       `;
 
-      return prismaResponse(true, growthRate);
+      return prismaResponse(
+        true,
+        growthRate
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -733,7 +785,10 @@ export class CategoryRepository {
         ORDER BY c.crt_dt DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -779,10 +834,21 @@ export class CategoryRepository {
         }),
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.ctgryInfo.findMany({
           where,
           include: {
@@ -815,14 +881,17 @@ export class CategoryRepository {
         this.prisma.ctgryInfo.count({ where, }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -843,7 +912,10 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, category);
+      return prismaResponse(
+        true,
+        category
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -864,7 +936,10 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, category);
+      return prismaResponse(
+        true,
+        category
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -898,7 +973,10 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, newCategory);
+      return prismaResponse(
+        true,
+        newCategory
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -928,11 +1006,14 @@ export class CategoryRepository {
         })),
       });
 
-      return prismaResponse(true, {
-        successCnt: newCategories.count,
-        failCnt: createData.length - newCategories.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: newCategories.count,
+          failCnt: createData.length - newCategories.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -965,7 +1046,10 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, updatedCategory);
+      return prismaResponse(
+        true,
+        updatedCategory
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -998,11 +1082,14 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, {
-        successCnt: updatedCategories.count,
-        failCnt: updateData.ctgryNoList.length - updatedCategories.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: updatedCategories.count,
+          failCnt: updateData.ctgryNoList.length - updatedCategories.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1028,7 +1115,10 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, !!deletedCategory);
+      return prismaResponse(
+        true,
+        !!deletedCategory
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1054,11 +1144,14 @@ export class CategoryRepository {
         },
       });
 
-      return prismaResponse(true, {
-        successCnt: deletedCategories.count,
-        failCnt: deleteData.ctgryNoList.length - deletedCategories.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: deletedCategories.count,
+          failCnt: deleteData.ctgryNoList.length - deletedCategories.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

@@ -29,20 +29,18 @@ const initialState = {
 };
 
 // Subscribe 스토어 생성
-export const useSubscribeStore = create<SubscribeState>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+export const useSubscribeStore = create<SubscribeState>()(devtools(
+  (set) => ({
+    ...initialState,
 
-      setUpdatingSettings: (isUpdating) => set({ isUpdatingSettings: isUpdating, }),
-      setSubscribingCategory: (isSubscribing) => set({ isSubscribingCategory: isSubscribing, }),
-      setUnsubscribingCategory: (isUnsubscribing) => set({ isUnsubscribingCategory: isUnsubscribing, }),
-      setSubscribingTag: (isSubscribing) => set({ isSubscribingTag: isSubscribing, }),
-      setUnsubscribingTag: (isUnsubscribing) => set({ isUnsubscribingTag: isUnsubscribing, }),
-      reset: () => set(initialState),
-    }),
-    {
-      name: 'subscribe-store',
-    }
-  )
-);
+    setUpdatingSettings: (isUpdating) => set({ isUpdatingSettings: isUpdating, }),
+    setSubscribingCategory: (isSubscribing) => set({ isSubscribingCategory: isSubscribing, }),
+    setUnsubscribingCategory: (isUnsubscribing) => set({ isUnsubscribingCategory: isUnsubscribing, }),
+    setSubscribingTag: (isSubscribing) => set({ isSubscribingTag: isSubscribing, }),
+    setUnsubscribingTag: (isUnsubscribing) => set({ isUnsubscribingTag: isUnsubscribing, }),
+    reset: () => set(initialState),
+  }),
+  {
+    name: 'subscribe-store',
+  }
+));

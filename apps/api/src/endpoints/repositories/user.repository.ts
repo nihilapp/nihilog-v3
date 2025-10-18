@@ -50,7 +50,11 @@ export class UserRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeUserStatItemType[]>`
-        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+        WITH date_series AS ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )},
 
         -- 모든 통계를 하나의 CTE로 통합
         all_stats AS (
@@ -192,7 +196,10 @@ export class UserRepository {
         ORDER BY ds.date_start
       `;
 
-      return prismaResponse(true, analyzeData);
+      return prismaResponse(
+        true,
+        analyzeData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -252,7 +259,10 @@ export class UserRepository {
         FROM active_users_30d au30, total_users tu
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -336,7 +346,10 @@ export class UserRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -372,7 +385,10 @@ export class UserRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -408,7 +424,10 @@ export class UserRepository {
         LIMIT ${limit}
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -445,7 +464,10 @@ export class UserRepository {
         ORDER BY rc.count DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -490,7 +512,10 @@ export class UserRepository {
         ORDER BY sc.count DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -520,7 +545,10 @@ export class UserRepository {
         LIMIT 50
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -561,7 +589,10 @@ export class UserRepository {
         FROM previous_period pp, current_period cp
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -642,7 +673,10 @@ export class UserRepository {
         FROM retention_6m r6
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -670,7 +704,10 @@ export class UserRepository {
         },
       });
 
-      return prismaResponse(true, user);
+      return prismaResponse(
+        true,
+        user
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -705,10 +742,16 @@ export class UserRepository {
         },
       });
 
-      return prismaResponse(true, newUser);
+      return prismaResponse(
+        true,
+        newUser
+      );
     }
     catch (error) {
-      console.log('createUser', error);
+      console.log(
+        'createUser',
+        error
+      );
       return prismaError(error as PrismaClientKnownRequestError);
     }
   }
@@ -736,7 +779,10 @@ export class UserRepository {
         },
       });
 
-      return prismaResponse(true, updateUser);
+      return prismaResponse(
+        true,
+        updateUser
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -769,7 +815,10 @@ export class UserRepository {
         },
       });
 
-      return prismaResponse(true, !!result);
+      return prismaResponse(
+        true,
+        !!result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -817,11 +866,22 @@ export class UserRepository {
       }),
     };
 
-    const skip = pageHelper(page, strtRow, endRow).offset;
-    const take = pageHelper(page, strtRow, endRow).limit;
+    const skip = pageHelper(
+      page,
+      strtRow,
+      endRow
+    ).offset;
+    const take = pageHelper(
+      page,
+      strtRow,
+      endRow
+    ).limit;
 
     try {
-      const [ totalCnt, list, ] = await this.prisma.$transaction([
+      const [
+        totalCnt,
+        list,
+      ] = await this.prisma.$transaction([
         this.prisma.userInfo.count({ where, }),
         this.prisma.userInfo.findMany({
           where,
@@ -850,14 +910,17 @@ export class UserRepository {
         }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((user, index) => ({
-          ...user,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((user, index) => ({
+            ...user,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -881,7 +944,10 @@ export class UserRepository {
         },
       });
 
-      return prismaResponse(true, user);
+      return prismaResponse(
+        true,
+        user
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -905,7 +971,10 @@ export class UserRepository {
         },
       });
 
-      return prismaResponse(true, user);
+      return prismaResponse(
+        true,
+        user
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -952,11 +1021,14 @@ export class UserRepository {
       const failNoList = userNoList
         .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
-      return prismaResponse(true, {
-        successCnt: result.length,
-        failCnt: userNoList.length - result.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: result.length,
+          failCnt: userNoList.length - result.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -999,11 +1071,14 @@ export class UserRepository {
       const failNoList = userNoList
         .filter((item) => !result.some((resultItem) => resultItem.userNo === item));
 
-      return prismaResponse(true, {
-        successCnt: result.length,
-        failCnt: userNoList.length - result.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: result.length,
+          failCnt: userNoList.length - result.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

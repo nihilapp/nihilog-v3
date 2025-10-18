@@ -25,23 +25,23 @@ interface ToastStyle {
  */
 export function getToastStyle(type: ToastType): ToastStyle {
   switch (type) {
-  case 'success':
-    return {
-      background: 'var(--color-blue-50)',
-      color: 'var(--color-blue-500)',
-      border: '1px solid var(--color-blue-500)',
-    };
-  case 'error':
-    return {
-      background: 'var(--color-red-50)',
-      color: 'var(--color-red-500)',
-      border: '1px solid var(--color-red-500)',
-    };
-  default:
-    return {
-      background: 'var(--popover)',
-      color: 'var(--popover-foreground)',
-      border: 'var(--border)',
-    };
+    case 'success':
+      return {
+        background: 'var(--color-blue-50)',
+        color: 'var(--color-blue-500)',
+        border: '1px solid var(--color-blue-500)',
+      };
+    case 'error':
+      return {
+        background: 'var(--color-red-50)',
+        color: 'var(--color-red-500)',
+        border: '1px solid var(--color-red-500)',
+      };
+    default:
+      return {
+        background: 'var(--popover)',
+        color: 'var(--popover-foreground)',
+        border: 'var(--border)',
+      };
   }
 }

@@ -27,15 +27,24 @@ export class DateTools {
     }
 
     if (date instanceof Date) {
-      return DateTime.fromJSDate(date, config);
+      return DateTime.fromJSDate(
+        date,
+        config
+      );
     }
 
     if (typeof date === 'string') {
-      return DateTime.fromISO(date, config);
+      return DateTime.fromISO(
+        date,
+        config
+      );
     }
 
     if (typeof date === 'number') {
-      return DateTime.fromMillis(date, config);
+      return DateTime.fromMillis(
+        date,
+        config
+      );
     }
 
     return DateTime.now().setZone(config.zone).setLocale(config.locale);
@@ -94,11 +103,17 @@ export class DateTools {
   ): number {
     const d1 = this.toDateTime(date1);
     const d2 = this.toDateTime(date2);
-    const duration = d1.diff(d2, unit);
+    const duration = d1.diff(
+      d2,
+      unit
+    );
 
     // unit을 단수형으로 변환 (예: 'days' -> 'day')
     const singularUnit = unit.endsWith('s')
-      ? unit.slice(0, -1)
+      ? unit.slice(
+        0,
+        -1
+      )
       : unit;
 
     return duration.as(singularUnit as DurationUnit) || 0;

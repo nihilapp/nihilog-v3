@@ -45,10 +45,16 @@ export class AdminController {
     const authUser = req.user;
 
     if (!authUser) {
-      return createError('UNAUTHORIZED', 'UNAUTHORIZED');
+      return createError(
+        'UNAUTHORIZED',
+        'UNAUTHORIZED'
+      );
     }
 
-    const result = await this.adminService.updateProfile(authUser, updateProfileData);
+    const result = await this.adminService.updateProfile(
+      authUser,
+      updateProfileData
+    );
 
     if (!result?.success) {
       return createError(
@@ -59,6 +65,10 @@ export class AdminController {
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', MESSAGE.USER.PROFILE.UPDATE_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+      userToReturn
+    );
   }
 }

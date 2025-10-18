@@ -27,7 +27,10 @@ export const postViewLogSchema = z.object({
       example: '127.0.0.1',
     }),
   viewDt: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .openapi({
       description: '조회 일시 (YYYY-MM-DD HH:MM:SS)',
       example: '2024-01-01 00:00:00',

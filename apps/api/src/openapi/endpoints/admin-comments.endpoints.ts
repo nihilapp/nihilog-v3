@@ -45,19 +45,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '댓글 분석 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.ANALYZE_SUCCESS, [ CreateCommentAnalyze.analyzeComment(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '댓글 분석 통계 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.ANALYZE_SUCCESS,
+                    [ CreateCommentAnalyze.analyzeComment(), ]
+                  ),
+                },
+                error: {
+                  summary: '댓글 분석 통계 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.ANALYZE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '댓글 분석 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.ANALYZE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -81,19 +91,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트별 댓글 수 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.topPostsByComment(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트별 댓글 수 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.topPostsByComment(), ]
+                  ),
+                },
+                error: {
+                  summary: '포스트별 댓글 수 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트별 댓글 수 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -117,19 +137,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자별 댓글 작성 수 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.topUsersByComment(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자별 댓글 작성 수 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.topUsersByComment(), ]
+                  ),
+                },
+                error: {
+                  summary: '사용자별 댓글 작성 수 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자별 댓글 작성 수 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -153,19 +183,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '평균 댓글 수 / 포스트 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.averageCommentPerPost(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '평균 댓글 수 / 포스트 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.averageCommentPerPost(), ]
+                  ),
+                },
+                error: {
+                  summary: '평균 댓글 수 / 포스트 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '평균 댓글 수 / 포스트 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -186,19 +226,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '댓글 상태별 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.commentStatusDistribution(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '댓글 상태별 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.commentStatusDistribution(), ]
+                  ),
+                },
+                error: {
+                  summary: '댓글 상태별 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '댓글 상태별 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -222,19 +272,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '댓글 승인율 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.commentApprovalRate(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '댓글 승인율 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.commentApprovalRate(), ]
+                  ),
+                },
+                error: {
+                  summary: '댓글 승인율 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '댓글 승인율 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -258,19 +318,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '스팸 댓글 비율 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.commentSpamRate(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '스팸 댓글 비율 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.commentSpamRate(), ]
+                  ),
+                },
+                error: {
+                  summary: '스팸 댓글 비율 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '스팸 댓글 비율 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -294,19 +364,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '답글 비율 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.commentReplyRatio(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '답글 비율 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.commentReplyRatio(), ]
+                  ),
+                },
+                error: {
+                  summary: '답글 비율 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '답글 비율 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -330,19 +410,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '평균 답글 깊이 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.commentAverageDepth(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '평균 답글 깊이 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.commentAverageDepth(), ]
+                  ),
+                },
+                error: {
+                  summary: '평균 답글 깊이 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '평균 답글 깊이 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -363,19 +453,29 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '댓글 없는 포스트 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS, [ CreateCommentAnalyze.postsWithoutComments(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '댓글 없는 포스트 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCommentAnalyze.postsWithoutComments(), ]
+                  ),
+                },
+                error: {
+                  summary: '댓글 없는 포스트 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '댓글 없는 포스트 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -409,23 +509,33 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '관리자 댓글 일괄 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '관리자 댓글 일괄 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '관리자 댓글 일괄 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '관리자 댓글 일괄 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.MULTIPLE_UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -455,23 +565,33 @@ export const registerAdminCommentsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '관리자 댓글 일괄 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '관리자 댓글 일괄 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '관리자 댓글 일괄 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '관리자 댓글 일괄 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.COMMENT.ADMIN.MULTIPLE_DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

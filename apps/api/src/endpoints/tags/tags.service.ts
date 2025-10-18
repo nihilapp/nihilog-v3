@@ -13,7 +13,8 @@ export class TagService {
    * @description 태그 목록 조회
    * @param searchData 검색 데이터
    */
-  async getTagList(searchData: SearchTagDto): Promise<RepoResponseType<{ list: SelectTagInfoListItemType[]; totalCnt: number }> | null> {
+  async getTagList(searchData: SearchTagDto): Promise<RepoResponseType<{ list: SelectTagInfoListItemType[];
+    totalCnt: number; }> | null> {
     return this.tagRepository.getTagList(searchData);
   }
 

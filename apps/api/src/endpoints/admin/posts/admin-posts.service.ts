@@ -19,7 +19,10 @@ export class AdminPostsService {
     analyzeStatData: AnalyzeStatDto,
     pstNo?: number
   ): Promise<RepoResponseType<AnalyzePostItemType[]> | null> {
-    return this.postRepository.getAnalyzePostData(analyzeStatData, pstNo);
+    return this.postRepository.getAnalyzePostData(
+      analyzeStatData,
+      pstNo
+    );
   }
 
   /**
@@ -31,7 +34,10 @@ export class AdminPostsService {
     analyzeStatData: AnalyzeStatDto,
     pstNo?: number
   ): Promise<RepoResponseType<SharePlatformStatItemType[]> | null> {
-    return this.postRepository.getPostShareStatsByPlatform(analyzeStatData, pstNo);
+    return this.postRepository.getPostShareStatsByPlatform(
+      analyzeStatData,
+      pstNo
+    );
   }
 
   /**
@@ -55,7 +61,10 @@ export class AdminPostsService {
    * @param analyzeStatData 분석 통계 데이터
    */
   async getTopPopularPostsByViewCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopPopularPostItemType[]> | null> {
-    return this.postRepository.getTopPopularPostsByViewCount(analyzeStatData.limit || 10, analyzeStatData);
+    return this.postRepository.getTopPopularPostsByViewCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
   }
 
   /**
@@ -63,7 +72,10 @@ export class AdminPostsService {
    * @param analyzeStatData 분석 통계 데이터
    */
   async getTopPostsByCommentCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopCommentPostItemType[]> | null> {
-    return this.postRepository.getTopPostsByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
+    return this.postRepository.getTopPostsByCommentCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
   }
 
   /**
@@ -80,7 +92,10 @@ export class AdminPostsService {
    * @param createData 포스트 생성 데이터
    */
   async adminCreatePost(userNo: number, createData: CreatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
-    return this.postRepository.createPost(userNo, createData);
+    return this.postRepository.createPost(
+      userNo,
+      createData
+    );
   }
 
   /**
@@ -89,7 +104,10 @@ export class AdminPostsService {
    * @param updateData 포스트 수정 데이터
    */
   async adminUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
-    return this.postRepository.updatePost(userNo, updateData);
+    return this.postRepository.updatePost(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -98,7 +116,10 @@ export class AdminPostsService {
    * @param updateData 포스트 일괄 수정 데이터
    */
   async adminMultipleUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.postRepository.multipleUpdatePost(userNo, updateData);
+    return this.postRepository.multipleUpdatePost(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -107,7 +128,10 @@ export class AdminPostsService {
    * @param deleteData 포스트 삭제 데이터
    */
   async adminDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<boolean> | null> {
-    return this.postRepository.deletePost(userNo, deleteData);
+    return this.postRepository.deletePost(
+      userNo,
+      deleteData
+    );
   }
 
   /**
@@ -116,6 +140,9 @@ export class AdminPostsService {
    * @param deleteData 포스트 일괄 삭제 데이터
    */
   async adminMultipleDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.postRepository.multipleDeletePost(userNo, deleteData);
+    return this.postRepository.multipleDeletePost(
+      userNo,
+      deleteData
+    );
   }
 }

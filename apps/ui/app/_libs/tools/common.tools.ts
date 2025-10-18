@@ -69,7 +69,10 @@ export class CommonHelper {
     const newObj = { ...obj, };
     for (const key in newObj) {
       if (
-        Object.prototype.hasOwnProperty.call(newObj, key)
+        Object.prototype.hasOwnProperty.call(
+          newObj,
+          key
+        )
         && newObj[key] == null
       ) {
         (newObj as any)[key] = '';
@@ -91,7 +94,10 @@ export class CommonHelper {
     }
     const result: T[][] = [];
     for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
+      result.push(array.slice(
+        i,
+        i + size
+      ));
     }
     return result;
   }
@@ -104,7 +110,10 @@ export class CommonHelper {
    * CommonHelper.numberArray(5); // [1,2,3,4,5]
    */
   static numberArray(number: number): number[] {
-    return Array.from({ length: number, }, (_, i) => i + 1);
+    return Array.from(
+      { length: number, },
+      (_, i) => i + 1
+    );
   }
 
   /**
@@ -116,7 +125,10 @@ export class CommonHelper {
    * CommonHelper.rangeArray(3, 7); // [3,4,5,6,7]
    */
   static rangeArray(number1: number, number2: number): number[] {
-    return Array.from({ length: number2 - number1 + 1, }, (_, i) => number1 + i);
+    return Array.from(
+      { length: number2 - number1 + 1, },
+      (_, i) => number1 + i
+    );
   }
 
   /**
@@ -233,8 +245,14 @@ export class CommonHelper {
    */
   static kebabCase(str: string): string {
     return str
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .replace(/\s+/g, '-')
+      .replace(
+        /([a-z])([A-Z])/g,
+        '$1-$2'
+      )
+      .replace(
+        /\s+/g,
+        '-'
+      )
       .toLowerCase();
   }
 
@@ -244,10 +262,16 @@ export class CommonHelper {
    */
   static camelCase(str: string): string {
     return str
-      .replace(/[-_\s]+(.)?/g, (_, c) => (c
-        ? c.toUpperCase()
-        : ''))
-      .replace(/^(.)/, (c) => c.toLowerCase());
+      .replace(
+        /[-_\s]+(.)?/g,
+        (_, c) => (c
+          ? c.toUpperCase()
+          : '')
+      )
+      .replace(
+        /^(.)/,
+        (c) => c.toLowerCase()
+      );
   }
 
   /**
@@ -256,8 +280,14 @@ export class CommonHelper {
    */
   static snakeCase(str: string): string {
     return str
-      .replace(/([a-z])([A-Z])/g, '$1_$2')
-      .replace(/\s+/g, '_')
+      .replace(
+        /([a-z])([A-Z])/g,
+        '$1_$2'
+      )
+      .replace(
+        /\s+/g,
+        '_'
+      )
       .toLowerCase();
   }
 
@@ -267,11 +297,17 @@ export class CommonHelper {
    * @example CommonHelper.padEnd('1', 3, '0') // '100'
    */
   static padStart(str: string, length: number, pad: string): string {
-    return str.padStart(length, pad);
+    return str.padStart(
+      length,
+      pad
+    );
   }
 
   static padEnd(str: string, length: number, pad: string): string {
-    return str.padEnd(length, pad);
+    return str.padEnd(
+      length,
+      pad
+    );
   }
 
   /**
@@ -280,7 +316,10 @@ export class CommonHelper {
    */
   static truncate(str: string, length: number): string {
     return str.length > length
-      ? str.slice(0, length) + '...'
+      ? str.slice(
+        0,
+        length
+      ) + '...'
       : str;
   }
 
@@ -290,7 +329,10 @@ export class CommonHelper {
    */
   static randomInt(min: number, max: number): number {
     // crypto.randomInt는 max 미포함이므로 +1
-    return nodeRandomInt(min, max + 1);
+    return nodeRandomInt(
+      min,
+      max + 1
+    );
   }
 
   /**
@@ -298,6 +340,12 @@ export class CommonHelper {
    * @example CommonHelper.clamp(15, 0, 10) // 10
    */
   static clamp(val: number, min: number, max: number): number {
-    return Math.min(Math.max(val, min), max);
+    return Math.min(
+      Math.max(
+        val,
+        min
+      ),
+      max
+    );
   }
 }

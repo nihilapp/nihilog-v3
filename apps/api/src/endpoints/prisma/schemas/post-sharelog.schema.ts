@@ -25,7 +25,10 @@ export const postShareLogSchema = z.object({
       example: 'https://example.com',
     }),
   shrnDt: z.string()
-    .regex(dateTimeRegex, dateTimeMessage)
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
     .openapi({
       description: '공유 일시',
       example: '2024-01-01 00:00:00',

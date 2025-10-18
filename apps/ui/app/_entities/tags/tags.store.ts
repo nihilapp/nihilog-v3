@@ -26,19 +26,17 @@ const initialState = {
 };
 
 // Tags 스토어 생성
-export const useTagsStore = create<TagsState>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+export const useTagsStore = create<TagsState>()(devtools(
+  (set) => ({
+    ...initialState,
 
-      setSelectedTag: (tagId) => set({ selectedTag: tagId, }),
-      setCreating: (isCreating) => set({ isCreating, }),
-      setUpdating: (isUpdating) => set({ isUpdating, }),
-      setDeleting: (isDeleting) => set({ isDeleting, }),
-      reset: () => set(initialState),
-    }),
-    {
-      name: 'tags-store',
-    }
-  )
-);
+    setSelectedTag: (tagId) => set({ selectedTag: tagId, }),
+    setCreating: (isCreating) => set({ isCreating, }),
+    setUpdating: (isUpdating) => set({ isUpdating, }),
+    setDeleting: (isDeleting) => set({ isDeleting, }),
+    reset: () => set(initialState),
+  }),
+  {
+    name: 'tags-store',
+  }
+));

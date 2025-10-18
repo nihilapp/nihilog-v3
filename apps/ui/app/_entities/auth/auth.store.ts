@@ -34,13 +34,16 @@ const createAuthSlice: StateCreator<
   },
 });
 
-const useAuthStore = create<AuthState>()(persist(immer(createAuthSlice), {
-  name: 'auth-storage',
-  storage: createJSONStorage(() => localStorage),
-  partialize: (state) => ({
-    authCardHeader: state.authCardHeader,
-  }),
-}));
+const useAuthStore = create<AuthState>()(persist(
+  immer(createAuthSlice),
+  {
+    name: 'auth-storage',
+    storage: createJSONStorage(() => localStorage),
+    partialize: (state) => ({
+      authCardHeader: state.authCardHeader,
+    }),
+  }
+));
 
 export const useAuthCardHeader = () => useAuthStore((state) => state.authCardHeader);
 

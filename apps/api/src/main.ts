@@ -19,7 +19,13 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
     {
-      logger: [ 'log', 'error', 'warn', 'debug', 'verbose', ], // 모든 로그 레벨 활성화
+      logger: [
+        'log',
+        'error',
+        'warn',
+        'debug',
+        'verbose',
+      ], // 모든 로그 레벨 활성화
     }
   );
 
@@ -28,27 +34,51 @@ async function bootstrap() {
   // Fastify 플러그인 등록
   // NestJS Fastify 어댑터와 플러그인 간의 알려진 타입 호환성 문제
   // @ts-expect-error - NestJS Fastify 어댑터와 플러그인 타입 호환성 문제
-  await app.register(fastifyCors, {
-    origin: (origin, cb) => {
+  await app.register(
+    fastifyCors,
+    {
+      origin: (origin, cb) => {
       // 모든 origin 허용 (개발 환경)
-      if (process.env.NODE_ENV === 'development') {
-        cb(null, true);
-        return;
-      }
-      // 프로덕션 환경에서는 허용된 origin만
-      const allowedOrigins = [ 'https://nihilncunia.dev', ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        cb(null, true);
-      }
-      else {
-        cb(new Error('Not allowed by CORS'), false);
-      }
-    },
-    credentials: true,
-    methods: [ 'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', ],
-    allowedHeaders: [ 'Content-Type', 'Authorization', 'X-Requested-With', 'Cookie', ],
-    exposedHeaders: [ 'Set-Cookie', ],
-  });
+        if (process.env.NODE_ENV === 'development') {
+          cb(
+            null,
+            true
+          );
+          return;
+        }
+        // 프로덕션 환경에서는 허용된 origin만
+        const allowedOrigins = [ 'https://nihilncunia.dev', ];
+        if (!origin || allowedOrigins.includes(origin)) {
+          cb(
+            null,
+            true
+          );
+        }
+        else {
+          cb(
+            new Error('Not allowed by CORS'),
+            false
+          );
+        }
+      },
+      credentials: true,
+      methods: [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH',
+        'OPTIONS',
+      ],
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Cookie',
+      ],
+      exposedHeaders: [ 'Set-Cookie', ],
+    }
+  );
 
   // @ts-expect-error - NestJS Fastify 어댑터와 플러그인 타입 호환성 문제
   await app.register(fastifyCookie);
@@ -95,7 +125,10 @@ async function bootstrap() {
 }
 
 const handleError = (error: Error): void => {
-  new Logger('Bootstrap').error('❌ 애플리케이션 시작에 실패했습니다:', error.stack);
+  new Logger('Bootstrap').error(
+    '❌ 애플리케이션 시작에 실패했습니다:',
+    error.stack
+  );
   process.exit(1);
 };
 

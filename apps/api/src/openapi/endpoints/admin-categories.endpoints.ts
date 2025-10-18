@@ -48,19 +48,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 분석 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.ANALYZE_SUCCESS, [ CreateCategoryAnalyze.analyzeCategory(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 분석 통계 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.ANALYZE_SUCCESS,
+                    [ CreateCategoryAnalyze.analyzeCategory(), ]
+                  ),
+                },
+                error: {
+                  summary: '카테고리 분석 통계 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.ANALYZE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '카테고리 분석 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.ANALYZE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -84,19 +94,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 구독자 성장률 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categorySubscriberGrowthRate(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 구독자 성장률 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categorySubscriberGrowthRate(), ]
+                  ),
+                },
+                error: {
+                  summary: '카테고리 구독자 성장률 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '카테고리 구독자 성장률 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -117,19 +137,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '구독자 없는 카테고리 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoriesWithoutSubscribers(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '구독자 없는 카테고리 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categoriesWithoutSubscribers(), ]
+                  ),
+                },
+                error: {
+                  summary: '구독자 없는 카테고리 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '구독자 없는 카테고리 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -153,19 +183,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '인기 카테고리 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.topPopularCategory(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '인기 카테고리 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.topPopularCategory(), ]
+                  ),
+                },
+                error: {
+                  summary: '인기 카테고리 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '인기 카테고리 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -199,19 +239,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '구독자 많은 카테고리 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.topCategoryBySubscriber(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '구독자 많은 카테고리 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.topCategoryBySubscriber(), ]
+                  ),
+                },
+                error: {
+                  summary: '구독자 많은 카테고리 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '구독자 많은 카테고리 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -235,19 +285,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '평균 북마크 수 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.averageBookmarkPerCategory(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '평균 북마크 수 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.averageBookmarkPerCategory(), ]
+                  ),
+                },
+                error: {
+                  summary: '평균 북마크 수 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '평균 북마크 수 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -271,19 +331,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '평균 조회수 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.averageViewPerCategory(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '평균 조회수 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.averageViewPerCategory(), ]
+                  ),
+                },
+                error: {
+                  summary: '평균 조회수 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '평균 조회수 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -304,19 +374,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '계층별 카테고리 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchyDistribution(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '계층별 카테고리 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categoryHierarchyDistribution(), ]
+                  ),
+                },
+                error: {
+                  summary: '계층별 카테고리 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '계층별 카테고리 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -337,19 +417,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '계층별 포스트 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchyPostDistribution(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '계층별 포스트 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categoryHierarchyPostDistribution(), ]
+                  ),
+                },
+                error: {
+                  summary: '계층별 포스트 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '계층별 포스트 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -370,19 +460,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '계층별 구독자 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryHierarchySubscriberDistribution(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '계층별 구독자 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categoryHierarchySubscriberDistribution(), ]
+                  ),
+                },
+                error: {
+                  summary: '계층별 구독자 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '계층별 구독자 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -403,19 +503,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 상태별 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryStatusDistribution(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 상태별 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categoryStatusDistribution(), ]
+                  ),
+                },
+                error: {
+                  summary: '카테고리 상태별 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '카테고리 상태별 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -436,19 +546,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '생성자별 카테고리 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.categoryCreatorStat(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '생성자별 카테고리 통계 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.categoryCreatorStat(), ]
+                  ),
+                },
+                error: {
+                  summary: '생성자별 카테고리 통계 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '생성자별 카테고리 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -469,19 +589,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '미사용 카테고리 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, [ CreateCategoryAnalyze.unusedCategory(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '미사용 카테고리 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+                    [ CreateCategoryAnalyze.unusedCategory(), ]
+                  ),
+                },
+                error: {
+                  summary: '미사용 카테고리 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '미사용 카테고리 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true,
-              hasRoles: true,
-            }),
+              {
+                hasAuthGuard: true,
+                hasRoles: true,
+              }
+            ),
           },
         },
       },
@@ -509,19 +639,29 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.SEARCH_SUCCESS, CreateExample.category('list')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.SEARCH_SUCCESS,
+                    CreateExample.category('list')
+                  ),
+                },
+                error: {
+                  summary: '카테고리 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.SEARCH_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '카테고리 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.SEARCH_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -550,23 +690,36 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_SUCCESS, CreateExample.category('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.GET_SUCCESS,
+                    CreateExample.category('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '카테고리를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '카테고리 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.GET_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NOT_FOUND),
-              },
-              error: {
-                summary: '카테고리 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.GET_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -595,23 +748,36 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_SUCCESS, CreateExample.category('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_SUCCESS,
+                    CreateExample.category('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '카테고리를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.CATEGORY.ADMIN.NAME_NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '카테고리 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NAME_NOT_FOUND),
-              },
-              error: {
-                summary: '카테고리 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -641,23 +807,36 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 생성 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS, CreateExample.category('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 생성 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS,
+                    CreateExample.category('detail')
+                  ),
+                },
+                conflict: {
+                  summary: '카테고리 이름 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.CATEGORY.ADMIN.NAME_IN_USE
+                  ),
+                },
+                error: {
+                  summary: '카테고리 생성 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.CREATE_ERROR
+                  ),
+                },
               },
-              conflict: {
-                summary: '카테고리 이름 중복',
-                value: createError('CONFLICT', MESSAGE.CATEGORY.ADMIN.NAME_IN_USE),
-              },
-              error: {
-                summary: '카테고리 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -687,23 +866,33 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 카테고리 생성 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 카테고리 생성 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '다수 카테고리 생성 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 카테고리 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -739,23 +928,36 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.UPDATE_SUCCESS, CreateExample.category('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.UPDATE_SUCCESS,
+                    CreateExample.category('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '카테고리를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '카테고리 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.UPDATE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NOT_FOUND),
-              },
-              error: {
-                summary: '카테고리 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -777,7 +979,11 @@ export const registerAdminCategoriesEndpoints = () => {
             schema: updateCategorySchema.extend({
               ctgryNoList: z.array(z.number().int().positive()).openapi({
                 description: '수정할 카테고리 번호 목록',
-                example: [ 1, 2, 3, ],
+                example: [
+                  1,
+                  2,
+                  3,
+                ],
               }),
             }),
           },
@@ -790,23 +996,33 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 카테고리 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 카테고리 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '다수 카테고리 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 카테고리 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -835,23 +1051,36 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '카테고리 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.DELETE_SUCCESS, true),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '카테고리 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.DELETE_SUCCESS,
+                    true
+                  ),
+                },
+                notFound: {
+                  summary: '카테고리를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '카테고리 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.DELETE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '카테고리를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.CATEGORY.ADMIN.NOT_FOUND),
-              },
-              error: {
-                summary: '카테고리 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -881,23 +1110,33 @@ export const registerAdminCategoriesEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 카테고리 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 카테고리 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '다수 카테고리 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 카테고리 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

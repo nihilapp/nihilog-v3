@@ -31,19 +31,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 분석 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ANALYZE_SUCCESS, [ CreateUserAnalyze.createUserAnalyzeExample(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 분석 통계 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.ANALYZE_SUCCESS,
+                    [ CreateUserAnalyze.createUserAnalyzeExample(), ]
+                  ),
+                },
+                error: {
+                  summary: '사용자 분석 통계 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.ANALYZE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자 분석 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.ANALYZE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -67,19 +77,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '활성 사용자 분석 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_SUCCESS, CreateUserAnalyze.createActiveUserAnalysisExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '활성 사용자 분석 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_SUCCESS,
+                    CreateUserAnalyze.createActiveUserAnalysisExample()
+                  ),
+                },
+                error: {
+                  summary: '활성 사용자 분석 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '활성 사용자 분석 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -103,19 +123,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자별 기여도 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_SUCCESS, CreateUserAnalyze.createTopUsersByContributionExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자별 기여도 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_SUCCESS,
+                    CreateUserAnalyze.createTopUsersByContributionExample()
+                  ),
+                },
+                error: {
+                  summary: '사용자별 기여도 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자별 기여도 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -139,19 +169,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자별 포스트 작성 수 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS, CreateUserAnalyze.createTopUsersByPostCountExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자별 포스트 작성 수 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS,
+                    CreateUserAnalyze.createTopUsersByPostCountExample()
+                  ),
+                },
+                error: {
+                  summary: '사용자별 포스트 작성 수 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.TOP_POST_COUNT_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자별 포스트 작성 수 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -175,19 +215,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자별 댓글 작성 수 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_SUCCESS, CreateUserAnalyze.createTopUsersByCommentCountExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자별 댓글 작성 수 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_SUCCESS,
+                    CreateUserAnalyze.createTopUsersByCommentCountExample()
+                  ),
+                },
+                error: {
+                  summary: '사용자별 댓글 작성 수 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자별 댓글 작성 수 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -208,19 +258,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '역할별 사용자 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_SUCCESS, CreateUserAnalyze.createUserRoleDistributionExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '역할별 사용자 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_SUCCESS,
+                    CreateUserAnalyze.createUserRoleDistributionExample()
+                  ),
+                },
+                error: {
+                  summary: '역할별 사용자 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '역할별 사용자 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -241,19 +301,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '상태별 사용자 분포 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_SUCCESS, CreateUserAnalyze.createUserStatusDistributionExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '상태별 사용자 분포 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_SUCCESS,
+                    CreateUserAnalyze.createUserStatusDistributionExample()
+                  ),
+                },
+                error: {
+                  summary: '상태별 사용자 분포 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '상태별 사용자 분포 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -288,19 +358,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '비활성 사용자 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.INACTIVE_USERS_SUCCESS, CreateUserAnalyze.createInactiveUsersListExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '비활성 사용자 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.INACTIVE_USERS_SUCCESS,
+                    CreateUserAnalyze.createInactiveUsersListExample()
+                  ),
+                },
+                error: {
+                  summary: '비활성 사용자 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.INACTIVE_USERS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '비활성 사용자 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.INACTIVE_USERS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -324,19 +404,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 성장률 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.GROWTH_RATE_SUCCESS, CreateUserAnalyze.createUserGrowthRateExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 성장률 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.GROWTH_RATE_SUCCESS,
+                    CreateUserAnalyze.createUserGrowthRateExample()
+                  ),
+                },
+                error: {
+                  summary: '사용자 성장률 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.GROWTH_RATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자 성장률 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.GROWTH_RATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -360,19 +450,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 유지율 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.STATISTICS.RETENTION_RATE_SUCCESS, CreateUserAnalyze.createUserRetentionRateExample()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 유지율 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.STATISTICS.RETENTION_RATE_SUCCESS,
+                    CreateUserAnalyze.createUserRetentionRateExample()
+                  ),
+                },
+                error: {
+                  summary: '사용자 유지율 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.STATISTICS.RETENTION_RATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자 유지율 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.STATISTICS.RETENTION_RATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -398,22 +498,32 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.SEARCH_SUCCESS, {
-                  list: [ CreateExample.user('list'), ],
-                  totalCnt: 1,
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.SEARCH_SUCCESS,
+                    {
+                      list: [ CreateExample.user('list'), ],
+                      totalCnt: 1,
+                    }
+                  ),
+                },
+                error: {
+                  summary: '사용자 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.SEARCH_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.SEARCH_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -442,19 +552,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, CreateExample.user('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.FETCH_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -483,19 +603,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, CreateExample.user()),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.FETCH_SUCCESS,
+                    CreateExample.user()
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -524,19 +654,29 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, CreateExample.user('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.FETCH_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -566,23 +706,36 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 생성 성공',
-                value: createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, CreateExample.user('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 생성 성공',
+                  value: createResponse(
+                    'CREATED',
+                    MESSAGE.USER.USER.CREATE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                conflict: {
+                  summary: '이미 존재하는 이메일',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.USER.USER.EMAIL_EXISTS
+                  ),
+                },
+                error: {
+                  summary: '사용자 생성 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.CREATE_ERROR
+                  ),
+                },
               },
-              conflict: {
-                summary: '이미 존재하는 이메일',
-                value: createError('CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS),
-              },
-              error: {
-                summary: '사용자 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -615,19 +768,32 @@ export const registerAdminUsersEndpoints = () => {
             examples: {
               success: {
                 summary: '최초 어드민 생성 성공',
-                value: createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, CreateExample.user('detail')),
+                value: createResponse(
+                  'CREATED',
+                  MESSAGE.USER.USER.CREATE_SUCCESS,
+                  CreateExample.user('detail')
+                ),
               },
               forbidden: {
                 summary: '개발 환경에서만 사용 가능',
-                value: createError('FORBIDDEN', MESSAGE.COMMON.DEVELOPMENT_ONLY),
+                value: createError(
+                  'FORBIDDEN',
+                  MESSAGE.COMMON.DEVELOPMENT_ONLY
+                ),
               },
               conflict: {
                 summary: '이미 존재하는 이메일',
-                value: createError('CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS),
+                value: createError(
+                  'CONFLICT',
+                  MESSAGE.USER.USER.EMAIL_EXISTS
+                ),
               },
               error: {
                 summary: '사용자 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.USER.USER.CREATE_ERROR
+                ),
               },
             },
           },
@@ -665,27 +831,43 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, CreateExample.user('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.UPDATE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
+                conflict: {
+                  summary: '사용자명 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.USER.USER.NAME_EXISTS
+                  ),
+                },
+                error: {
+                  summary: '사용자 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.UPDATE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-              conflict: {
-                summary: '사용자명 중복',
-                value: createError('CONFLICT', MESSAGE.USER.USER.NAME_EXISTS),
-              },
-              error: {
-                summary: '사용자 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -715,23 +897,33 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 사용자 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, {
-                  successCnt: 1,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 사용자 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.UPDATE_SUCCESS,
+                    {
+                      successCnt: 1,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '사용자 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -760,23 +952,36 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '사용자 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, true),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '사용자 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.DELETE_SUCCESS,
+                    true
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '사용자 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.DELETE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-              error: {
-                summary: '사용자 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -806,23 +1011,33 @@ export const registerAdminUsersEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 사용자 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, {
-                  successCnt: 1,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 사용자 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.DELETE_SUCCESS,
+                    {
+                      successCnt: 1,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '사용자 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '사용자 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

@@ -28,22 +28,28 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '프로필 조회 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.USER.PROFILE.GET_SUCCESS,
-                  CreateExample.user('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '프로필 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.PROFILE.GET_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                error: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
               },
-              error: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -64,22 +70,28 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '구독 설정 조회 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.USER.FETCH_SUCCESS,
-                  CreateExample.subscribe('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '구독 설정 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.USER.FETCH_SUCCESS,
+                    CreateExample.subscribe('detail')
+                  ),
+                },
+                error: {
+                  summary: '구독 설정을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.SUBSCRIBE.USER.NOT_FOUND
+                  ),
+                },
               },
-              error: {
-                summary: '구독 설정을 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -119,11 +131,17 @@ export const registerUserEndpoints = () => {
               },
               emailInUse: {
                 summary: '이메일 중복',
-                value: createError('CONFLICT', MESSAGE.USER.USER.EMAIL_EXISTS),
+                value: createError(
+                  'CONFLICT',
+                  MESSAGE.USER.USER.EMAIL_EXISTS
+                ),
               },
               createError: {
                 summary: '사용자 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.USER.CREATE_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.USER.USER.CREATE_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -155,26 +173,35 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '프로필 수정 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
-                  CreateExample.user('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '프로필 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
+                nameExists: {
+                  summary: '사용자명 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.USER.USER.NAME_EXISTS
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-              nameExists: {
-                summary: '사용자명 중복',
-                value: createError('CONFLICT', MESSAGE.USER.USER.NAME_EXISTS),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -204,26 +231,35 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '구독 설정 변경 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.USER.UPDATE_SUCCESS,
-                  CreateExample.subscribe('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '구독 설정 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.USER.UPDATE_SUCCESS,
+                    CreateExample.subscribe('detail')
+                  ),
+                },
+                userNotFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
+                subscribeNotFound: {
+                  summary: '구독 설정을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.SUBSCRIBE.USER.NOT_FOUND
+                  ),
+                },
               },
-              userNotFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-              subscribeNotFound: {
-                summary: '구독 설정을 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -244,22 +280,28 @@ export const registerUserEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '프로필 삭제 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.USER.PROFILE.DELETE_SUCCESS,
-                  true
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '프로필 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.PROFILE.DELETE_SUCCESS,
+                    true
+                  ),
+                },
+                notFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.NOT_FOUND
+                  ),
+                },
               },
-              notFound: {
-                summary: '사용자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.NOT_FOUND),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },

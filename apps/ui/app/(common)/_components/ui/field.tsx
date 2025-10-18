@@ -88,7 +88,10 @@ function Field({
       role='group'
       data-slot='field'
       data-orientation={orientation}
-      className={cn(fieldVariants({ orientation, }), className)}
+      className={cn(
+        fieldVariants({ orientation, }),
+        className
+      )}
       {...props}
     />
   );
@@ -191,30 +194,32 @@ function FieldError({
 }: React.ComponentProps<'div'> & {
   errors?: Array<{ message?: string } | undefined>;
 }) {
-  const content = useMemo(() => {
-    if (children) {
-      return children;
-    }
+  const content = useMemo(
+    () => {
+      if (children) {
+        return children;
+      }
 
-    if (!errors?.length) {
-      return null;
-    }
+      if (!errors?.length) {
+        return null;
+      }
 
-    if (errors?.length == 1) {
-      return errors[0]?.message;
-    }
+      if (errors?.length == 1) {
+        return errors[0]?.message;
+      }
 
-    return (
-      <ul className='ml-4 flex list-disc flex-col gap-1'>
-        {errors.map(
-          (error, index) =>
-            error?.message && <li key={index}>{error.message}</li>
-        )}
-      </ul>
-    );
-  }, [
-    children, errors,
-  ]);
+      return (
+        <ul className='ml-4 flex list-disc flex-col gap-1'>
+          {errors.map((error, index) =>
+            error?.message && <li key={index}>{error.message}</li>)}
+        </ul>
+      );
+    },
+    [
+      children,
+      errors,
+    ]
+  );
 
   if (!content) {
     return null;
@@ -224,7 +229,10 @@ function FieldError({
     <div
       role='alert'
       data-slot='field-error'
-      className={cn('text-destructive text-sm font-normal', className)}
+      className={cn(
+        'text-destructive text-sm font-normal',
+        className
+      )}
       {...props}
     >
       {content}

@@ -26,30 +26,66 @@ export function createSwaggerConfig(params: {
       },
       'JWT-auth'
     )
-    .addCookieAuth('accessToken', {
-      type: 'apiKey',
-      in: 'cookie',
-      name: 'accessToken',
-      description: 'HTTP-Only 쿠키를 통한 자동 JWT 인증 (로그인 시 자동 설정)',
-    })
+    .addCookieAuth(
+      'accessToken',
+      {
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'accessToken',
+        description: 'HTTP-Only 쿠키를 통한 자동 JWT 인증 (로그인 시 자동 설정)',
+      }
+    )
     // 인증 관련
-    .addTag('auth', '🔐 인증 관련 API - 회원가입, 로그인, 로그아웃 등')
+    .addTag(
+      'auth',
+      '🔐 인증 관련 API - 회원가입, 로그인, 로그아웃 등'
+    )
 
     // 사용자 관련
-    .addTag('users', '👤 구독자 관리 API - 프로필 조회/수정/삭제, 구독 설정 관리')
+    .addTag(
+      'users',
+      '👤 구독자 관리 API - 프로필 조회/수정/삭제, 구독 설정 관리'
+    )
 
     // 공개 API (읽기 전용)
-    .addTag('posts', '📖 포스트 공개 API - 조회 전용')
-    .addTag('categories', '📖 카테고리 공개 API - 조회 전용')
-    .addTag('tags', '📖 태그 공개 API - 조회 전용')
-    .addTag('comments', '💬 댓글 공개 API - 조회/작성/수정/삭제')
+    .addTag(
+      'posts',
+      '📖 포스트 공개 API - 조회 전용'
+    )
+    .addTag(
+      'categories',
+      '📖 카테고리 공개 API - 조회 전용'
+    )
+    .addTag(
+      'tags',
+      '📖 태그 공개 API - 조회 전용'
+    )
+    .addTag(
+      'comments',
+      '💬 댓글 공개 API - 조회/작성/수정/삭제'
+    )
 
     // 관리자 API
-    .addTag('admin', '🔐 관리자 공통 API - 관리자 전용 영역')
-    .addTag('admin/users', '👥 사용자 관리 API - 사용자 조회/생성/수정/삭제')
-    .addTag('admin/posts', '🛠️ 포스트 관리자 API - 생성/수정/삭제')
-    .addTag('admin/categories', '🛠️ 카테고리 관리자 API - 생성/수정/삭제')
-    .addTag('admin/tags', '🛠️ 태그 관리자 API - 생성/수정/삭제')
+    .addTag(
+      'admin',
+      '🔐 관리자 공통 API - 관리자 전용 영역'
+    )
+    .addTag(
+      'admin/users',
+      '👥 사용자 관리 API - 사용자 조회/생성/수정/삭제'
+    )
+    .addTag(
+      'admin/posts',
+      '🛠️ 포스트 관리자 API - 생성/수정/삭제'
+    )
+    .addTag(
+      'admin/categories',
+      '🛠️ 카테고리 관리자 API - 생성/수정/삭제'
+    )
+    .addTag(
+      'admin/tags',
+      '🛠️ 태그 관리자 API - 생성/수정/삭제'
+    )
     .build();
 }
 

@@ -34,11 +34,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '포스트 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.SEARCH_SUCCESS,
+                  [ CreateExample.post('list'), ]
+                ),
               },
               error: {
                 summary: '포스트 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.SEARCH_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -71,15 +78,25 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '포스트 상세 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.GET_SUCCESS, CreateExample.post('detail')),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.GET_SUCCESS,
+                  CreateExample.post('detail')
+                ),
               },
               notFound: {
                 summary: '포스트를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.POST.USER.NOT_FOUND),
+                value: createError(
+                  'NOT_FOUND',
+                  MESSAGE.POST.USER.NOT_FOUND
+                ),
               },
               error: {
                 summary: '포스트 상세 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.GET_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.GET_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -112,15 +129,25 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '포스트 상세 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.GET_SUCCESS, CreateExample.post('detail')),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.GET_SUCCESS,
+                  CreateExample.post('detail')
+                ),
               },
               notFound: {
                 summary: '포스트를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.POST.USER.NOT_FOUND),
+                value: createError(
+                  'NOT_FOUND',
+                  MESSAGE.POST.USER.NOT_FOUND
+                ),
               },
               error: {
                 summary: '포스트 상세 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.GET_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.GET_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -129,9 +156,9 @@ export const registerPostsEndpoints = () => {
     },
   });
 
-  // POST /posts/tag/{tagNo} - 태그별 포스트 목록 조회
+  // GET /posts/tag/{tagNo} - 태그별 포스트 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/posts/tag/{tagNo}',
     summary: '🏷️ 태그별 포스트 목록 조회',
     description: '태그별 포스트 목록을 조회합니다.',
@@ -143,13 +170,7 @@ export const registerPostsEndpoints = () => {
           example: 1,
         }),
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: searchPostSchema,
-          },
-        },
-      },
+      query: searchPostSchema,
     },
     responses: {
       200: {
@@ -160,11 +181,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '태그별 포스트 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.SEARCH_SUCCESS,
+                  [ CreateExample.post('list'), ]
+                ),
               },
               error: {
                 summary: '태그별 포스트 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.SEARCH_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -173,9 +201,9 @@ export const registerPostsEndpoints = () => {
     },
   });
 
-  // POST /posts/category/{ctgryNo} - 카테고리별 포스트 목록 조회
+  // GET /posts/category/{ctgryNo} - 카테고리별 포스트 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/posts/category/{ctgryNo}',
     summary: '📂 카테고리별 포스트 목록 조회',
     description: '카테고리별 포스트 목록을 조회합니다.',
@@ -187,13 +215,7 @@ export const registerPostsEndpoints = () => {
           example: 1,
         }),
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: searchPostSchema,
-          },
-        },
-      },
+      query: searchPostSchema,
     },
     responses: {
       200: {
@@ -204,11 +226,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '카테고리별 포스트 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.SEARCH_SUCCESS,
+                  [ CreateExample.post('list'), ]
+                ),
               },
               error: {
                 summary: '카테고리별 포스트 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.SEARCH_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -217,9 +246,9 @@ export const registerPostsEndpoints = () => {
     },
   });
 
-  // POST /posts/archive/{date} - 년월별 포스트 목록 조회
+  // GET /posts/archive/{date} - 년월별 포스트 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/posts/archive/{date}',
     summary: '📅 년월별 포스트 목록 조회',
     description: '년월별 포스트 목록을 조회합니다.',
@@ -231,13 +260,7 @@ export const registerPostsEndpoints = () => {
           example: '202401',
         }),
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: searchPostSchema,
-          },
-        },
-      },
+      query: searchPostSchema,
     },
     responses: {
       200: {
@@ -248,11 +271,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '년월별 포스트 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.SEARCH_SUCCESS,
+                  [ CreateExample.post('list'), ]
+                ),
               },
               error: {
                 summary: '년월별 포스트 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.SEARCH_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -261,21 +291,15 @@ export const registerPostsEndpoints = () => {
     },
   });
 
-  // POST /posts/advanced-search - 고급 검색을 통한 포스트 목록 조회
+  // GET /posts/advanced-search - 고급 검색을 통한 포스트 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/posts/advanced-search',
     summary: '🔍 고급 검색을 통한 포스트 목록 조회',
     description: '복합 조건(태그, 카테고리, 날짜 범위, 조회수 등)을 통한 포스트 목록을 조회합니다.',
     tags: [ 'posts', ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchPostSchema,
-          },
-        },
-      },
+      query: searchPostSchema,
     },
     responses: {
       200: {
@@ -286,11 +310,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '고급 검색 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.SEARCH_SUCCESS, [ CreateExample.post('list'), ]),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.SEARCH_SUCCESS,
+                  [ CreateExample.post('list'), ]
+                ),
               },
               error: {
                 summary: '고급 검색 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SEARCH_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.SEARCH_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -323,11 +354,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '포스트 조회 로그 기록 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.VIEW_LOG_SUCCESS, CreateExample.postViewLog()),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.VIEW_LOG_SUCCESS,
+                  CreateExample.postViewLog()
+                ),
               },
               error: {
                 summary: '포스트 조회 로그 기록 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.VIEW_LOG_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.VIEW_LOG_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -367,11 +405,18 @@ export const registerPostsEndpoints = () => {
             examples: addGlobalResponses({
               success: {
                 summary: '포스트 공유 로그 기록 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.USER.SHARE_LOG_SUCCESS, CreateExample.postShareLog()),
+                value: createResponse(
+                  'SUCCESS',
+                  MESSAGE.POST.USER.SHARE_LOG_SUCCESS,
+                  CreateExample.postShareLog()
+                ),
               },
               error: {
                 summary: '포스트 공유 로그 기록 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.USER.SHARE_LOG_ERROR),
+                value: createError(
+                  'INTERNAL_SERVER_ERROR',
+                  MESSAGE.POST.USER.SHARE_LOG_ERROR
+                ),
               },
             }), // 공개 엔드포인트이므로 글로벌 응답만 DB 에러 추가
           },
@@ -408,18 +453,28 @@ export const registerPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트 북마크 생성 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.BOOKMARK.CREATE_SUCCESS, CreateExample.postBookmark('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트 북마크 생성 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.BOOKMARK.CREATE_SUCCESS,
+                    CreateExample.postBookmark('detail')
+                  ),
+                },
+                error: {
+                  summary: '포스트 북마크 생성 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.BOOKMARK.CREATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트 북마크 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.BOOKMARK.CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -454,40 +509,44 @@ export const registerPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트 북마크 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.BOOKMARK.DELETE_SUCCESS, true),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트 북마크 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.BOOKMARK.DELETE_SUCCESS,
+                    true
+                  ),
+                },
+                error: {
+                  summary: '포스트 북마크 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.BOOKMARK.DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트 북마크 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.BOOKMARK.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
     },
   });
 
-  // POST /posts/bookmarked - 북마크한 포스트 목록 조회
+  // GET /posts/bookmarked - 북마크한 포스트 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/posts/bookmarked',
     summary: '📚 북마크한 포스트 목록 조회',
     description: '북마크한 포스트 목록을 조회합니다.',
     tags: [ 'posts', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchPostBookmarkSchema,
-          },
-        },
-      },
+      query: searchPostBookmarkSchema,
     },
     responses: {
       200: {
@@ -495,18 +554,28 @@ export const registerPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '북마크한 포스트 목록 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.BOOKMARK.SEARCH_SUCCESS, [ CreateExample.postBookmark('list'), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '북마크한 포스트 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.BOOKMARK.SEARCH_SUCCESS,
+                    [ CreateExample.postBookmark('list'), ]
+                  ),
+                },
+                error: {
+                  summary: '북마크한 포스트 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.BOOKMARK.SEARCH_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '북마크한 포스트 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.BOOKMARK.SEARCH_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },

@@ -35,27 +35,40 @@ export const registerAdminCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 카테고리 구독 생성 성공',
-                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 카테고리 구독 생성 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                conflict: {
+                  summary: '이미 존재하는 카테고리 구독',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS
+                  ),
+                },
+                error: {
+                  summary: '다수 카테고리 구독 생성 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_ERROR
+                  ),
+                },
               },
-              conflict: {
-                summary: '이미 존재하는 카테고리 구독',
-                value: createError('CONFLICT', MESSAGE.SUBSCRIBE.CATEGORY.ALREADY_EXISTS),
-              },
-              error: {
-                summary: '다수 카테고리 구독 생성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -85,27 +98,40 @@ export const registerAdminCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 카테고리 구독 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 카테고리 구독 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                notFound: {
+                  summary: '카테고리 구독을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '다수 카테고리 구독 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '카테고리 구독을 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND),
-              },
-              error: {
-                summary: '다수 카테고리 구독 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -135,27 +161,40 @@ export const registerAdminCategorySubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 카테고리 구독 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_SUCCESS, {
-                  successCnt: 3,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 카테고리 구독 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_SUCCESS,
+                    {
+                      successCnt: 3,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                notFound: {
+                  summary: '카테고리 구독을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND
+                  ),
+                },
+                error: {
+                  summary: '다수 카테고리 구독 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '카테고리 구독을 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.SUBSCRIBE.CATEGORY.NOT_FOUND),
-              },
-              error: {
-                summary: '다수 카테고리 구독 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.CATEGORY.ADMIN_MULTIPLE_DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

@@ -17,20 +17,14 @@ import { addGlobalResponses } from '../utils/global-responses';
 export const registerTagSubscribeEndpoints = () => {
   // 태그 구독 목록 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/users/subscribes/tags/search',
     summary: '📋 태그 구독 목록 조회',
     description: '사용자가 구독한 태그 목록을 조회합니다.',
     tags: [ 'tag-subscribe', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: searchTagSubscribeSchema,
-          },
-        },
-      },
+      query: searchTagSubscribeSchema,
     },
     responses: {
       200: {
@@ -38,26 +32,35 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 구독 목록 조회 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
-                  [ CreateExample.tagSubscribe('list'), ]
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 구독 목록 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
+                    [ CreateExample.tagSubscribe('list'), ]
+                  ),
+                },
+                validationError: {
+                  summary: '요청 데이터 유효성 검증 실패',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMON.INVALID_REQUEST
+                  ),
+                },
+                error: {
+                  summary: '태그 구독 목록 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR
+                  ),
+                },
               },
-              validationError: {
-                summary: '요청 데이터 유효성 검증 실패',
-                value: createError('BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST),
-              },
-              error: {
-                summary: '태그 구독 목록 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -66,7 +69,7 @@ export const registerTagSubscribeEndpoints = () => {
 
   // 특정 태그 구독 상태 조회
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/users/subscribes/tags/{tagNo}/search',
     summary: '📋 특정 태그 구독 상태 조회',
     description: '특정 태그의 구독 상태를 조회합니다.',
@@ -79,13 +82,7 @@ export const registerTagSubscribeEndpoints = () => {
           example: 1,
         }),
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: searchTagSubscribeSchema,
-          },
-        },
-      },
+      query: searchTagSubscribeSchema,
     },
     responses: {
       200: {
@@ -93,22 +90,28 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 구독 상태 조회 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
-                  CreateExample.tagSubscribe('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 구독 상태 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.SEARCH_SUCCESS,
+                    CreateExample.tagSubscribe('detail')
+                  ),
+                },
+                error: {
+                  summary: '태그 구독 상태 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 구독 상태 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.SEARCH_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -144,22 +147,28 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 구독 설정 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.CREATE_SUCCESS,
-                  CreateExample.tagSubscribe('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 구독 설정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.CREATE_SUCCESS,
+                    CreateExample.tagSubscribe('detail')
+                  ),
+                },
+                error: {
+                  summary: '태그 구독 설정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.CREATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 구독 설정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -189,22 +198,28 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 태그 구독 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_SUCCESS,
-                  [ CreateExample.tagSubscribe('detail'), ]
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 태그 구독 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_SUCCESS,
+                    [ CreateExample.tagSubscribe('detail'), ]
+                  ),
+                },
+                error: {
+                  summary: '다수 태그 구독 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 태그 구독 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -240,22 +255,28 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 구독 설정 변경 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.UPDATE_SUCCESS,
-                  CreateExample.tagSubscribe('detail')
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 구독 설정 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.UPDATE_SUCCESS,
+                    CreateExample.tagSubscribe('detail')
+                  ),
+                },
+                error: {
+                  summary: '태그 구독 설정 변경 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 구독 설정 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -285,22 +306,28 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 태그 구독 설정 변경 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_SUCCESS,
-                  [ CreateExample.tagSubscribe('detail'), ]
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 태그 구독 설정 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_SUCCESS,
+                    [ CreateExample.tagSubscribe('detail'), ]
+                  ),
+                },
+                error: {
+                  summary: '다수 태그 구독 설정 변경 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 태그 구독 설정 변경 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -329,18 +356,28 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '태그 구독 해제 성공',
-                value: createResponse('SUCCESS', MESSAGE.SUBSCRIBE.TAG.DELETE_SUCCESS, true),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '태그 구독 해제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.DELETE_SUCCESS,
+                    true
+                  ),
+                },
+                error: {
+                  summary: '태그 구독 해제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '태그 구독 해제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },
@@ -370,26 +407,32 @@ export const registerTagSubscribeEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 태그 구독 해제 성공',
-                value: createResponse(
-                  'SUCCESS',
-                  MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_SUCCESS,
-                  {
-                    totalCount: 3,
-                    successCount: 3,
-                    failCount: 0,
-                  }
-                ),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 태그 구독 해제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_SUCCESS,
+                    {
+                      totalCount: 3,
+                      successCount: 3,
+                      failCount: 0,
+                    }
+                  ),
+                },
+                error: {
+                  summary: '다수 태그 구독 해제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 태그 구독 해제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.SUBSCRIBE.TAG.MULTIPLE_DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+              }
+            ),
           },
         },
       },

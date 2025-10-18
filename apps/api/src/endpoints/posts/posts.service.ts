@@ -48,7 +48,10 @@ export class PostsService {
    * @param searchData 검색 조건
    */
   async getPostListByTagNo(tagNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
-    return this.postRepository.getPostListByTagNo(tagNo, searchData);
+    return this.postRepository.getPostListByTagNo(
+      tagNo,
+      searchData
+    );
   }
 
   /**
@@ -57,7 +60,10 @@ export class PostsService {
    * @param searchData 검색 조건
    */
   async getPostListByCtgryNo(ctgryNo: number, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
-    return this.postRepository.getPostListByCtgryNo(ctgryNo, searchData);
+    return this.postRepository.getPostListByCtgryNo(
+      ctgryNo,
+      searchData
+    );
   }
 
   /**
@@ -66,7 +72,10 @@ export class PostsService {
    * @param searchData 검색 조건
    */
   async getPostListFromArchive(date: string, searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
-    return this.postRepository.getPostListFromArchive(date, searchData);
+    return this.postRepository.getPostListFromArchive(
+      date,
+      searchData
+    );
   }
 
   /**
@@ -83,7 +92,10 @@ export class PostsService {
    * @param ip 사용자 IP
    */
   async createPostViewLog(pstNo: number, ip: string): Promise<RepoResponseType<SelectPostViewLogType> | null> {
-    return this.postRepository.createPostViewLog(pstNo, ip);
+    return this.postRepository.createPostViewLog(
+      pstNo,
+      ip
+    );
   }
 
   /**
@@ -119,6 +131,9 @@ export class PostsService {
     userNo: number,
     searchData: SearchPostBookmarkDto
   ): Promise<RepoResponseType<ListType<SelectPostBookmarkListItemType>> | null> {
-    return this.postRepository.getBookmarkedPostListByUserNo(userNo, searchData);
+    return this.postRepository.getBookmarkedPostListByUserNo(
+      userNo,
+      searchData
+    );
   }
 }

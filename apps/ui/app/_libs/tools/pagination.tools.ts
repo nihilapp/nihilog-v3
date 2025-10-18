@@ -41,7 +41,10 @@ export function hasPaginationParams(params: Record<string, any>): boolean {
 export function addPaginationParams(params: Record<string, any>): Record<string, any> {
   if (hasPaginationParams(params)) {
     const { page, limit, ...restParams } = params;
-    const { limit: calculatedLimit, offset, } = calculatePagination(page, limit);
+    const { limit: calculatedLimit, offset, } = calculatePagination(
+      page,
+      limit
+    );
 
     return {
       ...restParams,

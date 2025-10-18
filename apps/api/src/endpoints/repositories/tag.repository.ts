@@ -50,7 +50,11 @@ export class TagRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const analyzeData = await this.prisma.$queryRaw<AnalyzeTagStatItemType[]>`
-        WITH date_series AS ${createDateSeries(startDt, endDt, mode)},
+        WITH date_series AS ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )},
 
         -- 모든 통계를 하나의 CTE로 통합
         all_stats AS (
@@ -162,7 +166,10 @@ export class TagRepository {
         ORDER BY ds.date_start
       `;
 
-      return prismaResponse(true, analyzeData);
+      return prismaResponse(
+        true,
+        analyzeData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -214,7 +221,10 @@ export class TagRepository {
         ORDER BY tut.usage_count DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -230,7 +240,11 @@ export class TagRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const usageTrend = await this.prisma.$queryRaw<TagUsageTrendItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -250,7 +264,10 @@ export class TagRepository {
         ORDER BY b.date_start, t.tag_no
       `;
 
-      return prismaResponse(true, usageTrend);
+      return prismaResponse(
+        true,
+        usageTrend
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -296,7 +313,10 @@ export class TagRepository {
         };
       });
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -341,7 +361,10 @@ export class TagRepository {
         ORDER BY tst.subscriber_count DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -357,7 +380,11 @@ export class TagRepository {
       const { mode, startDt, endDt, } = analyzeStatData;
 
       const growthRate = await this.prisma.$queryRaw<TagSubscriberGrowthRateItemType[]>`
-        WITH ${createDateSeries(startDt, endDt, mode)}
+        WITH ${createDateSeries(
+          startDt,
+          endDt,
+          mode
+        )}
         SELECT
           b.date_start AS "dateStart",
           b.date_end AS "dateEnd",
@@ -384,7 +411,10 @@ export class TagRepository {
         ORDER BY b.date_start, t.tag_no
       `;
 
-      return prismaResponse(true, growthRate);
+      return prismaResponse(
+        true,
+        growthRate
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -423,7 +453,10 @@ export class TagRepository {
         ORDER BY t.crt_dt DESC
       `;
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -447,7 +480,10 @@ export class TagRepository {
       });
 
       const result = await Promise.all(tags.map(async (tag) => {
-        const [ usageCount, subscriberCount, ] = await Promise.all([
+        const [
+          usageCount,
+          subscriberCount,
+        ] = await Promise.all([
           this.prisma.pstTagMpng.count({
             where: {
               tagNo: tag.tagNo,
@@ -477,7 +513,10 @@ export class TagRepository {
         };
       }));
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -514,7 +553,10 @@ export class TagRepository {
         ORDER BY "averageFrequency" DESC
       `;
 
-      return prismaResponse(true, frequencyData);
+      return prismaResponse(
+        true,
+        frequencyData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -549,7 +591,10 @@ export class TagRepository {
         ORDER BY t.crt_dt DESC
       `;
 
-      return prismaResponse(true, lifecycleData);
+      return prismaResponse(
+        true,
+        lifecycleData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -590,7 +635,10 @@ export class TagRepository {
         ORDER BY sc.count DESC
       `;
 
-      return prismaResponse(true, statusDistribution);
+      return prismaResponse(
+        true,
+        statusDistribution
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -615,7 +663,10 @@ export class TagRepository {
         ORDER BY "tagCount" DESC
       `;
 
-      return prismaResponse(true, creatorStats);
+      return prismaResponse(
+        true,
+        creatorStats
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -656,7 +707,10 @@ export class TagRepository {
         ORDER BY "daysUnused" DESC
       `;
 
-      return prismaResponse(true, cleanupRecommendations);
+      return prismaResponse(
+        true,
+        cleanupRecommendations
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -754,10 +808,21 @@ export class TagRepository {
         }),
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.tagInfo.findMany({
           where,
           orderBy: {
@@ -784,14 +849,17 @@ export class TagRepository {
         this.prisma.tagInfo.count({ where, }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -808,7 +876,10 @@ export class TagRepository {
         where: { tagNo, },
       });
 
-      return prismaResponse(true, tag);
+      return prismaResponse(
+        true,
+        tag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -825,7 +896,10 @@ export class TagRepository {
         where: { tagNm, },
       });
 
-      return prismaResponse(true, tag);
+      return prismaResponse(
+        true,
+        tag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -849,7 +923,10 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, newTag);
+      return prismaResponse(
+        true,
+        newTag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -873,11 +950,14 @@ export class TagRepository {
         })),
       });
 
-      return prismaResponse(true, {
-        successCnt: newTags.count,
-        failCnt: createData.length - newTags.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: newTags.count,
+          failCnt: createData.length - newTags.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -900,7 +980,10 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, updatedTag);
+      return prismaResponse(
+        true,
+        updatedTag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -927,11 +1010,14 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, {
-        successCnt: updatedTags.count,
-        failCnt: updateData.tagNoList.length - updatedTags.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: updatedTags.count,
+          failCnt: updateData.tagNoList.length - updatedTags.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -957,7 +1043,10 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, !!deletedTag);
+      return prismaResponse(
+        true,
+        !!deletedTag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -983,11 +1072,14 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, {
-        successCnt: deletedTags.count,
-        failCnt: deleteData.tagNoList.length - deletedTags.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: deletedTags.count,
+          failCnt: deleteData.tagNoList.length - deletedTags.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1006,7 +1098,10 @@ export class TagRepository {
     try {
       const { pstNo, delYn, } = searchData;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.pstTagMpng.findMany({
           where: {
             delYn: delYn || 'N',
@@ -1036,14 +1131,17 @@ export class TagRepository {
         }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: index + 1,
+          })),
           totalCnt,
-          rowNo: index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1058,7 +1156,12 @@ export class TagRepository {
   async getPostTagMappingByTagNo(tagNo: number, pstNo: number): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
     try {
       const tag = await this.prisma.pstTagMpng.findUnique({
-        where: { pstNo_tagNo: { tagNo, pstNo, }, },
+        where: {
+          pstNo_tagNo: {
+            tagNo,
+            pstNo,
+          },
+        },
         include: {
           tag: {
             select: {
@@ -1068,7 +1171,10 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, tag);
+      return prismaResponse(
+        true,
+        tag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1099,7 +1205,10 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, newTag);
+      return prismaResponse(
+        true,
+        newTag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1123,11 +1232,14 @@ export class TagRepository {
         })),
       });
 
-      return prismaResponse(true, {
-        successCnt: newTags.count,
-        failCnt: createData.length - newTags.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: newTags.count,
+          failCnt: createData.length - newTags.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1150,7 +1262,10 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, !!deletedTag);
+      return prismaResponse(
+        true,
+        !!deletedTag
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -1173,11 +1288,14 @@ export class TagRepository {
         },
       });
 
-      return prismaResponse(true, {
-        successCnt: deletedTags.count,
-        failCnt: deleteData.tagMapNoList.length - deletedTags.count,
-        failNoList: [],
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: deletedTags.count,
+          failCnt: deleteData.tagMapNoList.length - deletedTags.count,
+          failNoList: [],
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

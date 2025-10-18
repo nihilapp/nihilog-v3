@@ -32,22 +32,25 @@ export function SignInForm() {
     signIn.mutate(data);
   };
 
-  useEffect(() => {
-    setAuthCardHeader({
-      title: '로그인',
-      description: '로그인 페이지입니다.',
-    });
+  useEffect(
+    () => {
+      setAuthCardHeader({
+        title: '로그인',
+        description: '로그인 페이지입니다.',
+      });
 
-    form.trigger();
+      form.trigger();
 
-    return () => {
-      resetAuthCardHeader();
-    };
-  }, [
-    setAuthCardHeader,
-    resetAuthCardHeader,
-    form,
-  ]);
+      return () => {
+        resetAuthCardHeader();
+      };
+    },
+    [
+      setAuthCardHeader,
+      resetAuthCardHeader,
+      form,
+    ]
+  );
 
   return (
     <div className='flex flex-col gap-5'>

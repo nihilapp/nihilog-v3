@@ -33,7 +33,10 @@ export class AuthController {
     endpoint: '/signin',
     method: 'POST',
     options: {
-      throttle: [ 5, 60000, ],
+      throttle: [
+        5,
+        60000,
+      ],
       serialize: true,
     },
   })
@@ -102,9 +105,15 @@ export class AuthController {
     endpoint: '/refresh',
     method: 'POST',
     options: {
-      throttle: [ 5, 60000, ],
+      throttle: [
+        5,
+        60000,
+      ],
       serialize: true,
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
     },
   })
   async refreshToken(
@@ -114,7 +123,10 @@ export class AuthController {
     const refreshToken = req.cookies[ 'refreshToken' ];
 
     if (!refreshToken) {
-      return createError('UNAUTHORIZED', MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND);
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND
+      );
     }
 
     const result = await this.authService.refresh(refreshToken);
@@ -185,11 +197,24 @@ export class AuthController {
     }
 
     // 쿠키 정리
-    clearCookie(res, 'accessToken');
-    clearCookie(res, 'refreshToken');
-    clearCookie(res, 'accessTokenExpiresAt');
+    clearCookie(
+      res,
+      'accessToken'
+    );
+    clearCookie(
+      res,
+      'refreshToken'
+    );
+    clearCookie(
+      res,
+      'accessTokenExpiresAt'
+    );
 
-    return createResponse('SUCCESS', MESSAGE.AUTH.SIGN_OUT_SUCCESS, null);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.AUTH.SIGN_OUT_SUCCESS,
+      null
+    );
   }
 
   /**
@@ -201,7 +226,10 @@ export class AuthController {
     method: 'GET',
     options: {
       serialize: true,
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
       authGuard: 'JWT-auth',
     },
   })
@@ -209,7 +237,10 @@ export class AuthController {
     const authUser = req.user;
 
     if (!authUser) {
-      return createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.UNAUTHORIZED
+      );
     }
 
     const result = await this.authService.session(authUser.userNo);
@@ -221,7 +252,11 @@ export class AuthController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.AUTH.SESSION_GET_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.AUTH.SESSION_GET_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -234,7 +269,10 @@ export class AuthController {
     method: 'POST',
     options: {
       serialize: true,
-      roles: [ 'USER', 'ADMIN', ],
+      roles: [
+        'USER',
+        'ADMIN',
+      ],
       authGuard: 'JWT-auth',
     },
   })
@@ -245,10 +283,16 @@ export class AuthController {
     const authUser = req.user;
 
     if (!authUser) {
-      return createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED);
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.UNAUTHORIZED
+      );
     }
 
-    const result = await this.authService.changePassword(authUser.userNo, changePasswordData);
+    const result = await this.authService.changePassword(
+      authUser.userNo,
+      changePasswordData
+    );
 
     if (!result?.success) {
       return createError(
@@ -257,6 +301,10 @@ export class AuthController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.AUTH.PASSWORD_CHANGE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.AUTH.PASSWORD_CHANGE_SUCCESS,
+      result.data
+    );
   }
 }

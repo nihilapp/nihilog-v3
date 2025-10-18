@@ -71,14 +71,8 @@ const config = [
       'no-unexpected-multiline': 'off',
       'no-use-before-define': 'off',
       'spaced-comment': 'off',
-      'function-call-argument-newline': [
-        'error',
-        'consistent',
-      ],
-      'function-paren-newline': [
-        'error',
-        'consistent',
-      ],
+      'function-call-argument-newline': 'off', // @stylistic 버전 사용
+      'function-paren-newline': 'off', // @stylistic 버전 사용
       'no-multiple-empty-lines': [
         'error',
         {
@@ -179,11 +173,20 @@ const config = [
       ],
       '@stylistic/object-property-newline': [
         'error',
-        { allowAllPropertiesOnSameLine: true, },
+        { allowAllPropertiesOnSameLine: false, },
       ],
       '@stylistic/array-element-newline': [
         'error',
-        'consistent',
+        {
+          ArrayExpression: {
+            minItems: 2,
+            multiline: true,
+          },
+          ArrayPattern: {
+            minItems: 2,
+            multiline: true,
+          },
+        },
       ],
       '@stylistic/array-bracket-newline': [
         'error',
@@ -193,6 +196,13 @@ const config = [
         'error',
         'prefer-single',
       ],
+
+      // 함수 정의/호출 줄바꿈 규칙
+      // multiline: 여러 줄에 걸친 매개변수일 때 괄호도 줄바꿈
+      '@stylistic/function-paren-newline': ['error', 'multiline'],
+      // always: 각 인자를 별도 줄에 배치
+      '@stylistic/function-call-argument-newline': ['error', 'always'],
+
       // import-x 규칙
       'import-x/extensions': 'off',
       'import-x/no-extraneous-dependencies': 'off',
@@ -228,7 +238,13 @@ const config = [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-shadow': 'warn',
       '@typescript-eslint/no-use-before-define': [

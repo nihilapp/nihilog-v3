@@ -18,15 +18,26 @@ export function useGetCategoryByName(options: UseGetCategoryByNameOptions) {
 
   const query = useGet<SelectCategoryType>({
     url: [
-      'categories', 'name', name,
+      'categories',
+      'name',
+      name,
     ],
-    callback() {
-      // 성공 시 토스트 메시지는 필요에 따라 추가
+    enabled: !!name,
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
     },
     errorCallback(error) {
-      toast.error(error.message, {
-        style: getToastStyle('error'),
-      });
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
     },
     ...queryOptions,
   });

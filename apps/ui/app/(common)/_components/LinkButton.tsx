@@ -47,7 +47,13 @@ export function LinkButton({
   return (
     <Button
       asChild
-      className={cn(cssVariants({ variant, size, }), className)}
+      className={cn(
+        cssVariants({
+          variant,
+          size,
+        }),
+        className
+      )}
     >
       <Link href={href} {...props}>
         {children}

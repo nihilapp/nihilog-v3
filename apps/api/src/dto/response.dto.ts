@@ -63,7 +63,11 @@ export class MultipleResultDto {
 
   @ApiProperty({
     description: '실패 번호 목록',
-    example: [ 1, 2, 3, ],
+    example: [
+      1,
+      2,
+      3,
+    ],
   })
   declare failNoList: number[];
 }
@@ -119,7 +123,11 @@ export class MutationResponseDto {
 
   @ApiProperty({
     description: '영향받은 행 번호 목록',
-    example: [ 1, 2, 3, ],
+    example: [
+      1,
+      2,
+      3,
+    ],
   })
   declare affectedRows: number[];
 }

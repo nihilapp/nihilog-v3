@@ -14,15 +14,24 @@ interface UseGetUserProfileOptions extends QueryOptionType<SelectUserInfoType> {
 export function useGetUserProfile(options: UseGetUserProfileOptions = {}) {
   const query = useGet<SelectUserInfoType>({
     url: [
-      'users', 'profile',
+      'users',
+      'profile',
     ],
-    callback() {
-      // 성공 시 토스트 메시지는 필요에 따라 추가
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
     },
     errorCallback(error) {
-      toast.error(error.message, {
-        style: getToastStyle('error'),
-      });
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
     },
     ...options,
   });

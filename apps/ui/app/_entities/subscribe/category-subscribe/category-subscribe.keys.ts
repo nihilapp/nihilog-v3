@@ -1,40 +1,41 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import type { SearchCategorySubscribeType } from '@/_schemas/category-subscribe.schema';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
- * 카테고리 구독 관련 쿼리 키 정의
+ * 카테고리 구독 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * 카테고리 구독 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const categorySubscribeKeys = createQueryKeys('categorySubscribe', {
-  // ===== GET Queries =====
-  search: (searchData: SearchCategorySubscribeType) => [
-    'users', 'subscribes', 'categories', 'search', searchData,
-  ], // 카테고리 구독 목록 조회 (POST)
-  byNo: (ctgryNo: number, params: SearchCategorySubscribeType) => [
-    'users', 'subscribes', 'categories', ctgryNo, 'search', params,
-  ], // 특정 카테고리 구독 상태 조회 (POST)
+export function useInvalidateCategorySubscribeCache() {
+  const queryClient = useQueryClient();
 
-  // ===== POST Mutations =====
-  create: (ctgryNo: number) => [
-    'users', 'subscribes', 'categories', 'create', ctgryNo,
-  ], // 카테고리 구독 설정
-  createMultiple: () => [
-    'users', 'subscribes', 'categories', 'create', 'multiple',
-  ], // 다수 카테고리 일괄 구독
+  return () => {
+    // 1. users/subscribes/categories로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'users',
+        'subscribes',
+        'categories',
+      ],
+    });
 
-  // ===== PUT Mutations =====
-  update: (ctgrySbcrNo: number) => [
-    'users', 'subscribes', 'categories', 'update', ctgrySbcrNo,
-  ], // 카테고리 구독 설정 변경
-  updateMultiple: () => [
-    'users', 'subscribes', 'categories', 'update', 'multiple',
-  ], // 다수 카테고리 구독 설정 일괄 변경
+    // 2. admin/subscribes로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'subscribes',
+      ],
+    });
 
-  // ===== DELETE Mutations =====
-  delete: (ctgrySbcrNo: number) => [
-    'users', 'subscribes', 'categories', 'delete', ctgrySbcrNo,
-  ], // 카테고리 구독 해제
-  deleteMultiple: () => [
-    'users', 'subscribes', 'categories', 'delete', 'multiple',
-  ], // 다수 카테고리 구독 일괄 해제
-});
+    // 3. categories로 시작하는 모든 쿼리 무효화 (구독 상태 변경 시)
+    queryClient.invalidateQueries({
+      queryKey: [ 'categories', ],
+    });
+
+    // 4. admin/categories로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'categories',
+      ],
+    });
+  };
+}

@@ -20,7 +20,12 @@ export class CategoriesService {
     const safeData = searchCategorySchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
     return this.categoryRepository.getCategoryList(safeData.data);

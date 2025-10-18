@@ -9,14 +9,18 @@ import type { FastifyReply } from 'fastify';
  * @param httpOnly 쿠키 접근 권한
  */
 export function setCookie(res: FastifyReply, name: string, value: string, maxAge: number, httpOnly: boolean = true) {
-  res.setCookie(name, value, {
-    httpOnly,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    domain: 'localhost', // localhost 도메인으로 설정
-    path: '/', // 경로 설정
-    maxAge: maxAge * 60 * 1000, // 쿠키 만료 시간
-  });
+  res.setCookie(
+    name,
+    value,
+    {
+      httpOnly,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      domain: 'localhost', // localhost 도메인으로 설정
+      path: '/', // 경로 설정
+      maxAge: maxAge * 60 * 1000, // 쿠키 만료 시간
+    }
+  );
 }
 
 /**
@@ -26,10 +30,13 @@ export function setCookie(res: FastifyReply, name: string, value: string, maxAge
  * @param path 쿠키 경로 (기본값: '/')
  */
 export function clearCookie(res: FastifyReply, name: string, path: string = '/') {
-  res.clearCookie(name, {
-    path,
-    domain: 'localhost', // localhost 도메인으로 설정
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-  });
+  res.clearCookie(
+    name,
+    {
+      path,
+      domain: 'localhost', // localhost 도메인으로 설정
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    }
+  );
 }

@@ -62,7 +62,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ANALYZE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.ANALYZE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -87,7 +91,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.ACTIVE_USER_ANALYSIS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -103,7 +111,10 @@ export class AdminUserController {
     },
   })
   async getTopUsersByContribution(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByContributionItemType[]>> {
-    const result = await this.usersService.getTopUsersByContribution(analyzeStatData.limit || 10, analyzeStatData);
+    const result = await this.usersService.getTopUsersByContribution(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
 
     if (!result?.success) {
       return createError(
@@ -112,7 +123,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.TOP_CONTRIBUTION_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -128,7 +143,10 @@ export class AdminUserController {
     },
   })
   async getTopUsersByPostCount(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByPostCountItemType[]>> {
-    const result = await this.usersService.getTopUsersByPostCount(analyzeStatData.limit || 10, analyzeStatData);
+    const result = await this.usersService.getTopUsersByPostCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
 
     if (!result?.success) {
       return createError(
@@ -137,7 +155,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.TOP_POST_COUNT_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -153,7 +175,10 @@ export class AdminUserController {
     },
   })
   async getTopUsersByCommentCount(@Query() analyzeStatData: AnalyzeStatDto): Promise<ResponseDto<TopUsersByCommentCountItemType[]>> {
-    const result = await this.usersService.getTopUsersByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
+    const result = await this.usersService.getTopUsersByCommentCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
 
     if (!result?.success) {
       return createError(
@@ -162,7 +187,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.TOP_COMMENT_COUNT_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -186,7 +215,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.ROLE_DISTRIBUTION_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -210,7 +243,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.STATUS_DISTRIBUTION_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -235,7 +272,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.INACTIVE_USERS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.INACTIVE_USERS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -260,7 +301,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.GROWTH_RATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.GROWTH_RATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -285,7 +330,11 @@ export class AdminUserController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.STATISTICS.RETENTION_RATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.STATISTICS.RETENTION_RATE_SUCCESS,
+      result.data
+    );
   }
 
   // ========================================================
@@ -316,10 +365,17 @@ export class AdminUserController {
     const result = await this.usersService.getUserList(searchData);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.SEARCH_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.SEARCH_ERROR
+      );
     }
 
-    return removeSensitiveInfoFromListResponse(createResponse('SUCCESS', MESSAGE.USER.USER.SEARCH_SUCCESS, result.data));
+    return removeSensitiveInfoFromListResponse(createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.SEARCH_SUCCESS,
+      result.data
+    ));
   }
 
   /**
@@ -346,12 +402,19 @@ export class AdminUserController {
     const result = await this.usersService.getUserByNo(userNo);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || MESSAGE.USER.USER.NOT_FOUND);
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
+      );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.FETCH_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -378,12 +441,19 @@ export class AdminUserController {
     const result = await this.usersService.getUserByNm(name);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || MESSAGE.USER.USER.NOT_FOUND);
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
+      );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.FETCH_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -410,12 +480,19 @@ export class AdminUserController {
     const result = await this.usersService.getUserByEmail(email);
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'NOT_FOUND', result?.error?.message || MESSAGE.USER.USER.NOT_FOUND);
+      return createError(
+        result?.error?.code || 'NOT_FOUND',
+        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
+      );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.FETCH_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.FETCH_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -439,15 +516,25 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.createUser(req.user, createUserData);
+    const result = await this.usersService.createUser(
+      req.user,
+      createUserData
+    );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR
+      );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, userToReturn);
+    return createResponse(
+      'CREATED',
+      MESSAGE.USER.USER.CREATE_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -464,21 +551,37 @@ export class AdminUserController {
   async adminSignup(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     // 개발 환경이 아니면 접근 거부
     if (process.env.NODE_ENV !== 'development') {
-      return createError('FORBIDDEN', MESSAGE.COMMON.DEVELOPMENT_ONLY);
+      return createError(
+        'FORBIDDEN',
+        MESSAGE.COMMON.DEVELOPMENT_ONLY
+      );
     }
 
     // 최초 어드민 생성 (req.user 없이)
-    const result = await this.usersService.createUser(null, createUserData);
+    const result = await this.usersService.createUser(
+      null,
+      createUserData
+    );
 
-    console.log('result', result);
+    console.log(
+      'result',
+      result
+    );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.CREATE_ERROR
+      );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('CREATED', MESSAGE.USER.USER.CREATE_SUCCESS, userToReturn);
+    return createResponse(
+      'CREATED',
+      MESSAGE.USER.USER.CREATE_SUCCESS,
+      userToReturn
+    );
   }
 
   /**
@@ -504,15 +607,26 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.updateUser(req.user.userNo, userNo, updateUserData);
+    const result = await this.usersService.updateUser(
+      req.user.userNo,
+      userNo,
+      updateUserData
+    );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR
+      );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, userToReturn);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.UPDATE_SUCCESS,
+      userToReturn
+    );
   }
 
   // TODO: 여기서부터 다시 진행할 것
@@ -538,13 +652,23 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.multipleUpdateUser(req.user.userNo, updateUserDto);
+    const result = await this.usersService.multipleUpdateUser(
+      req.user.userNo,
+      updateUserDto
+    );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR
+      );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -574,10 +698,17 @@ export class AdminUserController {
     );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.DELETE_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.DELETE_ERROR
+      );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.DELETE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -601,12 +732,22 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
-    const result = await this.usersService.adminMultipleDeleteUser(req.user.userNo, body.userNoList);
+    const result = await this.usersService.adminMultipleDeleteUser(
+      req.user.userNo,
+      body.userNoList
+    );
 
     if (!result?.success) {
-      return createError(result?.error?.code || 'INTERNAL_SERVER_ERROR', result?.error?.message || MESSAGE.USER.USER.DELETE_ERROR);
+      return createError(
+        result?.error?.code || 'INTERNAL_SERVER_ERROR',
+        result?.error?.message || MESSAGE.USER.USER.DELETE_ERROR
+      );
     }
 
-    return createResponse('SUCCESS', MESSAGE.USER.USER.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.USER.USER.DELETE_SUCCESS,
+      result.data
+    );
   }
 }

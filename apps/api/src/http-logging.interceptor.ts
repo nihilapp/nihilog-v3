@@ -86,7 +86,10 @@ export class HttpLoggingInterceptor implements NestInterceptor {
         ? ` | Content-Type: ${contentType}`
         : '')
       + (userAgent
-        ? ` | User-Agent: ${userAgent.substring(0, 100)}${userAgent.length > 100
+        ? ` | User-Agent: ${userAgent.substring(
+          0,
+          100
+        )}${userAgent.length > 100
           ? '...'
           : ''}`
         : '')
@@ -108,7 +111,10 @@ export class HttpLoggingInterceptor implements NestInterceptor {
           ? ' 🔧 Swagger'
           : ''}`
           + (responseData && typeof responseData === 'object'
-            ? ` | Response: ${JSON.stringify(responseData).substring(0, 500)}${JSON.stringify(responseData).length > 500
+            ? ` | Response: ${JSON.stringify(responseData).substring(
+              0,
+              500
+            )}${JSON.stringify(responseData).length > 500
               ? '...'
               : ''}`
             : ''

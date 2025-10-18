@@ -59,7 +59,10 @@ export class AdminCategoriesController {
     @Query() analyzeStatData: AnalyzeStatDto,
     @Query('ctgryNo') ctgryNo?: number
   ): Promise<ResponseDto<AnalyzeCategoryStatItemType[]>> {
-    const result = await this.adminCategoriesService.adminGetAnalyzeCategoryData(analyzeStatData, ctgryNo);
+    const result = await this.adminCategoriesService.adminGetAnalyzeCategoryData(
+      analyzeStatData,
+      ctgryNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -68,7 +71,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.ANALYZE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.ANALYZE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -93,7 +100,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -118,7 +129,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -143,7 +158,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -168,7 +187,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -192,7 +215,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -216,7 +243,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -240,7 +271,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -264,7 +299,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -288,7 +327,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -312,7 +355,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -337,7 +384,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -361,7 +412,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.STATISTICS_SUCCESS,
+      result.data
+    );
   }
 
   // ========================================================
@@ -386,7 +441,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.SEARCH_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.SEARCH_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -407,7 +466,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.GET_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -428,7 +491,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.GET_BY_NAME_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -449,7 +516,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -470,7 +541,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -483,7 +558,10 @@ export class AdminCategoriesController {
     method: 'PATCH',
   })
   async adminUpdateCategory(@Param('ctgryNo') ctgryNo: number, @Body() updateData: UpdateCategoryDto): Promise<ResponseDto<SelectCategoryType>> {
-    const result = await this.adminCategoriesService.adminUpdateCategory(ctgryNo, updateData);
+    const result = await this.adminCategoriesService.adminUpdateCategory(
+      ctgryNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -492,7 +570,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -513,7 +595,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.MULTIPLE_UPDATE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -534,7 +620,11 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.DELETE_SUCCESS,
+      result.data
+    );
   }
 
   /**
@@ -555,6 +645,10 @@ export class AdminCategoriesController {
       );
     }
 
-    return createResponse('SUCCESS', MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_SUCCESS, result.data);
+    return createResponse(
+      'SUCCESS',
+      MESSAGE.CATEGORY.ADMIN.MULTIPLE_DELETE_SUCCESS,
+      result.data
+    );
   }
 }

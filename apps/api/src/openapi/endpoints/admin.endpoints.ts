@@ -32,27 +32,43 @@ export const registerAdminEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '프로필 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.USER.PROFILE.UPDATE_SUCCESS, CreateExample.user('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '프로필 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '관리자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.USER.USER.ADMIN_NOT_FOUND
+                  ),
+                },
+                conflict: {
+                  summary: '사용자명 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.USER.USER.NAME_EXISTS
+                  ),
+                },
+                error: {
+                  summary: '프로필 업데이트 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.PROFILE.UPDATE_ERROR
+                  ),
+                },
               },
-              notFound: {
-                summary: '관리자를 찾을 수 없음',
-                value: createError('NOT_FOUND', MESSAGE.USER.USER.ADMIN_NOT_FOUND),
-              },
-              conflict: {
-                summary: '사용자명 중복',
-                value: createError('CONFLICT', MESSAGE.USER.USER.NAME_EXISTS),
-              },
-              error: {
-                summary: '프로필 업데이트 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.USER.PROFILE.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

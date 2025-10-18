@@ -1,40 +1,41 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import type { SearchTagSubscribeType } from '@/_schemas/tag-subscribe.schema';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
- * 태그 구독 관련 쿼리 키 정의
+ * 태그 구독 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * 태그 구독 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const tagSubscribeKeys = createQueryKeys('tagSubscribe', {
-  // ===== GET Queries =====
-  search: (searchData: SearchTagSubscribeType) => [
-    'users', 'subscribes', 'tags', 'search', searchData,
-  ], // 태그 구독 목록 조회 (POST)
-  byNo: (tagNo: number, params: SearchTagSubscribeType) => [
-    'users', 'subscribes', 'tags', tagNo, 'search', params,
-  ], // 특정 태그 구독 상태 조회 (POST)
+export function useInvalidateTagSubscribeCache() {
+  const queryClient = useQueryClient();
 
-  // ===== POST Mutations =====
-  create: (tagNo: number) => [
-    'users', 'subscribes', 'tags', 'create', tagNo,
-  ], // 태그 구독 설정
-  createMultiple: () => [
-    'users', 'subscribes', 'tags', 'create', 'multiple',
-  ], // 다수 태그 일괄 구독
+  return () => {
+    // 1. users/subscribes/tags로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'users',
+        'subscribes',
+        'tags',
+      ],
+    });
 
-  // ===== PUT Mutations =====
-  update: (tagSbcrNo: number) => [
-    'users', 'subscribes', 'tags', 'update', tagSbcrNo,
-  ], // 태그 구독 설정 변경
-  updateMultiple: () => [
-    'users', 'subscribes', 'tags', 'update', 'multiple',
-  ], // 다수 태그 구독 설정 일괄 변경
+    // 2. admin/subscribes로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'subscribes',
+      ],
+    });
 
-  // ===== DELETE Mutations =====
-  delete: (tagSbcrNo: number) => [
-    'users', 'subscribes', 'tags', 'delete', tagSbcrNo,
-  ], // 태그 구독 해제
-  deleteMultiple: () => [
-    'users', 'subscribes', 'tags', 'delete', 'multiple',
-  ], // 다수 태그 구독 일괄 해제
-});
+    // 3. tags로 시작하는 모든 쿼리 무효화 (구독 상태 변경 시)
+    queryClient.invalidateQueries({
+      queryKey: [ 'tags', ],
+    });
+
+    // 4. admin/tags로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'tags',
+      ],
+    });
+  };
+}

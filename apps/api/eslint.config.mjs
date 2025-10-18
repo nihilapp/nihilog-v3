@@ -99,8 +99,8 @@ const baseConfig = [
       'camelcase': 'off',
       'no-empty-pattern': 'off',
       'no-underscore-dangle': 'off',
-      'function-call-argument-newline': 'off',
-      'function-paren-newline': 'off',
+      'function-call-argument-newline': 'off', // @stylistic 버전 사용
+      'function-paren-newline': 'off', // @stylistic 버전 사용
 
       // import-x 규칙 (전역)
       'import-x/extensions': 'off',
@@ -149,9 +149,32 @@ const baseConfig = [
           ExportDeclaration: { multiline: true, consistent: true },
         },
       ],
-      '@stylistic/array-element-newline': 'off',
-      '@stylistic/array-bracket-newline': 'off',
-      '@stylistic/object-property-newline': 'off',
+      '@stylistic/array-element-newline': [
+        'error',
+        {
+          ArrayExpression: {
+            minItems: 2,
+            multiline: true,
+          },
+          ArrayPattern: {
+            minItems: 2,
+            multiline: true,
+          },
+        },
+      ],
+      '@stylistic/array-bracket-newline': [
+        'error',
+        {
+          minItems: 2,
+          multiline: true,
+        },
+      ],
+      '@stylistic/object-property-newline': [
+        'error',
+        {
+          allowAllPropertiesOnSameLine: false,
+        },
+      ],
       '@stylistic/comma-dangle': [
         'warn',
         {
@@ -187,8 +210,10 @@ const baseConfig = [
       ],
 
       // 함수 정의/호출 줄바꿈 규칙
+      // multiline: 여러 줄에 걸친 매개변수일 때 괄호도 줄바꿈
       '@stylistic/function-paren-newline': ['error', 'multiline'],
-      '@stylistic/function-call-argument-newline': ['error', 'consistent'],
+      // always: 각 인자를 별도 줄에 배치
+      '@stylistic/function-call-argument-newline': ['error', 'always'],
 
       // typescript-eslint 규칙
       '@typescript-eslint/no-unsafe-assignment': 'off',

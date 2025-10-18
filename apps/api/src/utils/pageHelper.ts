@@ -2,9 +2,13 @@ export function pageHelper(
   page?: number,
   strtRow?: number,
   endRow?: number
-): { limit: number | undefined; offset: number | undefined } {
+): { limit: number | undefined;
+  offset: number | undefined; } {
   if (page == null || endRow == null) {
-    return { limit: undefined, offset: undefined, };
+    return {
+      limit: undefined,
+      offset: undefined,
+    };
   }
 
   const pagination = {

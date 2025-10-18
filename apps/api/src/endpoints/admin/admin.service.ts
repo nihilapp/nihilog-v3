@@ -36,7 +36,12 @@ export class AdminService {
 
       if (existingUser?.success && existingUser.data && existingUser.data.userNo !== authUser.userNo) {
         // 중복된 사용자명 - prismaResponse 사용
-        return prismaResponse(false, null, 'CONFLICT', MESSAGE.USER.USER.NAME_EXISTS);
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.USER.USER.NAME_EXISTS
+        );
       }
     }
 

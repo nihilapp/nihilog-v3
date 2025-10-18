@@ -26,19 +26,17 @@ const initialState = {
 };
 
 // Categories 스토어 생성
-export const useCategoriesStore = create<CategoriesState>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+export const useCategoriesStore = create<CategoriesState>()(devtools(
+  (set) => ({
+    ...initialState,
 
-      setSelectedCategory: (categoryId) => set({ selectedCategory: categoryId, }),
-      setCreating: (isCreating) => set({ isCreating, }),
-      setUpdating: (isUpdating) => set({ isUpdating, }),
-      setDeleting: (isDeleting) => set({ isDeleting, }),
-      reset: () => set(initialState),
-    }),
-    {
-      name: 'categories-store',
-    }
-  )
-);
+    setSelectedCategory: (categoryId) => set({ selectedCategory: categoryId, }),
+    setCreating: (isCreating) => set({ isCreating, }),
+    setUpdating: (isUpdating) => set({ isUpdating, }),
+    setDeleting: (isDeleting) => set({ isDeleting, }),
+    reset: () => set(initialState),
+  }),
+  {
+    name: 'categories-store',
+  }
+));

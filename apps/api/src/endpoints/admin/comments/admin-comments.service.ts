@@ -31,7 +31,10 @@ export class AdminCommentsService {
    * @param pstNo 포스트 번호 (선택적)
    */
   async adminGetAnalyzeCommentData(analyzeStatData: AnalyzeStatDto, pstNo?: number): Promise<RepoResponseType<AnalyzeCommentStatItemType[]> | null> {
-    return this.commentRepository.getAnalyzeCommentData(analyzeStatData, pstNo);
+    return this.commentRepository.getAnalyzeCommentData(
+      analyzeStatData,
+      pstNo
+    );
   }
 
   /**
@@ -39,7 +42,10 @@ export class AdminCommentsService {
    * @param analyzeStatData 분석 통계 데이터
    */
   async adminGetTopPostsByCommentCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopPostsByCommentItemType[]> | null> {
-    return this.commentRepository.getTopPostsByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
+    return this.commentRepository.getTopPostsByCommentCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
   }
 
   /**
@@ -47,7 +53,10 @@ export class AdminCommentsService {
    * @param analyzeStatData 분석 통계 데이터
    */
   async adminGetTopUsersByCommentCount(analyzeStatData: AnalyzeStatDto): Promise<RepoResponseType<TopUsersByCommentItemType[]> | null> {
-    return this.commentRepository.getTopUsersByCommentCount(analyzeStatData.limit || 10, analyzeStatData);
+    return this.commentRepository.getTopUsersByCommentCount(
+      analyzeStatData.limit || 10,
+      analyzeStatData
+    );
   }
 
   /**
@@ -114,7 +123,10 @@ export class AdminCommentsService {
    * @param updateData 수정 데이터
    */
   async adminMultipleUpdateComment(userNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.commentRepository.multipleUpdateComment(userNo, updateData);
+    return this.commentRepository.multipleUpdateComment(
+      userNo,
+      updateData
+    );
   }
 
   /**
@@ -123,6 +135,9 @@ export class AdminCommentsService {
    * @param deleteData 삭제 데이터
    */
   async adminMultipleDeleteComment(userNo: number, deleteData: DeleteCommentDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.commentRepository.multipleDeleteComment(userNo, deleteData);
+    return this.commentRepository.multipleDeleteComment(
+      userNo,
+      deleteData
+    );
   }
 }

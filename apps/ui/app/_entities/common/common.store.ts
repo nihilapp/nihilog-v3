@@ -24,11 +24,14 @@ const createCommonSlice: StateCreator<
   },
 });
 
-const useCommonStore = create<CommonState>()(persist(immer(createCommonSlice), {
-  name: 'common-storage',
-  storage: createJSONStorage(() => localStorage),
-  partialize: (state) => ({ word: state.word, }),
-}));
+const useCommonStore = create<CommonState>()(persist(
+  immer(createCommonSlice),
+  {
+    name: 'common-storage',
+    storage: createJSONStorage(() => localStorage),
+    partialize: (state) => ({ word: state.word, }),
+  }
+));
 
 export const useWord = () => useCommonStore((state) => state.word);
 

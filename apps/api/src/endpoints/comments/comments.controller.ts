@@ -82,7 +82,10 @@ export class CommentsController {
       return req.errorResponse;
     }
 
-    const result = await this.commentsService.createComment(req.user.userNo, createData);
+    const result = await this.commentsService.createComment(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -118,7 +121,10 @@ export class CommentsController {
       return req.errorResponse;
     }
 
-    const result = await this.commentsService.updateComment(req.user.userNo, updateData);
+    const result = await this.commentsService.updateComment(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -154,7 +160,10 @@ export class CommentsController {
       return req.errorResponse;
     }
 
-    const result = await this.commentsService.deleteComment(req.user.userNo, deleteData);
+    const result = await this.commentsService.deleteComment(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(

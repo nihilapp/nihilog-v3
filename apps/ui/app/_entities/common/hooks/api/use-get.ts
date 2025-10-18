@@ -5,15 +5,16 @@ import { useQuery } from '@tanstack/react-query';
 import type { QueryOptionType, OkType } from '@/_entities/common/common.types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
+import type { ErrorType } from '@/_types';
 
 interface UseGetOptions<TData = unknown> extends QueryOptionType<TData> {
   url: string[];
   params?: Record<string, any>;
   body?: Record<string, any>;
   ttl?: number;
-  enable?: boolean;
+  enabled?: boolean;
   callback?: (response: OkType<TData>) => void;
-  errorCallback?: (error: any) => void;
+  errorCallback?: (error: ErrorType) => void;
 }
 
 /**
@@ -26,7 +27,7 @@ export function useGet<TData = unknown>(options: UseGetOptions<TData>) {
     params = {},
     body = {},
     ttl = 60,
-    enable = true,
+    enabled = true,
     callback,
     errorCallback,
     ...queryOptions
@@ -43,21 +44,29 @@ export function useGet<TData = unknown>(options: UseGetOptions<TData>) {
 
   const query = useQuery({
     queryKey: [
-      fullUrl, params, body,
+      fullUrl,
+      params,
+      body,
     ],
     queryFn: async () => {
       const response = await Api.get<TData>(finalUrl);
       return response.data;
     },
-    enabled: enable,
+    enabled,
     staleTime: ttl * 60 * 1000, // 분을 밀리초로 변환
     gcTime: ttl * 60 * 1000, // 분을 밀리초로 변환
     ...queryOptions,
   });
 
   // loading과 done 상태 계산
-  const loading = useLoading(query.isLoading, query.isFetching);
-  const done = useDone(loading, query.isSuccess);
+  const loading = useLoading(
+    query.isLoading,
+    query.isFetching
+  );
+  const done = useDone(
+    loading,
+    query.isSuccess
+  );
 
   // 콜백 실행
   if (query.data && callback) {
@@ -65,7 +74,7 @@ export function useGet<TData = unknown>(options: UseGetOptions<TData>) {
   }
 
   if (query.error && errorCallback) {
-    errorCallback(query.error);
+    errorCallback(query.error as ErrorType);
   }
 
   return {

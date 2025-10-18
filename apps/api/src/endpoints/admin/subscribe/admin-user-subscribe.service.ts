@@ -73,7 +73,12 @@ export class AdminSubscribeService {
     const safeData = searchSubscribeSchema.safeParse(searchData);
 
     if (!safeData.success) {
-      return prismaResponse(false, null, 'BAD_REQUEST', MESSAGE.COMMON.INVALID_REQUEST);
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.COMMON.INVALID_REQUEST
+      );
     }
 
     return this.subscribeRepository.getSubscribeList(safeData.data);
@@ -99,10 +104,18 @@ export class AdminSubscribeService {
     const findSubscribe = await this.getUserSubscribeByUserNo(createData.userNo);
 
     if (findSubscribe?.success && findSubscribe.data) {
-      return prismaResponse(false, null, 'CONFLICT', MESSAGE.SUBSCRIBE.ADMIN.ALREADY_EXISTS);
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.SUBSCRIBE.ADMIN.ALREADY_EXISTS
+      );
     }
 
-    return this.subscribeRepository.createUserSubscribe(adminNo, createData);
+    return this.subscribeRepository.createUserSubscribe(
+      adminNo,
+      createData
+    );
   }
 
   /**
@@ -111,7 +124,10 @@ export class AdminSubscribeService {
    * @param updateData 구독 설정 일괄 수정 데이터
    */
   async adminMultipleUpdateUserSubscribe(adminNo: number, updateData: UpdateSubscribeDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    return this.subscribeRepository.multipleUpdateUserSubscribe(adminNo, updateData);
+    return this.subscribeRepository.multipleUpdateUserSubscribe(
+      adminNo,
+      updateData
+    );
   }
 
   /**
@@ -120,7 +136,10 @@ export class AdminSubscribeService {
    * @param sbcrNo 구독 번호
    */
   async adminDeleteUserSubscribe(adminNo: number, sbcrNo: number): Promise<RepoResponseType<boolean> | null> {
-    return this.subscribeRepository.deleteUserSubscribe(adminNo, sbcrNo);
+    return this.subscribeRepository.deleteUserSubscribe(
+      adminNo,
+      sbcrNo
+    );
   }
 
   /**
@@ -136,6 +155,9 @@ export class AdminSubscribeService {
       return null;
     }
 
-    return this.subscribeRepository.multipleDeleteUserSubscribe(adminNo, deleteData.sbcrNoList);
+    return this.subscribeRepository.multipleDeleteUserSubscribe(
+      adminNo,
+      deleteData.sbcrNoList
+    );
   }
 }

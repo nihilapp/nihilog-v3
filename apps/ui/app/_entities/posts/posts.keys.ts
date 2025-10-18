@@ -1,48 +1,58 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import type { SearchPostType } from '@/_schemas/post.schema';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
- * 포스트 관련 쿼리 키 정의
+ * 포스트 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * 포스트 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const postsKeys = createQueryKeys('posts', {
-  // ===== GET Queries =====
-  search: (params: SearchPostType) => [
-    'posts', 'search', params,
-  ], // 포스트 목록 조회 (POST /posts/search)
-  byNo: (pstNo: number) => [
-    'posts', 'by-no', pstNo,
-  ], // 포스트 번호로 조회
-  bySlug: (pstCd: string) => [
-    'posts', 'by-slug', pstCd,
-  ], // 포스트 슬러그로 조회
-  listByTag: (tagNo: number, params: SearchPostType) => [
-    'posts', 'list', 'tag', tagNo, params,
-  ], // 태그별 포스트 목록
-  listByCategory: (ctgryNo: number, params: SearchPostType) => [
-    'posts', 'list', 'category', ctgryNo, params,
-  ], // 카테고리별 포스트 목록
-  listByArchive: (date: string, params: SearchPostType) => [
-    'posts', 'list', 'archive', date, params,
-  ], // 년월별 포스트 목록
-  advancedSearch: (params: SearchPostType) => [
-    'posts', 'advanced-search', params,
-  ], // 고급 검색 포스트 목록
-  bookmarked: (params: SearchPostType) => [
-    'posts', 'bookmarked', params,
-  ], // 북마크한 포스트 목록
+export function useInvalidatePostsCache() {
+  const queryClient = useQueryClient();
 
-  // ===== POST Mutations =====
-  createViewLog: (pstNo: number) => [
-    'posts', 'create', 'view-log', pstNo,
-  ], // 조회 로그 기록
-  createShareLog: (pstNo: number) => [
-    'posts', 'create', 'share-log', pstNo,
-  ], // 공유 로그 기록
-  createBookmark: (pstNo: number) => [
-    'posts', 'create', 'bookmark', pstNo,
-  ], // 북마크 생성
-  deleteBookmark: (pstNo: number) => [
-    'posts', 'delete', 'bookmark', pstNo,
-  ], // 북마크 삭제
-});
+  return () => {
+    // 1. posts로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [ 'posts', ],
+    });
+
+    // 2. admin/posts로 시작하는 모든 쿼리 무효화 (관리자 관련)
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'posts',
+      ],
+    });
+
+    // 3. 관련 엔티티들도 무효화
+    queryClient.invalidateQueries({
+      queryKey: [ 'categories', ],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [ 'tags', ],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [ 'comments', ],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [ 'users', ],
+    });
+  };
+}
+
+/**
+ * 포스트 북마크 관련 캐시 무효화 로직
+ */
+export function useInvalidatePostsBookmarkCache() {
+  const queryClient = useQueryClient();
+
+  return () => {
+    // 북마크 관련 쿼리들 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'posts',
+        'bookmarked',
+      ],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [ 'posts', ],
+    });
+  };
+}

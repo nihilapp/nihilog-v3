@@ -68,7 +68,10 @@ export class SubscribeRepository {
         FROM subscription_stats
       `;
 
-      return prismaResponse(true, analyzeData);
+      return prismaResponse(
+        true,
+        analyzeData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -119,7 +122,10 @@ export class SubscribeRepository {
         FROM notification_stats
       `;
 
-      return prismaResponse(true, distributionData);
+      return prismaResponse(
+        true,
+        distributionData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -146,7 +152,10 @@ export class SubscribeRepository {
         FROM nihilog.user_sbcr_info
       `;
 
-      return prismaResponse(true, activeUsersData);
+      return prismaResponse(
+        true,
+        activeUsersData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -173,7 +182,10 @@ export class SubscribeRepository {
         FROM nihilog.user_sbcr_info
       `;
 
-      return prismaResponse(true, inactiveUsersData);
+      return prismaResponse(
+        true,
+        inactiveUsersData
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -204,7 +216,10 @@ export class SubscribeRepository {
         },
       });
 
-      return prismaResponse(true, subscribe);
+      return prismaResponse(
+        true,
+        subscribe
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -240,7 +255,10 @@ export class SubscribeRepository {
         },
       });
 
-      return prismaResponse(true, updateSubscribe);
+      return prismaResponse(
+        true,
+        updateSubscribe
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -289,10 +307,21 @@ export class SubscribeRepository {
         }),
       };
 
-      const skip = pageHelper(page, strtRow, endRow).offset;
-      const take = pageHelper(page, strtRow, endRow).limit;
+      const skip = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).offset;
+      const take = pageHelper(
+        page,
+        strtRow,
+        endRow
+      ).limit;
 
-      const [ list, totalCnt, ] = await this.prisma.$transaction([
+      const [
+        list,
+        totalCnt,
+      ] = await this.prisma.$transaction([
         this.prisma.userSbcrInfo.findMany({
           where,
           include: {
@@ -331,14 +360,17 @@ export class SubscribeRepository {
         }),
       ]);
 
-      return prismaResponse(true, {
-        list: list.map((item, index) => ({
-          ...item,
+      return prismaResponse(
+        true,
+        {
+          list: list.map((item, index) => ({
+            ...item,
+            totalCnt,
+            rowNo: skip + index + 1,
+          })),
           totalCnt,
-          rowNo: skip + index + 1,
-        })),
-        totalCnt,
-      });
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -376,7 +408,10 @@ export class SubscribeRepository {
         },
       });
 
-      return prismaResponse(true, result);
+      return prismaResponse(
+        true,
+        result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -418,11 +453,14 @@ export class SubscribeRepository {
       const failNoList = sbcrNoList
         .filter((item) => !result.some((resultItem) => resultItem.sbcrNo === item));
 
-      return prismaResponse(true, {
-        successCnt: result.length,
-        failCnt: failNoList.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: result.length,
+          failCnt: failNoList.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -453,7 +491,10 @@ export class SubscribeRepository {
         },
       });
 
-      return prismaResponse(true, !!result);
+      return prismaResponse(
+        true,
+        !!result
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);
@@ -496,11 +537,14 @@ export class SubscribeRepository {
       const failNoList = sbcrNoList
         .filter((item) => !result.some((resultItem) => resultItem.sbcrNo === item));
 
-      return prismaResponse(true, {
-        successCnt: result.length,
-        failCnt: failNoList.length,
-        failNoList,
-      });
+      return prismaResponse(
+        true,
+        {
+          successCnt: result.length,
+          failCnt: failNoList.length,
+          failNoList,
+        }
+      );
     }
     catch (error) {
       return prismaError(error as PrismaClientKnownRequestError);

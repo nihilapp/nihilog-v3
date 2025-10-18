@@ -39,19 +39,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트 분석 데이터 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.analyzePost(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트 분석 데이터 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.analyzePost(), ]
+                  ),
+                },
+                error: {
+                  summary: '포스트 분석 데이터 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트 분석 데이터 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -86,19 +96,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '플랫폼별 공유 통계 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.sharePlatformStat(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '플랫폼별 공유 통계 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.sharePlatformStat(), ]
+                  ),
+                },
+                error: {
+                  summary: '플랫폼별 공유 통계 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '플랫폼별 공유 통계 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -122,19 +142,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트별 평균 조회수 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.averageViewStat(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트별 평균 조회수 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.averageViewStat(), ]
+                  ),
+                },
+                error: {
+                  summary: '포스트별 평균 조회수 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트별 평균 조회수 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -158,19 +188,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트당 평균 북마크 수 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.averageBookmarkStat(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트당 평균 북마크 수 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.averageBookmarkStat(), ]
+                  ),
+                },
+                error: {
+                  summary: '포스트당 평균 북마크 수 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트당 평균 북마크 수 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -194,19 +234,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '인기 포스트 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.topPopularPost(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '인기 포스트 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.topPopularPost(), ]
+                  ),
+                },
+                error: {
+                  summary: '인기 포스트 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '인기 포스트 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -230,19 +280,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '댓글 많은 포스트 TOP N 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.topCommentPost(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '댓글 많은 포스트 TOP N 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.topCommentPost(), ]
+                  ),
+                },
+                error: {
+                  summary: '댓글 많은 포스트 TOP N 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '댓글 많은 포스트 TOP N 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -266,19 +326,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트 상태 비율 조회 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.STATISTICS_SUCCESS, [ CreatePostAnalyze.postStatusRatio(), ]),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트 상태 비율 조회 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.STATISTICS_SUCCESS,
+                    [ CreatePostAnalyze.postStatusRatio(), ]
+                  ),
+                },
+                error: {
+                  summary: '포스트 상태 비율 조회 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.STATISTICS_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트 상태 비율 조회 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.STATISTICS_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -308,19 +378,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '새 포스트 작성 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.CREATE_SUCCESS, CreateExample.post('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '새 포스트 작성 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.CREATE_SUCCESS,
+                    CreateExample.post('detail')
+                  ),
+                },
+                error: {
+                  summary: '새 포스트 작성 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.CREATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '새 포스트 작성 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.CREATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -360,19 +440,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.UPDATE_SUCCESS, CreateExample.post('detail')),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.UPDATE_SUCCESS,
+                    CreateExample.post('detail')
+                  ),
+                },
+                error: {
+                  summary: '포스트 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -402,23 +492,33 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 포스트 일괄 수정 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.UPDATE_SUCCESS, {
-                  successCnt: 1,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 포스트 일괄 수정 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.UPDATE_SUCCESS,
+                    {
+                      successCnt: 1,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '다수 포스트 일괄 수정 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.UPDATE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 포스트 일괄 수정 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.UPDATE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -458,19 +558,29 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '포스트 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.DELETE_SUCCESS, true),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '포스트 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.DELETE_SUCCESS,
+                    true
+                  ),
+                },
+                error: {
+                  summary: '포스트 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '포스트 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },
@@ -500,23 +610,33 @@ export const registerAdminPostsEndpoints = () => {
         content: {
           'application/json': {
             schema: z.looseObject({}),
-            examples: addGlobalResponses({
-              success: {
-                summary: '다수 포스트 일괄 삭제 성공',
-                value: createResponse('SUCCESS', MESSAGE.POST.ADMIN.DELETE_SUCCESS, {
-                  successCnt: 1,
-                  failCnt: 0,
-                  failNoList: [],
-                }),
+            examples: addGlobalResponses(
+              {
+                success: {
+                  summary: '다수 포스트 일괄 삭제 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.POST.ADMIN.DELETE_SUCCESS,
+                    {
+                      successCnt: 1,
+                      failCnt: 0,
+                      failNoList: [],
+                    }
+                  ),
+                },
+                error: {
+                  summary: '다수 포스트 일괄 삭제 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.POST.ADMIN.DELETE_ERROR
+                  ),
+                },
               },
-              error: {
-                summary: '다수 포스트 일괄 삭제 실패',
-                value: createError('INTERNAL_SERVER_ERROR', MESSAGE.POST.ADMIN.DELETE_ERROR),
-              },
-            }, {
-              hasAuthGuard: true, // JWT 인증 사용
-              hasRoles: true, // 권한 사용
-            }),
+              {
+                hasAuthGuard: true, // JWT 인증 사용
+                hasRoles: true, // 권한 사용
+              }
+            ),
           },
         },
       },

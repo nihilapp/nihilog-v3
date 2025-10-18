@@ -11,7 +11,10 @@ export class GlobalResponses {
   static getUnauthorizedResponse() {
     return {
       summary: '인증 실패',
-      value: createError('UNAUTHORIZED', MESSAGE.AUTH.UNAUTHORIZED),
+      value: createError(
+        'UNAUTHORIZED',
+        MESSAGE.AUTH.UNAUTHORIZED
+      ),
     };
   }
 
@@ -21,7 +24,10 @@ export class GlobalResponses {
   static getForbiddenResponse() {
     return {
       summary: '권한 없음',
-      value: createError('FORBIDDEN', MESSAGE.AUTH.PERMISSION_DENIED),
+      value: createError(
+        'FORBIDDEN',
+        MESSAGE.AUTH.PERMISSION_DENIED
+      ),
     };
   }
 
@@ -31,7 +37,10 @@ export class GlobalResponses {
   static getDBErrorResponse() {
     return {
       summary: 'DB 연결 에러',
-      value: createError('INTERNAL_SERVER_ERROR', MESSAGE.DB.CONNECTION_ERROR),
+      value: createError(
+        'INTERNAL_SERVER_ERROR',
+        MESSAGE.DB.CONNECTION_ERROR
+      ),
     };
   }
 

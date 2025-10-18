@@ -11,10 +11,19 @@ export const createCommentSchema = z.object({
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.'),
   cmntCntnt: z.string()
-    .min(1, '댓글 내용은 필수입니다.')
-    .max(1000, '댓글 내용은 1000자를 초과할 수 없습니다.'),
+    .min(
+      1,
+      '댓글 내용은 필수입니다.'
+    )
+    .max(
+      1000,
+      '댓글 내용은 1000자를 초과할 수 없습니다.'
+    ),
   cmntSts: z.enum([
-    'PENDING', 'APPROVED', 'SPAM', 'REJECTED',
+    'PENDING',
+    'APPROVED',
+    'SPAM',
+    'REJECTED',
   ])
     .default('PENDING')
     .optional(),
@@ -43,11 +52,20 @@ export const updateCommentSchema = z.object({
     .positive('댓글 번호는 양수여야 합니다.'))
     .optional(),
   cmntCntnt: z.string()
-    .min(1, '댓글 내용은 필수입니다.')
-    .max(1000, '댓글 내용은 1000자를 초과할 수 없습니다.')
+    .min(
+      1,
+      '댓글 내용은 필수입니다.'
+    )
+    .max(
+      1000,
+      '댓글 내용은 1000자를 초과할 수 없습니다.'
+    )
     .optional(),
   cmntSts: z.enum([
-    'PENDING', 'APPROVED', 'SPAM', 'REJECTED',
+    'PENDING',
+    'APPROVED',
+    'SPAM',
+    'REJECTED',
   ])
     .optional(),
   prntCmntNo: z.number()
@@ -86,29 +104,47 @@ export const searchCommentSchema = baseSearchSchema.extend({
     .positive('댓글 번호는 양수여야 합니다.'))
     .optional(),
   cmntSts: z.enum([
-    'PENDING', 'APPROVED', 'SPAM', 'REJECTED',
+    'PENDING',
+    'APPROVED',
+    'SPAM',
+    'REJECTED',
   ])
     .optional(),
   delYn: ynEnumSchema.optional(),
   useYn: ynEnumSchema.optional(),
-  srchType: z.enum([
-    'userEmlAddr', 'cmntCntnt', 'userNm',
-  ], {
-    error: '검색 타입은 userEmlAddr, cmntCntnt, userNm 중 하나여야 합니다.',
-  })
+  srchType: z.enum(
+    [
+      'userEmlAddr',
+      'cmntCntnt',
+      'userNm',
+    ],
+    {
+      error: '검색 타입은 userEmlAddr, cmntCntnt, userNm 중 하나여야 합니다.',
+    }
+  )
     .default('userEmlAddr')
     .optional(),
   crtDtFrom: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
   crtDtTo: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/, 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.')
+    .regex(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
+      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+    )
     .optional(),
-  orderBy: z.enum([
-    'LATEST', 'OLDEST',
-  ], {
-    error: '정렬 옵션은 LATEST, OLDEST 중 하나여야 합니다.',
-  })
+  orderBy: z.enum(
+    [
+      'LATEST',
+      'OLDEST',
+    ],
+    {
+      error: '정렬 옵션은 LATEST, OLDEST 중 하나여야 합니다.',
+    }
+  )
     .default('LATEST')
     .optional(),
 }).partial();

@@ -96,13 +96,16 @@ export class PostsController {
    */
   @Endpoint({
     endpoint: '/tag/:tagNo',
-    method: 'POST',
+    method: 'GET',
   })
   async getPostListByTagNo(
     @Param('tagNo') tagNo: number,
-    @Body() searchData: SearchPostDto
+    @Query() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
-    const result = await this.postsService.getPostListByTagNo(tagNo, searchData);
+    const result = await this.postsService.getPostListByTagNo(
+      tagNo,
+      searchData
+    );
 
     if (!result?.success) {
       return createError(
@@ -125,13 +128,16 @@ export class PostsController {
    */
   @Endpoint({
     endpoint: '/category/:ctgryNo',
-    method: 'POST',
+    method: 'GET',
   })
   async getPostListByCtgryNo(
     @Param('ctgryNo') ctgryNo: number,
-    @Body() searchData: SearchPostDto
+    @Query() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
-    const result = await this.postsService.getPostListByCtgryNo(ctgryNo, searchData);
+    const result = await this.postsService.getPostListByCtgryNo(
+      ctgryNo,
+      searchData
+    );
 
     if (!result?.success) {
       return createError(
@@ -154,13 +160,16 @@ export class PostsController {
    */
   @Endpoint({
     endpoint: '/archive/:date',
-    method: 'POST',
+    method: 'GET',
   })
   async getPostListFromArchive(
     @Param('date') date: string,
-    @Body() searchData: SearchPostDto
+    @Query() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
-    const result = await this.postsService.getPostListFromArchive(date, searchData);
+    const result = await this.postsService.getPostListFromArchive(
+      date,
+      searchData
+    );
 
     if (!result?.success) {
       return createError(
@@ -182,9 +191,9 @@ export class PostsController {
    */
   @Endpoint({
     endpoint: '/advanced-search',
-    method: 'POST',
+    method: 'GET',
   })
-  async getAdvancedPostList(@Body() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
+  async getAdvancedPostList(@Query() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getAdvancedPostList(searchData);
 
     if (!result?.success) {
@@ -214,7 +223,10 @@ export class PostsController {
     @Param('pstNo') pstNo: number,
     @Ip() ip: string
   ): Promise<ResponseDto<SelectPostViewLogType>> {
-    const result = await this.postsService.createPostViewLog(pstNo, ip);
+    const result = await this.postsService.createPostViewLog(
+      pstNo,
+      ip
+    );
 
     if (!result?.success) {
       return createError(
@@ -326,21 +338,24 @@ export class PostsController {
    */
   @Endpoint({
     endpoint: '/bookmarked',
-    method: 'POST',
+    method: 'GET',
     options: {
       authGuard: 'JWT-auth',
     },
   })
   async getBookmarkedPostListByUserNo(
     @Req() req: AuthRequest,
-    @Body() searchData: SearchPostBookmarkDto
+    @Query() searchData: SearchPostBookmarkDto
   ): Promise<ResponseDto<ListType<SelectPostBookmarkListItemType>>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.postsService
-      .getBookmarkedPostListByUserNo(req.user.userNo, searchData);
+      .getBookmarkedPostListByUserNo(
+        req.user.userNo,
+        searchData
+      );
 
     if (!result?.success) {
       return createError(

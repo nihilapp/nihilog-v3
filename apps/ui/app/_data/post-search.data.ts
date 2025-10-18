@@ -59,28 +59,61 @@ export const postSearchData = {
    * @description 정렬 옵션
    */
   sortOptions: [
-    { value: 'LATEST', label: '최신순', },
-    { value: 'POPULAR', label: '인기순', },
-    { value: 'OLDEST', label: '오래된순', },
+    {
+      value: 'LATEST',
+      label: '최신순',
+    },
+    {
+      value: 'POPULAR',
+      label: '인기순',
+    },
+    {
+      value: 'OLDEST',
+      label: '오래된순',
+    },
   ] as const,
 
   /**
    * @description 포스트 상태 옵션
    */
   statusOptions: [
-    { value: 'EMPTY', label: '초안', color: 'outline' as const, },
-    { value: 'WRITING', label: '작성중', color: 'secondary' as const, },
-    { value: 'FINISHED', label: '발행됨', color: 'default' as const, },
+    {
+      value: 'EMPTY',
+      label: '초안',
+      color: 'outline' as const,
+    },
+    {
+      value: 'WRITING',
+      label: '작성중',
+      color: 'secondary' as const,
+    },
+    {
+      value: 'FINISHED',
+      label: '발행됨',
+      color: 'default' as const,
+    },
   ] as const,
 
   /**
    * @description 페이지 크기 옵션
    */
   pageSizeOptions: [
-    { value: 10, label: '10개씩', },
-    { value: 20, label: '20개씩', },
-    { value: 50, label: '50개씩', },
-    { value: 100, label: '100개씩', },
+    {
+      value: 10,
+      label: '10개씩',
+    },
+    {
+      value: 20,
+      label: '20개씩',
+    },
+    {
+      value: 50,
+      label: '50개씩',
+    },
+    {
+      value: 100,
+      label: '100개씩',
+    },
   ] as const,
 } as const;
 

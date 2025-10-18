@@ -33,10 +33,12 @@ import config from './conf/conf';
     }),
     PrismaModule,
     RepositoryModule,
-    ThrottlerModule.forRoot([ {
-      ttl: 60000, // 1분
-      limit: 60, // 60회
-    }, ]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1분
+        limit: 60, // 60회
+      },
+    ]),
     AuthModule,
     UserModule,
     PostsModule,

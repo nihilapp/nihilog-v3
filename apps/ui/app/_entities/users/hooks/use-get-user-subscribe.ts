@@ -2,7 +2,6 @@ import { toast } from 'sonner';
 
 import type { QueryOptionType } from '@/_entities/common/common.types';
 import { useGet } from '@/_entities/common/hooks';
-import { usersKeys } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
 import type { SelectUserSbcrInfoType } from '@/_types';
 
@@ -15,15 +14,24 @@ interface UseGetUserSubscribeOptions extends QueryOptionType<SelectUserSbcrInfoT
 export function useGetUserSubscribe(options: UseGetUserSubscribeOptions = {}) {
   const query = useGet<SelectUserSbcrInfoType>({
     url: [
-      'users', 'subscribe',
+      'users',
+      'subscribe',
     ],
-    callback() {
-      // 성공 시 토스트 메시지는 필요에 따라 추가
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
     },
     errorCallback(error) {
-      toast.error(error.message, {
-        style: getToastStyle('error'),
-      });
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
     },
     ...options,
   });

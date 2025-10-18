@@ -1,9 +1,8 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks';
-import { usersKeys } from '@/_entities/users/users.keys';
+import { useInvalidateUserSubscribeCache } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
 import type { UpdateSubscribeType } from '@/_schemas';
 import type { SelectUserSbcrInfoType } from '@/_types';
@@ -15,26 +14,31 @@ interface UseUpdateUserSubscribeOptions extends MutationOptionsType<SelectUserSb
  * @param {UseUpdateUserSubscribeOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
 export function useUpdateUserSubscribe(options: UseUpdateUserSubscribeOptions = {}) {
-  const queryClient = useQueryClient();
+  const invalidateCache = useInvalidateUserSubscribeCache();
 
   const mutation = usePut<SelectUserSbcrInfoType, UpdateSubscribeType>({
     url: [
-      'users', 'subscribe',
+      'users',
+      'subscribe',
     ],
-    callback() {
-      toast.success('구독 설정이 변경되었습니다.', {
-        style: getToastStyle('success'),
-      });
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
 
-      // 구독 정보 무효화
-      queryClient.invalidateQueries({
-        queryKey: usersKeys.subscribeInfo().queryKey,
-      });
+      // 구독 관련 캐시 무효화
+      invalidateCache();
     },
     errorCallback(error) {
-      toast.error(error.message, {
-        style: getToastStyle('error'),
-      });
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
     },
     ...options,
   });
