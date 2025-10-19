@@ -5,7 +5,6 @@ import React from 'react';
 
 import { AuthLeft } from '@/(auth)/auth/_layouts/AuthLeft';
 import { AuthRight } from '@/(auth)/auth/_layouts/AuthRight';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/(common)/_components/ui/resizable';
 import { cn } from '@/_libs';
 
 interface Props
@@ -15,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex h-full text-md', ],
+  [ 'h-screen flex overflow-hidden', ],
   {
     variants: {},
     defaultVariants: {},
@@ -25,23 +24,17 @@ const cssVariants = cva(
 
 export function AuthLayout({ className, children, ...props }: Props) {
   return (
-    <ResizablePanelGroup
-      direction='horizontal'
+    <div
       className={cn(
         cssVariants({}),
         className
       )}
       {...props}
     >
-      <ResizablePanel defaultSize={60}>
-        <AuthLeft>
-          {children}
-        </AuthLeft>
-      </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={40}>
-        <AuthRight />
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      <AuthLeft>
+        {children}
+      </AuthLeft>
+      <AuthRight />
+    </div>
   );
 }

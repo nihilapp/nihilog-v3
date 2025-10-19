@@ -14,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'h-full overflow-y-auto p-5', ],
+  [ 'flex-1 flex flex-col justify-center px-8 py-12 lg:px-12 xl:px-16 overflow-hidden', ],
   {
     variants: {},
     defaultVariants: {},
@@ -33,12 +33,12 @@ export function AuthLeft({ className, children, ...props }: Props) {
       )}
       {...props}
     >
-      <Card className='h-full'>
-        <CardHeader>
+      <Card className='shadow-xl rounded-8 flex flex-col max-h-full'>
+        <CardHeader className='flex-shrink-0'>
           <CardTitle>{authCardHeader.title}</CardTitle>
           <CardDescription>{authCardHeader.description}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className='flex-1 overflow-y-auto'>
           {children}
         </CardContent>
       </Card>

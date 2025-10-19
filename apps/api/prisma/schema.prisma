@@ -6,26 +6,20 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-  schemas   = ["nihilog"]
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // 사용자 권한 enum
 enum UserRole {
   ADMIN
   USER
-
-  @@schema("nihilog")
 }
 
 // Y/N 상태 enum
 enum YnStatus {
   Y
   N
-
-  @@schema("nihilog")
 }
 
 // 포스트 상태 enum
@@ -33,8 +27,6 @@ enum PostStatus {
   EMPTY
   WRITING
   FINISHED
-
-  @@schema("nihilog")
 }
 
 // 댓글 상태 enum
@@ -47,8 +39,6 @@ enum CommentStatus {
   REJECTED
   // 댓글 스팸
   SPAM
-
-  @@schema("nihilog")
 }
 
 // 사용자 기본 정보 테이블
@@ -105,7 +95,6 @@ model UserInfo {
   deletedPostBookmarks      PstBkmrkMpng[]  @relation("PstBkmrkDeleter")
 
   @@map("user_info")
-  @@schema("nihilog")
 }
 
 // 카테고리 정보 테이블
@@ -139,7 +128,6 @@ model CtgryInfo {
   @@index([delDt, delYn])
   @@index([upCtgryNo, delYn])
   @@map("ctgry_info")
-  @@schema("nihilog")
 }
 
 // 태그 정보 테이블
@@ -168,7 +156,6 @@ model TagInfo {
   @@index([crtDt, delYn])
   @@index([delDt, delYn])
   @@map("tag_info")
-  @@schema("nihilog")
 }
 
 // 포스트 정보 테이블
@@ -216,7 +203,6 @@ model PstInfo {
   @@index([updtDt, delYn])
   @@index([delDt, delYn])
   @@map("pst_info")
-  @@schema("nihilog")
 }
 
 // 댓글 정보 테이블
@@ -249,7 +235,6 @@ model CmntInfo {
   @@index([prntCmntNo, delYn])
   @@index([delDt, delYn])
   @@map("cmnt_info")
-  @@schema("nihilog")
 }
 
 // 카테고리 구독 매핑 테이블
@@ -279,7 +264,6 @@ model CtgrySbcrMpng {
   @@index([crtDt, delYn])
   @@index([delDt, delYn])
   @@map("ctgry_sbcr_mpng")
-  @@schema("nihilog")
 }
 
 // 태그 구독 매핑 테이블
@@ -309,7 +293,6 @@ model TagSbcrMpng {
   @@index([crtDt, delYn])
   @@index([delDt, delYn])
   @@map("tag_sbcr_mpng")
-  @@schema("nihilog")
 }
 
 // 사용자 구독 설정 테이블
@@ -343,7 +326,6 @@ model UserSbcrInfo {
   @@index([crtDt, delYn])
   @@index([delDt, delYn])
   @@map("user_sbcr_info")
-  @@schema("nihilog")
 }
 
 // 포스트-태그 매핑 테이블
@@ -373,7 +355,6 @@ model PstTagMpng {
   @@index([crtDt, delYn])
   @@index([delDt, delYn])
   @@map("pst_tag_mpng")
-  @@schema("nihilog")
 }
 
 // 포스트 조회 로그 테이블
@@ -389,7 +370,6 @@ model PstViewLog {
   @@index([pstNo, viewDt])
   @@index([viewDt, pstNo])
   @@map("pst_view_log")
-  @@schema("nihilog")
 }
 
 // 포스트 공유 로그 테이블
@@ -405,7 +385,6 @@ model PstShrnLog {
   @@index([pstNo, shrnDt])
   @@index([shrnDt, pstNo])
   @@map("pst_shrn_log")
-  @@schema("nihilog")
 }
 
 // 포스트 북마크 매핑 테이블
@@ -433,5 +412,4 @@ model PstBkmrkMpng {
   @@index([crtDt, delYn])
   @@index([pstNo, delYn])
   @@map("pst_bkmrk_mpng")
-  @@schema("nihilog")
 }

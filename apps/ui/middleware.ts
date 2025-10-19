@@ -6,6 +6,7 @@ import { siteConfig } from './app/_config/config';
 const publicPaths = [
   '/auth/signin',
   '/auth/signup',
+  '/auth/admin/signup',
   '/auth/forgot-password',
   '/auth/reset-password',
 ];
@@ -27,7 +28,10 @@ function shouldRefreshToken(accessTokenExpiresAt?: string): boolean {
   }
 
   // 액세스 토큰 만료 시간을 숫자로 변환합니다.
-  const expiresAt = parseInt(accessTokenExpiresAt, 10);
+  const expiresAt = parseInt(
+    accessTokenExpiresAt,
+    10
+  );
 
   // 현재 시간을 밀리초 단위로 가져옵니다.
   const now = Date.now();
@@ -51,16 +55,22 @@ async function attemptTokenRefresh(refreshToken: string): Promise<NextResponse |
       ? siteConfig.backEnd.development
       : siteConfig.backEnd.production
   );
-  const refreshUrl = new URL('/auth/refresh', backendUrl);
+  const refreshUrl = new URL(
+    '/auth/refresh',
+    backendUrl
+  );
 
   // 토큰 갱신 요청
-  const refreshResponse = await fetch(refreshUrl, {
-    method: 'POST',
-    headers: {
-      Cookie: `refreshToken=${refreshToken}`,
-    },
-    credentials: 'include',
-  });
+  const refreshResponse = await fetch(
+    refreshUrl,
+    {
+      method: 'POST',
+      headers: {
+        Cookie: `refreshToken=${refreshToken}`,
+      },
+      credentials: 'include',
+    }
+  );
 
   // 토큰 갱신 응답 확인
   if (!refreshResponse.ok) {
@@ -75,7 +85,10 @@ async function attemptTokenRefresh(refreshToken: string): Promise<NextResponse |
 
   // 쿠키 헤더를 응답 헤더에 추가
   setCookieHeaders.forEach((cookie) => {
-    response.headers.append('Set-Cookie', cookie);
+    response.headers.append(
+      'Set-Cookie',
+      cookie
+    );
   });
 
   return response;
@@ -86,9 +99,7 @@ export async function middleware(request: NextRequest) {
 
   // 요청된 경로가 공개 경로인지 확인합니다.
   // `startsWith`를 사용하여 `/auth/reset-password?token=...`와 같이 쿼리 파라미터가 있는 경우도 처리합니다.
-  const isPublic = publicPaths.some(
-    (path) => pathname.startsWith(path)
-  );
+  const isPublic = publicPaths.some((path) => pathname.startsWith(path));
   if (isPublic) {
     // 인증이 필요 없으면 그대로 진행
     return NextResponse.next();
@@ -115,7 +126,10 @@ export async function middleware(request: NextRequest) {
       catch (error) {
         // 메인 페이지에서는 토큰 갱신 실패 시에도 접근을 허용합니다.
         if (process.env.NODE_ENV === 'development') {
-          console.warn('메인 페이지 토큰 갱신 실패:', error);
+          console.warn(
+            '메인 페이지 토큰 갱신 실패:',
+            error
+          );
         }
       }
     }
@@ -140,12 +154,15 @@ export async function middleware(request: NextRequest) {
       else {
         // 토큰 갱신 응답 실패 로깅
         if (process.env.NODE_ENV === 'development') {
-          console.warn('토큰 갱신 응답 실패:', {
-            status: 'FAILED',
-            statusText: 'NON_OK_RESPONSE',
-            pathname,
-            timestamp: new Date().toISOString(),
-          });
+          console.warn(
+            '토큰 갱신 응답 실패:',
+            {
+              status: 'FAILED',
+              statusText: 'NON_OK_RESPONSE',
+              pathname,
+              timestamp: new Date().toISOString(),
+            }
+          );
         }
 
         // 토큰 갱신 실패 시, 기존 토큰이 유효한지 확인 후 처리
@@ -157,19 +174,25 @@ export async function middleware(request: NextRequest) {
     catch (error) {
       // 개발 환경에서는 자세한 에러 정보를, 프로덕션에서는 간단한 메시지만 로깅
       if (process.env.NODE_ENV === 'development') {
-        console.error('미들웨어 토큰 갱신 실패 (상세):', {
-          error: error instanceof Error
-            ? error.message
-            : error,
-          pathname,
-          refreshToken: refreshToken
-            ? '[PRESENT]'
-            : '[MISSING]',
-          timestamp: new Date().toISOString(),
-        });
+        console.error(
+          '미들웨어 토큰 갱신 실패 (상세):',
+          {
+            error: error instanceof Error
+              ? error.message
+              : error,
+            pathname,
+            refreshToken: refreshToken
+              ? '[PRESENT]'
+              : '[MISSING]',
+            timestamp: new Date().toISOString(),
+          }
+        );
       }
       else {
-        console.error('미들웨어 토큰 갱신 실패:', pathname);
+        console.error(
+          '미들웨어 토큰 갱신 실패:',
+          pathname
+        );
       }
 
       // 갱신 실패 시, 기존 토큰이 유효한지 확인 후 처리
@@ -182,7 +205,10 @@ export async function middleware(request: NextRequest) {
   // RefreshToken이 없거나 갱신이 필요하지 않은 경우
   if (!refreshToken) {
     // 유효한 토큰이 없는 경우 로그인 페이지로 리다이렉트합니다.
-    return NextResponse.redirect(new URL('/auth/signin', request.url));
+    return NextResponse.redirect(new URL(
+      '/auth/signin',
+      request.url
+    ));
   }
 
   // 토큰은 있지만 아직 갱신이 필요하지 않은 경우 그대로 진행

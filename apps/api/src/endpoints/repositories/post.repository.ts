@@ -387,7 +387,7 @@ export class PostRepository {
             date_trunc(${mode}, p.publ_dt::timestamptz) AS stat_date,
             'publish' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_info p
+          FROM pst_info p
           WHERE ${pstNo
             ? Prisma.sql`p.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -402,7 +402,7 @@ export class PostRepository {
             date_trunc(${mode}, p.updt_dt::timestamptz) AS stat_date,
             'update' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_info p
+          FROM pst_info p
           WHERE ${pstNo
             ? Prisma.sql`p.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -418,7 +418,7 @@ export class PostRepository {
             date_trunc(${mode}, p.del_dt::timestamptz) AS stat_date,
             'delete' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_info p
+          FROM pst_info p
           WHERE ${pstNo
             ? Prisma.sql`p.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -433,7 +433,7 @@ export class PostRepository {
             date_trunc(${mode}, v.view_dt::timestamptz) AS stat_date,
             'view' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_view_log v
+          FROM pst_view_log v
           WHERE ${pstNo
             ? Prisma.sql`v.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -447,7 +447,7 @@ export class PostRepository {
             date_trunc(${mode}, bm.crt_dt::timestamptz) AS stat_date,
             'bookmark' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_bkmrk_mpng bm
+          FROM pst_bkmrk_mpng bm
           WHERE ${pstNo
             ? Prisma.sql`bm.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -462,7 +462,7 @@ export class PostRepository {
             date_trunc(${mode}, sl.shrn_dt::timestamptz) AS stat_date,
             'share' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_shrn_log sl
+          FROM pst_shrn_log sl
           WHERE ${pstNo
             ? Prisma.sql`sl.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -476,7 +476,7 @@ export class PostRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -536,7 +536,7 @@ export class PostRepository {
             date_trunc(${mode}, v.view_dt::timestamptz) AS view_date,
             v.pst_no,
             COUNT(*) AS view_count
-          FROM nihilog.pst_view_log v
+          FROM pst_view_log v
           WHERE v.view_dt::timestamptz >= ${startDt}::timestamptz
             AND v.view_dt::timestamptz <= ${endDt}::timestamptz
           GROUP BY date_trunc(${mode}, v.view_dt::timestamptz), v.pst_no
@@ -582,7 +582,7 @@ export class PostRepository {
             date_trunc(${mode}, bm.crt_dt::timestamptz) AS bookmark_date,
             bm.pst_no,
             COUNT(*) AS bookmark_count
-          FROM nihilog.pst_bkmrk_mpng bm
+          FROM pst_bkmrk_mpng bm
           WHERE bm.crt_dt::timestamptz >= ${startDt}::timestamptz
             AND bm.crt_dt::timestamptz <= ${endDt}::timestamptz
             AND bm.del_yn = 'N'
@@ -680,8 +680,8 @@ export class PostRepository {
           p.pst_ttl AS "title",
           COUNT(c.cmnt_no) AS "commentCount",
           p.publ_dt AS "publishDate"
-        FROM nihilog.pst_info p
-        LEFT JOIN nihilog.cmnt_info c ON p.pst_no = c.pst_no AND c.del_yn = 'N'
+        FROM pst_info p
+        LEFT JOIN cmnt_info c ON p.pst_no = c.pst_no AND c.del_yn = 'N'
         ${whereClause}
         GROUP BY p.pst_no, p.pst_ttl, p.publ_dt
         ORDER BY COUNT(c.cmnt_no) DESC, p.publ_dt DESC
@@ -710,7 +710,7 @@ export class PostRepository {
           SELECT
             pst_stts,
             COUNT(*) as count
-          FROM nihilog.pst_info
+          FROM pst_info
           WHERE del_yn = 'N'
             ${analyzeStatData
               ? Prisma.sql`

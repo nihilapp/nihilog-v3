@@ -60,7 +60,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'new_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -74,7 +74,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.del_dt::timestamptz) AS stat_date,
             'delete_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -89,7 +89,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'pending_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -105,7 +105,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'approved_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -121,7 +121,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'rejected_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -137,7 +137,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'spam_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -153,7 +153,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'top_level_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -169,7 +169,7 @@ export class CommentRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'reply_comment' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${pstNo
             ? Prisma.sql`c.pst_no = ${pstNo}`
             : Prisma.sql`TRUE`}
@@ -297,8 +297,8 @@ export class CommentRepository {
           SELECT
             p.pst_no,
             COUNT(c.cmnt_no) as comment_count
-          FROM nihilog.pst_info p
-          LEFT JOIN nihilog.cmnt_info c ON p.pst_no = c.pst_no
+          FROM pst_info p
+          LEFT JOIN cmnt_info c ON p.pst_no = c.pst_no
             AND c.del_yn = 'N'
             AND c.crt_dt::timestamptz >= ${startDt}::timestamptz
             AND c.crt_dt::timestamptz <= ${endDt}::timestamptz
@@ -546,11 +546,11 @@ export class CommentRepository {
           COALESCE(p.publ_dt, p.crt_dt) AS "publishDate",
           COALESCE(p.pst_view, 0) AS "viewCount",
           EXTRACT(DAYS FROM (NOW() - COALESCE(p.publ_dt, p.crt_dt)::timestamp)) AS "daysSincePublish"
-        FROM nihilog.pst_info p
+        FROM pst_info p
         WHERE p.del_yn = 'N'
           AND NOT EXISTS (
             SELECT 1
-            FROM nihilog.cmnt_info c
+            FROM cmnt_info c
             WHERE c.pst_no = p.pst_no
               AND c.del_yn = 'N'
           )

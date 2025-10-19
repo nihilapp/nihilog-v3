@@ -13,7 +13,7 @@ interface UseSignOutOptions extends MutationOptionsType<ResponseType<null>, void
  * @param {UseSignOutOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
 export function useSignOut(options: UseSignOutOptions = {}) {
-  const invalidateCache = useInvalidateAuthCache();
+  const removeCache = useInvalidateAuthCache(true);
 
   const mutation = usePost<ResponseType<null>, void>({
     url: [
@@ -29,7 +29,7 @@ export function useSignOut(options: UseSignOutOptions = {}) {
       );
 
       // 인증 관련 캐시 무효화
-      invalidateCache();
+      removeCache();
     },
     errorCallback(error) {
       toast.error(

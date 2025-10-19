@@ -60,7 +60,7 @@ export class CategoryRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'new_category' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.ctgry_info c
+          FROM ctgry_info c
           WHERE ${ctgryNo
             ? Prisma.sql`c.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -74,7 +74,7 @@ export class CategoryRepository {
             date_trunc(${mode}, c.del_dt::timestamptz) AS stat_date,
             'delete_category' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.ctgry_info c
+          FROM ctgry_info c
           WHERE ${ctgryNo
             ? Prisma.sql`c.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -89,7 +89,7 @@ export class CategoryRepository {
             date_trunc(${mode}, csm.crt_dt::timestamptz) AS stat_date,
             'subscriber_increase' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.ctgry_sbcr_mpng csm
+          FROM ctgry_sbcr_mpng csm
           WHERE ${ctgryNo
             ? Prisma.sql`csm.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -105,7 +105,7 @@ export class CategoryRepository {
             date_trunc(${mode}, csm.del_dt::timestamptz) AS stat_date,
             'subscriber_decrease' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.ctgry_sbcr_mpng csm
+          FROM ctgry_sbcr_mpng csm
           WHERE ${ctgryNo
             ? Prisma.sql`csm.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -120,7 +120,7 @@ export class CategoryRepository {
             date_trunc(${mode}, p.publ_dt::timestamptz) AS stat_date,
             'post_count' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_info p
+          FROM pst_info p
           WHERE ${ctgryNo
             ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -136,8 +136,8 @@ export class CategoryRepository {
             date_trunc(${mode}, v.view_dt::timestamptz) AS stat_date,
             'view_count' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_view_log v
-          INNER JOIN nihilog.pst_info p ON p.pst_no = v.pst_no
+          FROM pst_view_log v
+          INNER JOIN pst_info p ON p.pst_no = v.pst_no
           WHERE ${ctgryNo
             ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -153,8 +153,8 @@ export class CategoryRepository {
             date_trunc(${mode}, bm.crt_dt::timestamptz) AS stat_date,
             'bookmark_count' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_bkmrk_mpng bm
-          INNER JOIN nihilog.pst_info p ON p.pst_no = bm.pst_no
+          FROM pst_bkmrk_mpng bm
+          INNER JOIN pst_info p ON p.pst_no = bm.pst_no
           WHERE ${ctgryNo
             ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -171,8 +171,8 @@ export class CategoryRepository {
             date_trunc(${mode}, sl.shrn_dt::timestamptz) AS stat_date,
             'share_count' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_shrn_log sl
-          INNER JOIN nihilog.pst_info p ON p.pst_no = sl.pst_no
+          FROM pst_shrn_log sl
+          INNER JOIN pst_info p ON p.pst_no = sl.pst_no
           WHERE ${ctgryNo
             ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -188,8 +188,8 @@ export class CategoryRepository {
             date_trunc(${mode}, cm.crt_dt::timestamptz) AS stat_date,
             'comment_count' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info cm
-          INNER JOIN nihilog.pst_info p ON p.pst_no = cm.pst_no
+          FROM cmnt_info cm
+          INNER JOIN pst_info p ON p.pst_no = cm.pst_no
           WHERE ${ctgryNo
             ? Prisma.sql`p.ctgry_no = ${ctgryNo}`
             : Prisma.sql`TRUE`}
@@ -307,7 +307,7 @@ export class CategoryRepository {
             csm.ctgry_no,
             COUNT(*) as subscriber_count,
             MAX(csm.crt_dt) as last_subscriber_date
-          FROM nihilog.ctgry_sbcr_mpng csm
+          FROM ctgry_sbcr_mpng csm
           WHERE csm.use_yn = 'Y'
             AND csm.del_yn = 'N'
           GROUP BY csm.ctgry_no
@@ -321,12 +321,12 @@ export class CategoryRepository {
           COALESCE(p.post_count, 0) AS "postCount",
           tsc.last_subscriber_date AS "lastSubscriberDate"
         FROM top_subscriber_categories tsc
-        LEFT JOIN nihilog.ctgry_info c ON c.ctgry_no = tsc.ctgry_no
+        LEFT JOIN ctgry_info c ON c.ctgry_no = tsc.ctgry_no
         LEFT JOIN (
           SELECT
             ctgry_no,
             COUNT(*) as post_count
-          FROM nihilog.pst_info
+          FROM pst_info
           WHERE use_yn = 'Y' AND del_yn = 'N'
           GROUP BY ctgry_no
         ) p ON p.ctgry_no = tsc.ctgry_no
@@ -764,12 +764,12 @@ export class CategoryRepository {
           c.crt_dt AS "createDate",
           COALESCE(p.post_count, 0) AS "postCount",
           EXTRACT(DAYS FROM (NOW() - c.crt_dt::timestamp)) AS "daysSinceCreation"
-        FROM nihilog.ctgry_info c
+        FROM ctgry_info c
         LEFT JOIN (
           SELECT
             ctgry_no,
             COUNT(*) as post_count
-          FROM nihilog.pst_info
+          FROM pst_info
           WHERE use_yn = 'Y' AND del_yn = 'N'
           GROUP BY ctgry_no
         ) p ON p.ctgry_no = c.ctgry_no
@@ -777,7 +777,7 @@ export class CategoryRepository {
           AND c.del_yn = 'N'
           AND NOT EXISTS (
             SELECT 1
-            FROM nihilog.ctgry_sbcr_mpng csm
+            FROM ctgry_sbcr_mpng csm
             WHERE csm.ctgry_no = c.ctgry_no
               AND csm.use_yn = 'Y'
               AND csm.del_yn = 'N'

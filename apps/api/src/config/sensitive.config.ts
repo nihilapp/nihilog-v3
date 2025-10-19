@@ -56,7 +56,6 @@ export const databaseConfig = registerAs(
     user: process.env.DB_USER || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
     name: process.env.DB_NAME || 'postgres',
-    schema: process.env.DB_SCHEMA || 'nihilog',
   })
 );
 

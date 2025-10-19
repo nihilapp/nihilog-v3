@@ -59,7 +59,7 @@ export function AuthButtons({ className, ...props }: Props) {
             </Button>
             {process.env.NODE_ENV === 'development' && (
               <Button asChild>
-                <Link href='/admin/signup'>관리자 계정생성</Link>
+                <Link href='/auth/admin/signup'>관리자 계정생성</Link>
               </Button>
             )}
           </>

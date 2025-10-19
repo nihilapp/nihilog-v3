@@ -54,7 +54,7 @@ export class SubscribeRepository {
                  THEN 1 END) as new_post_notification_count,
             COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
                  THEN 1 END) as comment_reply_notification_count
-          FROM nihilog.user_sbcr_info
+          FROM user_sbcr_info
         )
         SELECT
           ${startDt} as "dateStart",
@@ -90,7 +90,7 @@ export class SubscribeRepository {
             COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as active_count,
             COUNT(CASE WHEN eml_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as inactive_count,
             COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as total_count
-          FROM nihilog.user_sbcr_info
+          FROM user_sbcr_info
 
           UNION ALL
 
@@ -99,7 +99,7 @@ export class SubscribeRepository {
             COUNT(CASE WHEN new_pst_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as active_count,
             COUNT(CASE WHEN new_pst_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as inactive_count,
             COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as total_count
-          FROM nihilog.user_sbcr_info
+          FROM user_sbcr_info
 
           UNION ALL
 
@@ -108,7 +108,7 @@ export class SubscribeRepository {
             COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as active_count,
             COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as inactive_count,
             COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as total_count
-          FROM nihilog.user_sbcr_info
+          FROM user_sbcr_info
         )
         SELECT
           "notificationType",
@@ -149,7 +149,7 @@ export class SubscribeRepository {
           COUNT(CASE WHEN new_pst_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "newPostActiveUsers",
           COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "commentReplyActiveUsers",
           COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND new_pst_ntfy_yn = 'Y' AND cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "allNotificationsActiveUsers"
-        FROM nihilog.user_sbcr_info
+        FROM user_sbcr_info
       `;
 
       return prismaResponse(
@@ -179,7 +179,7 @@ export class SubscribeRepository {
           COUNT(CASE WHEN new_pst_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "newPostInactiveUsers",
           COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "commentReplyInactiveUsers",
           COUNT(CASE WHEN eml_ntfy_yn = 'N' AND new_pst_ntfy_yn = 'N' AND cmnt_rpl_ntfy_yn = 'N' AND use_yn = 'Y' AND del_yn = 'N' THEN 1 END) as "allNotificationsInactiveUsers"
-        FROM nihilog.user_sbcr_info
+        FROM user_sbcr_info
       `;
 
       return prismaResponse(

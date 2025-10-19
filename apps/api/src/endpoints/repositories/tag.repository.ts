@@ -62,7 +62,7 @@ export class TagRepository {
             date_trunc(${mode}, t.crt_dt::timestamptz) AS stat_date,
             'new_tag' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.tag_info t
+          FROM tag_info t
           WHERE ${tagNo
             ? Prisma.sql`t.tag_no = ${tagNo}`
             : Prisma.sql`TRUE`}
@@ -76,7 +76,7 @@ export class TagRepository {
             date_trunc(${mode}, t.del_dt::timestamptz) AS stat_date,
             'delete_tag' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.tag_info t
+          FROM tag_info t
           WHERE ${tagNo
             ? Prisma.sql`t.tag_no = ${tagNo}`
             : Prisma.sql`TRUE`}
@@ -91,7 +91,7 @@ export class TagRepository {
             date_trunc(${mode}, ptm.crt_dt::timestamptz) AS stat_date,
             'tag_mapping' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_tag_mpng ptm
+          FROM pst_tag_mpng ptm
           WHERE ${tagNo
             ? Prisma.sql`ptm.tag_no = ${tagNo}`
             : Prisma.sql`TRUE`}
@@ -107,7 +107,7 @@ export class TagRepository {
             date_trunc(${mode}, ptm.del_dt::timestamptz) AS stat_date,
             'tag_mapping_delete' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_tag_mpng ptm
+          FROM pst_tag_mpng ptm
           WHERE ${tagNo
             ? Prisma.sql`ptm.tag_no = ${tagNo}`
             : Prisma.sql`TRUE`}
@@ -122,7 +122,7 @@ export class TagRepository {
             date_trunc(${mode}, tsm.crt_dt::timestamptz) AS stat_date,
             'subscriber_increase' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.tag_sbcr_mpng tsm
+          FROM tag_sbcr_mpng tsm
           WHERE ${tagNo
             ? Prisma.sql`tsm.tag_no = ${tagNo}`
             : Prisma.sql`TRUE`}
@@ -138,7 +138,7 @@ export class TagRepository {
             date_trunc(${mode}, tsm.del_dt::timestamptz) AS stat_date,
             'subscriber_decrease' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.tag_sbcr_mpng tsm
+          FROM tag_sbcr_mpng tsm
           WHERE ${tagNo
             ? Prisma.sql`tsm.tag_no = ${tagNo}`
             : Prisma.sql`TRUE`}
@@ -189,7 +189,7 @@ export class TagRepository {
             ptm.tag_no,
             COUNT(*) as usage_count,
             MAX(ptm.crt_dt) as last_used_date
-          FROM nihilog.pst_tag_mpng ptm
+          FROM pst_tag_mpng ptm
           WHERE ptm.use_yn = 'Y'
             AND ptm.del_yn = 'N'
             ${analyzeStatData
@@ -209,12 +209,12 @@ export class TagRepository {
           COALESCE(tsm.subscriber_count, 0) AS "subscriberCount",
           tut.last_used_date AS "lastUsedDate"
         FROM top_used_tags tut
-        LEFT JOIN nihilog.tag_info t ON t.tag_no = tut.tag_no
+        LEFT JOIN tag_info t ON t.tag_no = tut.tag_no
         LEFT JOIN (
           SELECT
             tag_no,
             COUNT(*) as subscriber_count
-          FROM nihilog.tag_sbcr_mpng
+          FROM tag_sbcr_mpng
           WHERE use_yn = 'Y' AND del_yn = 'N'
           GROUP BY tag_no
         ) tsm ON tsm.tag_no = tut.tag_no
@@ -335,7 +335,7 @@ export class TagRepository {
             tsm.tag_no,
             COUNT(*) as subscriber_count,
             MAX(tsm.crt_dt) as last_subscriber_date
-          FROM nihilog.tag_sbcr_mpng tsm
+          FROM tag_sbcr_mpng tsm
           WHERE tsm.use_yn = 'Y'
             AND tsm.del_yn = 'N'
           GROUP BY tsm.tag_no
@@ -349,12 +349,12 @@ export class TagRepository {
           COALESCE(ptm.usage_count, 0) AS "usageCount",
           tst.last_subscriber_date AS "lastSubscriberDate"
         FROM top_subscriber_tags tst
-        LEFT JOIN nihilog.tag_info t ON t.tag_no = tst.tag_no
+        LEFT JOIN tag_info t ON t.tag_no = tst.tag_no
         LEFT JOIN (
           SELECT
             tag_no,
             COUNT(*) as usage_count
-          FROM nihilog.pst_tag_mpng
+          FROM pst_tag_mpng
           WHERE use_yn = 'Y' AND del_yn = 'N'
           GROUP BY tag_no
         ) ptm ON ptm.tag_no = tst.tag_no
@@ -432,12 +432,12 @@ export class TagRepository {
           t.tag_nm AS "tagNm",
           t.crt_dt AS "createDate",
           COALESCE(ptm.usage_count, 0) AS "usageCount"
-        FROM nihilog.tag_info t
+        FROM tag_info t
         LEFT JOIN (
           SELECT
             tag_no,
             COUNT(*) as usage_count
-          FROM nihilog.pst_tag_mpng
+          FROM pst_tag_mpng
           WHERE use_yn = 'Y' AND del_yn = 'N'
           GROUP BY tag_no
         ) ptm ON ptm.tag_no = t.tag_no
@@ -445,7 +445,7 @@ export class TagRepository {
           AND t.del_yn = 'N'
           AND NOT EXISTS (
             SELECT 1
-            FROM nihilog.tag_sbcr_mpng tsm
+            FROM tag_sbcr_mpng tsm
             WHERE tsm.tag_no = t.tag_no
               AND tsm.use_yn = 'Y'
               AND tsm.del_yn = 'N'

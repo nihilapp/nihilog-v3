@@ -62,7 +62,7 @@ export class UserRepository {
             date_trunc(${mode}, u.crt_dt::timestamptz) AS stat_date,
             'new_user' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.user_info u
+          FROM user_info u
           WHERE ${userNo
             ? Prisma.sql`u.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -76,7 +76,7 @@ export class UserRepository {
             date_trunc(${mode}, u.del_dt::timestamptz) AS stat_date,
             'delete_user' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.user_info u
+          FROM user_info u
           WHERE ${userNo
             ? Prisma.sql`u.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -91,7 +91,7 @@ export class UserRepository {
             date_trunc(${mode}, u.last_lgn_dt::timestamptz) AS stat_date,
             'login' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.user_info u
+          FROM user_info u
           WHERE ${userNo
             ? Prisma.sql`u.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -106,7 +106,7 @@ export class UserRepository {
             date_trunc(${mode}, p.crt_dt::timestamptz) AS stat_date,
             'post_write' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_info p
+          FROM pst_info p
           WHERE ${userNo
             ? Prisma.sql`p.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -121,7 +121,7 @@ export class UserRepository {
             date_trunc(${mode}, c.crt_dt::timestamptz) AS stat_date,
             'comment_write' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.cmnt_info c
+          FROM cmnt_info c
           WHERE ${userNo
             ? Prisma.sql`c.crt_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -136,7 +136,7 @@ export class UserRepository {
             date_trunc(${mode}, bm.crt_dt::timestamptz) AS stat_date,
             'bookmark_add' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.pst_bkmrk_mpng bm
+          FROM pst_bkmrk_mpng bm
           WHERE ${userNo
             ? Prisma.sql`bm.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -151,8 +151,8 @@ export class UserRepository {
             date_trunc(${mode}, tsm.crt_dt::timestamptz) AS stat_date,
             'tag_subscribe' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.tag_sbcr_mpng tsm
-          INNER JOIN nihilog.user_sbcr_info usi ON usi.sbcr_no = tsm.sbcr_no
+          FROM tag_sbcr_mpng tsm
+          INNER JOIN user_sbcr_info usi ON usi.sbcr_no = tsm.sbcr_no
           WHERE ${userNo
             ? Prisma.sql`usi.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -167,8 +167,8 @@ export class UserRepository {
             date_trunc(${mode}, csm.crt_dt::timestamptz) AS stat_date,
             'category_subscribe' AS stat_type,
             COUNT(*) AS stat_count
-          FROM nihilog.ctgry_sbcr_mpng csm
-          INNER JOIN nihilog.user_sbcr_info usi ON usi.sbcr_no = csm.sbcr_no
+          FROM ctgry_sbcr_mpng csm
+          INNER JOIN user_sbcr_info usi ON usi.sbcr_no = csm.sbcr_no
           WHERE ${userNo
             ? Prisma.sql`usi.user_no = ${userNo}`
             : Prisma.sql`TRUE`}
@@ -217,21 +217,21 @@ export class UserRepository {
       const result = await this.prisma.$queryRaw<ActiveUserAnalysisItemType[]>`
         WITH active_users_7d AS (
           SELECT COUNT(*) as active_count
-          FROM nihilog.user_info
+          FROM user_info
           WHERE last_lgn_dt::timestamptz >= (${startDt}::timestamptz - INTERVAL '7 days')
             AND last_lgn_dt::timestamptz <= ${endDt}::timestamptz
             AND use_yn = 'Y' AND del_yn = 'N'
         ),
         active_users_30d AS (
           SELECT COUNT(*) as active_count
-          FROM nihilog.user_info
+          FROM user_info
           WHERE last_lgn_dt::timestamptz >= (${startDt}::timestamptz - INTERVAL '30 days')
             AND last_lgn_dt::timestamptz <= ${endDt}::timestamptz
             AND use_yn = 'Y' AND del_yn = 'N'
         ),
         total_users AS (
           SELECT COUNT(*) as total_count
-          FROM nihilog.user_info
+          FROM user_info
           WHERE use_yn = 'Y' AND del_yn = 'N'
         )
         SELECT
@@ -293,13 +293,13 @@ export class UserRepository {
               COALESCE(c.last_comment_date, '1900-01-01'::timestamp),
               COALESCE(bm.last_bookmark_date, '1900-01-01'::timestamp)
             ) as last_activity_date
-          FROM nihilog.user_info u
+          FROM user_info u
           LEFT JOIN (
             SELECT
               user_no,
               COUNT(*) as post_count,
               MAX(crt_dt) as last_post_date
-            FROM nihilog.pst_info
+            FROM pst_info
             WHERE use_yn = 'Y' AND del_yn = 'N'
               ${analyzeStatData
                 ? Prisma.sql`AND crt_dt::timestamptz >= ${analyzeStatData.startDt}::timestamptz AND crt_dt::timestamptz <= ${analyzeStatData.endDt}::timestamptz`
@@ -311,7 +311,7 @@ export class UserRepository {
               crt_no as user_no,
               COUNT(*) as comment_count,
               MAX(crt_dt) as last_comment_date
-            FROM nihilog.cmnt_info
+            FROM cmnt_info
             WHERE use_yn = 'Y' AND del_yn = 'N'
               ${analyzeStatData
                 ? Prisma.sql`AND crt_dt::timestamptz >= ${analyzeStatData.startDt}::timestamptz AND crt_dt::timestamptz <= ${analyzeStatData.endDt}::timestamptz`
@@ -323,7 +323,7 @@ export class UserRepository {
               user_no,
               COUNT(*) as bookmark_count,
               MAX(crt_dt) as last_bookmark_date
-            FROM nihilog.pst_bkmrk_mpng
+            FROM pst_bkmrk_mpng
             WHERE use_yn = 'Y' AND del_yn = 'N'
               ${analyzeStatData
                 ? Prisma.sql`AND crt_dt::timestamptz >= ${analyzeStatData.startDt}::timestamptz AND crt_dt::timestamptz <= ${analyzeStatData.endDt}::timestamptz`
@@ -373,8 +373,8 @@ export class UserRepository {
           u.eml_addr AS "emailAddress",
           COUNT(p.pst_no) AS "postCount",
           MAX(p.crt_dt) AS "lastPostDate"
-        FROM nihilog.user_info u
-        INNER JOIN nihilog.pst_info p ON u.user_no = p.user_no
+        FROM user_info u
+        INNER JOIN pst_info p ON u.user_no = p.user_no
         WHERE u.use_yn = 'Y' AND u.del_yn = 'N'
           AND p.use_yn = 'Y' AND p.del_yn = 'N'
           ${analyzeStatData
@@ -412,8 +412,8 @@ export class UserRepository {
           u.eml_addr AS "emailAddress",
           COUNT(c.cmnt_no) AS "commentCount",
           MAX(c.crt_dt) AS "lastCommentDate"
-        FROM nihilog.user_info u
-        INNER JOIN nihilog.cmnt_info c ON u.user_no = c.crt_no
+        FROM user_info u
+        INNER JOIN cmnt_info c ON u.user_no = c.crt_no
         WHERE u.use_yn = 'Y' AND u.del_yn = 'N'
           AND c.use_yn = 'Y' AND c.del_yn = 'N'
           ${analyzeStatData
@@ -444,7 +444,7 @@ export class UserRepository {
           SELECT
             user_role AS role,
             COUNT(*) AS count
-          FROM nihilog.user_info
+          FROM user_info
           WHERE del_yn = 'N'
           GROUP BY user_role
         ),
@@ -488,7 +488,7 @@ export class UserRepository {
               WHEN del_yn = 'Y' THEN 'DELETED'
             END AS status,
             COUNT(*) AS count
-          FROM nihilog.user_info
+          FROM user_info
           GROUP BY
             CASE
               WHEN use_yn = 'Y' AND del_yn = 'N' THEN 'ACTIVE'
@@ -535,7 +535,7 @@ export class UserRepository {
           u.eml_addr AS "emailAddress",
           COALESCE(u.last_lgn_dt, u.crt_dt) AS "lastLoginDate",
           EXTRACT(DAYS FROM (NOW() - COALESCE(u.last_lgn_dt, u.crt_dt)::timestamp)) AS "daysSinceLastLogin"
-        FROM nihilog.user_info u
+        FROM user_info u
         WHERE u.use_yn = 'Y' AND u.del_yn = 'N'
           AND (
             u.last_lgn_dt IS NULL
@@ -566,13 +566,13 @@ export class UserRepository {
       const result = await this.prisma.$queryRaw<UserGrowthRateItemType[]>`
         WITH previous_period AS (
           SELECT COUNT(*) as user_count
-          FROM nihilog.user_info
+          FROM user_info
           WHERE crt_dt::timestamptz < ${startDt}::timestamptz
             AND del_yn = 'N'
         ),
         current_period AS (
           SELECT COUNT(*) as user_count
-          FROM nihilog.user_info
+          FROM user_info
           WHERE crt_dt::timestamptz <= ${endDt}::timestamptz
             AND del_yn = 'N'
         )
@@ -612,7 +612,7 @@ export class UserRepository {
           SELECT
             COUNT(*) as total_signups,
             COUNT(CASE WHEN last_lgn_dt::timestamptz >= (${endDt}::timestamptz - INTERVAL '1 month') THEN 1 END) as active_users
-          FROM nihilog.user_info
+          FROM user_info
           WHERE crt_dt::timestamptz >= ${startDt}::timestamptz
             AND crt_dt::timestamptz <= ${endDt}::timestamptz
             AND del_yn = 'N'
@@ -621,7 +621,7 @@ export class UserRepository {
           SELECT
             COUNT(*) as total_signups,
             COUNT(CASE WHEN last_lgn_dt::timestamptz >= (${endDt}::timestamptz - INTERVAL '3 months') THEN 1 END) as active_users
-          FROM nihilog.user_info
+          FROM user_info
           WHERE crt_dt::timestamptz >= (${startDt}::timestamptz - INTERVAL '2 months')
             AND crt_dt::timestamptz <= ${endDt}::timestamptz
             AND del_yn = 'N'
@@ -630,7 +630,7 @@ export class UserRepository {
           SELECT
             COUNT(*) as total_signups,
             COUNT(CASE WHEN last_lgn_dt::timestamptz >= (${endDt}::timestamptz - INTERVAL '6 months') THEN 1 END) as active_users
-          FROM nihilog.user_info
+          FROM user_info
           WHERE crt_dt::timestamptz >= (${startDt}::timestamptz - INTERVAL '5 months')
             AND crt_dt::timestamptz <= ${endDt}::timestamptz
             AND del_yn = 'N'
