@@ -1,1 +1,1 @@
-export { useUpdateAdminProfile } from './use-update-admin-profile';
+export { useAdminUpdateProfile } from './use-update-admin-profile';

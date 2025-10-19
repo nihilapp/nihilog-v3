@@ -1,30 +1,30 @@
 // 통계 분석 훅들
-export { useGetAnalyzeTagData } from './use-get-analyze-tag-data';
-export { useGetTopUsedTags } from './use-get-top-used-tags';
-export { useGetTagUsageTrend } from './use-get-tag-usage-trend';
-export { useGetUnusedTags } from './use-get-unused-tags';
-export { useGetTopTagsBySubscriber } from './use-get-top-tags-by-subscriber';
-export { useGetTagSubscriberGrowth } from './use-get-tag-subscriber-growth';
-export { useGetTagsWithoutSubscribers } from './use-get-tags-without-subscribers';
-export { useGetTagUsageEfficiency } from './use-get-tag-usage-efficiency';
-export { useGetTagAverageUsageFrequency } from './use-get-tag-average-usage-frequency';
-export { useGetTagLifecycleAnalysis } from './use-get-tag-lifecycle-analysis';
-export { useGetTagStatusDistribution } from './use-get-tag-status-distribution';
-export { useGetTagCreatorStats } from './use-get-tag-creator-stats';
-export { useGetTagCleanupRecommendations } from './use-get-tag-cleanup-recommendations';
+export { useAdminGetAnalyzeTagData } from './use-admin-get-analyze-tag-data';
+export { useAdminGetTopUsedTags } from './use-admin-get-top-used-tags';
+export { useAdminGetTagUsageTrend } from './use-admin-get-tag-usage-trend';
+export { useAdminGetUnusedTags } from './use-admin-get-unused-tags';
+export { useAdminGetTopTagsBySubscriber } from './use-admin-get-top-tags-by-subscriber';
+export { useAdminGetTagSubscriberGrowth } from './use-admin-get-tag-subscriber-growth';
+export { useAdminGetTagsWithoutSubscribers } from './use-admin-get-tags-without-subscribers';
+export { useAdminGetTagUsageEfficiency } from './use-admin-get-tag-usage-efficiency';
+export { useAdminGetTagAverageUsageFrequency } from './use-admin-get-tag-average-usage-frequency';
+export { useAdminGetTagLifecycleAnalysis } from './use-admin-get-tag-lifecycle-analysis';
+export { useAdminGetTagStatusDistribution } from './use-admin-get-tag-status-distribution';
+export { useAdminGetTagCreatorStats } from './use-admin-get-tag-creator-stats';
+export { useAdminGetTagCleanupRecommendations } from './use-admin-get-tag-cleanup-recommendations';
 
 // 태그 관리 훅들
-export { useCreateTag } from './use-create-tag';
-export { useMultipleCreateTag } from './use-multiple-create-tag';
-export { useUpdateTag } from './use-update-tag';
-export { useMultipleUpdateTag } from './use-multiple-update-tag';
-export { useDeleteTag } from './use-delete-tag';
-export { useMultipleDeleteTag } from './use-multiple-delete-tag';
+export { useAdminCreateTag } from './use-admin-create-tag';
+export { useAdminMultipleCreateTag } from './use-admin-multiple-create-tag';
+export { useAdminUpdateTag } from './use-admin-update-tag';
+export { useAdminMultipleUpdateTag } from './use-admin-multiple-update-tag';
+export { useAdminDeleteTag } from './use-admin-delete-tag';
+export { useAdminMultipleDeleteTag } from './use-admin-multiple-delete-tag';
 
 // 태그 매핑 훅들
-export { useGetTagMapping } from './use-get-tag-mapping';
-export { useGetTagMappingByTagNo } from './use-get-tag-mapping-by-tag-no';
-export { useAddTagMapping } from './use-add-tag-mapping';
-export { useMultipleAddTagMapping } from './use-multiple-add-tag-mapping';
-export { useDeleteTagMapping } from './use-delete-tag-mapping';
-export { useMultipleDeleteTagMapping } from './use-multiple-delete-tag-mapping';
+export { useAdminGetTagMapping } from './use-admin-get-tag-mapping';
+export { useAdminGetTagMappingByTagNo } from './use-admin-get-tag-mapping-by-tag-no';
+export { useAdminAddTagMapping } from './use-admin-add-tag-mapping';
+export { useAdminMultipleAddTagMapping } from './use-admin-multiple-add-tag-mapping';
+export { useAdminDeleteTagMapping } from './use-admin-delete-tag-mapping';
+export { useAdminMultipleDeleteTagMapping } from './use-admin-multiple-delete-tag-mapping';

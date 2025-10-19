@@ -34,7 +34,7 @@ export class AdminController {
       roles: [ 'ADMIN', ],
     },
   })
-  async updateProfile(
+  async adminUpdateProfile(
     @Req() req: AuthRequest,
     @Body() updateProfileData: UpdateUserDto
   ): Promise<ResponseDto<SelectUserInfoType>> {

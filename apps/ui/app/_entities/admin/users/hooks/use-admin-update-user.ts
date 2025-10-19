@@ -1,25 +1,30 @@
 import { toast } from 'sonner';
 
-import { useInvalidateAdminCache } from '@/_entities/admin/admin.keys';
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { usePut } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { UpdateUserType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
-interface UseUpdateAdminProfileOptions extends MutationOptionsType<SelectUserInfoType, UpdateUserType> {}
+import { useInvalidateAdminUsersCache } from '../admin-users.keys';
+
+interface UseAdminUpdateUserOptions extends MutationOptionsType<SelectUserInfoType, UpdateUserType> {
+  userNo: number;
+}
 
 /**
- * @description 관리자 프로필을 수정하는 커스텀 훅
- * @param {UseUpdateAdminProfileOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @description 사용자를 수정하는 커스텀 훅
+ * @param {UseAdminUpdateUserOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminUpdateProfile(options: UseUpdateAdminProfileOptions = {}) {
-  const invalidateCache = useInvalidateAdminCache();
+export function useAdminUpdateUser(options: UseAdminUpdateUserOptions = { userNo: 0, }) {
+  const { userNo, ...mutationOptions } = options;
+  const invalidateCache = useInvalidateAdminUsersCache();
 
   const mutation = usePut<SelectUserInfoType, UpdateUserType>({
     url: [
       'admin',
-      'profile',
+      'users',
+      userNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -29,7 +34,7 @@ export function useAdminUpdateProfile(options: UseUpdateAdminProfileOptions = {}
         }
       );
 
-      // 관리자 관련 캐시 무효화
+      // Admin Users 관련 캐시 무효화
       invalidateCache();
     },
     errorCallback(error) {
@@ -40,7 +45,7 @@ export function useAdminUpdateProfile(options: UseUpdateAdminProfileOptions = {}
         }
       );
     },
-    ...options,
+    ...mutationOptions,
   });
 
   return mutation;

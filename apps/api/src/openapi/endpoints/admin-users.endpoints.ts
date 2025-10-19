@@ -742,10 +742,10 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/signup - 최초 어드민 생성 (개발 환경에서만)
+  // POST /admin/users/admin - 최초 어드민 생성 (개발 환경에서만)
   openApiRegistry.registerPath({
     method: 'post',
-    path: '/admin/users/signup',
+    path: '/admin/users/admin',
     summary: '🔐 최초 어드민 생성',
     description: '개발 환경에서만 사용 가능한 최초 어드민 계정 생성 기능입니다. 프로덕션 환경에서는 접근이 제한됩니다.',
     tags: [ 'admin-users', ],

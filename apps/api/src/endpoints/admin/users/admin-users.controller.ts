@@ -542,13 +542,13 @@ export class AdminUserController {
    * @param createUserData 사용자 생성 정보
    */
   @Endpoint({
-    endpoint: '/signup',
+    endpoint: '/admin',
     method: 'POST',
     options: {
       // 개발 환경에서만 인증 없이 접근 가능
     },
   })
-  async adminSignup(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
+  async adminCreateAdmin(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
     // 개발 환경이 아니면 접근 거부
     if (process.env.NODE_ENV !== 'development') {
       return createError(
