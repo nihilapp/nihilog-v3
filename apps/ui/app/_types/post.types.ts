@@ -1,4 +1,5 @@
 // 포스트 관련 타입 정의 (기본 구조)
+import type { CategoryInfoType } from './category.types';
 
 export interface PostInfoType {
   pstNo: number;
@@ -26,8 +27,11 @@ export interface PostInfoType {
   delDt?: string;
 }
 
-export type SelectPostType = PostInfoType;
-export type SelectPostListItemType = PostInfoType & {
+// 카테고리 정보가 포함된 포스트 타입
+export type SelectPostType = PostInfoType & {
+  category?: CategoryInfoType | null;
+};
+export type SelectPostListItemType = SelectPostType & {
   totalCnt: number;
   rowNo: number;
 };
@@ -67,8 +71,12 @@ export type SelectPostShareLogListItemType = PostShareLogType & {
   rowNo: number;
 };
 
-export type SelectPostBookmarkType = PostBookmarkType;
-export type SelectPostBookmarkListItemType = PostBookmarkType & {
+// 포스트와 카테고리 정보가 포함된 북마크 타입
+export type SelectPostBookmarkType = PostBookmarkType & {
+  post: SelectPostType;
+};
+
+export type SelectPostBookmarkListItemType = SelectPostBookmarkType & {
   totalCnt: number;
   rowNo: number;
 };

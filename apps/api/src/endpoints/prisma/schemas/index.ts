@@ -147,10 +147,12 @@ export {
 } from './tag.schema';
 
 export {
+  categoryInfoSchema,
   createCategorySchema,
   updateCategorySchema,
   deleteCategorySchema,
   searchCategorySchema,
+  type CategoryInfoType,
   type CreateCategoryType,
   type UpdateCategoryType,
   type DeleteCategoryType,

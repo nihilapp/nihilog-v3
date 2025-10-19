@@ -1,7 +1,12 @@
-import type { PstBkmrkMpng, PstInfo, PstShrnLog, PstViewLog } from '@prisma/client';
+import type { PstShrnLog, PstViewLog } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
-// 단일 포스트 조회
-export type SelectPostType = PstInfo;
+// 단일 포스트 조회 (카테고리 포함)
+export type SelectPostType = Prisma.PstInfoGetPayload<{
+  include: {
+    category: true;
+  };
+}>;
 
 // 목록 조회 항목 (페이징 정보 포함)
 export type SelectPostListItemType = SelectPostType & {
@@ -27,8 +32,16 @@ export type SelectPostShareLogListItemType = SelectPostShareLogType & {
   rowNo: number;
 };
 
-// 단일 포스트 북마크
-export type SelectPostBookmarkType = PstBkmrkMpng;
+// 단일 포스트 북마크 (포스트와 카테고리 포함)
+export type SelectPostBookmarkType = Prisma.PstBkmrkMpngGetPayload<{
+  include: {
+    post: {
+      include: {
+        category: true;
+      };
+    };
+  };
+}>;
 
 // 목록 조회 항목 (페이징 정보 포함)
 export type SelectPostBookmarkListItemType = SelectPostBookmarkType & {

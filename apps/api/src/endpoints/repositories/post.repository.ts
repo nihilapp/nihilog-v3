@@ -74,6 +74,9 @@ export class PostRepository {
           orderBy: { pstNo: 'desc', },
           skip,
           take,
+          include: {
+            category: true,
+          },
         }),
         this.prisma.pstInfo.count({ where, }),
       ]);
@@ -103,6 +106,9 @@ export class PostRepository {
     try {
       const post = await this.prisma.pstInfo.findUnique({
         where: { pstNo, },
+        include: {
+          category: true,
+        },
       });
 
       return prismaResponse(
@@ -123,6 +129,9 @@ export class PostRepository {
     try {
       const post = await this.prisma.pstInfo.findFirst({
         where: { pstCd, },
+        include: {
+          category: true,
+        },
       });
 
       return prismaResponse(
@@ -183,6 +192,9 @@ export class PostRepository {
           orderBy: { pstNo: 'desc', },
           skip,
           take,
+          include: {
+            category: true,
+          },
         }),
         this.prisma.pstInfo.count({
           where,
@@ -250,6 +262,9 @@ export class PostRepository {
           orderBy: { pstNo: 'desc', },
           skip,
           take,
+          include: {
+            category: true,
+          },
         }),
         this.prisma.pstInfo.count({
           where,
@@ -321,6 +336,9 @@ export class PostRepository {
           },
           skip,
           take,
+          include: {
+            category: true,
+          },
         }),
         this.prisma.pstInfo.count({
           where,
@@ -834,6 +852,13 @@ export class PostRepository {
           userNo: createData.userNo,
           pstNo: createData.pstNo,
         },
+        include: {
+          post: {
+            include: {
+              category: true,
+            },
+          },
+        },
       });
 
       return prismaResponse(
@@ -912,6 +937,13 @@ export class PostRepository {
           where,
           skip,
           take,
+          include: {
+            post: {
+              include: {
+                category: true,
+              },
+            },
+          },
         }),
         this.prisma.pstBkmrkMpng.count({ where, }),
       ]);
@@ -1003,6 +1035,9 @@ export class PostRepository {
           },
           skip,
           take,
+          include: {
+            category: true,
+          },
         }),
         this.prisma.pstInfo.count({ where, }),
       ]);
@@ -1046,6 +1081,9 @@ export class PostRepository {
           updtNo: userNo,
           updtDt: timeToString(),
         },
+        include: {
+          category: true,
+        },
       });
 
       return prismaResponse(
@@ -1073,6 +1111,9 @@ export class PostRepository {
           ...updateData,
           updtNo: userNo,
           updtDt: timeToString(),
+        },
+        include: {
+          category: true,
         },
       });
 

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import type { MutationOptionsType } from '@/_entities/common/common.types';
@@ -16,6 +17,7 @@ interface UseCreatePostOptions extends MutationOptionsType<SelectPostType, Creat
  */
 export function useCreatePost(options: UseCreatePostOptions = {}) {
   const invalidateCache = useInvalidateAdminPostsCache();
+  const router = useRouter();
 
   const mutation = usePost<SelectPostType, CreatePostType>({
     url: [
@@ -23,6 +25,10 @@ export function useCreatePost(options: UseCreatePostOptions = {}) {
       'posts',
     ],
     callback(res) {
+      if (!res.data) {
+        return;
+      }
+
       toast.success(
         res.message,
         {
@@ -32,6 +38,8 @@ export function useCreatePost(options: UseCreatePostOptions = {}) {
 
       // Admin Posts 관련 캐시 무효화
       invalidateCache();
+
+      router.push(`/admin/posts/edit?pstCd=${res.data.pstCd}`);
     },
     errorCallback(error) {
       toast.error(

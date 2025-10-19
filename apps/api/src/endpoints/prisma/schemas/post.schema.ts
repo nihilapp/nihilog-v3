@@ -5,6 +5,8 @@ import { commonSchema, ynEnumSchema } from '@/endpoints/prisma/schemas/common.sc
 import { postStatusSchema as basePostStatusSchema } from '@/endpoints/prisma/schemas/enums.schema';
 import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 
+import { categoryInfoSchema } from './category.schema';
+
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
@@ -21,7 +23,7 @@ const postStatusSchema = basePostStatusSchema
     example: 'EMPTY',
   });
 
-// 기본 포스트 스키마
+// 카테고리 정보가 포함된 포스트 스키마
 export const postSchema = commonSchema.extend({
   pstNo: z.coerce
     .number()
@@ -190,6 +192,13 @@ export const postSchema = commonSchema.extend({
         3,
       ],
     }),
+  // 카테고리 정보 포함
+  category: categoryInfoSchema
+    .nullable()
+    .optional()
+    .openapi({
+      description: '카테고리 정보',
+    }),
 });
 
 // 포스트 생성 스키마
@@ -324,7 +333,7 @@ export const deletePostSchema = postSchema.pick({
   }
 );
 
-// 포스트 북마크 스키마
+// 포스트 북마크 스키마 (포스트와 카테고리 정보 포함)
 export const postBookmarkSchema = commonSchema.extend({
   bkmrkNo: z.coerce
     .number()
@@ -349,6 +358,12 @@ export const postBookmarkSchema = commonSchema.extend({
     .openapi({
       description: '포스트 번호',
       example: 1,
+    }),
+  // 포스트 정보 포함 (카테고리 정보도 포함)
+  post: postSchema
+    .optional()
+    .openapi({
+      description: '포스트 정보 (카테고리 포함)',
     }),
 });
 

@@ -1,18 +1,16 @@
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
 import { Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { SwaggerModule } from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 import { UnifiedResponseInterceptor } from '@/interceptors/unified-response.interceptor';
 import { generateOpenApiDocument } from '@/openapi/generator';
 
 import { AppModule } from './app.module';
+import { CONFIG } from './config/config';
 import { HttpLoggingInterceptor } from './http-logging.interceptor';
-import { swaggerUiOptions } from './swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -29,15 +27,17 @@ async function bootstrap() {
     }
   );
 
-  const configService = app.get(ConfigService);
-
   // Fastify 플러그인 등록
-  // NestJS Fastify 어댑터와 플러그인 간의 알려진 타입 호환성 문제
-  // @ts-expect-error - NestJS Fastify 어댑터와 플러그인 타입 호환성 문제
+  // NestJS Fastify 어댑터와 플러그인 간의 알려진 타입 호환성 문제로 인한 ESLint 비활성화
+  /* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+  // Cookie 플러그인을 먼저 등록 (CORS가 Cookie 메서드를 사용하므로)
+  await app.register(fastifyCookie as any);
+
   await app.register(
-    fastifyCors,
+    fastifyCors as any,
     {
-      origin: (origin, cb) => {
+      origin: (origin: string | undefined, cb: (err: Error | null, allow: boolean) => void) => {
       // 모든 origin 허용 (개발 환경)
         if (process.env.NODE_ENV === 'development') {
           cb(
@@ -80,8 +80,7 @@ async function bootstrap() {
     }
   );
 
-  // @ts-expect-error - NestJS Fastify 어댑터와 플러그인 타입 호환성 문제
-  await app.register(fastifyCookie);
+  /* eslint-enable @typescript-eslint/no-unsafe-argument */
 
   // 글로벌 파이프 설정
   app.useGlobalPipes(new ZodValidationPipe());
@@ -95,23 +94,11 @@ async function bootstrap() {
   // 글로벌 필터 설정
   app.useGlobalFilters();
 
-  const swaggerPath = configService.get<string>('swagger.path') ?? 'api';
+  const host = CONFIG.SERVER.HOST;
+  const port = CONFIG.SERVER.PORT;
 
-  const host = configService.get<string>('server.host') ?? 'localhost';
-  const port = configService.get<number>('server.port') ?? 8000;
-
-  // Zod 기반 OpenAPI 문서 생성
-  const zodOpenApiDocument = generateOpenApiDocument();
-
-  // Zod OpenAPI 문서만 사용
-  const document = zodOpenApiDocument;
-
-  SwaggerModule.setup(
-    swaggerPath,
-    app,
-    document,
-    swaggerUiOptions
-  );
+  // Zod 기반 OpenAPI 문서 생성 (필요시 사용)
+  generateOpenApiDocument();
 
   await app.listen(
     port,
@@ -120,8 +107,7 @@ async function bootstrap() {
 
   const logger = new Logger('Bootstrap');
   logger.log(`🚀 애플리케이션이 http://${host}:${port} 에서 실행 중입니다.`);
-  logger.log(`📚 Swagger 문서는 http://${host}:${port}/${swaggerPath} 에서 확인 가능합니다.`);
-  logger.log(`🔧 Swagger 요청은 로그에 🔧 표시로 구분됩니다.`);
+  logger.log(`📚 OpenAPI 문서가 생성되었습니다.`);
 }
 
 const handleError = (error: Error): void => {

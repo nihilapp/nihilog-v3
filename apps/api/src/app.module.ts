@@ -23,12 +23,12 @@ import { TagSubscribeModule } from '@/endpoints/subscribe/tag-subscribe/tag-subs
 import { TagModule } from '@/endpoints/tags/tags.module';
 import { UserModule } from '@/endpoints/users/users.module';
 
-import config from './conf/conf';
+import sensitiveConfig from './config/sensitive.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: config,
+      load: sensitiveConfig,
       isGlobal: true,
     }),
     PrismaModule,

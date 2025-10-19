@@ -1,6 +1,8 @@
 import { OpenApiGeneratorV3 } from '@asteasolutions/zod-to-openapi';
 import type { OpenAPIObject } from '@nestjs/swagger';
 
+import { CONFIG } from '../config/config';
+
 import { registerAdminCategoriesEndpoints } from './endpoints/admin-categories.endpoints';
 import { registerAdminCategorySubscribeEndpoints } from './endpoints/admin-category-subscribe.endpoints';
 import { registerAdminCommentsEndpoints } from './endpoints/admin-comments.endpoints';
@@ -20,7 +22,7 @@ import { registerUserEndpoints } from './endpoints/users.endpoints';
 import { openApiRegistry, registerAllSchemas } from './registry';
 
 // OpenAPI 문서 생성 함수
-export const generateOpenApiDocument = (): OpenAPIObject => {
+export const generateOpenApiDocument = () => {
   // 모든 스키마 등록
   registerAllSchemas();
 
@@ -47,18 +49,18 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
   const openApiDocument = generator.generateDocument({
     openapi: '3.0.0',
     info: {
-      title: 'Nihilog API',
-      description: 'Nihilog 블로그 API 문서',
-      version: '1.0.0',
+      title: CONFIG.APP.NAME + ' API',
+      description: CONFIG.APP.DESCRIPTION + ' API 문서',
+      version: CONFIG.APP.VERSION,
       contact: {
-        name: 'Nihilog',
-        url: 'https://github.com/nihilncunia/nihilog',
+        name: CONFIG.APP.NAME,
+        url: CONFIG.APP.URL,
         email: 'nihil_ncunia@naver.com',
       },
     },
     servers: [
       {
-        url: 'http://localhost:8000',
+        url: `http://${CONFIG.SERVER.HOST}:${CONFIG.SERVER.PORT}`,
         description: '개발 서버',
       },
     ],
@@ -134,5 +136,5 @@ export const generateOpenApiDocument = (): OpenAPIObject => {
     ],
   });
 
-  return openApiDocument as OpenAPIObject;
+  return openApiDocument as unknown as OpenAPIObject;
 };

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/prisma/schemas/common.schema';
 import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 
-const categoryInfoSchema = commonSchema.extend({
+export const categoryInfoSchema = commonSchema.extend({
   ctgryNo: z.coerce
     .number()
     .int('카테고리 번호는 정수여야 합니다.')
@@ -182,6 +182,7 @@ export const searchCategorySchema = baseSearchSchema.partial().extend({
     }),
 }).partial();
 
+export type CategoryInfoType = z.infer<typeof categoryInfoSchema>;
 export type CreateCategoryType = z.infer<typeof createCategorySchema>;
 export type UpdateCategoryType = z.infer<typeof updateCategorySchema>;
 export type DeleteCategoryType = z.infer<typeof deleteCategorySchema>;

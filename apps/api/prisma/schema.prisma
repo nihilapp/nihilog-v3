@@ -209,7 +209,6 @@ model PstInfo {
   shareLogs PstShrnLog[]
   bookmarks PstBkmrkMpng[]
 
-  @@unique([pstTtl])
   @@unique([pstCd])
   @@index([publDt, delYn, rlsYn])
   @@index([pstStts, delYn])

@@ -1,6 +1,6 @@
 'use client';
 
-import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, getPaginationRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
@@ -14,6 +14,7 @@ interface Props
   className?: string;
   columns: ColumnDef<any>[];
   data: any[];
+  totalCnt: number;
   message?: string;
 }
 
@@ -26,11 +27,26 @@ const cssVariants = cva(
   }
 );
 
-export function DataTable({ className, columns, data, message, ...props }: Props) {
+export function DataTable({ className, columns, data, totalCnt, message, ...props }: Props) {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
+      },
+    },
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10,
+      },
+    },
+    pageCount: Math.ceil(totalCnt / 10),
+    manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -87,6 +103,7 @@ export function DataTable({ className, columns, data, message, ...props }: Props
             )}
         </TableBody>
       </Table>
+
     </div>
   );
 }

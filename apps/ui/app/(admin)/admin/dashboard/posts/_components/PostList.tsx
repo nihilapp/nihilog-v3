@@ -5,6 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
 import { DataTable } from '@/(common)/_components/DataTable';
+import { Badge } from '@/(common)/_components/ui/badge';
 import { Button } from '@/(common)/_components/ui/button';
 import { useCreatePost } from '@/_entities/admin/posts/hooks';
 import { useGetPostList } from '@/_entities/posts/hooks';
@@ -40,10 +41,26 @@ export function PostList({ className, ...props }: Props) {
     {
       accessorKey: 'ctgryNo',
       header: '카테고리',
+      cell({ row, }) {
+        return (
+          <Badge variant='outline'>
+            {row.original.ctgryNo
+              ? row.original.category?.ctgryNm
+              : '미분류'}
+          </Badge>
+        );
+      },
     },
     {
       accessorKey: 'pstStts',
       header: '상태',
+      cell({ row, }) {
+        return (
+          <Badge variant='outline'>
+            {row.original.pstStts}
+          </Badge>
+        );
+      },
     },
     {
       accessorKey: 'crtDt',
@@ -79,7 +96,7 @@ export function PostList({ className, ...props }: Props) {
     >
       {done && (
         <>
-          <div>
+          <div className='flex items-center justify-end'>
             <Button onClick={onCreatePost}>
               새 포스트
             </Button>
@@ -88,6 +105,7 @@ export function PostList({ className, ...props }: Props) {
           <DataTable
             columns={columns}
             data={posts?.data?.list || []}
+            totalCnt={posts?.data?.totalCnt || 0}
             message='포스트가 없습니다.'
           />
         </>
