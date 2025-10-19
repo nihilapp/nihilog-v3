@@ -1,0 +1,48 @@
+import { toast } from 'sonner';
+
+import type { QueryOptionType } from '@/_entities/common/common.types';
+import { useGet } from '@/_entities/common/hooks';
+import { getToastStyle } from '@/_libs';
+import type { AnalyzeStatType } from '@/_schemas';
+import type { AnalyzeUserStatItemType } from '@/_types';
+
+interface UseGetAnalyzeUserDataOptions extends QueryOptionType<AnalyzeUserStatItemType[]> {}
+
+/**
+ * @description 사용자 분석 통계 데이터를 조회하는 커스텀 훅
+ * @param {AnalyzeStatType} analyzeStatData - 분석 통계 데이터
+ * @param {UseGetAnalyzeUserDataOptions} [options] - 쿼리 옵션 (선택사항)
+ */
+export function useGetAnalyzeUserData(
+  analyzeStatData: AnalyzeStatType,
+  options: UseGetAnalyzeUserDataOptions = {}
+) {
+  const query = useGet<AnalyzeUserStatItemType[]>({
+    url: [
+      'admin',
+      'users',
+      'analyze',
+      'overview',
+    ],
+    params: analyzeStatData,
+    callback(res) {
+      toast.success(
+        res.message,
+        {
+          style: getToastStyle('success'),
+        }
+      );
+    },
+    errorCallback(error) {
+      toast.error(
+        error.message,
+        {
+          style: getToastStyle('error'),
+        }
+      );
+    },
+    ...options,
+  });
+
+  return query;
+}

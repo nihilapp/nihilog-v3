@@ -15,7 +15,7 @@ interface Props
 const cssVariants = cva([ 'flex items-center gap-2', ]);
 
 export function AuthButtons({ className, ...props }: Props) {
-  const { session, isPending, } = useGetSession();
+  const { response, isPending, } = useGetSession();
 
   const { mutate: signOut, } = useSignOut();
 
@@ -35,7 +35,7 @@ export function AuthButtons({ className, ...props }: Props) {
       )}
       {...props}
     >
-      {session
+      {response?.data
         ? (
           <>
             <Button variant='outline' asChild>

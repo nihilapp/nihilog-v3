@@ -1,103 +1,50 @@
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-import type { SearchCommentType } from '@/_schemas/comment.schema';
-import type { AnalyzeStatType } from '@/_schemas/common.schema';
+import { useQueryClient } from '@tanstack/react-query';
 
 /**
- * 관리자 댓글 관련 쿼리 키 정의
+ * Admin Comments 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * Admin Comments 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
  */
-export const adminCommentsKeys = createQueryKeys(
-  'adminComments',
-  {
-  // ===== GET Queries =====
-    search: (params: SearchCommentType) => [
-      'admin',
-      'comments',
-      'search',
-      params,
-    ], // 댓글 목록 조회 (POST)
+export function useInvalidateAdminCommentsCache() {
+  const queryClient = useQueryClient();
 
-    // ===== 통계 관련 GET Queries =====
-    analyzeCommentStatusDistribution: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'comment-status-distribution',
-    ], // 댓글 상태 분포
-    analyzePostsWithoutComments: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'posts-without-comments',
-    ], // 댓글 없는 포스트
+  return () => {
+    // 1. admin/comments로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'comments',
+      ],
+    });
 
-    // ===== POST Mutations (통계) =====
-    analyzeOverview: (params: AnalyzeStatType) => [
-      'admin',
-      'comments',
-      'analyze',
-      'overview',
-      params,
-    ], // 댓글 분석 통계
-    analyzeTopPostsByComments: (limit: number) => [
-      'admin',
-      'comments',
-      'analyze',
-      'top-posts-by-comments',
-      limit,
-    ], // 댓글 많은 포스트 TOP N
-    analyzeTopUsersByComments: (limit: number) => [
-      'admin',
-      'comments',
-      'analyze',
-      'top-users-by-comments',
-      limit,
-    ], // 댓글 많은 사용자 TOP N
-    analyzeAverageCommentsPerPost: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'average-comments-per-post',
-    ], // 포스트당 평균 댓글 수
-    analyzeCommentApprovalRate: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'comment-approval-rate',
-    ], // 댓글 승인율
-    analyzeCommentSpamRate: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'comment-spam-rate',
-    ], // 스팸 댓글 비율
-    analyzeCommentReplyRatio: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'comment-reply-ratio',
-    ], // 답글 비율
-    analyzeCommentAverageDepth: () => [
-      'admin',
-      'comments',
-      'analyze',
-      'comment-average-depth',
-    ], // 평균 댓글 깊이
+    // 2. comments로 시작하는 모든 쿼리 무효화 (일반 댓글 관련)
+    queryClient.invalidateQueries({
+      queryKey: [ 'comments', ],
+    });
 
-    // ===== PUT Mutations =====
-    updateMultiple: () => [
-      'admin',
-      'comments',
-      'update',
-      'multiple',
-    ], // 다수 댓글 수정
+    // 3. posts로 시작하는 모든 쿼리 무효화 (댓글과 관련된 포스트)
+    queryClient.invalidateQueries({
+      queryKey: [ 'posts', ],
+    });
 
-    // ===== DELETE Mutations =====
-    deleteMultiple: () => [
-      'admin',
-      'comments',
-      'delete',
-      'multiple',
-    ], // 다수 댓글 삭제
-  }
-);
+    // 4. admin/posts로 시작하는 모든 쿼리 무효화 (관리자 포스트 관련)
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'posts',
+      ],
+    });
+
+    // 5. users로 시작하는 모든 쿼리 무효화 (댓글 작성자 관련)
+    queryClient.invalidateQueries({
+      queryKey: [ 'users', ],
+    });
+
+    // 6. admin/users로 시작하는 모든 쿼리 무효화 (관리자 사용자 관련)
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'users',
+      ],
+    });
+  };
+}

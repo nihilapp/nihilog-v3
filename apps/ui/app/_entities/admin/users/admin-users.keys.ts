@@ -1,4 +1,5 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useQueryClient } from '@tanstack/react-query';
 
 import type { AnalyzeStatType } from '@/_schemas/common.schema';
 import type { SearchUserType } from '@/_schemas/user.schema';
@@ -148,3 +149,70 @@ export const adminUsersKeys = createQueryKeys(
     ], // 다중 사용자 삭제
   }
 );
+
+/**
+ * Admin Users 관련 뮤테이션 시 공통 캐시 무효화 로직
+ * Admin Users 생성/수정/삭제 시 관련된 모든 쿼리를 무효화합니다.
+ */
+export function useInvalidateAdminUsersCache() {
+  const queryClient = useQueryClient();
+
+  return () => {
+    // 1. admin/users로 시작하는 모든 쿼리 무효화
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'users',
+      ],
+    });
+
+    // 2. users로 시작하는 모든 쿼리 무효화 (일반 사용자 관련)
+    queryClient.invalidateQueries({
+      queryKey: [ 'users', ],
+    });
+
+    // 3. auth로 시작하는 모든 쿼리 무효화 (인증 관련)
+    queryClient.invalidateQueries({
+      queryKey: [ 'auth', ],
+    });
+
+    // 4. posts로 시작하는 모든 쿼리 무효화 (사용자와 관련된 포스트)
+    queryClient.invalidateQueries({
+      queryKey: [ 'posts', ],
+    });
+
+    // 5. admin/posts로 시작하는 모든 쿼리 무효화 (관리자 포스트 관련)
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'posts',
+      ],
+    });
+
+    // 6. comments로 시작하는 모든 쿼리 무효화 (사용자와 관련된 댓글)
+    queryClient.invalidateQueries({
+      queryKey: [ 'comments', ],
+    });
+
+    // 7. admin/comments로 시작하는 모든 쿼리 무효화 (관리자 댓글 관련)
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'comments',
+      ],
+    });
+
+    // 8. subscribe로 시작하는 모든 쿼리 무효화 (사용자 구독 관련)
+    queryClient.invalidateQueries({
+      queryKey: [ 'subscribe', ],
+    });
+
+    // 9. admin/subscribe로 시작하는 모든 쿼리 무효화 (관리자 구독 관련)
+    queryClient.invalidateQueries({
+      queryKey: [
+        'admin',
+        'subscribe',
+      ],
+    });
+  };
+}

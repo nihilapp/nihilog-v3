@@ -27,6 +27,7 @@ export {
 export {
   createUserSchema,
   updateUserSchema,
+  deleteUserSchema,
   signInSchema,
   forgotPasswordSchema,
   changePasswordSchema,
@@ -35,6 +36,7 @@ export {
   searchUserSchema,
   type CreateUserType,
   type UpdateUserType,
+  type DeleteUserType,
   type SignInType,
   type ForgotPasswordType,
   type ChangePasswordType,

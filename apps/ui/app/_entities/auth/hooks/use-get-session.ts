@@ -18,12 +18,7 @@ export function useGetSession(options: UseGetSessionOptions = {}) {
       'session',
     ],
     callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
+      //
     },
     errorCallback(error) {
       toast.error(

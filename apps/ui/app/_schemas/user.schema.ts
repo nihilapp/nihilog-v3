@@ -122,6 +122,18 @@ export const withdrawSchema = z.object({
   }
 );
 
+// 사용자 삭제 스키마
+export const deleteUserSchema = z.object({
+  userNo: z.number()
+    .int('사용자 번호는 정수여야 합니다.')
+    .positive('사용자 번호는 양수여야 합니다.')
+    .optional(),
+  userNoList: z.array(z.number()
+    .int('사용자 번호는 정수여야 합니다.')
+    .positive('사용자 번호는 양수여야 합니다.'))
+    .optional(),
+}).partial();
+
 // 사용자 검색 스키마
 export const searchUserSchema = baseSearchSchema.extend({
   delYn: ynEnumSchema.optional(),
@@ -180,6 +192,7 @@ export const searchUserSchema = baseSearchSchema.extend({
 // 타입 추출
 export type CreateUserType = z.infer<typeof createUserSchema>;
 export type UpdateUserType = z.infer<typeof updateUserSchema>;
+export type DeleteUserType = z.infer<typeof deleteUserSchema>;
 export type SignInType = z.infer<typeof signInSchema>;
 export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordSchema>;

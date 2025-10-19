@@ -6,12 +6,11 @@ import React from 'react';
 
 import { DataTable } from '@/(common)/_components/DataTable';
 import { Button } from '@/(common)/_components/ui/button';
+import { useCreatePost } from '@/_entities/admin/posts/hooks';
+import { useGetPostList } from '@/_entities/posts/hooks';
 import { cn } from '@/_libs';
 import { CommonHelper } from '@/_libs/tools';
 import type { SelectPostType } from '@/_types';
-
-import { useAdminCreatePost } from '@/_entities/admin/posts/hooks';
-import { useGetPostsForAdmin } from '@/_entities/posts/hooks/use-get-posts';
 
 interface Props
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -52,28 +51,14 @@ export function PostList({ className, ...props }: Props) {
     },
   ];
 
-  const createPost = useAdminCreatePost();
-  const { response: posts, done, } = useGetPostsForAdmin({
-    searchParams: {
+  const createPost = useCreatePost();
+  const { response: posts, done, } = useGetPostList({
+    params: {
       page: 1,
       strtRow: 0,
       endRow: 10,
     },
   });
-
-  // 디버깅용 로그
-  console.log(
-    'posts response:',
-    posts
-  );
-  console.log(
-    'posts data:',
-    posts?.data
-  );
-  console.log(
-    'posts list:',
-    posts?.data?.list
-  );
 
   const onCreatePost = () => {
     createPost.mutate({

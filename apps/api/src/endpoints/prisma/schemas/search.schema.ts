@@ -6,7 +6,8 @@ extendZodWithOpenApi(z);
 
 // 범용 검색 스키마 (기본 필드만)
 export const baseSearchSchema = z.object({
-  strtRow: z.number()
+  strtRow: z.coerce
+    .number()
     .int('시작행은 정수여야 합니다.')
     .min(
       0,
@@ -17,7 +18,8 @@ export const baseSearchSchema = z.object({
       description: '시작 행 번호 (페이징용, 0부터 시작)',
       example: 0,
     }),
-  endRow: z.number()
+  endRow: z.coerce
+    .number()
     .int('끝행은 정수여야 합니다.')
     .min(
       1,
@@ -44,7 +46,8 @@ export const baseSearchSchema = z.object({
       description: '검색 키워드 (최대 100자)',
       example: '검색어',
     }),
-  page: z.number()
+  page: z.coerce
+    .number()
     .int('페이지는 정수여야 합니다.')
     .min(
       1,
