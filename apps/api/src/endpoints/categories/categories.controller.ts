@@ -1,6 +1,7 @@
 import {
   Controller,
   Param,
+  ParseIntPipe,
   Query
 } from '@nestjs/common';
 
@@ -51,7 +52,10 @@ export class CategoriesController {
     endpoint: '/:ctgryNo',
     method: 'GET',
   })
-  async getCategoryByCtgryNo(@Param('ctgryNo') ctgryNo: number): Promise<ResponseDto<SelectCategoryType>> {
+  async getCategoryByCtgryNo(@Param(
+    'ctgryNo',
+    ParseIntPipe
+  ) ctgryNo: number): Promise<ResponseDto<SelectCategoryType>> {
     const result = await this.categoriesService.getCategoryByCtgryNo(ctgryNo);
 
     if (!result?.success) {

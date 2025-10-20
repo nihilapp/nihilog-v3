@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Query, Req } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -45,7 +45,10 @@ export class CommentsController {
     endpoint: '/:cmntNo',
     method: 'GET',
   })
-  async getCommentByCmntNo(@Param('cmntNo') cmntNo: number): Promise<ResponseDto<SelectCommentType>> {
+  async getCommentByCmntNo(@Param(
+    'cmntNo',
+    ParseIntPipe
+  ) cmntNo: number): Promise<ResponseDto<SelectCommentType>> {
     const result = await this.commentsService.getCommentByCmntNo(cmntNo);
 
     if (!result?.success) {

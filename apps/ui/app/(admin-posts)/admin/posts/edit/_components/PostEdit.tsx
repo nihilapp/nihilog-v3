@@ -3,14 +3,14 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import React, { useMemo } from 'react';
 
-import { useGetPostBySlug } from '@/_entities/posts/hooks';
+import { useGetPostByNo } from '@/_entities/posts/hooks';
 import { cn } from '@/_libs';
 
 interface Props
   extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof cssVariants> {
   className?: string;
-  pstCd: string;
+  pstNo: string;
 }
 
 const cssVariants = cva(
@@ -22,8 +22,8 @@ const cssVariants = cva(
   }
 );
 
-export function PostEdit({ className, pstCd, ...props }: Props) {
-  const { response, loading, done, } = useGetPostBySlug({ pstCd, });
+export function PostEdit({ className, pstNo, ...props }: Props) {
+  const { response, loading, done, } = useGetPostByNo({ pstNo: +pstNo, });
 
   const post = useMemo(
     () => {

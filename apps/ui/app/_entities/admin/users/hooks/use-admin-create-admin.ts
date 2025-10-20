@@ -7,6 +7,7 @@ import type { CreateUserType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
+import { useRouter } from 'next/navigation';
 
 interface UseAdminCreateAdminOptions extends MutationOptionsType<SelectUserInfoType, CreateUserType> {}
 
@@ -16,6 +17,7 @@ interface UseAdminCreateAdminOptions extends MutationOptionsType<SelectUserInfoT
  */
 export function useAdminCreateAdmin(options: UseAdminCreateAdminOptions = {}) {
   const invalidateCache = useInvalidateAdminUsersCache();
+  const router = useRouter();
 
   const mutation = usePost<SelectUserInfoType, CreateUserType>({
     url: [
@@ -33,6 +35,8 @@ export function useAdminCreateAdmin(options: UseAdminCreateAdminOptions = {}) {
 
       // Admin Users 관련 캐시 무효화
       invalidateCache();
+
+      router.push('/auth/signin');
     },
     errorCallback(error) {
       toast.error(

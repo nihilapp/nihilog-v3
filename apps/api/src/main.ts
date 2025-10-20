@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ZodValidationPipe } from 'nestjs-zod';
 
+import { PrismaExceptionFilter } from '@/filters/prisma-exception.filter';
 import { UnifiedResponseInterceptor } from '@/interceptors/unified-response.interceptor';
 import { generateOpenApiDocument } from '@/openapi/generator';
 
@@ -92,7 +93,7 @@ async function bootstrap() {
   );
 
   // 글로벌 필터 설정
-  app.useGlobalFilters();
+  app.useGlobalFilters(new PrismaExceptionFilter());
 
   const host = CONFIG.SERVER.HOST;
   const port = CONFIG.SERVER.PORT;

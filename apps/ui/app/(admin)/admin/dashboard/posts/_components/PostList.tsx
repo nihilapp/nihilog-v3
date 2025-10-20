@@ -7,7 +7,7 @@ import React from 'react';
 import { DataTable } from '@/(common)/_components/DataTable';
 import { Badge } from '@/(common)/_components/ui/badge';
 import { Button } from '@/(common)/_components/ui/button';
-import { useCreatePost } from '@/_entities/admin/posts/hooks';
+import { useAdminCreatePost } from '@/_entities/admin/posts/hooks';
 import { useGetPostList } from '@/_entities/posts/hooks';
 import { cn } from '@/_libs';
 import { CommonHelper } from '@/_libs/tools';
@@ -68,7 +68,9 @@ export function PostList({ className, ...props }: Props) {
     },
   ];
 
-  const createPost = useCreatePost();
+  // TODO: 어드민 페이지 토큰 관련 내용 확인 필요.
+
+  const createPost = useAdminCreatePost();
   const { response: posts, done, } = useGetPostList({
     params: {
       page: 1,

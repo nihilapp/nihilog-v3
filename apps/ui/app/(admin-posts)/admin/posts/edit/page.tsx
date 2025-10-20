@@ -5,7 +5,7 @@ import { setMeta } from '@/_libs';
 
 interface Props {
   searchParams: Promise<{
-    pstCd: string;
+    pstNo: string;
   }>;
 }
 
@@ -15,9 +15,9 @@ export const metadata = setMeta({
 });
 
 export default function PostEditPage({ searchParams, }: Props) {
-  const { pstCd, } = use(searchParams);
+  const { pstNo, } = use(searchParams);
 
   return (
-    <PostEdit pstCd={pstCd} />
+    <PostEdit pstNo={pstNo} />
   );
 }

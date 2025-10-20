@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Param,
+  ParseIntPipe,
   Query,
   Req,
   UseGuards
@@ -200,7 +201,10 @@ export class AdminSubscribeController {
   })
   async getUserSubscribeByUserNo(
     @Req() req: AuthRequest,
-    @Param('userNo') userNo: number
+    @Param(
+      'userNo',
+      ParseIntPipe
+    ) userNo: number
   ): Promise<ResponseDto<UserSubscribeDto>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -317,7 +321,10 @@ export class AdminSubscribeController {
   })
   async adminDeleteUserSubscribe(
     @Req() req: AuthRequest,
-    @Param('sbcrNo') sbcrNo: number
+    @Param(
+      'sbcrNo',
+      ParseIntPipe
+    ) sbcrNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;

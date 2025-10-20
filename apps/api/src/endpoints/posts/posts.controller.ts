@@ -1,4 +1,4 @@
-import { Body, Controller, Ip, Param, Query, Req } from '@nestjs/common';
+import { Body, Controller, Ip, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -47,7 +47,10 @@ export class PostsController {
     endpoint: '/:pstNo',
     method: 'GET',
   })
-  async getPostByPstNo(@Param('pstNo') pstNo: number): Promise<ResponseDto<SelectPostType>> {
+  async getPostByPstNo(@Param(
+    'pstNo',
+    ParseIntPipe
+  ) pstNo: number): Promise<ResponseDto<SelectPostType>> {
     const result = await this.postsService.getPostByPstNo(pstNo);
 
     if (!result?.success) {
@@ -99,7 +102,10 @@ export class PostsController {
     method: 'GET',
   })
   async getPostListByTagNo(
-    @Param('tagNo') tagNo: number,
+    @Param(
+      'tagNo',
+      ParseIntPipe
+    ) tagNo: number,
     @Query() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostListByTagNo(
@@ -131,7 +137,10 @@ export class PostsController {
     method: 'GET',
   })
   async getPostListByCtgryNo(
-    @Param('ctgryNo') ctgryNo: number,
+    @Param(
+      'ctgryNo',
+      ParseIntPipe
+    ) ctgryNo: number,
     @Query() searchData: SearchPostDto
   ): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
     const result = await this.postsService.getPostListByCtgryNo(
@@ -220,7 +229,10 @@ export class PostsController {
     method: 'POST',
   })
   async createPostViewLog(
-    @Param('pstNo') pstNo: number,
+    @Param(
+      'pstNo',
+      ParseIntPipe
+    ) pstNo: number,
     @Ip() ip: string
   ): Promise<ResponseDto<SelectPostViewLogType>> {
     const result = await this.postsService.createPostViewLog(
@@ -280,7 +292,10 @@ export class PostsController {
     },
   })
   async createPostBookmark(
-    @Param('pstNo') pstNo: number,
+    @Param(
+      'pstNo',
+      ParseIntPipe
+    ) pstNo: number,
     @Body() createData: CreatePostBookmarkDto
   ): Promise<ResponseDto<SelectPostBookmarkType>> {
     const result = await this.postsService.createPostBookmark(createData);
@@ -312,7 +327,10 @@ export class PostsController {
     },
   })
   async deletePostBookmark(
-    @Param('pstNo') pstNo: number,
+    @Param(
+      'pstNo',
+      ParseIntPipe
+    ) pstNo: number,
     @Body() deleteData: DeletePostBookmarkDto
   ): Promise<ResponseDto<boolean>> {
     const result = await this.postsService.deletePostBookmark(deleteData);

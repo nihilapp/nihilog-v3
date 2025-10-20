@@ -2,6 +2,7 @@ import {
   Controller,
   Body,
   Param,
+  ParseIntPipe,
   Query,
   UseGuards
 } from '@nestjs/common';
@@ -456,7 +457,10 @@ export class AdminCategoriesController {
     endpoint: '/:ctgryNo',
     method: 'GET',
   })
-  async adminGetCategoryByCtgryNo(@Param('ctgryNo') ctgryNo: number): Promise<ResponseDto<SelectCategoryType>> {
+  async adminGetCategoryByCtgryNo(@Param(
+    'ctgryNo',
+    ParseIntPipe
+  ) ctgryNo: number): Promise<ResponseDto<SelectCategoryType>> {
     const result = await this.adminCategoriesService.adminGetCategoryByCtgryNo(ctgryNo);
 
     if (!result?.success) {
@@ -557,7 +561,10 @@ export class AdminCategoriesController {
     endpoint: '/:ctgryNo',
     method: 'PATCH',
   })
-  async adminUpdateCategory(@Param('ctgryNo') ctgryNo: number, @Body() updateData: UpdateCategoryDto): Promise<ResponseDto<SelectCategoryType>> {
+  async adminUpdateCategory(@Param(
+    'ctgryNo',
+    ParseIntPipe
+  ) ctgryNo: number, @Body() updateData: UpdateCategoryDto): Promise<ResponseDto<SelectCategoryType>> {
     const result = await this.adminCategoriesService.adminUpdateCategory(
       ctgryNo,
       updateData
@@ -610,7 +617,10 @@ export class AdminCategoriesController {
     endpoint: '/:ctgryNo',
     method: 'DELETE',
   })
-  async adminDeleteCategory(@Param('ctgryNo') ctgryNo: number): Promise<ResponseDto<boolean>> {
+  async adminDeleteCategory(@Param(
+    'ctgryNo',
+    ParseIntPipe
+  ) ctgryNo: number): Promise<ResponseDto<boolean>> {
     const result = await this.adminCategoriesService.adminDeleteCategory(ctgryNo);
 
     if (!result?.success) {

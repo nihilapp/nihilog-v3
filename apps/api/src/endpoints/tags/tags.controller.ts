@@ -1,6 +1,7 @@
 import {
   Controller,
   Param,
+  ParseIntPipe,
   Query
 } from '@nestjs/common';
 
@@ -51,7 +52,10 @@ export class TagController {
     endpoint: '/:tagNo',
     method: 'GET',
   })
-  async getTagByTagNo(@Param('tagNo') tagNo: number): Promise<ResponseDto<SelectTagInfoType>> {
+  async getTagByTagNo(@Param(
+    'tagNo',
+    ParseIntPipe
+  ) tagNo: number): Promise<ResponseDto<SelectTagInfoType>> {
     const result = await this.tagService.getTagByTagNo(tagNo);
 
     if (!result?.success) {

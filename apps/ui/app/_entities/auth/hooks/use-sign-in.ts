@@ -6,6 +6,7 @@ import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SignInType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
+import { useRouter } from 'next/navigation';
 
 interface UseSignInOptions extends MutationOptionsType<SelectUserInfoType, SignInType> {}
 
@@ -15,6 +16,7 @@ interface UseSignInOptions extends MutationOptionsType<SelectUserInfoType, SignI
  */
 export function useSignIn(options: UseSignInOptions = {}) {
   const invalidateCache = useInvalidateAuthCache();
+  const router = useRouter();
 
   const mutation = usePost<SelectUserInfoType, SignInType>({
     url: [
@@ -31,6 +33,12 @@ export function useSignIn(options: UseSignInOptions = {}) {
 
       // 인증 관련 캐시 무효화
       invalidateCache();
+
+      if (res.data?.userRole === 'ADMIN') {
+        router.push('/admin/dashboard');
+      } else {
+        router.push('/');
+      }
     },
     errorCallback(error) {
       toast.error(

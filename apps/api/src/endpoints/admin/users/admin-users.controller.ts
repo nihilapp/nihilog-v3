@@ -3,6 +3,7 @@ import {
   Controller,
   Req,
   Param,
+  ParseIntPipe,
   Query
 } from '@nestjs/common';
 
@@ -393,7 +394,10 @@ export class AdminUserController {
   })
   async adminGetUserByUserNo(
     @Req() req: AuthRequest,
-    @Param('userNo') userNo: number
+    @Param(
+      'userNo',
+      ParseIntPipe
+    ) userNo: number
   ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -600,7 +604,10 @@ export class AdminUserController {
   })
   async adminUpdateUser(
     @Req() req: AuthRequest,
-    @Param('userNo') userNo: number,
+    @Param(
+      'userNo',
+      ParseIntPipe
+    ) userNo: number,
     @Body() updateUserData: UpdateUserDto
   ): Promise<ResponseDto<SelectUserInfoType>> {
     if (req.errorResponse) {
@@ -686,7 +693,10 @@ export class AdminUserController {
   })
   async adminDeleteUser(
     @Req() req: AuthRequest,
-    @Param('userNo') userNo: number
+    @Param(
+      'userNo',
+      ParseIntPipe
+    ) userNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;

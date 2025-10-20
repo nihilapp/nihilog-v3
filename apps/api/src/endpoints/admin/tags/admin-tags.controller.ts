@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Query, Req, UseGuards } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -792,8 +792,14 @@ export class AdminTagsController {
   })
   async adminGetTagMappingByTagNo(
     @Req() req: AuthRequest,
-    @Param('pstNo') pstNo: number,
-    @Param('tagNo') tagNo: number
+    @Param(
+      'pstNo',
+      ParseIntPipe
+    ) pstNo: number,
+    @Param(
+      'tagNo',
+      ParseIntPipe
+    ) tagNo: number
   ): Promise<ResponseDto<SelectPstTagMpngType>> {
     if (req.errorResponse) {
       return req.errorResponse;

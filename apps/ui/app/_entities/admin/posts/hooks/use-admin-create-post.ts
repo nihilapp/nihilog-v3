@@ -39,7 +39,7 @@ export function useAdminCreatePost(options: OptionType = {}) {
       // Admin Posts 관련 캐시 무효화
       invalidateCache();
 
-      router.push(`/admin/posts/edit?pstCd=${res.data.pstCd}`);
+      router.push(`/admin/posts/edit?pstNo=${res.data.pstNo}`);
     },
     errorCallback(error) {
       toast.error(
@@ -54,5 +54,3 @@ export function useAdminCreatePost(options: OptionType = {}) {
 
   return mutation;
 }
-
-

@@ -1,7 +1,6 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import type { IconType } from 'react-icons';
@@ -18,6 +17,7 @@ import {
   FaList
 } from 'react-icons/fa';
 
+import { MenuLink } from '@/(common)/_components/MenuLink';
 import {
   Sidebar,
   SidebarContent,
@@ -25,7 +25,6 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   useSidebar
 } from '@/(common)/_components/ui/sidebar';
@@ -184,21 +183,14 @@ export function AdminSidebar({ className, ...props }: Props) {
               <SidebarMenu>
                 {item.children.map((child) => (
                   <SidebarMenuItem key={child.label}>
-                    <SidebarMenuButton
-                      asChild
+                    <MenuLink
+                      href={child.href || '#'}
+                      label={child.label}
+                      icon={child.icon}
+                      variant='sidebar-indent'
+                      size='sidebar'
                       isActive={pathname === child.href}
-                      className={cn(
-                        'transition-all duration-200 ease-in-out ml-4',
-                        'hover:bg-blue-50 hover:text-blue-600',
-                        'data-[active=true]:bg-blue-500 data-[active=true]:text-white',
-                        'data-[active=true]:hover:bg-blue-600'
-                      )}
-                    >
-                      <Link href={child.href || '#'}>
-                        {child.icon && <child.icon />}
-                        <span>{child.label}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                    />
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -206,21 +198,14 @@ export function AdminSidebar({ className, ...props }: Props) {
           )
           : (
             // 단일 메뉴 항목
-            <SidebarMenuButton
-              asChild
+            <MenuLink
+              href={item.href || '#'}
+              label={item.label}
+              icon={item.icon}
+              variant='sidebar'
+              size='sidebar'
               isActive={pathname === item.href}
-              className={cn(
-                'transition-all duration-200 ease-in-out',
-                'hover:bg-blue-50 hover:text-blue-600',
-                'data-[active=true]:bg-blue-500 data-[active=true]:text-white',
-                'data-[active=true]:hover:bg-blue-600'
-              )}
-            >
-              <Link href={item.href || '#'}>
-                {item.icon && <item.icon />}
-                <span>{item.label}</span>
-              </Link>
-            </SidebarMenuButton>
+            />
           )}
       </SidebarMenuItem>
     ));
@@ -231,11 +216,12 @@ export function AdminSidebar({ className, ...props }: Props) {
       collapsible='none'
       className={cn(
         cssVariants({ isOpen: open, }),
+        'overflow-x-hidden',
         className
       )}
       {...props}
     >
-      <SidebarContent>
+      <SidebarContent className='overflow-x-hidden'>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
