@@ -1,13 +1,13 @@
 // 통계 분석 훅들
-export { useGetAnalyzeSubscribeData } from './use-get-analyze-subscribe-data';
-export { useGetSubscribeNotificationDistribution } from './use-get-subscribe-notification-distribution';
-export { useGetTotalActiveNotificationUsers } from './use-get-total-active-notification-users';
-export { useGetTotalInactiveNotificationUsers } from './use-get-total-inactive-notification-users';
+export { useAdminGetAnalyzeSubscribeData } from './use-admin-get-analyze-subscribe-data';
+export { useAdminGetSubscribeNotificationDistribution } from './use-admin-get-subscribe-notification-distribution';
+export { useAdminGetTotalActiveNotificationUsers } from './use-admin-get-total-active-notification-users';
+export { useAdminGetTotalInactiveNotificationUsers } from './use-admin-get-total-inactive-notification-users';
 
 // 구독 관리 훅들
-export { useGetUserSubscribeList } from './use-get-user-subscribe-list';
-export { useGetUserSubscribeByNo } from './use-get-user-subscribe-by-no';
-export { useCreateUserSubscribe } from './use-create-user-subscribe';
-export { useMultipleUpdateUserSubscribe } from './use-multiple-update-user-subscribe';
-export { useDeleteUserSubscribe } from './use-delete-user-subscribe';
-export { useMultipleDeleteUserSubscribe } from './use-multiple-delete-user-subscribe';
+export { useAdminGetUserSubscribeList } from './use-admin-get-user-subscribe-list';
+export { useAdminGetUserSubscribeByNo } from './use-admin-get-user-subscribe-by-no';
+export { useAdminCreateUserSubscribe } from './use-admin-create-user-subscribe';
+export { useAdminMultipleUpdateUserSubscribe } from './use-admin-multiple-update-user-subscribe';
+export { useAdminDeleteUserSubscribe } from './use-admin-delete-user-subscribe';
+export { useAdminMultipleDeleteUserSubscribe } from './use-admin-multiple-delete-user-subscribe';

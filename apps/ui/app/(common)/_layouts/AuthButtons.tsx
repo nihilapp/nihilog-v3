@@ -12,14 +12,18 @@ interface Props
   extends React.HTMLAttributes<HTMLDivElement>,
   VariantProps<typeof cssVariants> {}
 
-const cssVariants = cva([ 'flex items-center gap-2', ]);
+const cssVariants = cva(['flex items-center gap-2'], {
+  variants: {},
+  defaultVariants: {},
+  compoundVariants: [],
+});
 
 export function AuthButtons({ className, ...props }: Props) {
   const { response, isPending, } = useGetSession();
 
   const { mutate: signOut, } = useSignOut();
 
-  const handleSignOut = () => {
+  const onClickSignOut = () => {
     signOut(null);
   };
 
@@ -41,10 +45,12 @@ export function AuthButtons({ className, ...props }: Props) {
             <Button variant='outline' asChild>
               <Link href='/profile'>마이페이지</Link>
             </Button>
-            <Button variant='outline' asChild>
-              <Link href='/admin/dashboard'>관리자 대시보드</Link>
-            </Button>
-            <Button onClick={handleSignOut}>
+            {response.data.userRole === 'ADMIN' && (
+              <Button variant='outline' asChild>
+                <Link href='/admin/dashboard'>관리자 대시보드</Link>
+              </Button>
+            )}
+            <Button onClick={onClickSignOut}>
               로그아웃
             </Button>
           </>

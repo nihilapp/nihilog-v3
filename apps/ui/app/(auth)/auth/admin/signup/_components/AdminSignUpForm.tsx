@@ -10,14 +10,14 @@ import { Button } from '@/(common)/_components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/(common)/_components/ui/form';
 import { Input } from '@/(common)/_components/ui/input';
 import { Separator } from '@/(common)/_components/ui/separator';
-import { useSignupUser } from '@/_entities/admin/users/hooks';
+import { useAdminCreateAdmin } from '@/_entities/admin/users/hooks';
 import { useAuthActions } from '@/_entities/auth/auth.store';
 import { createUserSchema, userRoleSchema, type CreateUserType } from '@/_schemas';
 
 export function AdminSignUpForm() {
   const { setAuthCardHeader, resetAuthCardHeader, } = useAuthActions();
 
-  const signupUser = useSignupUser();
+  const signupUser = useAdminCreateAdmin();
 
   const form = useForm({
     mode: 'all',
