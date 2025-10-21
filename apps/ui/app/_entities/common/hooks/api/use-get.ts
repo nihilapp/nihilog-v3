@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import type { QueryOptionType, OkType } from '@/_entities/common/common.types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
@@ -49,8 +50,8 @@ export function useGet<TData = unknown>(options: UseGetOptions<TData>) {
       body,
     ],
     queryFn: async () => {
-      const response = await Api.get<TData>(finalUrl);
-      return response.data;
+      // ensureOk 검증을 통해 error: true 응답을 에러로 처리
+      return await Api.getQuery<TData>(finalUrl);
     },
     enabled,
     staleTime: ttl * 60 * 1000, // 분을 밀리초로 변환
@@ -68,14 +69,30 @@ export function useGet<TData = unknown>(options: UseGetOptions<TData>) {
     query.isSuccess
   );
 
-  // 콜백 실행
-  if (query.data && callback) {
-    callback(query.data);
-  }
+  // 콜백 실행을 useEffect로 처리하여 렌더링 이후에 실행
+  useEffect(
+    () => {
+      if (query.data && callback) {
+        callback(query.data);
+      }
+    },
+    [
+      query.data,
+      callback,
+    ]
+  );
 
-  if (query.error && errorCallback) {
-    errorCallback(query.error as ErrorType);
-  }
+  useEffect(
+    () => {
+      if (query.error && errorCallback) {
+        errorCallback(query.error as ErrorType);
+      }
+    },
+    [
+      query.error,
+      errorCallback,
+    ]
+  );
 
   return {
     response: query.data,

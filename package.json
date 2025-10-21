@@ -3,7 +3,14 @@
   "workspaces": [
     "apps/*"
   ],
-  "scripts": {},
+  "scripts": {
+    "api:dev": "pnpm --filter api dev",
+    "ui:dev": "pnpm --filter ui dev",
+    "api:ncu": "cd apps/api && ncu",
+    "api:ncu:update": "cd apps/api && ncu -u",
+    "ui:ncu": "cd apps/ui && ncu",
+    "ui:ncu:update": "cd apps/ui && ncu -u"
+  },
   "keywords": [],
   "license": "MIT"
 }

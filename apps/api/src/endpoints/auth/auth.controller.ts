@@ -110,10 +110,6 @@ export class AuthController {
         60000,
       ],
       serialize: true,
-      roles: [
-        'USER',
-        'ADMIN',
-      ],
     },
   })
   async refreshToken(

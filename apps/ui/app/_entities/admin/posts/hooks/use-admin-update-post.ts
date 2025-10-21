@@ -8,23 +8,20 @@ import type { SelectPostType } from '@/_types';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
-interface OptionType extends MutationOptionsType<SelectPostType, UpdatePostType> {
-  pstNo: number;
-}
+interface OptionType extends MutationOptionsType<SelectPostType, UpdatePostType> {}
 
 /**
  * @description 포스트를 수정하는 커스텀 훅
  * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminUpdatePost(options: OptionType = { pstNo: 0, }) {
-  const { pstNo, ...mutationOptions } = options;
+export function useAdminUpdatePost(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminPostsCache();
 
   const mutation = usePut<SelectPostType, UpdatePostType>({
-    url: [
+    url: (variables) => [
       'admin',
       'posts',
-      pstNo.toString(),
+      variables.pstNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -45,7 +42,7 @@ export function useAdminUpdatePost(options: OptionType = { pstNo: 0, }) {
         }
       );
     },
-    ...mutationOptions,
+    ...options,
   });
 
   return mutation;

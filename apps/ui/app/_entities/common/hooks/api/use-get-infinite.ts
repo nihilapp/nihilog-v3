@@ -1,6 +1,7 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import type { InfiniteQueryOptionType, OkType } from '@/_entities/common/common.types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
@@ -57,8 +58,8 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(option
         ? `${fullUrl}?${queryString}`
         : fullUrl;
 
-      const response = await Api.get<TPageData>(finalUrl);
-      return response.data;
+      // ensureOk 검증을 통해 error: true 응답을 에러로 처리
+      return await Api.getQuery<TPageData>(finalUrl);
     },
     enabled: enable,
     staleTime: ttl * 60 * 1000, // 분을 밀리초로 변환
@@ -78,14 +79,30 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(option
     query.isSuccess
   );
 
-  // 콜백 실행
-  if (query.data && callback) {
-    query.data.pages.forEach((page) => callback(page as OkType<TPageData>));
-  }
+  // 콜백 실행을 useEffect로 처리하여 렌더링 이후에 실행
+  useEffect(
+    () => {
+      if (query.data && callback) {
+        query.data.pages.forEach((page) => callback(page as OkType<TPageData>));
+      }
+    },
+    [
+      query.data,
+      callback,
+    ]
+  );
 
-  if (query.error && errorCallback) {
-    errorCallback(query.error as ErrorType);
-  }
+  useEffect(
+    () => {
+      if (query.error && errorCallback) {
+        errorCallback(query.error as ErrorType);
+      }
+    },
+    [
+      query.error,
+      errorCallback,
+    ]
+  );
 
   return {
     response: query.data,

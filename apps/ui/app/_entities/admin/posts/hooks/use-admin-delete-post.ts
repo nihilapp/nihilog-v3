@@ -7,23 +7,20 @@ import type { DeletePostType } from '@/_schemas';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
-interface OptionType extends MutationOptionsType<boolean, DeletePostType> {
-  pstNo: number;
-}
+interface OptionType extends MutationOptionsType<boolean, DeletePostType> {}
 
 /**
  * @description 포스트를 삭제하는 커스텀 훅
  * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminDeletePost(options: OptionType = { pstNo: 0, }) {
-  const { pstNo, ...mutationOptions } = options;
+export function useAdminDeletePost(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminPostsCache();
 
   const mutation = useDelete<boolean, DeletePostType>({
-    url: [
+    url: (variables) => [
       'admin',
       'posts',
-      pstNo.toString(),
+      variables.pstNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -44,7 +41,7 @@ export function useAdminDeletePost(options: OptionType = { pstNo: 0, }) {
         }
       );
     },
-    ...mutationOptions,
+    ...options,
   });
 
   return mutation;

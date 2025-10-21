@@ -8,23 +8,22 @@ import type { SelectUserInfoType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 
-interface UseAdminUpdateUserOptions extends MutationOptionsType<SelectUserInfoType, UpdateUserType> {
-  userNo: number;
-}
+type UpdateUserWithIdType = UpdateUserType & { userNo?: number };
+
+interface UseAdminUpdateUserOptions extends MutationOptionsType<SelectUserInfoType, UpdateUserWithIdType> {}
 
 /**
  * @description 사용자를 수정하는 커스텀 훅
  * @param {UseAdminUpdateUserOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminUpdateUser(options: UseAdminUpdateUserOptions = { userNo: 0, }) {
-  const { userNo, ...mutationOptions } = options;
+export function useAdminUpdateUser(options: UseAdminUpdateUserOptions = {}) {
   const invalidateCache = useInvalidateAdminUsersCache();
 
-  const mutation = usePut<SelectUserInfoType, UpdateUserType>({
-    url: [
+  const mutation = usePut<SelectUserInfoType, UpdateUserWithIdType>({
+    url: (variables) => [
       'admin',
       'users',
-      userNo.toString(),
+      variables.userNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -45,7 +44,7 @@ export function useAdminUpdateUser(options: UseAdminUpdateUserOptions = { userNo
         }
       );
     },
-    ...mutationOptions,
+    ...options,
   });
 
   return mutation;

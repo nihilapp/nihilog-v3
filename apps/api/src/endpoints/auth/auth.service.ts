@@ -15,6 +15,7 @@ import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';
+import { parseExpiresInToMs } from '@/utils/timeParser';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
@@ -150,8 +151,9 @@ export class AuthService {
       );
     }
 
-    // AccessToken 만료시간 계산
-    const accessTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000).getTime();
+    // AccessToken 만료시간 계산 (ConfigService에서 동적으로 계산)
+    const expiresInMs = parseExpiresInToMs(this.env.get('jwt.access.expiresIn'));
+    const accessTokenExpiresAt = new Date(Date.now() + expiresInMs).getTime();
 
     // 응답용 사용자 데이터 준비
     const userToReturn = cloneDeep(user);
@@ -244,8 +246,9 @@ export class AuthService {
         );
       }
 
-      // AccessToken 만료시간 계산
-      const accessTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000).getTime();
+      // AccessToken 만료시간 계산 (ConfigService에서 동적으로 계산)
+      const expiresInMs = parseExpiresInToMs(this.env.get('jwt.access.expiresIn'));
+      const accessTokenExpiresAt = new Date(Date.now() + expiresInMs).getTime();
 
       const userToReturn = cloneDeep(user);
       userToReturn.encptPswd = null;

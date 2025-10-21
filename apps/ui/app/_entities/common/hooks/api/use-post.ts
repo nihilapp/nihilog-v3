@@ -1,6 +1,7 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import type { MutationOptionsType, OkType } from '@/_entities/common/common.types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
@@ -24,7 +25,7 @@ export function usePost<TData = unknown, TVariables = unknown>(options: UsePostO
   const {
     url,
     params = {},
-    body,
+    body: _body,
     enabled = true,
     callback,
     errorCallback,
@@ -42,11 +43,11 @@ export function usePost<TData = unknown, TVariables = unknown>(options: UsePostO
 
   const mutation = useMutation({
     mutationFn: async (variables: TVariables) => {
-      const response = await Api.post<TData, TVariables>(
+      // ensureOk 검증을 통해 error: true 응답을 에러로 처리
+      return await Api.postQuery<TData, TVariables>(
         finalUrl,
         variables
       );
-      return response.data;
     },
     ...mutationOptions,
   });
@@ -61,14 +62,30 @@ export function usePost<TData = unknown, TVariables = unknown>(options: UsePostO
     mutation.isSuccess
   );
 
-  // 콜백 실행
-  if (mutation.data && callback) {
-    callback(mutation.data);
-  }
+  // 콜백 실행을 useEffect로 처리하여 렌더링 이후에 실행
+  useEffect(
+    () => {
+      if (mutation.data && callback) {
+        callback(mutation.data);
+      }
+    },
+    [
+      mutation.data,
+      callback,
+    ]
+  );
 
-  if (mutation.error && errorCallback) {
-    errorCallback(mutation.error as ErrorType);
-  }
+  useEffect(
+    () => {
+      if (mutation.error && errorCallback) {
+        errorCallback(mutation.error as ErrorType);
+      }
+    },
+    [
+      mutation.error,
+      errorCallback,
+    ]
+  );
 
   return {
     response: mutation.data,

@@ -4,26 +4,24 @@ import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
+import type { DeleteCategorySubscribeType } from '@/_schemas';
 import type { ResponseType } from '@/_types';
 
-interface UseDeleteCategorySubscribeOptions extends MutationOptionsType<ResponseType<boolean>, void> {
-  ctgrySbcrNo: number;
-}
+interface UseDeleteCategorySubscribeOptions extends MutationOptionsType<ResponseType<boolean>, DeleteCategorySubscribeType> {}
 
 /**
  * @description 카테고리 구독을 해제하는 커스텀 훅
- * @param {UseDeleteCategorySubscribeOptions} options - 뮤테이션 옵션
+ * @param {UseDeleteCategorySubscribeOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useDeleteCategorySubscribe(options: UseDeleteCategorySubscribeOptions) {
-  const { ctgrySbcrNo, ...restOptions } = options;
+export function useDeleteCategorySubscribe(options: UseDeleteCategorySubscribeOptions = {}) {
   const invalidateCache = useInvalidateCategorySubscribeCache();
 
-  const mutation = useDelete<ResponseType<boolean>, void>({
-    url: [
+  const mutation = useDelete<ResponseType<boolean>, DeleteCategorySubscribeType>({
+    url: (variables) => [
       'users',
       'subscribes',
       'categories',
-      ctgrySbcrNo.toString(),
+      variables.ctgrySbcrNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -44,7 +42,7 @@ export function useDeleteCategorySubscribe(options: UseDeleteCategorySubscribeOp
         }
       );
     },
-    ...restOptions,
+    ...options,
   });
 
   return mutation;

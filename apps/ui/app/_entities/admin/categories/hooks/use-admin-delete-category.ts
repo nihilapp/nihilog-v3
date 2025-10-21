@@ -4,24 +4,22 @@ import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/
 import type { MutationOptionsType } from '@/_entities/common/common.types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
+import type { DeleteCategoryType } from '@/_schemas';
 
-interface OptionType extends MutationOptionsType<boolean, void> {
-  ctgryNo: number;
-}
+interface OptionType extends MutationOptionsType<boolean, DeleteCategoryType> {}
 
 /**
  * @description 카테고리를 삭제하는 커스텀 훅
- * @param {OptionType} options - 뮤테이션 옵션
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminDeleteCategory(options: OptionType) {
-  const { ctgryNo, ...mutationOptions } = options;
+export function useAdminDeleteCategory(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminCategoriesCache();
 
-  const mutation = useDelete<boolean, void>({
-    url: [
+  const mutation = useDelete<boolean, DeleteCategoryType>({
+    url: (variables) => [
       'admin',
       'categories',
-      ctgryNo.toString(),
+      variables.ctgryNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -42,7 +40,7 @@ export function useAdminDeleteCategory(options: OptionType) {
         }
       );
     },
-    ...mutationOptions,
+    ...options,
   });
 
   return mutation;

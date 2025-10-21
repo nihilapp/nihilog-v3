@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
@@ -6,7 +7,6 @@ import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SignInType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
-import { useRouter } from 'next/navigation';
 
 interface UseSignInOptions extends MutationOptionsType<SelectUserInfoType, SignInType> {}
 
@@ -36,7 +36,8 @@ export function useSignIn(options: UseSignInOptions = {}) {
 
       if (res.data?.userRole === 'ADMIN') {
         router.push('/admin/dashboard');
-      } else {
+      }
+      else {
         router.push('/');
       }
     },

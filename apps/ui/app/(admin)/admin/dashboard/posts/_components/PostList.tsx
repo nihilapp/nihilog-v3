@@ -2,12 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 import { DataTable } from '@/(common)/_components/DataTable';
 import { Badge } from '@/(common)/_components/ui/badge';
 import { Button } from '@/(common)/_components/ui/button';
-import { useAdminCreatePost } from '@/_entities/admin/posts/hooks';
+import { useAdminCreatePost, useAdminDeletePost } from '@/_entities/admin/posts/hooks';
 import { useGetPostList } from '@/_entities/posts/hooks';
 import { cn } from '@/_libs';
 import { CommonHelper } from '@/_libs/tools';
@@ -29,6 +30,10 @@ const cssVariants = cva(
 );
 
 export function PostList({ className, ...props }: Props) {
+  const router = useRouter();
+
+  const deletePost = useAdminDeletePost();
+
   const columns: ColumnDef<SelectPostType>[] = [
     {
       accessorKey: 'pstNo',
@@ -65,6 +70,37 @@ export function PostList({ className, ...props }: Props) {
     {
       accessorKey: 'crtDt',
       header: '생성일',
+    },
+    {
+      id: 'actions',
+      header: '작업',
+      cell({ row, }) {
+        return (
+          <div className='flex items-center gap-2'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => {
+                // TODO: 수정 기능 구현
+                router.push(`/admin/posts/edit?pstNo=${row.original.pstNo}`);
+              }}
+            >
+              수정
+            </Button>
+            <Button
+              variant='destructive'
+              size='sm'
+              onClick={() => {
+                deletePost.mutate({
+                  pstNo: row.original.pstNo,
+                });
+              }}
+            >
+              삭제
+            </Button>
+          </div>
+        );
+      },
     },
   ];
 

@@ -7,23 +7,20 @@ import { getToastStyle } from '@/_libs';
 import type { UpdateCategoryType } from '@/_schemas';
 import type { SelectCategoryType } from '@/_types';
 
-interface OptionType extends MutationOptionsType<SelectCategoryType, UpdateCategoryType> {
-  ctgryNo: number;
-}
+interface OptionType extends MutationOptionsType<SelectCategoryType, UpdateCategoryType> {}
 
 /**
  * @description 카테고리를 수정하는 커스텀 훅
- * @param {OptionType} options - 뮤테이션 옵션
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminUpdateCategory(options: OptionType) {
-  const { ctgryNo, ...mutationOptions } = options;
+export function useAdminUpdateCategory(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminCategoriesCache();
 
   const mutation = usePut<SelectCategoryType, UpdateCategoryType>({
-    url: [
+    url: (variables) => [
       'admin',
       'categories',
-      ctgryNo.toString(),
+      variables.ctgryNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -44,7 +41,7 @@ export function useAdminUpdateCategory(options: OptionType) {
         }
       );
     },
-    ...mutationOptions,
+    ...options,
   });
 
   return mutation;

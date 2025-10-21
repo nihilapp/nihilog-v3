@@ -7,24 +7,23 @@ import { getToastStyle } from '@/_libs';
 import type { UpdateTagSubscribeType } from '@/_schemas';
 import type { SelectTagSubscribeMappingType } from '@/_types';
 
-interface UseUpdateTagSubscribeOptions extends MutationOptionsType<SelectTagSubscribeMappingType, UpdateTagSubscribeType> {
-  tagSbcrNo: number;
-}
+type UpdateTagSubscribeWithIdType = UpdateTagSubscribeType & { tagSbcrNo?: number };
+
+interface UseUpdateTagSubscribeOptions extends MutationOptionsType<SelectTagSubscribeMappingType, UpdateTagSubscribeWithIdType> {}
 
 /**
  * @description 태그 구독 설정을 변경하는 커스텀 훅
- * @param {UseUpdateTagSubscribeOptions} options - 뮤테이션 옵션
+ * @param {UseUpdateTagSubscribeOptions} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useUpdateTagSubscribe(options: UseUpdateTagSubscribeOptions) {
-  const { tagSbcrNo, ...restOptions } = options;
+export function useUpdateTagSubscribe(options: UseUpdateTagSubscribeOptions = {}) {
   const invalidateCache = useInvalidateTagSubscribeCache();
 
-  const mutation = usePut<SelectTagSubscribeMappingType, UpdateTagSubscribeType>({
-    url: [
+  const mutation = usePut<SelectTagSubscribeMappingType, UpdateTagSubscribeWithIdType>({
+    url: (variables) => [
       'users',
       'subscribes',
       'tags',
-      tagSbcrNo.toString(),
+      variables.tagSbcrNo?.toString() || '0',
     ],
     callback(res) {
       toast.success(
@@ -45,7 +44,7 @@ export function useUpdateTagSubscribe(options: UseUpdateTagSubscribeOptions) {
         }
       );
     },
-    ...restOptions,
+    ...options,
   });
 
   return mutation;

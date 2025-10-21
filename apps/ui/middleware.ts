@@ -165,10 +165,18 @@ export async function middleware(request: NextRequest) {
           );
         }
 
-        // 토큰 갱신 실패 시, 기존 토큰이 유효한지 확인 후 처리
-        // 갱신 실패가 반드시 인증 실패를 의미하지는 않으므로, 기존 토큰으로 진행을 시도
-        console.warn('토큰 갱신 실패했지만 기존 토큰으로 진행을 시도합니다.');
-        return NextResponse.next();
+        // 토큰 갱신 실패 시, 쿠키를 삭제하고 로그인 페이지로 리다이렉트
+        const response = NextResponse.redirect(new URL(
+          '/auth/signin',
+          request.url
+        ));
+
+        // 만료된 쿠키 삭제
+        response.cookies.delete('accessToken');
+        response.cookies.delete('refreshToken');
+        response.cookies.delete('accessTokenExpiresAt');
+
+        return response;
       }
     }
     catch (error) {
@@ -195,10 +203,18 @@ export async function middleware(request: NextRequest) {
         );
       }
 
-      // 갱신 실패 시, 기존 토큰이 유효한지 확인 후 처리
-      // 갱신 실패가 반드시 인증 실패를 의미하지는 않으므로, 기존 토큰으로 진행을 시도
-      console.warn('토큰 갱신 중 예외 발생했지만 기존 토큰으로 진행을 시도합니다.');
-      return NextResponse.next();
+      // 갱신 중 예외 발생 시, 쿠키를 삭제하고 로그인 페이지로 리다이렉트
+      const response = NextResponse.redirect(new URL(
+        '/auth/signin',
+        request.url
+      ));
+
+      // 만료된 쿠키 삭제
+      response.cookies.delete('accessToken');
+      response.cookies.delete('refreshToken');
+      response.cookies.delete('accessTokenExpiresAt');
+
+      return response;
     }
   }
 
