@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { CreatePstTagMpngType } from '@/_schemas';
@@ -8,13 +8,13 @@ import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface UseMultipleAddTagMappingOptions extends MutationOptionsType<MultipleResultType, CreatePstTagMpngType[]> {}
+interface OptionType extends MutationOptionsType<MultipleResultType, CreatePstTagMpngType[]> {}
 
 /**
  * @description 다수 태그 매핑을 추가하는 커스텀 훅
- * @param {UseMultipleAddTagMappingOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleAddTagMapping(options: UseMultipleAddTagMappingOptions = {}) {
+export function useAdminMultipleAddTagMapping(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminTagsCache();
 
   const mutation = usePost<MultipleResultType, CreatePstTagMpngType[]>({

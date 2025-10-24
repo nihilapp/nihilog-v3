@@ -1,20 +1,20 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SearchTagType } from '@/_schemas';
 import type { ListType, SelectTagInfoListItemType } from '@/_types';
 
-interface UseGetTagListOptions extends QueryOptionType<ListType<SelectTagInfoListItemType>> {
+interface OptionType extends QueryOptionType<ListType<SelectTagInfoListItemType>> {
   searchData?: SearchTagType;
 }
 
 /**
  * @description 태그 목록을 조회하는 커스텀 훅
- * @param {UseGetTagListOptions} [options] - 쿼리 옵션 (선택사항)
+ * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useGetTagList(options: UseGetTagListOptions = {}) {
+export function useGetTagList(options: OptionType = {}) {
   const { searchData = {}, ...queryOptions } = options;
 
   const query = useGet<ListType<SelectTagInfoListItemType>>({

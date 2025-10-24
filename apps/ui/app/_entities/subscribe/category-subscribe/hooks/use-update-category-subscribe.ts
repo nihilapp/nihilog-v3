@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
@@ -9,13 +9,13 @@ import type { SelectCategorySubscribeMappingType } from '@/_types';
 
 type UpdateCategorySubscribeWithIdType = UpdateCategorySubscribeType & { ctgrySbcrNo?: number };
 
-interface UseUpdateCategorySubscribeOptions extends MutationOptionsType<SelectCategorySubscribeMappingType, UpdateCategorySubscribeWithIdType> {}
+interface OptionType extends MutationOptionsType<SelectCategorySubscribeMappingType, UpdateCategorySubscribeWithIdType> {}
 
 /**
  * @description 카테고리 구독 설정을 변경하는 커스텀 훅
- * @param {UseUpdateCategorySubscribeOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useUpdateCategorySubscribe(options: UseUpdateCategorySubscribeOptions = {}) {
+export function useUpdateCategorySubscribe(options: OptionType = {}) {
   const invalidateCache = useInvalidateCategorySubscribeCache();
 
   const mutation = usePut<SelectCategorySubscribeMappingType, UpdateCategorySubscribeWithIdType>({

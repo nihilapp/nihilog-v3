@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { DeleteUserType } from '@/_schemas';
@@ -8,13 +8,13 @@ import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 
-interface UseAdminMultipleDeleteUserOptions extends MutationOptionsType<MultipleResultType, DeleteUserType> {}
+interface OptionType extends MutationOptionsType<MultipleResultType, DeleteUserType> {}
 
 /**
  * @description 다수 사용자를 일괄 삭제하는 커스텀 훅
- * @param {UseAdminMultipleDeleteUserOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleDeleteUser(options: UseAdminMultipleDeleteUserOptions = {}) {
+export function useAdminMultipleDeleteUser(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminUsersCache();
 
   const mutation = useDelete<MultipleResultType, DeleteUserType>({

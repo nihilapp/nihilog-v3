@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
@@ -9,13 +9,13 @@ import type { SelectTagSubscribeMappingType } from '@/_types';
 
 type UpdateTagSubscribeWithIdType = UpdateTagSubscribeType & { tagSbcrNo?: number };
 
-interface UseUpdateTagSubscribeOptions extends MutationOptionsType<SelectTagSubscribeMappingType, UpdateTagSubscribeWithIdType> {}
+interface OptionType extends MutationOptionsType<SelectTagSubscribeMappingType, UpdateTagSubscribeWithIdType> {}
 
 /**
  * @description 태그 구독 설정을 변경하는 커스텀 훅
- * @param {UseUpdateTagSubscribeOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useUpdateTagSubscribe(options: UseUpdateTagSubscribeOptions = {}) {
+export function useUpdateTagSubscribe(options: OptionType = {}) {
   const invalidateCache = useInvalidateTagSubscribeCache();
 
   const mutation = usePut<SelectTagSubscribeMappingType, UpdateTagSubscribeWithIdType>({

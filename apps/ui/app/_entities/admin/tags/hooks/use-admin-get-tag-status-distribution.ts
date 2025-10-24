@@ -1,17 +1,17 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { TagStatusDistributionItemType } from '@/_types';
 
-interface UseGetTagStatusDistributionOptions extends QueryOptionType<TagStatusDistributionItemType[]> {}
+interface OptionType extends QueryOptionType<TagStatusDistributionItemType[]> {}
 
 /**
  * @description 태그 상태별 분포를 조회하는 커스텀 훅
- * @param {UseGetTagStatusDistributionOptions} [options] - 쿼리 옵션 (선택사항)
+ * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useAdminGetTagStatusDistribution(options: UseGetTagStatusDistributionOptions = {}) {
+export function useAdminGetTagStatusDistribution(options: OptionType = {}) {
   const query = useGet<TagStatusDistributionItemType[]>({
     url: [
       'admin',

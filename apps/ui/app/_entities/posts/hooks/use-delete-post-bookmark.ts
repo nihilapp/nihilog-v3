@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { useInvalidatePostsBookmarkCache } from '@/_entities/posts/posts.keys';
 import { getToastStyle } from '@/_libs';
@@ -8,13 +8,13 @@ import type { DeletePostBookmarkType } from '@/_schemas';
 
 type DeletePostBookmarkWithIdType = DeletePostBookmarkType & { pstNo?: number };
 
-interface UseDeletePostBookmarkOptions extends MutationOptionsType<boolean, DeletePostBookmarkWithIdType> {}
+interface OptionType extends MutationOptionsType<boolean, DeletePostBookmarkWithIdType> {}
 
 /**
  * @description 포스트 북마크를 삭제하는 커스텀 훅
- * @param {UseDeletePostBookmarkOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useDeletePostBookmark(options: UseDeletePostBookmarkOptions = {}) {
+export function useDeletePostBookmark(options: OptionType = {}) {
   const invalidateCache = useInvalidatePostsBookmarkCache();
 
   const mutation = useDelete<boolean, DeletePostBookmarkWithIdType>({

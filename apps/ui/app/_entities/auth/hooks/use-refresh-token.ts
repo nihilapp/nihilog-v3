@@ -1,18 +1,18 @@
 import { toast } from 'sonner';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SelectUserInfoType } from '@/_types';
 
-interface UseRefreshTokenOptions extends MutationOptionsType<SelectUserInfoType, void> {}
+interface OptionType extends MutationOptionsType<SelectUserInfoType, void> {}
 
 /**
  * @description 액세스 토큰을 갱신하는 커스텀 훅
- * @param {UseRefreshTokenOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useRefreshToken(options: UseRefreshTokenOptions = {}) {
+export function useRefreshToken(options: OptionType = {}) {
   const invalidateCache = useInvalidateAuthCache();
 
   const mutation = usePost<SelectUserInfoType, void>({

@@ -3,7 +3,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import type { InfiniteQueryOptionType, OkType } from '@/_entities/common/common.types';
+import type { InfiniteQueryOptionType, OkType } from '@/_types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
 import type { ErrorType } from '@/_types';
@@ -13,7 +13,7 @@ interface UseGetInfiniteOptions<TPageData = unknown, TPageParam = unknown> exten
   params?: Record<string, any>;
   body?: Record<string, any>;
   ttl?: number;
-  enable?: boolean;
+  enabled?: boolean;
   getNextPageParam?: (lastPage: OkType<TPageData>, allPages: OkType<TPageData>[]) => TPageParam | undefined;
   getPreviousPageParam?: (firstPage: OkType<TPageData>, allPages: OkType<TPageData>[]) => TPageParam | undefined;
   callback?: (response: OkType<TPageData>) => void;
@@ -30,7 +30,7 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(option
     params = {},
     body = {},
     ttl = 60,
-    enable = true,
+    enabled = true,
     getNextPageParam,
     getPreviousPageParam,
     callback,
@@ -61,7 +61,7 @@ export function useGetInfinite<TPageData = unknown, TPageParam = unknown>(option
       // ensureOk 검증을 통해 error: true 응답을 에러로 처리
       return await Api.getQuery<TPageData>(finalUrl);
     },
-    enabled: enable,
+    enabled,
     staleTime: ttl * 60 * 1000, // 분을 밀리초로 변환
     gcTime: ttl * 60 * 1000, // 분을 밀리초로 변환
     ...(getNextPageParam && { getNextPageParam, }),

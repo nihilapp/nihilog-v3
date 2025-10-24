@@ -1,18 +1,18 @@
 import { toast } from 'sonner';
 
 import { useInvalidateCommentsCache } from '@/_entities/comments/comments.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { DeleteCommentType } from '@/_schemas';
 
-interface UseDeleteCommentOptions extends MutationOptionsType<boolean, DeleteCommentType> {}
+interface OptionType extends MutationOptionsType<boolean, DeleteCommentType> {}
 
 /**
  * @description 댓글을 삭제하는 커스텀 훅
- * @param {UseDeleteCommentOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useDeleteComment(options: UseDeleteCommentOptions = {}) {
+export function useDeleteComment(options: OptionType = {}) {
   const invalidateCache = useInvalidateCommentsCache();
 
   const mutation = useDelete<boolean, DeleteCommentType>({

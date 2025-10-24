@@ -1,19 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { DeleteTagType } from '@/_schemas';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface UseDeleteTagOptions extends MutationOptionsType<boolean, DeleteTagType> {}
+interface OptionType extends MutationOptionsType<boolean, DeleteTagType> {}
 
 /**
  * @description 태그를 삭제하는 커스텀 훅
- * @param {UseDeleteTagOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminDeleteTag(options: UseDeleteTagOptions = {}) {
+export function useAdminDeleteTag(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminTagsCache();
 
   const mutation = useDelete<boolean, DeleteTagType>({

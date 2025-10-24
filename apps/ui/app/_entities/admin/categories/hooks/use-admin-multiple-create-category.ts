@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 
 import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/admin-categories.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { CreateCategoryType } from '@/_schemas';

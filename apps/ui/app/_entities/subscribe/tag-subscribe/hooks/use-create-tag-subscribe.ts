@@ -1,21 +1,21 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreateTagSubscribeType } from '@/_schemas';
 import type { SelectTagSubscribeMappingType } from '@/_types';
 
-interface UseCreateTagSubscribeOptions extends MutationOptionsType<SelectTagSubscribeMappingType, CreateTagSubscribeType> {
+interface OptionType extends MutationOptionsType<SelectTagSubscribeMappingType, CreateTagSubscribeType> {
   tagNo: number;
 }
 
 /**
  * @description 특정 태그를 구독하는 커스텀 훅
- * @param {UseCreateTagSubscribeOptions} options - 뮤테이션 옵션
+ * @param {OptionType} options - 뮤테이션 옵션
  */
-export function useCreateTagSubscribe(options: UseCreateTagSubscribeOptions) {
+export function useCreateTagSubscribe(options: OptionType) {
   const { tagNo, ...restOptions } = options;
   const invalidateCache = useInvalidateTagSubscribeCache();
 

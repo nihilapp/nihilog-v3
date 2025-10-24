@@ -1,17 +1,17 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { useInvalidateUsersCache } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
 
-interface UseDeleteUserProfileOptions extends MutationOptionsType<boolean> {}
+interface OptionType extends MutationOptionsType<boolean> {}
 
 /**
  * @description 내 프로필을 삭제하는 커스텀 훅
- * @param {UseDeleteUserProfileOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useDeleteUserProfile(options: UseDeleteUserProfileOptions = {}) {
+export function useDeleteUserProfile(options: OptionType = {}) {
   const invalidateCache = useInvalidateUsersCache();
 
   const mutation = useDelete<boolean>({

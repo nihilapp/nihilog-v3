@@ -1,20 +1,20 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SearchPostType } from '@/_schemas';
 import type { ListType, SelectPostListItemType } from '@/_types';
 
-interface UseGetAdvancedPostListOptions extends QueryOptionType<ListType<SelectPostListItemType>> {
+interface OptionType extends QueryOptionType<ListType<SelectPostListItemType>> {
   params: SearchPostType;
 }
 
 /**
  * @description 고급 검색으로 포스트 목록을 조회하는 커스텀 훅
- * @param {UseGetAdvancedPostListOptions} options - 쿼리 옵션 및 검색 파라미터
+ * @param {OptionType} options - 쿼리 옵션 및 검색 파라미터
  */
-export function useGetAdvancedPostList(options: UseGetAdvancedPostListOptions) {
+export function useGetAdvancedPostList(options: OptionType) {
   const { params, ...queryOptions } = options;
 
   const query = useGet<ListType<SelectPostListItemType>>({

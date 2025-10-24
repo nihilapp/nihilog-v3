@@ -1,32 +1,27 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidatePostsBookmarkCache } from '@/_entities/posts/posts.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreatePostBookmarkType } from '@/_schemas';
 import type { SelectPostBookmarkType } from '@/_types';
 
-interface UseCreatePostBookmarkOptions extends MutationOptionsType<SelectPostBookmarkType, CreatePostBookmarkType> {
-  pstNo: number;
-  body: CreatePostBookmarkType;
-}
+interface OptionType extends MutationOptionsType<SelectPostBookmarkType, CreatePostBookmarkType> {}
 
 /**
  * @description 포스트 북마크를 생성하는 커스텀 훅
- * @param {UseCreatePostBookmarkOptions} options - 뮤테이션 옵션, 포스트 번호 및 Body 데이터
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useCreatePostBookmark(options: UseCreatePostBookmarkOptions) {
-  const { pstNo, body, ...mutationOptions } = options;
+export function useCreatePostBookmark(options: OptionType = {}) {
   const invalidateCache = useInvalidatePostsBookmarkCache();
 
   const mutation = usePost<SelectPostBookmarkType, CreatePostBookmarkType>({
-    url: [
+    url: (variables) => [
       'posts',
-      pstNo.toString(),
+      variables.pstNo?.toString() || '0',
       'bookmark',
     ],
-    body,
     callback(res) {
       toast.success(
         res.message,
@@ -46,7 +41,7 @@ export function useCreatePostBookmark(options: UseCreatePostBookmarkOptions) {
         }
       );
     },
-    ...mutationOptions,
+    ...options,
   });
 
   return mutation;

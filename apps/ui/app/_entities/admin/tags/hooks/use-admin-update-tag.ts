@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { UpdateTagType } from '@/_schemas';
@@ -8,13 +8,13 @@ import type { SelectTagInfoType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface UseUpdateTagOptions extends MutationOptionsType<SelectTagInfoType, UpdateTagType> {}
+interface OptionType extends MutationOptionsType<SelectTagInfoType, UpdateTagType> {}
 
 /**
  * @description 태그를 수정하는 커스텀 훅
- * @param {UseUpdateTagOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminUpdateTag(options: UseUpdateTagOptions = {}) {
+export function useAdminUpdateTag(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminTagsCache();
 
   const mutation = usePut<SelectTagInfoType, UpdateTagType>({

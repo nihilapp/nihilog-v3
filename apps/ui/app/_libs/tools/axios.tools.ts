@@ -28,10 +28,11 @@ export class Api {
   };
 
   /**
-   * 비즈니스 에러(Response code) 처리를 표준화합니다.
+   * @description 비즈니스 에러(Response code) 처리를 표준화합니다.
    * 서버가 200을 반환해도 `code` 가 SUCCESS 가 아니면 AxiosError 로 throw 합니다.
+   * @param res - Axios 응답 객체
    */
-  private static ensureOk<T>(res: AxiosResponse<ResponseType<T>>): ResponseType<T> {
+  private static ensureOk<TData>(res: AxiosResponse<ResponseType<TData>>): ResponseType<TData> {
     const payload = res.data;
 
     // 성공 응답 코드 목록
@@ -57,7 +58,7 @@ export class Api {
   }
 
   /**
-   * 싱글턴 Axios 인스턴스를 생성하고 반환합니다.
+   * @description 싱글턴 Axios 인스턴스를 생성하고 반환합니다.
    */
   static getInstance(): AxiosInstance {
     if (!this.instance) {
@@ -119,27 +120,52 @@ export class Api {
   }
 
   /**
-   * GET 요청을 수행합니다.
+   * @description GET 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param config - Axios 요청 설정
    */
-  static async get<T>(restApi: string, config?: AxiosRequestConfig) {
-    return this.getInstance().get<ResponseType<T>>(
+  static async get<TData>(restApi: string, config?: AxiosRequestConfig) {
+    return this.getInstance().get<ResponseType<TData>>(
       restApi,
       config
     );
   }
 
   /**
-   * POST 요청을 수행합니다.
+   * @description Data가 포함된 GET 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param data - 요청 데이터
+   * @param config - Axios 요청 설정
    */
-  static async post<T, P>(
+  static async getWithData<TData, TBody>(
     restApi: string,
-    data: P,
+    data: TBody,
+    config?: AxiosRequestConfig
+  ) {
+    return this.getInstance().get<ResponseType<TData>>(
+      restApi,
+      {
+        ...config,
+        data,
+      }
+    );
+  }
+
+  /**
+   * @description POST 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param data - 요청 데이터
+   * @param config - Axios 요청 설정
+   */
+  static async post<TData, TBody>(
+    restApi: string,
+    data: TBody,
     config?: AxiosRequestConfig
   ) {
     return this.getInstance().post<
-      T,
-      AxiosResponse<ResponseType<T>, P>,
-      P
+      TData,
+      AxiosResponse<ResponseType<TData>, TBody>,
+      TBody
     >(
       restApi,
       data,
@@ -148,17 +174,20 @@ export class Api {
   }
 
   /**
-   * 파일 업로드를 위한 POST 요청을 수행합니다.
+   * @description 파일 업로드를 위한 POST 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param data - 요청 데이터
+   * @param config - Axios 요청 설정
    */
-  static async postWithFile<T, P>(
+  static async postWithFile<TData, TBody>(
     restApi: string,
-    data: P,
+    data: TBody,
     config?: AxiosRequestConfig
   ) {
     return this.getInstance().post<
-      T,
-      AxiosResponse<ResponseType<T>, P>,
-      P
+      TData,
+      AxiosResponse<ResponseType<TData>, TBody>,
+      TBody
     >(
       restApi,
       data,
@@ -172,17 +201,20 @@ export class Api {
   }
 
   /**
-   * PATCH 요청을 수행합니다.
+   * @description PATCH 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param data - 요청 데이터
+   * @param config - Axios 요청 설정
    */
-  static async patch<T, P>(
+  static async patch<TData, TBody>(
     restApi: string,
-    data: P,
+    data: TBody,
     config?: AxiosRequestConfig
   ) {
     return this.getInstance().patch<
-      T,
-      AxiosResponse<ResponseType<T>, P>,
-      P
+      TData,
+      AxiosResponse<ResponseType<TData>, TBody>,
+      TBody
     >(
       restApi,
       data,
@@ -191,17 +223,20 @@ export class Api {
   }
 
   /**
-   * PUT 요청을 수행합니다.
+   * @description PUT 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param data - 요청 데이터
+   * @param config - Axios 요청 설정
    */
-  static async put<T, P>(
+  static async put<TData, TBody>(
     restApi: string,
-    data: P,
+    data: TBody,
     config?: AxiosRequestConfig
   ) {
     return this.getInstance().put<
-      T,
-      AxiosResponse<ResponseType<T>, P>,
-      P
+      TData,
+      AxiosResponse<ResponseType<TData>, TBody>,
+      TBody
     >(
       restApi,
       data,
@@ -210,87 +245,117 @@ export class Api {
   }
 
   /**
-   * DELETE 요청을 수행합니다.
+   * @description DELETE 요청을 수행합니다.
+   * @param restApi - API 엔드포인트
+   * @param config - Axios 요청 설정
    */
-  static async delete<T>(restApi: string, config?: AxiosRequestConfig) {
-    return this.getInstance().delete<ResponseType<T>>(
+  static async delete<TData>(restApi: string, config?: AxiosRequestConfig) {
+    return this.getInstance().delete<ResponseType<TData>>(
       restApi,
       config
     );
   }
 
   /**
-   * GET 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description GET 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
    */
-  static async getQuery<D>(url: string) {
-    const res = await this.get<D>(url);
-    return this.ensureOk<D>(res);
+  static async getQuery<TData>(url: string) {
+    const res = await this.get<TData>(url);
+    return this.ensureOk<TData>(res);
   }
 
   /**
-   * POST 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description Data가 포함된 GET 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
+   * @param bodyData - 요청 데이터
    */
-  static async postQuery<D, P>(url: string, postData: P) {
-    const res = await this.post<D, P>(
+  static async getWithDataQuery<TData, TBody>(
+    url: string,
+    bodyData: TBody
+  ) {
+    const res = await this.getWithData<TData, TBody>(
+      url,
+      bodyData
+    );
+    return this.ensureOk<TData>(res);
+  }
+
+  /**
+   * @description POST 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
+   * @param postData - 요청 데이터
+   */
+  static async postQuery<TData, TBody>(url: string, postData: TBody) {
+    const res = await this.post<TData, TBody>(
       url,
       postData
     );
-    return this.ensureOk<D>(res);
+    return this.ensureOk<TData>(res);
   }
 
   /**
-   * PATCH 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description PATCH 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
+   * @param patchData - 요청 데이터
    */
-  static async patchQuery<D, P>(url: string, patchData: P) {
-    const res = await this.patch<D, P>(
+  static async patchQuery<TData, TBody>(url: string, patchData: TBody) {
+    const res = await this.patch<TData, TBody>(
       url,
       patchData
     );
-    return this.ensureOk<D>(res);
+    return this.ensureOk<TData>(res);
   }
 
   /**
-   * PUT 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description PUT 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
+   * @param putData - 요청 데이터
    */
-  static async putQuery<D, P>(url: string, putData: P) {
-    const res = await this.put<D, P>(
+  static async putQuery<TData, TBody>(url: string, putData: TBody) {
+    const res = await this.put<TData, TBody>(
       url,
       putData
     );
-    return this.ensureOk<D>(res);
+    return this.ensureOk<TData>(res);
   }
 
   /**
-   * DELETE 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description DELETE 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
    */
-  static async deleteQuery<D>(url: string) {
-    const res = await this.delete<D>(url);
-    return this.ensureOk<D>(res);
+  static async deleteQuery<TData>(url: string) {
+    const res = await this.delete<TData>(url);
+    return this.ensureOk<TData>(res);
   }
 
   /**
-   * 데이터와 함께 DELETE 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description 데이터와 함께 DELETE 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
+   * @param postData - 요청 데이터
    */
-  static async deleteWithDataQuery<D, P>(url: string, postData: P) {
-    const res = await this.delete<D>(
+  static async deleteWithDataQuery<TData, TBody>(url: string, postData: TBody) {
+    const res = await this.delete<TData>(
       url,
       {
         data: postData,
       }
     );
-    return this.ensureOk<D>(res);
+    return this.ensureOk<TData>(res);
   }
 
   /**
-   * 여러 데이터를 삭제하는 DELETE 요청을 수행하고 응답 데이터만 반환합니다.
+   * @description 여러 데이터를 삭제하는 DELETE 요청을 수행하고 응답 데이터만 반환합니다.
+   * @param url - API 엔드포인트
+   * @param deleteData - 삭제할 데이터
    */
-  static async deletesQuery<D, P>(url: string, deleteData: P) {
-    const res = await this.delete<D>(
+  static async deletesQuery<TData, TBody>(url: string, deleteData: TBody) {
+    const res = await this.delete<TData>(
       url,
       {
         data: deleteData,
       }
     );
-    return this.ensureOk<D>(res);
+    return this.ensureOk<TData>(res);
   }
 }

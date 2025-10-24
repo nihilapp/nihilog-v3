@@ -1,17 +1,17 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { TagWithoutSubscribersItemType } from '@/_types';
 
-interface UseGetTagsWithoutSubscribersOptions extends QueryOptionType<TagWithoutSubscribersItemType[]> {}
+interface OptionType extends QueryOptionType<TagWithoutSubscribersItemType[]> {}
 
 /**
  * @description 구독자 없는 태그 목록을 조회하는 커스텀 훅
- * @param {UseGetTagsWithoutSubscribersOptions} [options] - 쿼리 옵션 (선택사항)
+ * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useAdminGetTagsWithoutSubscribers(options: UseGetTagsWithoutSubscribersOptions = {}) {
+export function useAdminGetTagsWithoutSubscribers(options: OptionType = {}) {
   const query = useGet<TagWithoutSubscribersItemType[]>({
     url: [
       'admin',

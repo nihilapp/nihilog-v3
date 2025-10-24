@@ -1,21 +1,21 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { AnalyzeStatType } from '@/_schemas';
 import type { TagUsageTrendItemType } from '@/_types';
 
-interface UseGetTagUsageTrendOptions extends QueryOptionType<TagUsageTrendItemType[]> {}
+interface OptionType extends QueryOptionType<TagUsageTrendItemType[]> {}
 
 /**
  * @description 태그별 사용 추이를 조회하는 커스텀 훅
  * @param {AnalyzeStatType} analyzeStatData - 분석 통계 데이터
- * @param {UseGetTagUsageTrendOptions} [options] - 쿼리 옵션 (선택사항)
+ * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
 export function useAdminGetTagUsageTrend(
   analyzeStatData: AnalyzeStatType,
-  options: UseGetTagUsageTrendOptions = {}
+  options: OptionType = {}
 ) {
   const query = useGet<TagUsageTrendItemType[]>({
     url: [

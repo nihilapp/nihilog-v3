@@ -1,7 +1,7 @@
 import { type Metadata } from 'next';
 
 import { siteConfig } from '@/_config/config';
-import type { OpenGraphType, SiteMetadata } from '@/_entities/common/common.types';
+import type { OpenGraphType, SiteMetadata } from '@/_types';
 
 export const setMeta = (meta: SiteMetadata): Metadata => {
   const siteDescription = meta.description || siteConfig.site.description;

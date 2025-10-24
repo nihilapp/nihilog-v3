@@ -1,19 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreateTagSubscribeType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
-interface UseMultipleCreateTagSubscribeOptions extends MutationOptionsType<MultipleResultType, CreateTagSubscribeType> {}
+interface OptionType extends MutationOptionsType<MultipleResultType, CreateTagSubscribeType> {}
 
 /**
  * @description 다수 태그를 일괄 구독하는 커스텀 훅
- * @param {UseMultipleCreateTagSubscribeOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useMultipleCreateTagSubscribe(options: UseMultipleCreateTagSubscribeOptions = {}) {
+export function useMultipleCreateTagSubscribe(options: OptionType = {}) {
   const invalidateCache = useInvalidateTagSubscribeCache();
 
   const mutation = usePost<MultipleResultType, CreateTagSubscribeType>({

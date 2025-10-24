@@ -2,19 +2,19 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SignInType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
-interface UseSignInOptions extends MutationOptionsType<SelectUserInfoType, SignInType> {}
+interface OptionType extends MutationOptionsType<SelectUserInfoType, SignInType> {}
 
 /**
  * @description 사용자 로그인을 처리하는 커스텀 훅
- * @param {UseSignInOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useSignIn(options: UseSignInOptions = {}) {
+export function useSignIn(options: OptionType = {}) {
   const invalidateCache = useInvalidateAuthCache();
   const router = useRouter();
 

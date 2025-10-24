@@ -1,20 +1,20 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SearchTagSubscribeType } from '@/_schemas';
 import type { ListType, SelectTagSubscribeMappingListItemType } from '@/_types';
 
-interface UseGetTagSubscribeListOptions extends QueryOptionType<ListType<SelectTagSubscribeMappingListItemType>> {
+interface OptionType extends QueryOptionType<ListType<SelectTagSubscribeMappingListItemType>> {
   searchData?: SearchTagSubscribeType;
 }
 
 /**
  * @description 사용자가 구독한 태그 목록을 조회하는 커스텀 훅
- * @param {UseGetTagSubscribeListOptions} [options] - 쿼리 옵션 (선택사항)
+ * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useGetTagSubscribeList(options: UseGetTagSubscribeListOptions = {}) {
+export function useGetTagSubscribeList(options: OptionType = {}) {
   const { searchData, ...restOptions } = options;
 
   const query = useGet<ListType<SelectTagSubscribeMappingListItemType>>({

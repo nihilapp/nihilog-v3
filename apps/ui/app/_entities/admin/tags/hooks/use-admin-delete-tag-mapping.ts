@@ -1,19 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { DeletePstTagMpngType } from '@/_schemas';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface UseDeleteTagMappingOptions extends MutationOptionsType<boolean, DeletePstTagMpngType> {}
+interface OptionType extends MutationOptionsType<boolean, DeletePstTagMpngType> {}
 
 /**
  * @description 태그 매핑을 삭제하는 커스텀 훅
- * @param {UseDeleteTagMappingOptions} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminDeleteTagMapping(options: UseDeleteTagMappingOptions = {}) {
+export function useAdminDeleteTagMapping(options: OptionType = {}) {
   const invalidateCache = useInvalidateAdminTagsCache();
 
   const mutation = useDelete<boolean, DeletePstTagMpngType>({

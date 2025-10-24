@@ -5,7 +5,19 @@ export type {
   ResponseType,
   ErrorType,
   RepoResponseType
-} from './common.types.js';
+} from './common.types';
+
+// React Query 관련 타입 export
+export type {
+  OkType,
+  ErrorType as CommonErrorType,
+  OpenGraphType,
+  SiteMetadata,
+  QueryOptionType,
+  MutationOptionsType,
+  InfiniteQueryOptionType,
+  OptionType
+} from './common.types';
 
 // 사용자 타입 export
 export type {

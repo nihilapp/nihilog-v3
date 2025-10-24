@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_entities/common/common.types';
+import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { CreatePostType } from '@/_schemas';

@@ -1,42 +1,97 @@
-// 공통 타입 정의
+import type {
+  UseQueryOptions,
+  UseMutationOptions,
+  UseInfiniteQueryOptions,
+  InfiniteData,
+  QueryKey
+} from '@tanstack/react-query';
+import type { AxiosError } from 'axios';
 
-// 기본 응답 타입
-export interface ResponseType<T = any> {
-  success: boolean;
-  message: string;
-  data: T;
-  code?: string;
-}
+import type { ResponseType, ListType } from '@/_schemas/response.schema';
 
-// 목록 응답 타입
-export interface ListType<T = any> {
-  list: T[];
+export type OkType<TData = unknown> = ResponseType<TData>;
+export type ErrorType = ResponseType<null>;
+
+// 기존 타입들 재export
+export type { ResponseType, ListType };
+
+// 추가 타입들
+export type MultipleResultType<TData = unknown> = {
+  list: TData[];
   totalCnt: number;
-  page: number;
-  strtRow: number;
-  endRow: number;
+};
+
+export type RepoResponseType<TData = unknown> = ResponseType<TData>;
+
+// 공통 옵션 타입
+export type OptionType<TData = unknown, TBody = unknown> = {
+  url: (string | number)[];
+  params?: Record<string, string>;
+  body?: TBody;
+  ttl?: number;
+  enabled?: boolean;
+  callback?: (response: OkType<TData>) => void;
+  errorCallback?: (error: ErrorType) => void;
+};
+
+// Common SEO types (identical across apps)
+export type OpenGraphType
+  = | 'article'
+    | 'book'
+    | 'music.song'
+    | 'music.album'
+    | 'music.playlist'
+    | 'music.radio_station'
+    | 'profile'
+    | 'website'
+    | 'video.tv_show'
+    | 'video.other'
+    | 'video.movie'
+    | 'video.episode';
+
+export interface SiteMetadata {
+  title: string;
+  url: string;
+  description?: string;
+  author?: string;
+  keywords?: string;
+  type?: OpenGraphType;
+  tags?: string;
+  section?: string;
+  created?: string;
+  updated?: string;
+  imageLink?: string;
+  imageAlt?: string;
+  robots?:
+    | 'index, follow'
+    | 'noindex, nofollow'
+    | 'index, nofollow'
+    | 'noindex, follow';
 }
 
-// 다중 결과 타입
-export interface MultipleResultType<T = any> {
-  success: boolean;
-  data: T[];
-  totalCnt: number;
-}
+// React Query 옵션 타입들
+export type QueryOptionType<TData = unknown, TError = AxiosError<ErrorType>> = Omit<
+  UseQueryOptions<OkType<TData>, TError, OkType<TData>>,
+  'queryKey' | 'queryFn' | 'enabled'
+>;
 
-// 에러 타입
-export interface ErrorType {
-  code: string;
-  message: string;
-  details?: any;
-}
+export type MutationOptionsType<
+  TData = unknown,
+  TVariables = unknown,
+  TError = AxiosError<ErrorType>
+> = Omit<UseMutationOptions<OkType<TData>, TError, TVariables>, 'mutationFn' | 'enabled'>;
 
-// 리포지토리 응답 타입
-export interface RepoResponseType<T = any> {
-  success: boolean;
-  data: T | null;
-  error?: {
-    code: string;
-    message: string;
-  };
-}
+export type InfiniteQueryOptionType<
+  TPageData = unknown,
+  TPageParam = unknown,
+  TError = AxiosError<ErrorType>
+> = Omit<
+  UseInfiniteQueryOptions<
+    OkType<TPageData>,
+    TError,
+    InfiniteData<OkType<TPageData>, TPageParam>,
+    QueryKey,
+    TPageParam
+  >,
+  'queryKey' | 'queryFn' | 'enabled'
+>;

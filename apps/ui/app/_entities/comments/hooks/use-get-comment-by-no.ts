@@ -1,21 +1,18 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_entities/common/common.types';
+import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SelectCommentType } from '@/_types';
 
-interface UseGetCommentByNoOptions extends QueryOptionType<SelectCommentType> {
-  cmntNo: number;
-}
+interface OptionType extends QueryOptionType<SelectCommentType> {}
 
 /**
  * @description 댓글 번호로 댓글을 조회하는 커스텀 훅
- * @param {UseGetCommentByNoOptions} options - 쿼리 옵션
+ * @param {number} cmntNo - 댓글 번호
+ * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useGetCommentByNo(options: UseGetCommentByNoOptions) {
-  const { cmntNo, ...queryOptions } = options;
-
+export function useGetCommentByNo(cmntNo: number, options: OptionType = {}) {
   const query = useGet<SelectCommentType>({
     url: [
       'comments',
@@ -38,7 +35,7 @@ export function useGetCommentByNo(options: UseGetCommentByNoOptions) {
         }
       );
     },
-    ...queryOptions,
+    ...options,
   });
 
   return query;

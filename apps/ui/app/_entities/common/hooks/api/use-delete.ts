@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import type { MutationOptionsType, OkType } from '@/_entities/common/common.types';
+import type { MutationOptionsType, OkType } from '@/_types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
 import type { ErrorType } from '@/_types';
@@ -98,9 +98,9 @@ export function useDelete<TData = unknown, TVariables = unknown>(options: UseDel
     ...mutation,
     mutate: enabled
       ? mutation.mutate
-      : (..._args: any[]) => undefined as any,
+      : (_variables: TVariables, _options?: any) => undefined,
     mutateAsync: enabled
       ? mutation.mutateAsync
-      : async (..._args: any[]) => undefined as any,
+      : async (_variables: TVariables, _options?: any) => undefined as any,
   };
 }
