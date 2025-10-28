@@ -336,7 +336,7 @@ export class AdminCommentsController {
    */
   @Endpoint({
     endpoint: '/multiple',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],

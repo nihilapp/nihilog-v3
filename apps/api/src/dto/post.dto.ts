@@ -3,6 +3,8 @@ import { createZodDto } from 'nestjs-zod';
 import {
   createPostBookmarkSchema,
   createPostSchema,
+  createPostShareLogSchema,
+  createPostViewLogSchema,
   deletePostBookmarkSchema,
   deletePostSchema,
   searchPostBookmarkSchema,
@@ -30,3 +32,9 @@ export class DeletePostBookmarkDto extends createZodDto(deletePostBookmarkSchema
 
 // 포스트 북마크 검색 DTO
 export class SearchPostBookmarkDto extends createZodDto(searchPostBookmarkSchema) {}
+
+// 포스트 조회 로그 생성 DTO
+export class CreatePostViewLogDto extends createZodDto(createPostViewLogSchema) {}
+
+// 포스트 공유 로그 생성 DTO
+export class CreatePostShareLogDto extends createZodDto(createPostShareLogSchema) {}

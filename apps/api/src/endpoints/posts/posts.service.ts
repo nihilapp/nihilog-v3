@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import type { SearchPostDto } from '@/dto';
-import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
-import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
+import type { CreatePostBookmarkDto, CreatePostShareLogDto, CreatePostViewLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectPostBookmarkListItemType,
@@ -79,22 +78,13 @@ export class PostsService {
   }
 
   /**
-   * @description 고급 검색을 통한 포스트 목록 조회
-   * @param searchData 고급 검색 조건
-   */
-  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
-    return this.postRepository.getAdvancedPostList(searchData);
-  }
-
-  /**
    * @description 포스트 조회 로그 기록
-   * @param pstNo 포스트 번호
-   * @param ip 사용자 IP
+   * @param createData 조회 로그 생성 데이터
    */
-  async createPostViewLog(pstNo: number, ip: string): Promise<RepoResponseType<SelectPostViewLogType> | null> {
+  async createPostViewLog(createData: CreatePostViewLogDto): Promise<RepoResponseType<SelectPostViewLogType> | null> {
     return this.postRepository.createPostViewLog(
-      pstNo,
-      ip
+      createData.pstNo,
+      createData.ip
     );
   }
 

@@ -25,7 +25,7 @@ export class CategorySubscribeController {
    * @param req 요청 객체
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -65,7 +65,7 @@ export class CategorySubscribeController {
    * @param ctgryNo 카테고리 번호
    */
   @Endpoint({
-    endpoint: '/:ctgryNo/search',
+    endpoint: '/:ctgryNo',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -233,7 +233,7 @@ export class CategorySubscribeController {
       {
         ...body,
         ctgrySbcrNo,
-      }
+      } as UpdateCategorySubscribeDto & { ctgrySbcrNo: number }
     );
 
     if (!result?.success) {

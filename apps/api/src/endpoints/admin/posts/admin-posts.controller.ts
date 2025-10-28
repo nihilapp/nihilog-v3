@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Query, Req, UseGuards } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -283,7 +283,7 @@ export class AdminPostsController {
    * @param createData 포스트 생성 데이터
    */
   @Endpoint({
-    endpoint: '/',
+    endpoint: '',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
@@ -311,7 +311,7 @@ export class AdminPostsController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.POST.ADMIN.CREATE_SUCCESS,
       result.data
     );
@@ -323,7 +323,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/:pstNo',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -331,6 +331,10 @@ export class AdminPostsController {
   })
   async adminUpdatePost(
     @Req() req: AuthRequest,
+    @Param(
+      'pstNo',
+      ParseIntPipe
+    ) pstNo: number,
     @Body() updateData: UpdatePostDto
   ): Promise<ResponseDto<SelectPostType>> {
     if (req.errorResponse) {
@@ -339,7 +343,10 @@ export class AdminPostsController {
 
     const result = await this.postsService.adminUpdatePost(
       req.user.userNo,
-      updateData
+      {
+        ...updateData,
+        pstNo,
+      } as UpdatePostDto & { pstNo: number }
     );
 
     if (!result?.success) {
@@ -362,7 +369,7 @@ export class AdminPostsController {
    */
   @Endpoint({
     endpoint: '/multiple',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -404,14 +411,24 @@ export class AdminPostsController {
       roles: [ 'ADMIN', ],
     },
   })
-  async adminDeletePost(@Req() req: AuthRequest, @Body() deleteData: DeletePostDto): Promise<ResponseDto<boolean>> {
+  async adminDeletePost(
+    @Req() req: AuthRequest,
+    @Param(
+      'pstNo',
+      ParseIntPipe
+    ) pstNo: number,
+    @Body() deleteData: DeletePostDto
+  ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
     }
 
     const result = await this.postsService.adminDeletePost(
       req.user.userNo,
-      deleteData
+      {
+        ...deleteData,
+        pstNo,
+      } as DeletePostDto & { pstNo: number }
     );
 
     if (!result?.success) {

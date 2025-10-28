@@ -429,7 +429,7 @@ export class AdminCategoriesController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
   })
   async adminGetCategoryList(@Query() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {
@@ -521,7 +521,7 @@ export class AdminCategoriesController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.CATEGORY.ADMIN.CREATE_SUCCESS,
       result.data
     );
@@ -546,7 +546,7 @@ export class AdminCategoriesController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.CATEGORY.ADMIN.MULTIPLE_CREATE_SUCCESS,
       result.data
     );

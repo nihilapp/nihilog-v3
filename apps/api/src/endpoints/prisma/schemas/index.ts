@@ -51,6 +51,10 @@ export {
   postBookmarkSchema,
   createPostBookmarkSchema,
   deletePostBookmarkSchema,
+  postViewLogSchema,
+  createPostViewLogSchema,
+  postShareLogSchema,
+  createPostShareLogSchema,
   type PostType,
   type PostInfoType,
   type CreatePostType,
@@ -59,7 +63,11 @@ export {
   type SearchPostType,
   type CreatePostBookmarkType,
   type DeletePostBookmarkType,
-  type SearchPostBookmarkType
+  type SearchPostBookmarkType,
+  type PostViewLogSchemaType,
+  type CreatePostViewLogSchemaType,
+  type PostShareLogSchemaType,
+  type CreatePostShareLogSchemaType
 } from './post.schema';
 
 export {
@@ -110,18 +118,6 @@ export {
   type DeleteTagSubscribeType,
   type SearchTagSubscribeType
 } from './tag-subscribe.schema';
-
-export {
-  postViewLogSchema,
-  type PostViewLogSchemaType
-} from './post-viewlog.schema';
-
-export {
-  postShareLogSchema,
-  createPostShareLogSchema,
-  type PostShareLogSchemaType,
-  type CreatePostShareLogSchemaType
-} from './post-sharelog.schema';
 
 export {
   tagInfoSchema,

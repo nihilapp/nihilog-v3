@@ -103,7 +103,6 @@ export const createCommentSchema = commentSchema.pick({
 });
 
 export const updateCommentSchema = commentSchema.partial().pick({
-  cmntNo: true,
   cmntNoList: true,
   cmntCntnt: true,
   cmntSts: true,
@@ -113,7 +112,6 @@ export const updateCommentSchema = commentSchema.partial().pick({
 });
 
 export const deleteCommentSchema = commentSchema.pick({
-  cmntNo: true,
   cmntNoList: true,
 }).partial();
 

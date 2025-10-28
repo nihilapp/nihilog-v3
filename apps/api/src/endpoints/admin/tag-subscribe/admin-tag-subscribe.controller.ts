@@ -58,7 +58,7 @@ export class AdminTagSubscribeController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.SUBSCRIBE.TAG.ADMIN_MULTIPLE_CREATE_SUCCESS,
       result.data
     );
@@ -71,7 +71,7 @@ export class AdminTagSubscribeController {
    */
   @Endpoint({
     endpoint: '/multiple',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],

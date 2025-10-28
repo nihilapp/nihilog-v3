@@ -105,13 +105,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 사용 횟수 TOP N 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.TOP_USED_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 사용 횟수 TOP N 조회 성공',
+      MESSAGE.TAG.ADMIN.TOP_USED_SUCCESS,
       result.data
     );
   }
@@ -142,13 +142,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 사용 추이 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.USAGE_TREND_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 사용 추이 조회 성공',
+      MESSAGE.TAG.ADMIN.USAGE_TREND_SUCCESS,
       result.data
     );
   }
@@ -175,13 +175,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '미사용 태그 목록 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.UNUSED_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '미사용 태그 목록 조회 성공',
+      MESSAGE.TAG.ADMIN.UNUSED_SUCCESS,
       result.data
     );
   }
@@ -212,13 +212,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그별 구독자 수 TOP N 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.TOP_SUBSCRIBERS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그별 구독자 수 TOP N 조회 성공',
+      MESSAGE.TAG.ADMIN.TOP_SUBSCRIBERS_SUCCESS,
       result.data
     );
   }
@@ -249,13 +249,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그별 구독자 성장률 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.SUBSCRIBER_GROWTH_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그별 구독자 성장률 조회 성공',
+      MESSAGE.TAG.ADMIN.SUBSCRIBER_GROWTH_SUCCESS,
       result.data
     );
   }
@@ -282,13 +282,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '구독자 없는 태그 목록 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.NO_SUBSCRIBERS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '구독자 없는 태그 목록 조회 성공',
+      MESSAGE.TAG.ADMIN.NO_SUBSCRIBERS_SUCCESS,
       result.data
     );
   }
@@ -315,13 +315,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그별 사용 효율성 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.EFFICIENCY_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그별 사용 효율성 조회 성공',
+      MESSAGE.TAG.ADMIN.EFFICIENCY_SUCCESS,
       result.data
     );
   }
@@ -352,13 +352,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그별 평균 사용 빈도 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.FREQUENCY_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그별 평균 사용 빈도 조회 성공',
+      MESSAGE.TAG.ADMIN.FREQUENCY_SUCCESS,
       result.data
     );
   }
@@ -385,13 +385,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 생명주기 분석 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.LIFECYCLE_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 생명주기 분석 조회 성공',
+      MESSAGE.TAG.ADMIN.LIFECYCLE_SUCCESS,
       result.data
     );
   }
@@ -418,13 +418,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 상태별 분포 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.STATUS_DISTRIBUTION_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 상태별 분포 조회 성공',
+      MESSAGE.TAG.ADMIN.STATUS_DISTRIBUTION_SUCCESS,
       result.data
     );
   }
@@ -451,13 +451,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 생성자별 통계 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.CREATOR_STATS_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 생성자별 통계 조회 성공',
+      MESSAGE.TAG.ADMIN.CREATOR_STATS_SUCCESS,
       result.data
     );
   }
@@ -484,13 +484,13 @@ export class AdminTagsController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || '태그 정리 필요도 조회 실패'
+        result?.error?.message || MESSAGE.TAG.ADMIN.CLEANUP_ERROR
       );
     }
 
     return createResponse(
       'SUCCESS',
-      '태그 정리 필요도 조회 성공',
+      MESSAGE.TAG.ADMIN.CLEANUP_SUCCESS,
       result.data
     );
   }
@@ -533,7 +533,7 @@ export class AdminTagsController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.TAG.ADMIN.CREATE_SUCCESS,
       result.data
     );
@@ -573,7 +573,7 @@ export class AdminTagsController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.TAG.ADMIN.MULTIPLE_CREATE_SUCCESS,
       result.data
     );
@@ -582,11 +582,12 @@ export class AdminTagsController {
   /**
    * @description 태그 수정
    * @param req 요청 객체
+   * @param tagNo 태그 번호
    * @param updateData 태그 수정 데이터
    */
   @Endpoint({
-    endpoint: '',
-    method: 'PUT',
+    endpoint: '/:tagNo',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -594,6 +595,10 @@ export class AdminTagsController {
   })
   async adminUpdateTag(
     @Req() req: AuthRequest,
+    @Param(
+      'tagNo',
+      ParseIntPipe
+    ) tagNo: number,
     @Body() updateData: UpdateTagDto
   ): Promise<ResponseDto<SelectTagInfoType>> {
     if (req.errorResponse) {
@@ -602,7 +607,10 @@ export class AdminTagsController {
 
     const result = await this.adminTagsService.adminUpdateTag(
       req.user.userNo,
-      updateData
+      {
+        ...updateData,
+        tagNo,
+      } as UpdateTagDto & { tagNo: number }
     );
 
     if (!result?.success) {
@@ -626,7 +634,7 @@ export class AdminTagsController {
    */
   @Endpoint({
     endpoint: '/multiple',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -662,10 +670,11 @@ export class AdminTagsController {
   /**
    * @description 태그 삭제
    * @param req 요청 객체
+   * @param tagNo 태그 번호
    * @param deleteData 태그 삭제 데이터
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/:tagNo',
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
@@ -674,6 +683,10 @@ export class AdminTagsController {
   })
   async adminDeleteTag(
     @Req() req: AuthRequest,
+    @Param(
+      'tagNo',
+      ParseIntPipe
+    ) tagNo: number,
     @Body() deleteData: DeleteTagDto
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
@@ -682,7 +695,10 @@ export class AdminTagsController {
 
     const result = await this.adminTagsService.adminDeleteTag(
       req.user.userNo,
-      deleteData
+      {
+        ...deleteData,
+        tagNo,
+      } as DeleteTagDto & { tagNo: number }
     );
 
     if (!result?.success) {

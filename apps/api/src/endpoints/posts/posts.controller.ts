@@ -1,10 +1,9 @@
-import { Body, Controller, Ip, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
+import { Body, Controller, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { type AuthRequest, CreatePostBookmarkDto, DeletePostBookmarkDto, type ResponseDto, SearchPostDto } from '@/dto';
-import { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
-import { SearchPostBookmarkDto } from '@/dto/post.dto';
+import { CreatePostShareLogDto, CreatePostViewLogDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import { PostsService } from '@/endpoints/posts/posts.service';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
 import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostListItemType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
@@ -19,7 +18,7 @@ export class PostsController {
    * @param searchData 검색 조건 DTO
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
   })
   async getPostList(@Query() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
@@ -98,7 +97,7 @@ export class PostsController {
    * @param searchData 검색 조건
    */
   @Endpoint({
-    endpoint: '/tag/:tagNo',
+    endpoint: '/tags/:tagNo',
     method: 'GET',
   })
   async getPostListByTagNo(
@@ -133,7 +132,7 @@ export class PostsController {
    * @param searchData 검색 조건
    */
   @Endpoint({
-    endpoint: '/category/:ctgryNo',
+    endpoint: '/categories/:ctgryNo',
     method: 'GET',
   })
   async getPostListByCtgryNo(
@@ -195,50 +194,15 @@ export class PostsController {
   }
 
   /**
-   * @description 고급 검색을 통한 포스트 목록 조회
-   * @param searchData 고급 검색 조건 DTO
-   */
-  @Endpoint({
-    endpoint: '/advanced-search',
-    method: 'GET',
-  })
-  async getAdvancedPostList(@Query() searchData: SearchPostDto): Promise<ResponseDto<ListType<SelectPostListItemType>>> {
-    const result = await this.postsService.getAdvancedPostList(searchData);
-
-    if (!result?.success) {
-      return createError(
-        result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.POST.USER.SEARCH_ERROR
-      );
-    }
-
-    return createResponse(
-      'SUCCESS',
-      MESSAGE.POST.USER.SEARCH_SUCCESS,
-      result.data
-    );
-  }
-
-  /**
    * @description 포스트 조회 로그 기록
-   * @param pstNo 포스트 번호
-   * @param ip 사용자 IP
+   * @param createData 조회 로그 생성 데이터
    */
   @Endpoint({
-    endpoint: '/:pstNo/view',
+    endpoint: '/view-logs',
     method: 'POST',
   })
-  async createPostViewLog(
-    @Param(
-      'pstNo',
-      ParseIntPipe
-    ) pstNo: number,
-    @Ip() ip: string
-  ): Promise<ResponseDto<SelectPostViewLogType>> {
-    const result = await this.postsService.createPostViewLog(
-      pstNo,
-      ip
-    );
+  async createPostViewLog(@Body() createData: CreatePostViewLogDto): Promise<ResponseDto<SelectPostViewLogType>> {
+    const result = await this.postsService.createPostViewLog(createData);
 
     if (!result?.success) {
       return createError(
@@ -259,7 +223,7 @@ export class PostsController {
    * @param createData 공유 로그 생성 데이터
    */
   @Endpoint({
-    endpoint: '/:pstNo/share',
+    endpoint: '/share-logs',
     method: 'POST',
   })
   async createPostShareLog(@Body() createData: CreatePostShareLogDto): Promise<ResponseDto<SelectPostShareLogType>> {
@@ -281,23 +245,16 @@ export class PostsController {
 
   /**
    * @description 포스트 북마크 생성
-   * @param pstNo 포스트 번호
    * @param createData 북마크 생성 데이터
    */
   @Endpoint({
-    endpoint: '/:pstNo/bookmark',
+    endpoint: '/bookmarks',
     method: 'POST',
     options: {
       authGuard: 'JWT-auth',
     },
   })
-  async createPostBookmark(
-    @Param(
-      'pstNo',
-      ParseIntPipe
-    ) pstNo: number,
-    @Body() createData: CreatePostBookmarkDto
-  ): Promise<ResponseDto<SelectPostBookmarkType>> {
+  async createPostBookmark(@Body() createData: CreatePostBookmarkDto): Promise<ResponseDto<SelectPostBookmarkType>> {
     const result = await this.postsService.createPostBookmark(createData);
 
     if (!result?.success) {
@@ -316,23 +273,16 @@ export class PostsController {
 
   /**
    * @description 포스트 북마크 삭제
-   * @param pstNo 포스트 번호
    * @param deleteData 북마크 삭제 데이터
    */
   @Endpoint({
-    endpoint: '/:pstNo/bookmark',
+    endpoint: '/bookmarks',
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
     },
   })
-  async deletePostBookmark(
-    @Param(
-      'pstNo',
-      ParseIntPipe
-    ) pstNo: number,
-    @Body() deleteData: DeletePostBookmarkDto
-  ): Promise<ResponseDto<boolean>> {
+  async deletePostBookmark(@Body() deleteData: DeletePostBookmarkDto): Promise<ResponseDto<boolean>> {
     const result = await this.postsService.deletePostBookmark(deleteData);
 
     if (!result?.success) {
@@ -355,7 +305,7 @@ export class PostsController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '/bookmarked',
+    endpoint: '/bookmarks',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',

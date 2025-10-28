@@ -25,7 +25,7 @@ export class TagSubscribeController {
    * @param req 요청 객체
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -65,7 +65,7 @@ export class TagSubscribeController {
    * @param tagNo 태그 번호
    */
   @Endpoint({
-    endpoint: '/:tagNo/search',
+    endpoint: '/:tagNo',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -233,7 +233,7 @@ export class TagSubscribeController {
       {
         ...body,
         tagSbcrNo,
-      }
+      } as UpdateTagSubscribeDto & { tagSbcrNo: number }
     );
 
     if (!result?.success) {

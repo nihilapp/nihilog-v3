@@ -261,8 +261,8 @@ export class AuthController {
    * @param changePasswordData 비밀번호 변경 정보
    */
   @Endpoint({
-    endpoint: '/change-password',
-    method: 'POST',
+    endpoint: '/password',
+    method: 'PUT',
     options: {
       serialize: true,
       roles: [

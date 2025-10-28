@@ -64,13 +64,11 @@ export {
   DeletePostDto,
   SearchPostDto,
   CreatePostBookmarkDto,
-  DeletePostBookmarkDto
-} from './post.dto';
-
-// Post Share Log DTOs
-export {
+  DeletePostBookmarkDto,
+  SearchPostBookmarkDto,
+  CreatePostViewLogDto,
   CreatePostShareLogDto
-} from './post-sharelog.dto';
+} from './post.dto';
 
 // Tag DTOs
 export {

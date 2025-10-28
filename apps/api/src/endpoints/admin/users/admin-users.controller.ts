@@ -348,7 +348,7 @@ export class AdminUserController {
    * @param searchData 검색 조건
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -596,7 +596,7 @@ export class AdminUserController {
    */
   @Endpoint({
     endpoint: '/:userNo',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],
@@ -645,7 +645,7 @@ export class AdminUserController {
    */
   @Endpoint({
     endpoint: '/multiple',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],

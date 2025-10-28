@@ -4,8 +4,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
-import type { CreatePostShareLogDto } from '@/dto/post-sharelog.dto';
-import type { CreatePostBookmarkDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
+import type { CreatePostBookmarkDto, CreatePostShareLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
@@ -717,7 +716,7 @@ export class PostRepository {
                 AND publ_dt::timestamptz >= ${analyzeStatData.startDt}::timestamptz
                 AND publ_dt::timestamptz <= ${analyzeStatData.endDt}::timestamptz
               `
-              : Prisma.empty}
+              : Prisma.sql``}
           GROUP BY pst_stts
         ),
         total_count AS (
@@ -946,100 +945,6 @@ export class PostRepository {
           },
         }),
         this.prisma.pstBkmrkMpng.count({ where, }),
-      ]);
-
-      return prismaResponse(
-        true,
-        {
-          list: list.map((item, index) => ({
-            ...item,
-            totalCnt,
-            rowNo: skip + index + 1,
-          })),
-          totalCnt,
-        }
-      );
-    }
-    catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
-    }
-  }
-
-  /**
-   * @description 고급 검색을 통한 포스트 목록 조회
-   * @param searchData 고급 검색 데이터
-   */
-  async getAdvancedPostList(searchData: SearchPostDto): Promise<RepoResponseType<ListType<SelectPostListItemType>> | null> {
-    try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, orderBy, tagNoList, ctgryNoList, pstStts, archYn, } = searchData;
-
-      const where: Prisma.PstInfoWhereInput = {
-        // delYn 의 경우 관리자는 'y' 'n' 둘 다 볼 수 있어야 함.
-        delYn,
-        // rlsYn 의 경우 관리자는 'y' 'n' 둘 다 볼 수 있어야 함.
-        rlsYn,
-        // 검색은 둘 중 하나이므로 이렇게 둠.
-        ...(srchKywd && (srchType === 'pstTtl') && {
-          pstTtl: {
-            contains: srchKywd,
-            mode: 'insensitive',
-          },
-        }),
-        ...(srchKywd && (srchType === 'pstSmry') && {
-          pstSmry: {
-            contains: srchKywd,
-            mode: 'insensitive',
-          },
-        }),
-        // 포스트 상태
-        ...(pstStts === 'EMPTY' && {
-          pstStts: 'EMPTY',
-        }),
-        ...(pstStts === 'WRITING' && {
-          pstStts: 'WRITING',
-        }),
-        ...(pstStts === 'FINISHED' && {
-          pstStts: 'FINISHED',
-        }),
-        // 보관 여부
-        ...(archYn && { archYn, }),
-        // 태그는 or
-        ...(tagNoList && { tags: { some: { tagNo: { in: tagNoList, }, }, }, }),
-        // 카테고리는 or
-        ...(ctgryNoList && { ctgryNo: { in: ctgryNoList, }, }),
-      };
-
-      const { offset: skip, limit: take, } = pageHelper(
-        page,
-        strtRow,
-        endRow
-      );
-
-      const [
-        list,
-        totalCnt,
-      ] = await this.prisma.$transaction([
-        // 관리자 관점에서는 모든 포스트를 조회해야 하고 사용자 관점에서는 공개된 글만 조회 해야 함. 둘 다 기능해야 하므로 플래그로 조작하는 것으로 진행.
-        this.prisma.pstInfo.findMany({
-          where,
-          orderBy: {
-            ...(orderBy === 'LATEST') && {
-              publDt: 'desc',
-            },
-            ...(orderBy === 'OLDEST') && {
-              publDt: 'asc',
-            },
-            ...(orderBy === 'POPULAR') && {
-              pstView: 'desc',
-            },
-          },
-          skip,
-          take,
-          include: {
-            category: true,
-          },
-        }),
-        this.prisma.pstInfo.count({ where, }),
       ]);
 
       return prismaResponse(

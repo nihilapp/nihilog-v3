@@ -28,7 +28,7 @@ export class AdminController {
    */
   @Endpoint({
     endpoint: 'profile',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],

@@ -98,7 +98,6 @@ export const createTagSubscribeSchema = tagSubscribeSchema.pick({
 
 // 태그 구독 수정용 스키마
 export const updateTagSubscribeSchema = tagSubscribeSchema.pick({
-  tagSbcrNo: true,
   sbcrNo: true,
   tagNo: true,
   useYn: true,
@@ -110,7 +109,6 @@ export const updateTagSubscribeSchema = tagSubscribeSchema.pick({
 // 태그 구독 삭제용 스키마
 export const deleteTagSubscribeSchema = tagSubscribeSchema.pick({
   tagSbcrNoList: true,
-  tagSbcrNo: true,
   sbcrNo: true,
 }).partial();
 

@@ -203,8 +203,8 @@ export const registerAuthEndpoints = () => {
 
   // 비밀번호 변경
   openApiRegistry.registerPath({
-    method: 'post',
-    path: '/auth/change-password',
+    method: 'put',
+    path: '/auth/password',
     summary: '비밀번호 변경',
     description: '현재 로그인된 사용자의 비밀번호를 변경합니다.',
     tags: [ 'auth', ],

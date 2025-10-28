@@ -24,7 +24,7 @@ export class TagController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
   })
   async getTagList(@Query() searchData: SearchTagDto): Promise<ResponseDto<ListType<SelectTagInfoListItemType>>> {

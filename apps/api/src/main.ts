@@ -1,5 +1,7 @@
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
@@ -16,7 +18,11 @@ import { HttpLoggingInterceptor } from './http-logging.interceptor';
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter(),
+    new FastifyAdapter({
+      routerOptions: {
+        // Fastify v6 호환성을 위한 라우터 옵션 설정
+      },
+    }),
     {
       logger: [
         'log',
@@ -98,8 +104,36 @@ async function bootstrap() {
   const host = CONFIG.SERVER.HOST;
   const port = CONFIG.SERVER.PORT;
 
-  // Zod 기반 OpenAPI 문서 생성 (필요시 사용)
-  generateOpenApiDocument();
+  // Zod 기반 OpenAPI 문서 생성
+  const openApiDocument = generateOpenApiDocument();
+
+  // Fastify Swagger 설정 (OpenAPI 문서 제공)
+  /* eslint-disable @typescript-eslint/no-unsafe-argument */
+  await app.register(
+    fastifySwagger as any,
+    {
+      mode: 'static',
+      specification: {
+        document: openApiDocument,
+      },
+    }
+  );
+
+  // Swagger UI 설정
+  await app.register(
+    fastifySwaggerUi as any,
+    {
+      routePrefix: '/swagger/docs',
+      uiConfig: {
+        docExpansion: 'list',
+        deepLinking: true,
+        displayRequestDuration: true,
+      },
+      staticCSP: true,
+      transformStaticCSP: (header: string) => header,
+    }
+  );
+  /* eslint-enable @typescript-eslint/no-unsafe-argument */
 
   await app.listen(
     port,
@@ -108,7 +142,7 @@ async function bootstrap() {
 
   const logger = new Logger('Bootstrap');
   logger.log(`🚀 애플리케이션이 http://${host}:${port} 에서 실행 중입니다.`);
-  logger.log(`📚 OpenAPI 문서가 생성되었습니다.`);
+  logger.log(`📚 OpenAPI 문서가 http://${host}:${port}/swagger/docs 에서 사용 가능합니다.`);
 }
 
 const handleError = (error: Error): void => {

@@ -24,7 +24,7 @@ export class CategoriesController {
    * @param searchData 검색 데이터
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
   })
   async getCategoryList(@Query() searchData: SearchCategoryDto): Promise<ResponseDto<ListType<SelectCategoryListItemType>>> {

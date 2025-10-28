@@ -17,7 +17,7 @@ export class CommentsController {
    * @param searchData 검색 조건 DTO
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
   })
   async getCommentList(@Query() searchData: SearchCommentDto): Promise<ResponseDto<ListType<SelectCommentListItemType>>> {
@@ -107,10 +107,11 @@ export class CommentsController {
   /**
    * @description 댓글 수정
    * @param req 인증 요청
+   * @param cmntNo 댓글 번호
    * @param updateData 댓글 수정 데이터
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/:cmntNo',
     method: 'PUT',
     options: {
       authGuard: 'JWT-auth',
@@ -118,6 +119,10 @@ export class CommentsController {
   })
   async updateComment(
     @Req() req: AuthRequest,
+    @Param(
+      'cmntNo',
+      ParseIntPipe
+    ) cmntNo: number,
     @Body() updateData: UpdateCommentDto
   ): Promise<ResponseDto<SelectCommentType>> {
     if (req.errorResponse) {
@@ -126,7 +131,10 @@ export class CommentsController {
 
     const result = await this.commentsService.updateComment(
       req.user.userNo,
-      updateData
+      {
+        ...updateData,
+        cmntNo,
+      } as UpdateCommentDto & { cmntNo: number }
     );
 
     if (!result?.success) {
@@ -146,10 +154,11 @@ export class CommentsController {
   /**
    * @description 댓글 삭제
    * @param req 인증 요청
+   * @param cmntNo 댓글 번호
    * @param deleteData 댓글 삭제 데이터
    */
   @Endpoint({
-    endpoint: '',
+    endpoint: '/:cmntNo',
     method: 'DELETE',
     options: {
       authGuard: 'JWT-auth',
@@ -157,6 +166,10 @@ export class CommentsController {
   })
   async deleteComment(
     @Req() req: AuthRequest,
+    @Param(
+      'cmntNo',
+      ParseIntPipe
+    ) cmntNo: number,
     @Body() deleteData: DeleteCommentDto
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
@@ -165,7 +178,10 @@ export class CommentsController {
 
     const result = await this.commentsService.deleteComment(
       req.user.userNo,
-      deleteData
+      {
+        ...deleteData,
+        cmntNo,
+      } as DeleteCommentDto & { cmntNo: number }
     );
 
     if (!result?.success) {

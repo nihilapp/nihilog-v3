@@ -14,10 +14,10 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerCommentsEndpoints = () => {
-  // GET /comments/search - 댓글 목록 조회
+  // GET /comments - 댓글 목록 조회
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/comments/search',
+    path: '/comments',
     summary: '💬 댓글 목록 조회',
     description: '댓글 목록을 조회합니다.',
     tags: [ 'comments', ],
@@ -155,15 +155,21 @@ export const registerCommentsEndpoints = () => {
     },
   });
 
-  // PUT /comments - 댓글 수정
+  // PUT /comments/{cmntNo} - 댓글 수정
   openApiRegistry.registerPath({
     method: 'put',
-    path: '/comments',
+    path: '/comments/{cmntNo}',
     summary: '🔄 댓글 수정',
     description: '댓글을 수정합니다.',
     tags: [ 'comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
+      params: z.object({
+        cmntNo: z.coerce.number().int().positive().openapi({
+          description: '댓글 번호',
+          example: 1,
+        }),
+      }),
       body: {
         content: {
           'application/json': {
@@ -206,15 +212,21 @@ export const registerCommentsEndpoints = () => {
     },
   });
 
-  // DELETE /comments - 댓글 삭제
+  // DELETE /comments/{cmntNo} - 댓글 삭제
   openApiRegistry.registerPath({
     method: 'delete',
-    path: '/comments',
+    path: '/comments/{cmntNo}',
     summary: '🗑️ 댓글 삭제',
     description: '댓글을 삭제합니다.',
     tags: [ 'comments', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
+      params: z.object({
+        cmntNo: z.coerce.number().int().positive().openapi({
+          description: '댓글 번호',
+          example: 1,
+        }),
+      }),
       body: {
         content: {
           'application/json': {

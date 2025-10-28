@@ -99,7 +99,6 @@ export const createCategorySubscribeSchema = categorySubscribeSchema.pick({
 
 // 카테고리 구독 수정용 스키마
 export const updateCategorySubscribeSchema = categorySubscribeSchema.pick({
-  ctgrySbcrNo: true,
   sbcrNo: true,
   ctgryNo: true,
   useYn: true,
@@ -111,7 +110,6 @@ export const updateCategorySubscribeSchema = categorySubscribeSchema.pick({
 // 카테고리 구독 삭제용 스키마
 export const deleteCategorySubscribeSchema = categorySubscribeSchema.pick({
   ctgrySbcrNoList: true,
-  ctgrySbcrNo: true,
   sbcrNo: true,
 }).partial();
 

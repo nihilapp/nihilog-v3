@@ -162,7 +162,7 @@ export class AdminSubscribeController {
    * @description 전체 사용자 구독 설정 목록 조회
    */
   @Endpoint({
-    endpoint: '/search',
+    endpoint: '',
     method: 'GET',
     options: {
       authGuard: 'JWT-auth',
@@ -260,7 +260,7 @@ export class AdminSubscribeController {
     }
 
     return createResponse(
-      'SUCCESS',
+      'CREATED',
       MESSAGE.SUBSCRIBE.ADMIN.CREATE_SUCCESS,
       result.data
     );
@@ -273,7 +273,7 @@ export class AdminSubscribeController {
    */
   @Endpoint({
     endpoint: '/multiple',
-    method: 'PUT',
+    method: 'PATCH',
     options: {
       authGuard: 'JWT-auth',
       roles: [ 'ADMIN', ],

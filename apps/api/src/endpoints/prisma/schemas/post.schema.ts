@@ -6,6 +6,7 @@ import { postStatusSchema as basePostStatusSchema } from '@/endpoints/prisma/sch
 import { baseSearchSchema } from '@/endpoints/prisma/schemas/search.schema';
 
 import { categoryInfoSchema } from './category.schema';
+import { dateTimeMessage, dateTimeRegex } from './common.schema';
 
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
@@ -236,7 +237,6 @@ export const createPostSchema = postSchema.pick({
 
 // 포스트 수정 스키마 (단일/다건 통합)
 export const updatePostSchema = postSchema.partial().pick({
-  pstNo: true,
   pstTtl: true,
   pstSmry: true,
   pstMtxt: true,
@@ -324,12 +324,11 @@ export const searchPostSchema = baseSearchSchema.extend({
 
 // 포스트 삭제 스키마 (포스트 번호 또는 리스트 선택)
 export const deletePostSchema = postSchema.pick({
-  pstNo: true,
   pstNoList: true,
 }).refine(
-  (data) => data.pstNo || data.pstNoList,
+  (data) => data.pstNoList,
   {
-    message: '포스트 번호 또는 포스트 번호 목록 중 하나는 필수입니다.',
+    message: '포스트 번호 목록은 필수입니다.',
   }
 );
 
@@ -393,3 +392,108 @@ export type SearchPostType = z.infer<typeof searchPostSchema>;
 export type CreatePostBookmarkType = z.infer<typeof createPostBookmarkSchema>;
 export type DeletePostBookmarkType = z.infer<typeof deletePostBookmarkSchema>;
 export type SearchPostBookmarkType = z.infer<typeof searchPostBookmarkSchema>;
+
+// 포스트 조회 로그 스키마
+export const postViewLogSchema = z.object({
+  viewNo: z.coerce
+    .number()
+    .int('조회 번호는 정수여야 합니다.')
+    .positive('조회 번호는 양수여야 합니다.')
+    .openapi({
+      description: '조회 번호',
+      example: 1,
+    }),
+  pstNo: z.coerce
+    .number()
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
+    .openapi({
+      description: '포스트 번호',
+      example: 1,
+    }),
+  viewerIp: z.string()
+    .nullable()
+    .optional()
+    .openapi({
+      description: '조회자 IP',
+      example: '127.0.0.1',
+    }),
+  viewDt: z.string()
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
+    .openapi({
+      description: '조회 일시 (YYYY-MM-DD HH:MM:SS)',
+      example: '2024-01-01 00:00:00',
+    }),
+});
+
+// 포스트 조회 로그 생성 스키마
+export const createPostViewLogSchema = z.object({
+  pstNo: z.coerce
+    .number()
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
+    .openapi({
+      description: '포스트 번호',
+      example: 1,
+    }),
+  ip: z
+    .string()
+    .min(
+      1,
+      'IP 주소는 필수입니다.'
+    )
+    .openapi({
+      description: '조회자 IP',
+      example: '127.0.0.1',
+    }),
+});
+
+// 포스트 공유 로그 스키마
+export const postShareLogSchema = z.object({
+  shrnNo: z.coerce
+    .number()
+    .int('공유 번호는 정수여야 합니다.')
+    .positive('공유 번호는 양수여야 합니다.')
+    .openapi({
+      description: '공유 번호',
+      example: 1,
+    }),
+  pstNo: z.coerce
+    .number()
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
+    .openapi({
+      description: '포스트 번호',
+      example: 1,
+    }),
+  shrnSite: z.string()
+    .openapi({
+      description: '공유 사이트',
+      example: 'https://example.com',
+    }),
+  shrnDt: z.string()
+    .regex(
+      dateTimeRegex,
+      dateTimeMessage
+    )
+    .openapi({
+      description: '공유 일시',
+      example: '2024-01-01 00:00:00',
+    }),
+});
+
+// 포스트 공유 로그 생성 스키마
+export const createPostShareLogSchema = postShareLogSchema.pick({
+  pstNo: true,
+  shrnSite: true,
+  shrnDt: true,
+});
+
+// 타입 추출
+export type PostViewLogSchemaType = z.infer<typeof postViewLogSchema>;
+export type CreatePostViewLogSchemaType = z.infer<typeof createPostViewLogSchema>;
+export type PostShareLogSchemaType = z.infer<typeof postShareLogSchema>;
+export type CreatePostShareLogSchemaType = z.infer<typeof createPostShareLogSchema>;

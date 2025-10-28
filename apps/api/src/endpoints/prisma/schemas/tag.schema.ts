@@ -106,7 +106,6 @@ export const createTagSchema = tagInfoSchema.pick({
 
 // 태그 수정 스키마 (단일/다건 통합)
 export const updateTagSchema = tagInfoSchema.partial().pick({
-  tagNo: true,
   tagNm: true,
   tagExpln: true,
   tagColr: true,
@@ -214,12 +213,11 @@ export const searchTagSchema = baseSearchSchema.extend({
 
 // 태그 삭제 스키마 (태그 번호 또는 리스트 선택)
 export const deleteTagSchema = tagInfoSchema.pick({
-  tagNo: true,
   tagNoList: true,
 }).refine(
-  (data) => data.tagNo || data.tagNoList,
+  (data) => data.tagNoList,
   {
-    message: '태그 번호 또는 태그 번호 목록 중 하나는 필수입니다.',
+    message: '태그 번호 목록은 필수입니다.',
   }
 );
 
