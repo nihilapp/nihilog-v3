@@ -967,12 +967,13 @@ export class TagRepository {
   /**
    * @description 태그 수정
    * @param userNo 사용자 번호
+   * @param tagNo 태그 번호
    * @param updateData 태그 수정 데이터
    */
-  async updateTag(userNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<SelectTagInfoType> | null> {
+  async updateTag(userNo: number, tagNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<SelectTagInfoType> | null> {
     try {
       const updatedTag = await this.prisma.tagInfo.update({
-        where: { tagNo: updateData.tagNo, },
+        where: { tagNo, },
         data: {
           ...updateData,
           updtNo: userNo,
@@ -1027,12 +1028,12 @@ export class TagRepository {
   /**
    * @description 태그 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 태그 삭제 데이터
+   * @param tagNo 태그 번호
    */
-  async deleteTag(userNo: number, deleteData: DeleteTagDto): Promise<RepoResponseType<boolean> | null> {
+  async deleteTag(userNo: number, tagNo: number): Promise<RepoResponseType<boolean> | null> {
     try {
       const deletedTag = await this.prisma.tagInfo.update({
-        where: { tagNo: deleteData.tagNo, },
+        where: { tagNo, },
         data: {
           useYn: 'N',
           delYn: 'Y',

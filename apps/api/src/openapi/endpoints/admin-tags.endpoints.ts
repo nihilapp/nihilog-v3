@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
 import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
+import { updateTagSchema } from '@/endpoints/prisma/schemas/tag.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateTagAnalyze } from '@/utils/createTagAnalyze';
 
@@ -778,29 +779,29 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // PUT /admin/tags - 태그 수정
+  // PATCH /admin/tags/{tagNo} - 태그 수정
   openApiRegistry.registerPath({
-    method: 'put',
-    path: '/admin/tags',
+    method: 'patch',
+    path: '/admin/tags/{tagNo}',
     summary: '🏷️ 태그 수정',
     description: '관리자가 태그 정보를 수정합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
+      params: z.object({
+        tagNo: z.coerce
+          .number()
+          .int()
+          .positive()
+          .openapi({
+            description: '태그 번호',
+            example: 1,
+          }),
+      }),
       body: {
         content: {
           'application/json': {
-            schema: z.looseObject({}),
-            examples: {
-              updateTag: {
-                summary: '태그 수정 요청',
-                value: {
-                  tagNo: 1,
-                  tagName: 'React.js',
-                  tagDescription: 'React.js 관련 태그 (수정됨)',
-                },
-              },
-            },
+            schema: updateTagSchema,
           },
         },
       },
@@ -845,9 +846,9 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // PUT /admin/tags/multiple - 다수 태그 수정
+  // PATCH /admin/tags/multiple - 다수 태그 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/tags/multiple',
     summary: '🏷️ 다수 태그 수정',
     description: '관리자가 여러 태그를 한 번에 수정합니다.',
@@ -919,30 +920,25 @@ export const registerAdminTagsEndpoints = () => {
     },
   });
 
-  // DELETE /admin/tags - 태그 삭제
+  // DELETE /admin/tags/{tagNo} - 태그 삭제
   openApiRegistry.registerPath({
     method: 'delete',
-    path: '/admin/tags',
+    path: '/admin/tags/{tagNo}',
     summary: '🏷️ 태그 삭제',
     description: '관리자가 태그를 삭제합니다.',
     tags: [ 'admin-tags', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: z.looseObject({}),
-            examples: {
-              deleteTag: {
-                summary: '태그 삭제 요청',
-                value: {
-                  tagNo: 1,
-                },
-              },
-            },
-          },
-        },
-      },
+      params: z.object({
+        tagNo: z.coerce
+          .number()
+          .int()
+          .positive()
+          .openapi({
+            description: '태그 번호',
+            example: 1,
+          }),
+      }),
     },
     responses: {
       200: {

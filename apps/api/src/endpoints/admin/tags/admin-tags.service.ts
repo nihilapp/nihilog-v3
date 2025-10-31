@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
-import type { CreateTagDto, DeleteTagDto, UpdateTagDto } from '@/dto';
+import type { CreateTagDto, UpdateTagDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
-import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
+import type { CreatePstTagMpngDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import type {
   SelectPstTagMpngListItemType,
@@ -194,13 +194,15 @@ export class AdminTagsService {
   /**
    * @description 태그 수정
    * @param userNo 사용자 번호
+   * @param tagNo 태그 번호
    * @param updateData 태그 수정 데이터
    */
-  async adminUpdateTag(userNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<SelectTagInfoType> | null> {
+  async adminUpdateTag(userNo: number, tagNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<SelectTagInfoType> | null> {
     // 태그는 이름을 바꿀 이유가 별로 없음.
 
     return this.tagRepository.updateTag(
       userNo,
+      tagNo,
       updateData
     );
   }
@@ -222,12 +224,12 @@ export class AdminTagsService {
   /**
    * @description 태그 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 태그 삭제 데이터
+   * @param tagNo 태그 번호
    */
-  async adminDeleteTag(userNo: number, deleteData: DeleteTagDto): Promise<RepoResponseType<boolean> | null> {
+  async adminDeleteTag(userNo: number, tagNo: number): Promise<RepoResponseType<boolean> | null> {
     return this.tagRepository.deleteTag(
       userNo,
-      deleteData
+      tagNo
     );
   }
 

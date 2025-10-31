@@ -1,23 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { CreatePstTagMpngType } from '@/_types';
-import type { SelectPostTagMappingType } from '@/_types';
+import type { CreatePstTagMpngType } from '@/_schemas';
+import type { SelectPstTagMpngType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface OptionType extends MutationOptionsType<SelectPostTagMappingType, CreatePstTagMpngType> {}
-
 /**
  * @description 태그 매핑을 추가하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminAddTagMapping(options: OptionType = {}) {
+export function useAdminAddTagMapping() {
   const invalidateCache = useInvalidateAdminTagsCache();
 
-  const mutation = usePost<SelectPostTagMappingType, CreatePstTagMpngType>({
+  const mutation = usePost<SelectPstTagMpngType, CreatePstTagMpngType>({
     url: [
       'admin',
       'tags',
@@ -42,7 +38,6 @@ export function useAdminAddTagMapping(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

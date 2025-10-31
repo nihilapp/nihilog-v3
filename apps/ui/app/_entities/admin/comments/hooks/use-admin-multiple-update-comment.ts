@@ -1,23 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
-import { usePut } from '@/_entities/common/hooks';
+import { usePatch } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { UpdateCommentType } from '@/_types';
+import type { UpdateCommentType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminCommentsCache } from '../admin-comments.keys';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, UpdateCommentType> {}
-
 /**
  * @description 관리자 댓글 일괄 수정하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleUpdateComment(options: OptionType = {}) {
+export function useAdminMultipleUpdateComment() {
   const invalidateCache = useInvalidateAdminCommentsCache();
 
-  const mutation = usePut<MultipleResultType, UpdateCommentType>({
+  const mutation = usePatch<MultipleResultType, UpdateCommentType>({
     url: [
       'admin',
       'comments',
@@ -42,7 +38,6 @@ export function useAdminMultipleUpdateComment(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

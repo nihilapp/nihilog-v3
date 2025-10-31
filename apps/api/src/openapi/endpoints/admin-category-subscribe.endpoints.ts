@@ -75,9 +75,9 @@ export const registerAdminCategorySubscribeEndpoints = () => {
     },
   });
 
-  // PUT /admin/subscribes/categories/multiple - 다수 카테고리 구독 수정
+  // PATCH /admin/subscribes/categories/multiple - 다수 카테고리 구독 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/subscribes/categories/multiple',
     summary: '🔄 다수 카테고리 구독 수정',
     description: '다수 카테고리 구독을 일괄 수정합니다.',

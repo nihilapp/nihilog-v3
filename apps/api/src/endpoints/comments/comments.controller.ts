@@ -2,7 +2,7 @@ import { Body, Controller, Param, ParseIntPipe, Query, Req } from '@nestjs/commo
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import type { AuthRequest, CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
+import type { AuthRequest, CreateCommentDto, SearchCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
 import { CommentsService } from '@/endpoints/comments/comments.service';
 import type { SelectCommentListItemType, SelectCommentType } from '@/endpoints/prisma/types/comment.types';
 import type { ListType } from '@/endpoints/prisma/types/common.types';
@@ -131,10 +131,8 @@ export class CommentsController {
 
     const result = await this.commentsService.updateComment(
       req.user.userNo,
-      {
-        ...updateData,
-        cmntNo,
-      } as UpdateCommentDto & { cmntNo: number }
+      cmntNo,
+      updateData
     );
 
     if (!result?.success) {
@@ -155,7 +153,6 @@ export class CommentsController {
    * @description 댓글 삭제
    * @param req 인증 요청
    * @param cmntNo 댓글 번호
-   * @param deleteData 댓글 삭제 데이터
    */
   @Endpoint({
     endpoint: '/:cmntNo',
@@ -169,8 +166,7 @@ export class CommentsController {
     @Param(
       'cmntNo',
       ParseIntPipe
-    ) cmntNo: number,
-    @Body() deleteData: DeleteCommentDto
+    ) cmntNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -178,10 +174,7 @@ export class CommentsController {
 
     const result = await this.commentsService.deleteComment(
       req.user.userNo,
-      {
-        ...deleteData,
-        cmntNo,
-      } as DeleteCommentDto & { cmntNo: number }
+      cmntNo
     );
 
     if (!result?.success) {

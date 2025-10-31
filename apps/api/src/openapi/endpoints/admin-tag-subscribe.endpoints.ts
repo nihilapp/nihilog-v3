@@ -75,9 +75,9 @@ export const registerAdminTagSubscribeEndpoints = () => {
     },
   });
 
-  // PUT /admin/subscribes/tags/multiple - 다수 태그 구독 수정
+  // PATCH /admin/subscribes/tags/multiple - 다수 태그 구독 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/subscribes/tags/multiple',
     summary: '🔄 다수 태그 구독 수정',
     description: '다수 태그 구독을 일괄 수정합니다.',

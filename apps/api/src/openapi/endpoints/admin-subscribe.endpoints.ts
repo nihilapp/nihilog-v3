@@ -200,10 +200,10 @@ export const registerAdminSubscribeEndpoints = () => {
   // 기존 구독 설정 관리 엔드포인트
   // ========================================================
 
-  // GET /admin/subscribes/search - 구독 설정 목록 조회
+  // GET /admin/subscribes - 구독 설정 목록 조회
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/subscribes/search',
+    path: '/admin/subscribes',
     summary: '📋 구독 설정 목록 조회',
     description: '전체 사용자의 구독 설정 목록을 조회합니다.',
     tags: [ 'admin-subscribe', ],
@@ -363,9 +363,9 @@ export const registerAdminSubscribeEndpoints = () => {
     },
   });
 
-  // PUT /admin/subscribes/multiple - 구독 설정 일괄 변경
+  // PATCH /admin/subscribes/multiple - 구독 설정 일괄 변경
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/subscribes/multiple',
     summary: '🔄 구독 설정 일괄 변경',
     description: '다수 사용자의 구독 설정을 일괄 변경합니다.',

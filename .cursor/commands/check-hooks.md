@@ -69,9 +69,9 @@
 12. ✅ AdminSubscribeController → `apps/ui/app/_entities/admin/subscribe/hooks/`
 13. ✅ AdminCategorySubscribeController → `apps/ui/app/_entities/admin/subscribes/categories/hooks/`
 14. ✅ AdminTagSubscribeController → `apps/ui/app/_entities/admin/subscribes/tags/hooks/`
-15. AdminTagsController → `apps/ui/app/_entities/admin/tags/hooks/`
-16. AdminCommentsController → `apps/ui/app/_entities/admin/comments/hooks/`
-17. AdminCategoriesController → `apps/ui/app/_entities/admin/categories/hooks/`
+15. ✅ AdminTagsController → `apps/ui/app/_entities/admin/tags/hooks/`
+16. ✅ AdminCommentsController → `apps/ui/app/_entities/admin/comments/hooks/`
+17. ✅ AdminCategoriesController → `apps/ui/app/_entities/admin/categories/hooks/`
 
 # 작업 결과 보고
 

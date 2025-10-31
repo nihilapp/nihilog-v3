@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 
-import { usePut } from '@/_entities/common/hooks';
+import { usePatch } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { UpdatePostType } from '@/_schemas';
 import type { SelectPostType } from '@/_types';
@@ -14,7 +14,7 @@ import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 export function useAdminUpdatePost(pstNo: number) {
   const invalidateCache = useInvalidateAdminPostsCache();
 
-  const mutation = usePut<SelectPostType, UpdatePostType>({
+  const mutation = usePatch<SelectPostType, UpdatePostType>({
     url: [
       'admin',
       'posts',

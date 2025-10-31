@@ -4,8 +4,7 @@ import { MESSAGE } from '@/code/messages';
 import {
   searchCommentSchema,
   createCommentSchema,
-  updateCommentSchema,
-  deleteCommentSchema
+  updateCommentSchema
 } from '@/endpoints/prisma/schemas/comment.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
@@ -227,13 +226,6 @@ export const registerCommentsEndpoints = () => {
           example: 1,
         }),
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: deleteCommentSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {

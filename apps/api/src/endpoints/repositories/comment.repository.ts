@@ -743,13 +743,14 @@ export class CommentRepository {
   /**
    * @description 댓글 수정
    * @param userNo 사용자 번호
+   * @param cmntNo 댓글 번호
    * @param updateData 수정 데이터
    */
-  async updateComment(userNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<SelectCommentType> | null> {
+  async updateComment(userNo: number, cmntNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<SelectCommentType> | null> {
     try {
       const updateComment = await this.prisma.cmntInfo.update({
         where: {
-          cmntNo: updateData.cmntNo,
+          cmntNo,
         },
         data: {
           ...updateData,
@@ -777,13 +778,13 @@ export class CommentRepository {
   /**
    * @description 댓글 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 삭제 데이터
+   * @param cmntNo 댓글 번호
    */
-  async deleteComment(userNo: number, deleteData: DeleteCommentDto): Promise<RepoResponseType<boolean> | null> {
+  async deleteComment(userNo: number, cmntNo: number): Promise<RepoResponseType<boolean> | null> {
     try {
       const deleteComment = await this.prisma.cmntInfo.update({
         where: {
-          cmntNo: deleteData.cmntNo,
+          cmntNo,
         },
         data: {
           useYn: 'N',

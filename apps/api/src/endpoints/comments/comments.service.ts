@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
-import type { CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
+import type { CreateCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
 import { searchCommentSchema } from '@/endpoints/prisma/schemas/comment.schema';
 import type { SelectCommentListItemType, SelectCommentType } from '@/endpoints/prisma/types/comment.types';
 import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
@@ -54,11 +54,13 @@ export class CommentsService {
   /**
    * @description 댓글 수정
    * @param userNo 사용자 번호
+   * @param cmntNo 댓글 번호
    * @param updateData 수정 데이터
    */
-  async updateComment(userNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<SelectCommentType> | null> {
+  async updateComment(userNo: number, cmntNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<SelectCommentType> | null> {
     return this.commentRepository.updateComment(
       userNo,
+      cmntNo,
       updateData
     );
   }
@@ -66,12 +68,12 @@ export class CommentsService {
   /**
    * @description 댓글 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 삭제 데이터
+   * @param cmntNo 댓글 번호
    */
-  async deleteComment(userNo: number, deleteData: DeleteCommentDto): Promise<RepoResponseType<boolean> | null> {
+  async deleteComment(userNo: number, cmntNo: number): Promise<RepoResponseType<boolean> | null> {
     return this.commentRepository.deleteComment(
       userNo,
-      deleteData
+      cmntNo
     );
   }
 }

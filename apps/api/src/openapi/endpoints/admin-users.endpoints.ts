@@ -152,10 +152,10 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // GET /admin/users/analyze/top-posts - 사용자별 포스트 작성 수 TOP N
+  // GET /admin/users/analyze/top-post-count - 사용자별 포스트 작성 수 TOP N
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/users/analyze/top-posts',
+    path: '/admin/users/analyze/top-post-count',
     summary: '📝 사용자별 포스트 작성 수 TOP N',
     description: '포스트를 가장 많이 작성한 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
@@ -198,10 +198,10 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // GET /admin/users/analyze/top-comments - 사용자별 댓글 작성 수 TOP N
+  // GET /admin/users/analyze/top-comment-count - 사용자별 댓글 작성 수 TOP N
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/users/analyze/top-comments',
+    path: '/admin/users/analyze/top-comment-count',
     summary: '💬 사용자별 댓글 작성 수 TOP N',
     description: '댓글을 가장 많이 작성한 사용자 TOP N을 조회합니다.',
     tags: [ 'admin-users', ],
@@ -330,27 +330,21 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/analyze/inactive-users - 비활성 사용자 목록
+  // GET /admin/users/analyze/inactive-users - 비활성 사용자 목록
   openApiRegistry.registerPath({
-    method: 'post',
+    method: 'get',
     path: '/admin/users/analyze/inactive-users',
     summary: '😴 비활성 사용자 목록',
     description: '일정 기간 로그인하지 않은 비활성 사용자 목록을 조회합니다.',
     tags: [ 'admin-users', ],
     security: [ { 'JWT-auth': [], }, ],
     request: {
-      body: {
-        content: {
-          'application/json': {
-            schema: analyzeStatSchema.extend({
-              daysThreshold: z.coerce.number().int().positive().optional().openapi({
-                description: '비활성 기준 일수 (기본값: 30)',
-                example: 30,
-              }),
-            }),
-          },
-        },
-      },
+      query: z.object({
+        daysThreshold: z.coerce.number().int().positive().optional().openapi({
+          description: '비활성 기준 일수 (기본값: 30)',
+          example: 30,
+        }),
+      }),
     },
     responses: {
       200: {
@@ -481,10 +475,10 @@ export const registerAdminUsersEndpoints = () => {
 
   // ===== 기존 사용자 관리 엔드포인트 =====
 
-  // GET /admin/users/search - 사용자 목록 검색
+  // GET /admin/users - 사용자 목록 검색
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/users/search',
+    path: '/admin/users',
     summary: '🔎 사용자 목록 검색',
     description: '부분 일치(ILIKE) 기반으로 사용자 목록을 검색합니다. delYn이 제공되지 않으면 기본값 N으로 조회합니다.',
     tags: [ 'admin-users', ],
@@ -509,6 +503,13 @@ export const registerAdminUsersEndpoints = () => {
                       list: [ CreateExample.user('list'), ],
                       totalCnt: 1,
                     }
+                  ),
+                },
+                badRequest: {
+                  summary: '잘못된 요청',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMON.INVALID_REQUEST
                   ),
                 },
                 error: {
@@ -802,9 +803,9 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // PUT /admin/users/{userNo} - 사용자 정보 수정
+  // PATCH /admin/users/{userNo} - 사용자 정보 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/users/{userNo}',
     summary: '✏️ 사용자 정보 수정',
     description: 'ADMIN 권한으로 특정 사용자의 정보를 수정합니다.',
@@ -874,9 +875,9 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // PUT /admin/users/multiple - 다수 사용자 일괄 수정
+  // PATCH /admin/users/multiple - 다수 사용자 일괄 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/users/multiple',
     summary: '✏️ 다수 사용자 일괄 수정',
     description: 'ADMIN 권한으로 다수 사용자 정보를 일괄 수정합니다.',
@@ -1023,6 +1024,13 @@ export const registerAdminUsersEndpoints = () => {
                       failCnt: 0,
                       failNoList: [],
                     }
+                  ),
+                },
+                badRequest: {
+                  summary: '잘못된 요청',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMON.INVALID_REQUEST
                   ),
                 },
                 error: {

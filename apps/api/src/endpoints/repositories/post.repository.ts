@@ -1004,13 +1004,14 @@ export class PostRepository {
   /**
    * @description 포스트 수정
    * @param userNo 사용자 번호
+   * @param pstNo 포스트 번호
    * @param updateData 포스트 수정 데이터
    */
-  async updatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
+  async updatePost(userNo: number, pstNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     try {
       const updatePost = await this.prisma.pstInfo.update({
         where: {
-          pstNo: updateData.pstNo,
+          pstNo,
         },
         data: {
           ...updateData,
@@ -1074,13 +1075,13 @@ export class PostRepository {
   /**
    * @description 포스트 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 포스트 삭제 데이터
+   * @param pstNo 포스트 번호
    */
-  async deletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<boolean> | null> {
+  async deletePost(userNo: number, pstNo: number): Promise<RepoResponseType<boolean> | null> {
     try {
       const deletePost = await this.prisma.pstInfo.update({
         where: {
-          pstNo: deleteData.pstNo,
+          pstNo,
         },
         data: {
           useYn: 'N',

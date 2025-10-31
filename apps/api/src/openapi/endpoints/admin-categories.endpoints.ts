@@ -622,10 +622,10 @@ export const registerAdminCategoriesEndpoints = () => {
   // 카테고리 CRUD 엔드포인트
   // ========================================================
 
-  // GET /admin/categories/search - 카테고리 목록 조회
+  // GET /admin/categories - 카테고리 목록 조회
   openApiRegistry.registerPath({
     method: 'get',
-    path: '/admin/categories/search',
+    path: '/admin/categories',
     summary: '📁 관리자 카테고리 목록 조회',
     description: 'ADMIN 권한으로 카테고리 목록을 조회합니다.',
     tags: [ 'admin-categories', ],

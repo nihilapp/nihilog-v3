@@ -486,9 +486,9 @@ export const registerAdminCommentsEndpoints = () => {
   // 기존 관리자 기능
   // ========================================================
 
-  // PUT /admin/comments/multiple - 관리자 댓글 일괄 수정
+  // PATCH /admin/comments/multiple - 관리자 댓글 일괄 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/comments/multiple',
     summary: '🔄 관리자 댓글 일괄 수정',
     description: 'ADMIN 권한으로 다수 댓글을 일괄 수정합니다.',

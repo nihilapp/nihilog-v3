@@ -2,9 +2,9 @@ import { Body, Controller, Param, ParseIntPipe, Query, Req, UseGuards } from '@n
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import type { AuthRequest, CreateTagDto, DeleteTagDto, ResponseDto, UpdateTagDto } from '@/dto';
+import type { AuthRequest, CreateTagDto, ResponseDto, UpdateTagDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
-import type { CreatePstTagMpngDto, DeletePstTagMpngDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
+import type { CreatePstTagMpngDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
 import { AdminTagsService } from '@/endpoints/admin/tags/admin-tags.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
@@ -607,10 +607,8 @@ export class AdminTagsController {
 
     const result = await this.adminTagsService.adminUpdateTag(
       req.user.userNo,
-      {
-        ...updateData,
-        tagNo,
-      } as UpdateTagDto & { tagNo: number }
+      tagNo,
+      updateData
     );
 
     if (!result?.success) {
@@ -671,7 +669,6 @@ export class AdminTagsController {
    * @description 태그 삭제
    * @param req 요청 객체
    * @param tagNo 태그 번호
-   * @param deleteData 태그 삭제 데이터
    */
   @Endpoint({
     endpoint: '/:tagNo',
@@ -686,8 +683,7 @@ export class AdminTagsController {
     @Param(
       'tagNo',
       ParseIntPipe
-    ) tagNo: number,
-    @Body() deleteData: DeleteTagDto
+    ) tagNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -695,10 +691,7 @@ export class AdminTagsController {
 
     const result = await this.adminTagsService.adminDeleteTag(
       req.user.userNo,
-      {
-        ...deleteData,
-        tagNo,
-      } as DeleteTagDto & { tagNo: number }
+      tagNo
     );
 
     if (!result?.success) {

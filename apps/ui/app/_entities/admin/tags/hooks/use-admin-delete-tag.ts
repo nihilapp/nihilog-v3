@@ -1,25 +1,22 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeleteTagType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface OptionType extends MutationOptionsType<boolean, DeleteTagType> {}
-
 /**
  * @description 태그를 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} tagNo - 태그 번호
  */
-export function useAdminDeleteTag(options: OptionType = {}) {
+export function useAdminDeleteTag(tagNo: number) {
   const invalidateCache = useInvalidateAdminTagsCache();
 
-  const mutation = useDelete<boolean, DeleteTagType>({
+  const mutation = useDelete<boolean>({
     url: [
       'admin',
       'tags',
+      tagNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -40,7 +37,6 @@ export function useAdminDeleteTag(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

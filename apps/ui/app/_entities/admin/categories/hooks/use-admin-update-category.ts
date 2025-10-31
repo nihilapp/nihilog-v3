@@ -1,26 +1,23 @@
 import { toast } from 'sonner';
 
 import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/admin-categories.keys';
-import type { MutationOptionsType } from '@/_types';
-import { usePut } from '@/_entities/common/hooks';
+import { usePatch } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { UpdateCategoryType } from '@/_types';
+import type { UpdateCategoryType } from '@/_schemas';
 import type { SelectCategoryType } from '@/_types';
-
-interface OptionType extends MutationOptionsType<SelectCategoryType, UpdateCategoryType> {}
 
 /**
  * @description 카테고리를 수정하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} ctgryNo - 카테고리 번호
  */
-export function useAdminUpdateCategory(options: OptionType = {}) {
+export function useAdminUpdateCategory(ctgryNo: number) {
   const invalidateCache = useInvalidateAdminCategoriesCache();
 
-  const mutation = usePut<SelectCategoryType, UpdateCategoryType>({
-    url: (variables) => [
+  const mutation = usePatch<SelectCategoryType, UpdateCategoryType>({
+    url: [
       'admin',
       'categories',
-      variables.ctgryNo?.toString() || '0',
+      ctgryNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -41,7 +38,6 @@ export function useAdminUpdateCategory(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

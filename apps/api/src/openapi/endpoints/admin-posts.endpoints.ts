@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
 import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
-import { createPostSchema, updatePostSchema, deletePostSchema } from '@/endpoints/prisma/schemas/post.schema';
+import { createPostSchema, deletePostSchema, updatePostSchema } from '@/endpoints/prisma/schemas/post.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 import { CreatePostAnalyze } from '@/utils/createPostAnalyze';
@@ -407,9 +407,9 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // PUT /admin/posts/{pstNo} - 포스트 수정
+  // PATCH /admin/posts/{pstNo} - 포스트 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/posts/{pstNo}',
     summary: '✏️ 포스트 수정',
     description: '관리자가 포스트를 수정합니다.',
@@ -469,9 +469,9 @@ export const registerAdminPostsEndpoints = () => {
     },
   });
 
-  // PUT /admin/posts/multiple - 다수 포스트 일괄 수정
+  // PATCH /admin/posts/multiple - 다수 포스트 일괄 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/posts/multiple',
     summary: '✏️ 다수 포스트 일괄 수정',
     description: '관리자가 다수 포스트를 일괄 수정합니다.',
@@ -544,13 +544,6 @@ export const registerAdminPostsEndpoints = () => {
             example: 1,
           }),
       }),
-      body: {
-        content: {
-          'application/json': {
-            schema: deletePostSchema,
-          },
-        },
-      },
     },
     responses: {
       200: {

@@ -100,6 +100,13 @@ export const registerCategorySubscribeEndpoints = () => {
                     CreateExample.categorySubscribe('detail')
                   ),
                 },
+                validationError: {
+                  summary: '요청 데이터 유효성 검증 실패',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMON.INVALID_REQUEST
+                  ),
+                },
                 error: {
                   summary: '카테고리 구독 상태 조회 실패',
                   value: createError(

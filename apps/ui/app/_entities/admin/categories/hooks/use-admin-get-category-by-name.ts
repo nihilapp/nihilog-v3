@@ -1,18 +1,14 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SelectCategoryType } from '@/_types';
 
-interface OptionType extends QueryOptionType<SelectCategoryType> {}
-
 /**
  * @description 카테고리명으로 카테고리를 조회하는 커스텀 훅
  * @param {string} name - 카테고리명
- * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useAdminGetCategoryByName(name: string, options: OptionType = {}) {
+export function useAdminGetCategoryByName(name: string) {
   const query = useGet<SelectCategoryType>({
     url: [
       'admin',
@@ -36,7 +32,6 @@ export function useAdminGetCategoryByName(name: string, options: OptionType = {}
         }
       );
     },
-    ...options,
   });
 
   return query;

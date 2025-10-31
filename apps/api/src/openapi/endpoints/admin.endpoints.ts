@@ -9,9 +9,9 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerAdminEndpoints = () => {
-  // PUT /admin/profile - 관리자 프로필 수정
+  // PATCH /admin/profile - 관리자 프로필 수정
   openApiRegistry.registerPath({
-    method: 'put',
+    method: 'patch',
     path: '/admin/profile',
     summary: '✏️ 프로필 정보 수정',
     description: '현재 로그인된 관리자의 프로필을 업데이트합니다.',

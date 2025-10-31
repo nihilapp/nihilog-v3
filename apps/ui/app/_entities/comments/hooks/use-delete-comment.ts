@@ -1,9 +1,8 @@
 import { toast } from 'sonner';
 
 import { useInvalidateCommentsCache } from '@/_entities/comments/comments.keys';
-import { useDeletes } from '@/_entities/common/hooks';
+import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeleteCommentType } from '@/_schemas';
 
 /**
  * @description 댓글을 삭제하는 커스텀 훅
@@ -12,7 +11,7 @@ import type { DeleteCommentType } from '@/_schemas';
 export function useDeleteComment(cmntNo: number) {
   const invalidateCache = useInvalidateCommentsCache();
 
-  const mutation = useDeletes<boolean, DeleteCommentType>({
+  const mutation = useDelete<boolean>({
     url: [
       'comments',
       cmntNo.toString(),

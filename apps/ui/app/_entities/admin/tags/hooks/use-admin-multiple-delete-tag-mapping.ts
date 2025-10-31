@@ -1,23 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
-import { useDelete } from '@/_entities/common/hooks';
+import { useDeletes } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeletePstTagMpngType } from '@/_types';
+import type { DeletePstTagMpngType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, DeletePstTagMpngType> {}
-
 /**
  * @description 다수 태그 매핑을 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleDeleteTagMapping(options: OptionType = {}) {
+export function useAdminMultipleDeleteTagMapping() {
   const invalidateCache = useInvalidateAdminTagsCache();
 
-  const mutation = useDelete<MultipleResultType, DeletePstTagMpngType>({
+  const mutation = useDeletes<MultipleResultType, DeletePstTagMpngType>({
     url: [
       'admin',
       'tags',
@@ -43,7 +39,6 @@ export function useAdminMultipleDeleteTagMapping(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

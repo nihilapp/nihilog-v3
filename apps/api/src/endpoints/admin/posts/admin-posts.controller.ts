@@ -2,9 +2,9 @@ import { Body, Controller, Param, ParseIntPipe, Query, Req, UseGuards } from '@n
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import type { AuthRequest, ResponseDto } from '@/dto';
+import type { AuthRequest, DeletePostDto, ResponseDto } from '@/dto';
 import { AnalyzeStatDto } from '@/dto/common.dto';
-import { CreatePostDto, DeletePostDto, UpdatePostDto } from '@/dto/post.dto';
+import { CreatePostDto, UpdatePostDto } from '@/dto/post.dto';
 import { AdminPostsService } from '@/endpoints/admin/posts/admin-posts.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
@@ -343,10 +343,8 @@ export class AdminPostsController {
 
     const result = await this.postsService.adminUpdatePost(
       req.user.userNo,
-      {
-        ...updateData,
-        pstNo,
-      } as UpdatePostDto & { pstNo: number }
+      pstNo,
+      updateData
     );
 
     if (!result?.success) {
@@ -401,7 +399,8 @@ export class AdminPostsController {
 
   /**
    * @description 관리자 - 포스트 삭제
-   * @param deleteData 포스트 삭제 데이터
+   * @param req 요청 객체
+   * @param pstNo 포스트 번호
    */
   @Endpoint({
     endpoint: '/:pstNo',
@@ -416,8 +415,7 @@ export class AdminPostsController {
     @Param(
       'pstNo',
       ParseIntPipe
-    ) pstNo: number,
-    @Body() deleteData: DeletePostDto
+    ) pstNo: number
   ): Promise<ResponseDto<boolean>> {
     if (req.errorResponse) {
       return req.errorResponse;
@@ -425,10 +423,7 @@ export class AdminPostsController {
 
     const result = await this.postsService.adminDeletePost(
       req.user.userNo,
-      {
-        ...deleteData,
-        pstNo,
-      } as DeletePostDto & { pstNo: number }
+      pstNo
     );
 
     if (!result?.success) {

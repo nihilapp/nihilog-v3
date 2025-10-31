@@ -101,11 +101,13 @@ export class AdminPostsService {
   /**
    * @desc 포스트 수정
    * @param userNo 사용자 번호
+   * @param pstNo 포스트 번호
    * @param updateData 포스트 수정 데이터
    */
-  async adminUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
+  async adminUpdatePost(userNo: number, pstNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     return this.postRepository.updatePost(
       userNo,
+      pstNo,
       updateData
     );
   }
@@ -125,12 +127,12 @@ export class AdminPostsService {
   /**
    * @desc 포스트 삭제
    * @param userNo 사용자 번호
-   * @param deleteData 포스트 삭제 데이터
+   * @param pstNo 포스트 번호
    */
-  async adminDeletePost(userNo: number, deleteData: DeletePostDto): Promise<RepoResponseType<boolean> | null> {
+  async adminDeletePost(userNo: number, pstNo: number): Promise<RepoResponseType<boolean> | null> {
     return this.postRepository.deletePost(
       userNo,
-      deleteData
+      pstNo
     );
   }
 

@@ -1,20 +1,16 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { CreateTagType } from '@/_types';
+import type { CreateTagType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, CreateTagType[]> {}
-
 /**
  * @description 다수 태그를 생성하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleCreateTag(options: OptionType = {}) {
+export function useAdminMultipleCreateTag() {
   const invalidateCache = useInvalidateAdminTagsCache();
 
   const mutation = usePost<MultipleResultType, CreateTagType[]>({
@@ -42,7 +38,6 @@ export function useAdminMultipleCreateTag(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;
