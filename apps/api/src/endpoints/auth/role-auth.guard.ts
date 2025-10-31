@@ -41,9 +41,10 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const jwtResult = await super.canActivate(context);
 
       if (!jwtResult) {
+        // JWT 검증 실패 (토큰 없음, 무효, 만료 등)
         request.errorResponse = createError(
           'UNAUTHORIZED',
-          MESSAGE.AUTH.UNAUTHORIZED
+          MESSAGE.AUTH.INVALID_TOKEN
         );
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
@@ -51,6 +52,7 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const user = request.user;
 
       if (!user) {
+        // 사용자 정보 없음
         request.errorResponse = createError(
           'UNAUTHORIZED',
           MESSAGE.AUTH.UNAUTHORIZED
@@ -76,9 +78,10 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
       const hasRequiredRole = requiredRoles.includes(user.userRole);
 
       if (!hasRequiredRole) {
+        // 권한 부족
         request.errorResponse = createError(
           'FORBIDDEN',
-          MESSAGE.AUTH.FORBIDDEN
+          MESSAGE.AUTH.PERMISSION_DENIED
         );
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
@@ -88,7 +91,7 @@ export class RoleAuthGuard extends AuthGuard('jwt') {
     catch {
       request.errorResponse = createError(
         'UNAUTHORIZED',
-        MESSAGE.AUTH.UNAUTHORIZED
+        MESSAGE.AUTH.INVALID_TOKEN
       );
       return true; // Guard를 통과시키되 에러 응답을 설정
     }

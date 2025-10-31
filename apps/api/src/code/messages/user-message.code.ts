@@ -6,7 +6,6 @@ export const USER_MESSAGES = {
     // 성공 메시지
     CREATE_SUCCESS: '사용자가 생성되었습니다.',
     UPDATE_SUCCESS: '사용자 정보가 수정되었습니다.',
-    PASSWORD_CHANGE_SUCCESS: '비밀번호가 변경되었습니다.',
     IMAGE_CHANGE_SUCCESS: '프로필 이미지가 변경되었습니다.',
     SEARCH_SUCCESS: '사용자 검색을 완료했습니다.',
     FETCH_SUCCESS: '사용자 정보를 조회했습니다.',
@@ -15,7 +14,6 @@ export const USER_MESSAGES = {
     // 에러 메시지
     CREATE_ERROR: '사용자 생성에 실패했습니다.',
     UPDATE_ERROR: '사용자 정보 수정에 실패했습니다.',
-    PASSWORD_CHANGE_ERROR: '비밀번호 변경에 실패했습니다.',
     IMAGE_CHANGE_ERROR: '프로필 이미지 변경에 실패했습니다.',
     SEARCH_ERROR: '사용자 검색에 실패했습니다.',
     FETCH_ERROR: '사용자 정보 조회에 실패했습니다.',
@@ -25,6 +23,7 @@ export const USER_MESSAGES = {
     NAME_EXISTS: '이미 존재하는 이름입니다.',
     NOT_FOUND: '사용자를 찾을 수 없습니다.',
     ADMIN_NOT_FOUND: '관리자를 찾을 수 없습니다.',
+    INVALID_INPUT: '이메일, 사용자명, 비밀번호는 필수 입력 항목입니다.',
   },
 
   PROFILE: {
@@ -47,10 +46,6 @@ export const USER_MESSAGES = {
     EMAIL_EXISTS: '이미 사용 중인 이메일입니다.',
     USERNAME_EXISTS: '이미 존재하는 사용자명입니다.',
 
-    // 비밀번호 관련
-    PASSWORD_CHANGE_SUCCESS: '비밀번호가 변경되었습니다.',
-    INVALID_PASSWORD: '현재 비밀번호가 올바르지 않습니다.',
-
     // 이미지 관련
     IMAGE_CHANGE_SUCCESS: '프로필 이미지가 변경되었습니다.',
 
@@ -62,7 +57,6 @@ export const USER_MESSAGES = {
     UPDATE_ERROR: '프로필 정보 수정에 실패했습니다.',
     DELETE_ERROR: '프로필 삭제에 실패했습니다.',
     DELETE_MULTIPLE_ERROR: '다중 프로필 삭제에 실패했습니다.',
-    PASSWORD_CHANGE_ERROR: '비밀번호 변경에 실패했습니다.',
     IMAGE_CHANGE_ERROR: '프로필 이미지 변경에 실패했습니다.',
     UPDATE_FAILED: '프로필 업데이트에 실패했습니다.',
     VALIDATION_FAILED: '프로필 정보가 올바르지 않습니다.',

@@ -25,16 +25,27 @@ export class AdminAuthGuard extends AuthGuard('jwt') {
       const result = await super.canActivate(context);
 
       if (!result) {
+        // JWT 검증 실패 (토큰 없음, 무효, 만료 등)
         request.errorResponse = createError(
           'UNAUTHORIZED',
-          MESSAGE.AUTH.UNAUTHORIZED
+          MESSAGE.AUTH.INVALID_TOKEN
         );
         return true; // Guard를 통과시키되 에러 응답을 설정
       }
 
       const user = request.user;
 
-      if (!user || user.userRole !== userRoleSchema.enum.ADMIN) {
+      if (!user) {
+        // 사용자 정보 없음
+        request.errorResponse = createError(
+          'UNAUTHORIZED',
+          MESSAGE.AUTH.UNAUTHORIZED
+        );
+        return true;
+      }
+
+      if (user.userRole !== userRoleSchema.enum.ADMIN) {
+        // 관리자 권한 없음
         request.errorResponse = createError(
           'FORBIDDEN',
           MESSAGE.AUTH.ADMIN_ONLY
@@ -47,7 +58,7 @@ export class AdminAuthGuard extends AuthGuard('jwt') {
     catch {
       request.errorResponse = createError(
         'UNAUTHORIZED',
-        MESSAGE.AUTH.UNAUTHORIZED
+        MESSAGE.AUTH.INVALID_TOKEN
       );
       return true; // Guard를 통과시키되 에러 응답을 설정
     }

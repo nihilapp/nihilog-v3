@@ -128,6 +128,7 @@ export class AuthController {
     const result = await this.authService.refresh(refreshToken);
 
     if (!result?.success) {
+      // Service에서 이미 구체적인 메시지를 반환하므로 그대로 사용
       return createError(
         result?.error?.code || 'UNAUTHORIZED',
         result?.error?.message || MESSAGE.AUTH.INVALID_REFRESH_TOKEN

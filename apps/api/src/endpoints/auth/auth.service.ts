@@ -195,7 +195,16 @@ export class AuthService {
 
       const userResult = await this.userRepository.getUserByNo(payload.userNo);
 
-      if (!userResult?.success || userResult.data.reshToken !== token) {
+      if (!userResult?.success) {
+        return prismaResponse(
+          false,
+          null,
+          'UNAUTHORIZED',
+          MESSAGE.AUTH.NOT_FOUND
+        );
+      }
+
+      if (userResult.data.reshToken !== token) {
         return prismaResponse(
           false,
           null,
@@ -264,7 +273,31 @@ export class AuthService {
         }
       );
     }
-    catch {
+    catch (error) {
+      // 토큰 만료와 무효 토큰을 구분
+      // @nestjs/jwt는 내부적으로 다양한 에러를 던지므로 에러 객체의 속성으로 판단
+      if (error && typeof error === 'object') {
+        const errorObj = error as { name?: string;
+          code?: string;
+          message?: string; };
+
+        // 토큰 만료 에러 (jose의 JWTExpired 또는 jsonwebtoken의 TokenExpiredError)
+        if (
+          errorObj.name === 'TokenExpiredError'
+          || errorObj.name === 'JWTExpired'
+          || errorObj.code === 'ERR_JWT_EXPIRED'
+          || errorObj.message?.includes('expired')
+        ) {
+          return prismaResponse(
+            false,
+            null,
+            'UNAUTHORIZED',
+            MESSAGE.AUTH.SESSION_EXPIRED
+          );
+        }
+      }
+
+      // 기타 JWT 에러 (무효한 토큰 등)
       return prismaResponse(
         false,
         null,
@@ -287,8 +320,13 @@ export class AuthService {
 
     const userResult = await this.userRepository.getUserByNo(userNo);
 
-    if (!userResult?.success) {
-      return userResult;
+    if (!userResult?.success || !userResult.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.AUTH.NOT_FOUND
+      );
     }
 
     const user = userResult.data;
@@ -319,7 +357,12 @@ export class AuthService {
     );
 
     if (!updatedUserResult?.success) {
-      return updatedUserResult;
+      return prismaResponse(
+        false,
+        null,
+        'INTERNAL_SERVER_ERROR',
+        MESSAGE.AUTH.PASSWORD_CHANGE_ERROR
+      );
     }
 
     // 민감정보 제거
@@ -379,6 +422,10 @@ export class AuthService {
    * @param token JWT 토큰
    */
   async extractUserFromToken(token: string): Promise<JwtPayload | null> {
+    if (!token) {
+      return null;
+    }
+
     try {
       const payload = await this.jwtService
         .verifyAsync<JwtPayload>(
@@ -389,7 +436,9 @@ export class AuthService {
         );
       return payload;
     }
-    catch {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    catch (error) {
+      // 토큰 검증 실패 (만료, 무효 등)
       return null;
     }
   }

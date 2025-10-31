@@ -22,7 +22,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           // JWT 검증 실패 시 에러 응답 설정
           request.errorResponse = createError(
             'UNAUTHORIZED',
-            MESSAGE.AUTH.UNAUTHORIZED
+            MESSAGE.AUTH.INVALID_TOKEN
           );
           return true; // 가드는 통과시키되 에러 응답을 설정
         }
@@ -33,7 +33,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         // JWT 파싱 에러 등 발생 시
         request.errorResponse = createError(
           'UNAUTHORIZED',
-          MESSAGE.AUTH.UNAUTHORIZED
+          MESSAGE.AUTH.INVALID_TOKEN
         );
         return true; // 가드는 통과시키되 에러 응답을 설정
       }
@@ -47,6 +47,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   // 에러를 던지지 않고 user만 반환
   handleRequest<TUser = any>(err: unknown, user: TUser, _info: unknown): TUser | null {
     // JWT 검증 실패 시 null 반환
+    // canActivate에서 에러 메시지를 설정하므로 여기서는 단순히 null만 반환
     if (err || !user) {
       return null;
     }

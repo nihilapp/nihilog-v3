@@ -88,13 +88,6 @@ export const registerAuthEndpoints = () => {
                   CreateExample.user('detail')
                 ),
               },
-              invalidRefreshToken: {
-                summary: '리프레시 토큰이 유효하지 않음',
-                value: createError(
-                  'UNAUTHORIZED',
-                  MESSAGE.AUTH.INVALID_REFRESH_TOKEN
-                ),
-              },
               refreshTokenNotFound: {
                 summary: '리프레시 토큰이 없음',
                 value: createError(
@@ -102,15 +95,29 @@ export const registerAuthEndpoints = () => {
                   MESSAGE.AUTH.REFRESH_TOKEN_NOT_FOUND
                 ),
               },
-              tokenRefreshError: {
-                summary: '토큰 재발급 실패',
+              sessionExpired: {
+                summary: '리프레시 토큰 만료',
                 value: createError(
-                  'INTERNAL_SERVER_ERROR',
-                  MESSAGE.AUTH.TOKEN_REFRESH_ERROR
+                  'UNAUTHORIZED',
+                  MESSAGE.AUTH.SESSION_EXPIRED
                 ),
               },
-              userUpdateError: {
-                summary: '사용자 정보 업데이트 실패',
+              invalidRefreshToken: {
+                summary: '리프레시 토큰이 유효하지 않음',
+                value: createError(
+                  'UNAUTHORIZED',
+                  MESSAGE.AUTH.INVALID_REFRESH_TOKEN
+                ),
+              },
+              userNotFound: {
+                summary: '사용자를 찾을 수 없음',
+                value: createError(
+                  'UNAUTHORIZED',
+                  MESSAGE.AUTH.NOT_FOUND
+                ),
+              },
+              tokenRefreshError: {
+                summary: '토큰 재발급 실패',
                 value: createError(
                   'INTERNAL_SERVER_ERROR',
                   MESSAGE.AUTH.TOKEN_REFRESH_ERROR
@@ -234,18 +241,18 @@ export const registerAuthEndpoints = () => {
                     CreateExample.user('detail')
                   ),
                 },
+                userNotFound: {
+                  summary: '사용자를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.AUTH.NOT_FOUND
+                  ),
+                },
                 invalidCredentials: {
                   summary: '현재 비밀번호가 올바르지 않음',
                   value: createError(
                     'UNAUTHORIZED',
                     MESSAGE.AUTH.INVALID_CREDENTIALS
-                  ),
-                },
-                userUpdateError: {
-                  summary: '비밀번호 업데이트 실패',
-                  value: createError(
-                    'INTERNAL_SERVER_ERROR',
-                    MESSAGE.AUTH.PASSWORD_CHANGE_ERROR
                   ),
                 },
                 passwordChangeError: {
