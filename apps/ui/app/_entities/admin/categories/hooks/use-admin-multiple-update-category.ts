@@ -4,7 +4,7 @@ import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/
 import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { UpdateCategoryType } from '@/_schemas';
+import type { UpdateCategoryType } from '@/_types';
 import type { MultipleResultType } from '@/_types';
 
 interface OptionType extends MutationOptionsType<MultipleResultType, UpdateCategoryType> {}

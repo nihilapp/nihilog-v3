@@ -1,19 +1,15 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreateCategorySubscribeType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, CreateCategorySubscribeType> {}
-
 /**
  * @description 다수 카테고리를 일괄 구독하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useMultipleCreateCategorySubscribe(options: OptionType = {}) {
+export function useMultipleCreateCategorySubscribe() {
   const invalidateCache = useInvalidateCategorySubscribeCache();
 
   const mutation = usePost<MultipleResultType, CreateCategorySubscribeType>({
@@ -42,7 +38,6 @@ export function useMultipleCreateCategorySubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

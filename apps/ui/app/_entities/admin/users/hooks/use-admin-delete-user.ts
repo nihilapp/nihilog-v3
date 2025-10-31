@@ -1,26 +1,22 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeleteUserType } from '@/_schemas';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 
-interface OptionType extends MutationOptionsType<boolean, DeleteUserType> {}
-
 /**
  * @description 사용자를 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} userNo - 사용자 번호
  */
-export function useAdminDeleteUser(options: OptionType = {}) {
+export function useAdminDeleteUser(userNo: number) {
   const invalidateCache = useInvalidateAdminUsersCache();
 
-  const mutation = useDelete<boolean, DeleteUserType>({
-    url: (variables) => [
+  const mutation = useDelete<boolean>({
+    url: [
       'admin',
       'users',
-      variables.userNo?.toString() || '0',
+      userNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -41,7 +37,6 @@ export function useAdminDeleteUser(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

@@ -12,7 +12,7 @@ import { Input } from '@/(common)/_components/ui/input';
 import { Separator } from '@/(common)/_components/ui/separator';
 import { useAuthActions } from '@/_entities/auth/auth.store';
 import { useCreateUser } from '@/_entities/users/hooks';
-import { createUserSchema, userRoleSchema, type CreateUserType } from '@/_schemas';
+import { createUserSchema, userRoleSchema, type CreateUserType } from '@/_types';
 
 export function SignUpForm() {
   const { setAuthCardHeader, resetAuthCardHeader, } = useAuthActions();

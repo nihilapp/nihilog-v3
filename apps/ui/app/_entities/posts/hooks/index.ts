@@ -5,7 +5,6 @@ export { useGetPostBySlug } from './use-get-post-by-slug';
 export { useGetPostListByTagNo } from './use-get-post-list-by-tag-no';
 export { useGetPostListByCtgryNo } from './use-get-post-list-by-ctgry-no';
 export { useGetPostListFromArchive } from './use-get-post-list-from-archive';
-export { useGetAdvancedPostList } from './use-get-advanced-post-list';
 export { useGetBookmarkedPostListByUserNo } from './use-get-bookmarked-post-list-by-user-no';
 
 // POST 생성 훅

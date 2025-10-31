@@ -12,7 +12,7 @@ import { Input } from '@/(common)/_components/ui/input';
 import { Separator } from '@/(common)/_components/ui/separator';
 import { useAdminCreateAdmin } from '@/_entities/admin/users/hooks';
 import { useAuthActions } from '@/_entities/auth/auth.store';
-import { createUserSchema, userRoleSchema, type CreateUserType } from '@/_schemas';
+import { createUserSchema, userRoleSchema, type CreateUserType } from '@/_types';
 
 export function AdminSignUpForm() {
   const { setAuthCardHeader, resetAuthCardHeader, } = useAuthActions();

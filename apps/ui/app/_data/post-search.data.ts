@@ -1,4 +1,4 @@
-import type { SearchPostType } from '@/_schemas/post.schema';
+import type { SearchPostType } from '@/_types/post.schema';
 
 /**
  * @description 포스트 검색을 위한 기본 데이터

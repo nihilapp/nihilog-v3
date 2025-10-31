@@ -1,8 +1,8 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { AnalyzeStatType } from '@/_schemas/common.schema';
-import type { SearchPostType } from '@/_schemas/post.schema';
+import type { AnalyzeStatType } from '@/_types/common.schema';
+import type { SearchPostType } from '@/_types/post.schema';
 
 /**
  * 관리자 포스트 관련 쿼리 키 정의

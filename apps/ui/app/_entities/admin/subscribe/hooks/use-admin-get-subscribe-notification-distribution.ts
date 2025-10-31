@@ -1,17 +1,13 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SubscribeNotificationDistributionItemType } from '@/_types';
 
-interface OptionType extends QueryOptionType<SubscribeNotificationDistributionItemType[]> {}
-
 /**
  * @description 알림 설정별 분포 통계를 조회하는 커스텀 훅
- * @param {OptionType} [options] - 쿼리 옵션 (선택사항)
  */
-export function useAdminGetSubscribeNotificationDistribution(options: OptionType = {}) {
+export function useAdminGetSubscribeNotificationDistribution() {
   const query = useGet<SubscribeNotificationDistributionItemType[]>({
     url: [
       'admin',
@@ -35,7 +31,6 @@ export function useAdminGetSubscribeNotificationDistribution(options: OptionType
         }
       );
     },
-    ...options,
   });
 
   return query;

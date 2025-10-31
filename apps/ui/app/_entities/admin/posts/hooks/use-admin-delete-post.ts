@@ -1,26 +1,22 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeletePostType } from '@/_schemas';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
-interface OptionType extends MutationOptionsType<boolean, DeletePostType> {}
-
 /**
  * @description 포스트를 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} pstNo - 포스트 번호
  */
-export function useAdminDeletePost(options: OptionType = {}) {
+export function useAdminDeletePost(pstNo: number) {
   const invalidateCache = useInvalidateAdminPostsCache();
 
-  const mutation = useDelete<boolean, DeletePostType>({
-    url: (variables) => [
+  const mutation = useDelete<boolean>({
+    url: [
       'admin',
       'posts',
-      variables.pstNo?.toString() || '0',
+      pstNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -41,7 +37,6 @@ export function useAdminDeletePost(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

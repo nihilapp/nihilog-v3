@@ -1,21 +1,16 @@
-// 태그 구독 관련 타입 정의 (기본 구조)
+import type {
+  TagSbcrMpngTableType
+} from '../_schemas';
 
-export interface TagSubscribeMappingType {
-  tagSbcrNo: number;
-  sbcrNo: number;
-  tagNo: number;
-  useYn: 'Y' | 'N';
-  delYn: 'Y' | 'N';
-  crtNo?: number;
-  crtDt: string;
-  updtNo?: number;
-  updtDt: string;
-  delNo?: number;
-  delDt?: string;
-}
+// 단일 태그 구독 조회 (tag 정보 포함)
+export type SelectTagSbcrMpngType = TagSbcrMpngTableType & {
+  tag: {
+    tagNm: string;
+  };
+};
 
-export type SelectTagSubscribeMappingType = TagSubscribeMappingType;
-export type SelectTagSubscribeMappingListItemType = TagSubscribeMappingType & {
+// 목록 조회 항목 (페이징 정보 포함)
+export type SelectTagSbcrMpngListItemType = SelectTagSbcrMpngType & {
   totalCnt: number;
   rowNo: number;
 };

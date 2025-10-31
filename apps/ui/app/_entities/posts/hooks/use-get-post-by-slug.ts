@@ -1,21 +1,14 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SelectPostType } from '@/_types';
 
-interface OptionType extends QueryOptionType<SelectPostType> {
-  pstCd: string;
-}
-
 /**
  * @description 포스트 슬러그로 포스트를 조회하는 커스텀 훅
- * @param {OptionType} options - 쿼리 옵션 및 포스트 슬러그
+ * @param {string} pstCd - 포스트 슬러그
  */
-export function useGetPostBySlug(options: OptionType) {
-  const { pstCd, ...queryOptions } = options;
-
+export function useGetPostBySlug(pstCd: string) {
   const query = useGet<SelectPostType>({
     url: [
       'posts',
@@ -23,13 +16,8 @@ export function useGetPostBySlug(options: OptionType) {
       pstCd,
     ],
     enabled: !!pstCd,
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
+    callback(_res) {
+      //
     },
     errorCallback(error) {
       toast.error(
@@ -39,7 +27,6 @@ export function useGetPostBySlug(options: OptionType) {
         }
       );
     },
-    ...queryOptions,
   });
 
   return query;

@@ -1,32 +1,10 @@
-// 사용자 관련 타입 정의 (API 응답에 맞게)
-
-// 기본 사용자 정보 타입
-export interface UserInfoType {
-  userNo: number;
-  emlAddr: string;
-  userNm: string;
-  userRole: 'USER' | 'ADMIN';
-  proflImg?: string;
-  userBiogp?: string;
-  encptPswd: string;
-  reshToken?: string;
-  useYn: 'Y' | 'N';
-  delYn: 'Y' | 'N';
-  lastLgnDt?: string;
-  lastPswdChgDt?: string;
-  crtNo?: number;
-  crtDt: string;
-  updtNo?: number;
-  updtDt: string;
-  delNo?: number;
-  delDt?: string;
-}
+import type { UserInfoTableType } from '../_schemas/user.schema';
 
 // 단일 사용자 조회
-export type SelectUserInfoType = UserInfoType;
+export type SelectUserInfoType = UserInfoTableType;
 
 // 목록 조회 항목 (페이징 정보 포함)
-export type SelectUserInfoListItemType = UserInfoType & {
+export type SelectUserInfoListItemType = UserInfoTableType & {
   totalCnt: number;
   rowNo: number;
 };

@@ -3,11 +3,11 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
 interface CommonActions {
-  setWord: (word: string) => void;
+  toggleDarkMode: () => void;
 }
 
 interface CommonState {
-  word: string;
+  darkMode: boolean;
   actions: CommonActions;
 }
 
@@ -15,11 +15,11 @@ const createCommonSlice: StateCreator<
   CommonState,
   [['zustand/immer', never]]
 > = (set) => ({
-  word: '',
+  darkMode: false,
   actions: {
-    setWord: (word) =>
+    toggleDarkMode: () =>
       set((state) => {
-        state.word = word;
+        state.darkMode = !state.darkMode;
       }),
   },
 });
@@ -29,10 +29,10 @@ const useCommonStore = create<CommonState>()(persist(
   {
     name: 'common-storage',
     storage: createJSONStorage(() => localStorage),
-    partialize: (state) => ({ word: state.word, }),
+    partialize: (state) => ({ darkMode: state.darkMode, }),
   }
 ));
 
-export const useWord = () => useCommonStore((state) => state.word);
+export const useDarkMode = () => useCommonStore((state) => state.darkMode);
 
 export const useCommonActions = () => useCommonStore((state) => state.actions);

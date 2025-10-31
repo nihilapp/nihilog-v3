@@ -1,38 +1,26 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SearchPostType } from '@/_schemas';
 import type { ListType, SelectPostListItemType } from '@/_types';
 
-interface OptionType extends QueryOptionType<ListType<SelectPostListItemType>> {
-  ctgryNo: number;
-  params: SearchPostType;
-}
-
 /**
  * @description 카테고리별 포스트 목록을 조회하는 커스텀 훅
- * @param {OptionType} options - 쿼리 옵션, 카테고리 번호 및 검색 파라미터
+ * @param {number} ctgryNo - 카테고리 번호
+ * @param {SearchPostType} params - 검색 파라미터
  */
-export function useGetPostListByCtgryNo(options: OptionType) {
-  const { ctgryNo, params, ...queryOptions } = options;
-
+export function useGetPostListByCtgryNo(ctgryNo: number, params: SearchPostType) {
   const query = useGet<ListType<SelectPostListItemType>>({
     url: [
       'posts',
-      'category',
+      'categories',
       ctgryNo.toString(),
     ],
     params,
     enabled: !!ctgryNo,
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
+    callback(_res) {
+      //
     },
     errorCallback(error) {
       toast.error(
@@ -42,7 +30,6 @@ export function useGetPostListByCtgryNo(options: OptionType) {
         }
       );
     },
-    ...queryOptions,
   });
 
   return query;

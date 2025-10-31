@@ -12,7 +12,7 @@ import { Form } from '@/(common)/_components/ui/form';
 import { Separator } from '@/(common)/_components/ui/separator';
 import { useAuthActions } from '@/_entities/auth/auth.store';
 import { useSignIn } from '@/_entities/auth/hooks';
-import { signInSchema, type SignInType } from '@/_schemas';
+import { signInSchema, type SignInType } from '@/_types';
 
 export function SignInForm() {
   const { setAuthCardHeader, resetAuthCardHeader, } = useAuthActions();

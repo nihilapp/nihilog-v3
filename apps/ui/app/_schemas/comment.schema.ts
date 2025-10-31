@@ -1,13 +1,15 @@
 import { z } from 'zod';
 
-// 공통 스키마 import
-import { ynEnumSchema, baseSearchSchema } from './common.schema';
+import { commonSchema, dateTimeMessage, dateTimeRegex } from './common.schema';
+import { baseSearchSchema } from './search.schema';
 
-// 댓글 요청 스키마들
-
-// 댓글 생성 스키마
-export const createCommentSchema = z.object({
-  pstNo: z.number()
+const commentSchema = commonSchema.extend({
+  cmntNo: z.coerce
+    .number()
+    .int('댓글 번호는 정수여야 합니다.')
+    .positive('댓글 번호는 양수여야 합니다.'),
+  pstNo: z.coerce
+    .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.'),
   cmntCntnt: z.string()
@@ -27,13 +29,53 @@ export const createCommentSchema = z.object({
   ])
     .default('PENDING')
     .optional(),
-  prntCmntNo: z.number()
+  prntCmntNo: z.coerce
+    .number()
     .int('부모 댓글 번호는 정수여야 합니다.')
     .positive('부모 댓글 번호는 양수여야 합니다.')
     .optional()
     .nullable(),
-  useYn: ynEnumSchema.default('Y'),
-  delYn: ynEnumSchema.default('N'),
+  rowNo: z.coerce
+    .number()
+    .int('행 번호는 정수여야 합니다.')
+    .positive('행 번호는 양수여야 합니다.')
+    .optional(),
+  totalCnt: z.coerce
+    .number()
+    .int('총 개수는 정수여야 합니다.')
+    .positive('총 개수는 양수여야 합니다.')
+    .optional(),
+  cmntNoList: z.array(z.coerce
+    .number()
+    .int('댓글 번호는 정수여야 합니다.')
+    .positive('댓글 번호는 양수여야 합니다.'))
+    .optional(),
+});
+
+// CmntInfo 테이블 컬럼만 pick (Prisma 테이블 구조)
+export const cmntInfoTableSchema = commentSchema.pick({
+  cmntNo: true,
+  pstNo: true,
+  cmntCntnt: true,
+  cmntSts: true,
+  prntCmntNo: true,
+  useYn: true,
+  delYn: true,
+  crtNo: true,
+  crtDt: true,
+  updtNo: true,
+  updtDt: true,
+  delNo: true,
+  delDt: true,
+});
+
+export const createCommentSchema = commentSchema.pick({
+  pstNo: true,
+  cmntCntnt: true,
+  cmntSts: true,
+  prntCmntNo: true,
+  useYn: true,
+  delYn: true,
 }).partial({
   cmntSts: true,
   prntCmntNo: true,
@@ -41,77 +83,28 @@ export const createCommentSchema = z.object({
   delYn: true,
 });
 
-// 댓글 수정 스키마
-export const updateCommentSchema = z.object({
-  cmntNo: z.number()
-    .int('댓글 번호는 정수여야 합니다.')
-    .positive('댓글 번호는 양수여야 합니다.')
-    .optional(),
-  cmntNoList: z.array(z.number()
-    .int('댓글 번호는 정수여야 합니다.')
-    .positive('댓글 번호는 양수여야 합니다.'))
-    .optional(),
-  cmntCntnt: z.string()
-    .min(
-      1,
-      '댓글 내용은 필수입니다.'
-    )
-    .max(
-      1000,
-      '댓글 내용은 1000자를 초과할 수 없습니다.'
-    )
-    .optional(),
-  cmntSts: z.enum([
-    'PENDING',
-    'APPROVED',
-    'SPAM',
-    'REJECTED',
-  ])
-    .optional(),
-  prntCmntNo: z.number()
-    .int('부모 댓글 번호는 정수여야 합니다.')
-    .positive('부모 댓글 번호는 양수여야 합니다.')
-    .optional()
-    .nullable(),
-  useYn: ynEnumSchema.optional(),
-  delYn: ynEnumSchema.optional(),
+export const updateCommentSchema = commentSchema.partial().pick({
+  cmntNoList: true,
+  cmntCntnt: true,
+  cmntSts: true,
+  prntCmntNo: true,
+  useYn: true,
+  delYn: true,
+});
+
+export const deleteCommentSchema = commentSchema.pick({
+  cmntNoList: true,
 }).partial();
 
-// 댓글 삭제 스키마
-export const deleteCommentSchema = z.object({
-  cmntNo: z.number()
-    .int('댓글 번호는 정수여야 합니다.')
-    .positive('댓글 번호는 양수여야 합니다.')
-    .optional(),
-  cmntNoList: z.array(z.number()
-    .int('댓글 번호는 정수여야 합니다.')
-    .positive('댓글 번호는 양수여야 합니다.'))
-    .optional(),
-}).partial();
-
-// 댓글 검색 스키마
-export const searchCommentSchema = baseSearchSchema.extend({
-  pstNo: z.number()
-    .int('포스트 번호는 정수여야 합니다.')
-    .positive('포스트 번호는 양수여야 합니다.')
-    .optional(),
-  cmntNo: z.number()
-    .int('댓글 번호는 정수여야 합니다.')
-    .positive('댓글 번호는 양수여야 합니다.')
-    .optional(),
-  cmntNoList: z.array(z.number()
-    .int('댓글 번호는 정수여야 합니다.')
-    .positive('댓글 번호는 양수여야 합니다.'))
-    .optional(),
-  cmntSts: z.enum([
-    'PENDING',
-    'APPROVED',
-    'SPAM',
-    'REJECTED',
-  ])
-    .optional(),
-  delYn: ynEnumSchema.optional(),
-  useYn: ynEnumSchema.optional(),
+export const searchCommentSchema = baseSearchSchema.partial().extend({
+  ...commentSchema.pick({
+    pstNo: true,
+    cmntNo: true,
+    cmntNoList: true,
+    cmntSts: true,
+    delYn: true,
+    useYn: true,
+  }).shape,
   srchType: z.enum(
     [
       'userEmlAddr',
@@ -126,14 +119,14 @@ export const searchCommentSchema = baseSearchSchema.extend({
     .optional(),
   crtDtFrom: z.string()
     .regex(
-      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
-      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+      dateTimeRegex,
+      dateTimeMessage
     )
     .optional(),
   crtDtTo: z.string()
     .regex(
-      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/,
-      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+      dateTimeRegex,
+      dateTimeMessage
     )
     .optional(),
   orderBy: z.enum(
@@ -149,7 +142,7 @@ export const searchCommentSchema = baseSearchSchema.extend({
     .optional(),
 }).partial();
 
-// 타입 추출
+export type CmntInfoTableType = z.infer<typeof cmntInfoTableSchema>;
 export type CreateCommentType = z.infer<typeof createCommentSchema>;
 export type UpdateCommentType = z.infer<typeof updateCommentSchema>;
 export type DeleteCommentType = z.infer<typeof deleteCommentSchema>;

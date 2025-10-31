@@ -1,26 +1,22 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeleteSubscribeType } from '@/_schemas';
 
 import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
 
-interface OptionType extends MutationOptionsType<boolean, DeleteSubscribeType> {}
-
 /**
  * @description 특정 사용자 구독 설정을 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} sbcrNo - 구독 번호
  */
-export function useAdminDeleteUserSubscribe(options: OptionType = {}) {
+export function useAdminDeleteUserSubscribe(sbcrNo: number) {
   const invalidateCache = useInvalidateAdminSubscribeCache();
 
-  const mutation = useDelete<boolean, DeleteSubscribeType>({
-    url: (variables) => [
+  const mutation = useDelete<boolean>({
+    url: [
       'admin',
       'subscribes',
-      variables.sbcrNo?.toString() || '0',
+      sbcrNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -41,7 +37,6 @@ export function useAdminDeleteUserSubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

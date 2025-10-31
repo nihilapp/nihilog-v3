@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { useDone } from '@/_entities/common/hooks/use-done';
-import { useLoading } from '@/_entities/common/hooks/use-loading';
 import { Api } from '@/_libs';
 import type { ErrorType, OptionType } from '@/_types';
 
@@ -20,7 +19,7 @@ export function usePost<TData = unknown, TBody = unknown>({
     ? `${urlString}?${queryString}`
     : urlString;
 
-  const { data: response, isPending, isSuccess, error, ...other } = useMutation({
+  const { data: response, isPending: loading, isSuccess, error, ...other } = useMutation({
     mutationKey: [ ...url, ],
     mutationFn: async (postData: TBody) => {
       return await Api.postQuery<TData, TBody>(
@@ -41,10 +40,6 @@ export function usePost<TData = unknown, TBody = unknown>({
     },
   });
 
-  const loading = useLoading(
-    isPending,
-    isPending
-  );
   const done = useDone(
     loading,
     isSuccess

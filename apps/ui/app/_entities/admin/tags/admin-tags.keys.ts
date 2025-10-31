@@ -1,9 +1,9 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { AnalyzeStatType } from '@/_schemas/common.schema';
-import type { SearchTagType } from '@/_schemas/tag.schema';
-import type { SearchPstTagMpngType } from '@/_schemas/tag.schema';
+import type { AnalyzeStatType } from '@/_types/common.schema';
+import type { SearchTagType } from '@/_types/tag.schema';
+import type { SearchPstTagMpngType } from '@/_types/tag.schema';
 
 /**
  * 관리자 태그 관련 쿼리 키 정의

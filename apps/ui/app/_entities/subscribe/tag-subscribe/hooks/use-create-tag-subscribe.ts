@@ -1,25 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreateTagSubscribeType } from '@/_schemas';
-import type { SelectTagSubscribeMappingType } from '@/_types';
-
-interface OptionType extends MutationOptionsType<SelectTagSubscribeMappingType, CreateTagSubscribeType> {
-  tagNo: number;
-}
+import type { SelectTagSbcrMpngType } from '@/_types';
 
 /**
  * @description 특정 태그를 구독하는 커스텀 훅
- * @param {OptionType} options - 뮤테이션 옵션
+ * @param {number} tagNo - 태그 번호
  */
-export function useCreateTagSubscribe(options: OptionType) {
-  const { tagNo, ...restOptions } = options;
+export function useCreateTagSubscribe(tagNo: number) {
   const invalidateCache = useInvalidateTagSubscribeCache();
 
-  const mutation = usePost<SelectTagSubscribeMappingType, CreateTagSubscribeType>({
+  const mutation = usePost<SelectTagSbcrMpngType, CreateTagSubscribeType>({
     url: [
       'users',
       'subscribes',
@@ -45,7 +39,6 @@ export function useCreateTagSubscribe(options: OptionType) {
         }
       );
     },
-    ...restOptions,
   });
 
   return mutation;

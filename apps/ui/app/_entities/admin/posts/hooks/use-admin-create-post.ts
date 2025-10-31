@@ -1,7 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { CreatePostType } from '@/_schemas';
@@ -9,13 +8,10 @@ import type { SelectPostType } from '@/_types';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
-interface OptionType extends MutationOptionsType<SelectPostType, CreatePostType> {}
-
 /**
  * @description 새 포스트를 생성하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminCreatePost(options: OptionType = {}) {
+export function useAdminCreatePost() {
   const invalidateCache = useInvalidateAdminPostsCache();
   const router = useRouter();
 
@@ -49,7 +45,6 @@ export function useAdminCreatePost(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

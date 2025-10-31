@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { SearchCategoryType } from '@/_schemas';
+import type { SearchCategoryType } from '@/_types';
 import type { ListType, SelectCategoryListItemType } from '@/_types';
 
 interface OptionType extends QueryOptionType<ListType<SelectCategoryListItemType>> {

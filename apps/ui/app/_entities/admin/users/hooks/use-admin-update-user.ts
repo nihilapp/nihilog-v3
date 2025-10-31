@@ -1,6 +1,5 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { UpdateUserType } from '@/_schemas';
@@ -8,22 +7,18 @@ import type { SelectUserInfoType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 
-type UpdateUserWithIdType = UpdateUserType & { userNo?: number };
-
-interface OptionType extends MutationOptionsType<SelectUserInfoType, UpdateUserWithIdType> {}
-
 /**
  * @description 사용자를 수정하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} userNo - 사용자 번호
  */
-export function useAdminUpdateUser(options: OptionType = {}) {
+export function useAdminUpdateUser(userNo: number) {
   const invalidateCache = useInvalidateAdminUsersCache();
 
-  const mutation = usePut<SelectUserInfoType, UpdateUserWithIdType>({
-    url: (variables) => [
+  const mutation = usePut<SelectUserInfoType, UpdateUserType>({
+    url: [
       'admin',
       'users',
-      variables.userNo?.toString() || '0',
+      userNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -44,7 +39,6 @@ export function useAdminUpdateUser(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

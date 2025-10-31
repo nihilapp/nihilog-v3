@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { AnalyzeStatType } from '@/_schemas';
+import type { AnalyzeStatType } from '@/_types';
 import type { TopPostsByCommentItemType } from '@/_types';
 
 interface OptionType extends QueryOptionType<TopPostsByCommentItemType[]> {}

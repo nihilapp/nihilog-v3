@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeleteCommentType } from '@/_schemas';
+import type { DeleteCommentType } from '@/_types';
 import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminCommentsCache } from '../admin-comments.keys';

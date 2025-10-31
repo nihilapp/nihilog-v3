@@ -1,22 +1,18 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
-import { useDelete } from '@/_entities/common/hooks';
+import { useDeletes } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { DeleteCategorySubscribeType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, DeleteCategorySubscribeType> {}
-
 /**
  * @description 다수 카테고리 구독을 일괄 해제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useMultipleDeleteCategorySubscribe(options: OptionType = {}) {
+export function useMultipleDeleteCategorySubscribe() {
   const invalidateCache = useInvalidateCategorySubscribeCache();
 
-  const mutation = useDelete<MultipleResultType, DeleteCategorySubscribeType>({
+  const mutation = useDeletes<MultipleResultType, DeleteCategorySubscribeType>({
     url: [
       'users',
       'subscribes',
@@ -42,7 +38,6 @@ export function useMultipleDeleteCategorySubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

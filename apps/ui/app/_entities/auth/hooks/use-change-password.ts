@@ -1,25 +1,21 @@
 import { toast } from 'sonner';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
-import type { MutationOptionsType } from '@/_types';
-import { usePost } from '@/_entities/common/hooks';
+import { usePut } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { ChangePasswordType } from '@/_schemas';
+import type { ChangePasswordType } from '@/_types';
 import type { SelectUserInfoType } from '@/_types';
-
-interface OptionType extends MutationOptionsType<SelectUserInfoType, ChangePasswordType> {}
 
 /**
  * @description 사용자 비밀번호를 변경하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useChangePassword(options: OptionType = {}) {
+export function useChangePassword() {
   const invalidateCache = useInvalidateAuthCache();
 
-  const mutation = usePost<SelectUserInfoType, ChangePasswordType>({
+  const mutation = usePut<SelectUserInfoType, ChangePasswordType>({
     url: [
       'auth',
-      'change-password',
+      'password',
     ],
     callback(res) {
       toast.success(
@@ -40,7 +36,6 @@ export function useChangePassword(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

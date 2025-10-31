@@ -1,6 +1,5 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { UpdatePostType } from '@/_schemas';
@@ -8,13 +7,10 @@ import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, UpdatePostType> {}
-
 /**
  * @description 다수 포스트를 일괄 수정하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleUpdatePost(options: OptionType = {}) {
+export function useAdminMultipleUpdatePost() {
   const invalidateCache = useInvalidateAdminPostsCache();
 
   const mutation = usePut<MultipleResultType, UpdatePostType>({
@@ -42,7 +38,6 @@ export function useAdminMultipleUpdatePost(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

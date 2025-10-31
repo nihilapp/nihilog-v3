@@ -1,24 +1,17 @@
 import { toast } from 'sonner';
 
-import type { QueryOptionType } from '@/_types';
 import { useGet } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { SearchTagSubscribeType } from '@/_schemas';
-import type { ListType, SelectTagSubscribeMappingListItemType } from '@/_types';
-
-interface OptionType extends QueryOptionType<ListType<SelectTagSubscribeMappingListItemType>> {
-  tagNo: number;
-  searchData?: SearchTagSubscribeType;
-}
+import type { ListType, SelectTagSbcrMpngListItemType } from '@/_types';
 
 /**
  * @description 특정 태그의 구독 상태를 조회하는 커스텀 훅
- * @param {OptionType} options - 쿼리 옵션
+ * @param {number} tagNo - 태그 번호
+ * @param {SearchTagSubscribeType} [params] - 검색 파라미터 (선택사항)
  */
-export function useGetTagSubscribeByTagNo(options: OptionType) {
-  const { tagNo, searchData, ...restOptions } = options;
-
-  const query = useGet<ListType<SelectTagSubscribeMappingListItemType>>({
+export function useGetTagSubscribeByTagNo(tagNo: number, params?: SearchTagSubscribeType) {
+  const query = useGet<ListType<SelectTagSbcrMpngListItemType>>({
     url: [
       'users',
       'subscribes',
@@ -26,7 +19,8 @@ export function useGetTagSubscribeByTagNo(options: OptionType) {
       tagNo.toString(),
       'search',
     ],
-    params: searchData,
+    params,
+    enabled: !!tagNo,
     callback(res) {
       toast.success(
         res.message,
@@ -43,7 +37,6 @@ export function useGetTagSubscribeByTagNo(options: OptionType) {
         }
       );
     },
-    ...restOptions,
   });
 
   return query;

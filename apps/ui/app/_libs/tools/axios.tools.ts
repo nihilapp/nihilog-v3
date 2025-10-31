@@ -9,7 +9,7 @@ import axios, {
 
 import { RESPONSE_CODE } from '@/_code/response.code';
 import { siteConfig } from '@/_config/config';
-import type { ResponseType } from '@/_schemas/response.schema';
+import type { ResponseType } from '@/_types';
 
 /**
  * HTTP 클라이언트 유틸리티

@@ -1,29 +1,24 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { UpdateCategorySubscribeType } from '@/_schemas';
-import type { SelectCategorySubscribeMappingType } from '@/_types';
-
-type UpdateCategorySubscribeWithIdType = UpdateCategorySubscribeType & { ctgrySbcrNo?: number };
-
-interface OptionType extends MutationOptionsType<SelectCategorySubscribeMappingType, UpdateCategorySubscribeWithIdType> {}
+import type { SelectCtgrySbcrMpngType } from '@/_types';
 
 /**
  * @description 카테고리 구독 설정을 변경하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} ctgrySbcrNo - 카테고리 구독 번호
  */
-export function useUpdateCategorySubscribe(options: OptionType = {}) {
+export function useUpdateCategorySubscribe(ctgrySbcrNo: number) {
   const invalidateCache = useInvalidateCategorySubscribeCache();
 
-  const mutation = usePut<SelectCategorySubscribeMappingType, UpdateCategorySubscribeWithIdType>({
-    url: (variables) => [
+  const mutation = usePut<SelectCtgrySbcrMpngType, UpdateCategorySubscribeType>({
+    url: [
       'users',
       'subscribes',
       'categories',
-      variables.ctgrySbcrNo?.toString() || '0',
+      ctgrySbcrNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -44,7 +39,6 @@ export function useUpdateCategorySubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

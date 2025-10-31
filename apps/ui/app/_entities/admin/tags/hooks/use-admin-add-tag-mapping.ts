@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { CreatePstTagMpngType } from '@/_schemas';
+import type { CreatePstTagMpngType } from '@/_types';
 import type { SelectPostTagMappingType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';

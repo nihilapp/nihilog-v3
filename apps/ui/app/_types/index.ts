@@ -1,6 +1,7 @@
 // 공통 타입 export
 export type {
   ListType,
+  ListResponseType,
   MultipleResultType,
   ResponseType,
   ErrorType,
@@ -21,7 +22,6 @@ export type {
 
 // 사용자 타입 export
 export type {
-  UserInfoType,
   SelectUserInfoType,
   SelectUserInfoListItemType,
   AnalyzeUserStatItemType,
@@ -38,10 +38,6 @@ export type {
 
 // 포스트 타입 export
 export type {
-  PostInfoType,
-  PostViewLogType,
-  PostShareLogType,
-  PostBookmarkType,
   SelectPostType,
   SelectPostListItemType,
   SelectPostViewLogType,
@@ -59,7 +55,7 @@ export type {
   TopPopularPostItemType,
   TopCommentPostItemType,
   PostStatusRatioItemType
-} from './post.types.js';
+} from './post.types';
 
 // 카테고리 타입 export
 export type {
@@ -79,16 +75,14 @@ export type {
   UnusedCategoryItemType,
   CategorySubscriberGrowthRateItemType,
   CategoriesWithoutSubscribersItemType
-} from './category.types.js';
+} from './category.types';
 
 // 태그 타입 export
 export type {
-  TagInfoType,
-  PostTagMappingType,
-  SelectPostTagMappingType,
   SelectTagInfoType,
   SelectTagInfoListItemType,
-  SelectPostTagMappingListItemType,
+  SelectPstTagMpngType,
+  SelectPstTagMpngListItemType,
   AnalyzeTagStatItemType,
   TopUsedTagItemType,
   TagUsageTrendItemType,
@@ -102,11 +96,10 @@ export type {
   TagStatusDistributionItemType,
   TagCreatorStatItemType,
   TagCleanupRecommendationItemType
-} from './tag.types.js';
+} from './tag.types';
 
 // 댓글 타입 export
 export type {
-  CommentInfoType,
   SelectCommentType,
   SelectCommentListItemType,
   AnalyzeCommentStatItemType,
@@ -119,29 +112,26 @@ export type {
   CommentReplyRatioItemType,
   CommentAverageDepthItemType,
   PostsWithoutCommentsItemType
-} from './comment.types.js';
+} from './comment.types';
 
 // 구독 타입 export
 export type {
-  UserSubscribeInfoType,
   SelectUserSbcrInfoType,
-  SelectUserSubscribeInfoListItemType,
+  SelectUserSbcrInfoListItemType,
   AnalyzeSubscribeStatItemType,
   SubscribeNotificationDistributionItemType,
   TotalActiveNotificationUsersItemType,
   TotalInactiveNotificationUsersItemType
-} from './subscribe.types.js';
+} from './subscribe.types';
 
 // 카테고리 구독 타입 export
 export type {
-  CategorySubscribeMappingType,
-  SelectCategorySubscribeMappingType,
-  SelectCategorySubscribeMappingListItemType
-} from './category-subscribe.types.js';
+  SelectCtgrySbcrMpngType,
+  SelectCtgrySbcrMpngListItemType
+} from './category-subscribe.types';
 
 // 태그 구독 타입 export
 export type {
-  TagSubscribeMappingType,
-  SelectTagSubscribeMappingType,
-  SelectTagSubscribeMappingListItemType
-} from './tag-subscribe.types.js';
+  SelectTagSbcrMpngType,
+  SelectTagSbcrMpngListItemType
+} from './tag-subscribe.types';

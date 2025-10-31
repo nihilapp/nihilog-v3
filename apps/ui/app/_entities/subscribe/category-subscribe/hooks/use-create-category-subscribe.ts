@@ -1,25 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreateCategorySubscribeType } from '@/_schemas';
-import type { SelectCategorySubscribeMappingType } from '@/_types';
-
-interface OptionType extends MutationOptionsType<SelectCategorySubscribeMappingType, CreateCategorySubscribeType> {
-  ctgryNo: number;
-}
+import type { SelectCtgrySbcrMpngType } from '@/_types';
 
 /**
  * @description 특정 카테고리를 구독하는 커스텀 훅
- * @param {OptionType} options - 뮤테이션 옵션
+ * @param {number} ctgryNo - 카테고리 번호
  */
-export function useCreateCategorySubscribe(options: OptionType) {
-  const { ctgryNo, ...restOptions } = options;
+export function useCreateCategorySubscribe(ctgryNo: number) {
   const invalidateCache = useInvalidateCategorySubscribeCache();
 
-  const mutation = usePost<SelectCategorySubscribeMappingType, CreateCategorySubscribeType>({
+  const mutation = usePost<SelectCtgrySbcrMpngType, CreateCategorySubscribeType>({
     url: [
       'users',
       'subscribes',
@@ -45,7 +39,6 @@ export function useCreateCategorySubscribe(options: OptionType) {
         }
       );
     },
-    ...restOptions,
   });
 
   return mutation;

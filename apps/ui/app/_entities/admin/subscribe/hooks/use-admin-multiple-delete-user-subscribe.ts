@@ -1,23 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
-import { useDelete } from '@/_entities/common/hooks';
+import { useDeletes } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { DeleteSubscribeType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, DeleteSubscribeType> {}
-
 /**
  * @description 다수 사용자 구독 설정을 일괄 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleDeleteUserSubscribe(options: OptionType = {}) {
+export function useAdminMultipleDeleteUserSubscribe() {
   const invalidateCache = useInvalidateAdminSubscribeCache();
 
-  const mutation = useDelete<MultipleResultType, DeleteSubscribeType>({
+  const mutation = useDeletes<MultipleResultType, DeleteSubscribeType>({
     url: [
       'admin',
       'subscribes',
@@ -42,7 +38,6 @@ export function useAdminMultipleDeleteUserSubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

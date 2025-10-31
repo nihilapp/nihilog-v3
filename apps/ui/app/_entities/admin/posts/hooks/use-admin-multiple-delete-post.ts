@@ -1,23 +1,19 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
-import { useDelete } from '@/_entities/common/hooks';
+import { useDeletes } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { DeletePostType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, DeletePostType> {}
-
 /**
  * @description 다수 포스트를 일괄 삭제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminMultipleDeletePost(options: OptionType = {}) {
+export function useAdminMultipleDeletePost() {
   const invalidateCache = useInvalidateAdminPostsCache();
 
-  const mutation = useDelete<MultipleResultType, DeletePostType>({
+  const mutation = useDeletes<MultipleResultType, DeletePostType>({
     url: [
       'admin',
       'posts',
@@ -42,7 +38,6 @@ export function useAdminMultipleDeletePost(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

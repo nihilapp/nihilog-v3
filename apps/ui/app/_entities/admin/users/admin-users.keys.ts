@@ -1,8 +1,8 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { AnalyzeStatType } from '@/_schemas/common.schema';
-import type { SearchUserType } from '@/_schemas/user.schema';
+import type { AnalyzeStatType } from '@/_types/common.schema';
+import type { SearchUserType } from '@/_types/user.schema';
 
 /**
  * 관리자 사용자 관련 쿼리 키 정의

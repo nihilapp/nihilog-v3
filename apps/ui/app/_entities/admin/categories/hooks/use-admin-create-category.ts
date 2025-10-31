@@ -4,7 +4,7 @@ import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/
 import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { CreateCategoryType } from '@/_schemas';
+import type { CreateCategoryType } from '@/_types';
 import type { SelectCategoryType } from '@/_types';
 
 interface OptionType extends MutationOptionsType<SelectCategoryType, CreateCategoryType> {}

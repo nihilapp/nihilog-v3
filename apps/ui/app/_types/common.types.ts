@@ -7,26 +7,53 @@ import type {
 } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
 
-import type { ResponseType, ListType } from '@/_schemas/response.schema';
+// 응답 타입 정의
+export type ResponseType<TData = unknown> = {
+  error: boolean;
+  code: string;
+  message: string;
+  data: TData | null;
+  responseTime?: string | null;
+};
 
-export type OkType<TData = unknown> = ResponseType<TData>;
-export type ErrorType = ResponseType<null>;
+export type ListResponseType<TData = unknown> = ResponseType<{
+  list: TData[];
+  totalCnt: number;
+}>;
 
-// 기존 타입들 재export
-export type { ResponseType, ListType };
-
-// 추가 타입들
-export type MultipleResultType<TData = unknown> = {
+export type ListType<TData = unknown> = {
   list: TData[];
   totalCnt: number;
 };
 
-export type RepoResponseType<TData = unknown> = ResponseType<TData>;
+export type OkType<TData = unknown> = ResponseType<TData>;
+export type ErrorType = ResponseType<null>;
+
+// ========================================================
+// API 공통 타입 (백엔드와 동일 구조)
+// ========================================================
+
+// 다중 작업 결과 타입
+export type MultipleResultType = {
+  successCnt: number;
+  failCnt: number;
+  failNoList: number[];
+};
+
+// 리포지토리 응답 타입
+export type RepoResponseType<TData = unknown> = {
+  success: boolean;
+  data?: TData | null;
+  error?: {
+    code: string;
+    message: string;
+  };
+};
 
 // 공통 옵션 타입
 export type OptionType<TData = unknown, TBody = unknown> = {
   url: (string | number)[];
-  params?: Record<string, string>;
+  params?: Record<string, string> | {} | object;
   body?: TBody;
   ttl?: number;
   enabled?: boolean;
@@ -95,3 +122,33 @@ export type InfiniteQueryOptionType<
   >,
   'queryKey' | 'queryFn' | 'enabled'
 >;
+
+// ========================================================
+// 요청 타입 (스키마에서 추출)
+// ========================================================
+
+// Y/N 플래그 타입
+export type YnType = 'Y' | 'N';
+
+// 사용자 역할 타입
+export type UserRoleType = 'USER' | 'ADMIN';
+
+// 게시물 상태 타입
+export type PostStatusType = 'EMPTY' | 'WRITING' | 'FINISHED';
+
+// 범용 검색 스키마 타입
+export type BaseSearchType = {
+  strtRow?: number;
+  endRow?: number;
+  srchType?: string;
+  srchKywd?: string;
+  page?: number;
+};
+
+// 통계 분석 스키마 타입
+export type AnalyzeStatType = {
+  dateStart: string;
+  dateEnd: string;
+  period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  limit?: number;
+};

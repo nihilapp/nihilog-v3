@@ -1,6 +1,5 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
 import type { CreateUserType } from '@/_schemas';
@@ -8,13 +7,10 @@ import type { SelectUserInfoType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 
-interface OptionType extends MutationOptionsType<SelectUserInfoType, CreateUserType> {}
-
 /**
  * @description 새 사용자를 생성하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useAdminCreateUser(options: OptionType = {}) {
+export function useAdminCreateUser() {
   const invalidateCache = useInvalidateAdminUsersCache();
 
   const mutation = usePost<SelectUserInfoType, CreateUserType>({
@@ -41,7 +37,6 @@ export function useAdminCreateUser(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

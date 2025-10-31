@@ -1,137 +1,109 @@
-// 포스트 관련 타입 정의 (기본 구조)
-import type { CategoryInfoType } from './category.types';
+import type {
+  PstInfoTableType,
+  PstViewLogTableType,
+  PstShrnLogTableType,
+  PstBkmrkMpngTableType,
+  CtgryInfoTableType
+} from '../_schemas';
 
-export interface PostInfoType {
-  pstNo: number;
-  pstCd: string;
-  userNo: number;
-  ctgryNo?: number;
-  pstTtl: string;
-  pstSmry?: string;
-  pstMtxt: string;
-  pstThmbLink?: string;
-  pstStts: 'EMPTY' | 'WRITING' | 'FINISHED';
-  publDt?: string;
-  pinYn: 'Y' | 'N';
-  rlsYn: 'Y' | 'N';
-  archYn: 'Y' | 'N';
-  secrYn?: 'Y' | 'N';
-  pstPswd?: string;
-  useYn: 'Y' | 'N';
-  delYn: 'Y' | 'N';
-  crtNo?: number;
-  crtDt: string;
-  updtNo?: number;
-  updtDt: string;
-  delNo?: number;
-  delDt?: string;
-}
-
-// 카테고리 정보가 포함된 포스트 타입
-export type SelectPostType = PostInfoType & {
-  category?: CategoryInfoType | null;
+// 단일 포스트 조회 (카테고리 포함)
+export type SelectPostType = PstInfoTableType & {
+  category: CtgryInfoTableType | null;
 };
+
+// 목록 조회 항목 (페이징 정보 포함)
 export type SelectPostListItemType = SelectPostType & {
   totalCnt: number;
   rowNo: number;
 };
 
-// 기타 필요한 타입들 (기본 구조)
-export interface PostViewLogType {
-  viewLogNo: number;
-  pstNo: number;
-  userNo?: number;
-  viewDt: string;
-}
+// 단일 포스트 조회 로그
+export type SelectPostViewLogType = PstViewLogTableType;
 
-export interface PostShareLogType {
-  shareLogNo: number;
-  pstNo: number;
-  userNo?: number;
-  sharePlatform: string;
-  shareDt: string;
-}
-
-export interface PostBookmarkType {
-  bookmarkNo: number;
-  pstNo: number;
-  userNo: number;
-  bookmarkDt: string;
-}
-
-export type SelectPostViewLogType = PostViewLogType;
-export type SelectPostViewLogListItemType = PostViewLogType & {
+// 목록 조회 항목 (페이징 정보 포함)
+export type SelectPostViewLogListItemType = SelectPostViewLogType & {
   totalCnt: number;
   rowNo: number;
 };
 
-export type SelectPostShareLogType = PostShareLogType;
-export type SelectPostShareLogListItemType = PostShareLogType & {
+// 단일 포스트 공유 로그
+export type SelectPostShareLogType = PstShrnLogTableType;
+
+// 목록 조회 항목 (페이징 정보 포함)
+export type SelectPostShareLogListItemType = SelectPostShareLogType & {
   totalCnt: number;
   rowNo: number;
 };
 
-// 포스트와 카테고리 정보가 포함된 북마크 타입
-export type SelectPostBookmarkType = PostBookmarkType & {
+// 단일 포스트 북마크 (포스트와 카테고리 포함)
+export type SelectPostBookmarkType = PstBkmrkMpngTableType & {
   post: SelectPostType;
 };
 
+// 목록 조회 항목 (페이징 정보 포함)
 export type SelectPostBookmarkListItemType = SelectPostBookmarkType & {
   totalCnt: number;
   rowNo: number;
 };
 
-// 통계 관련 타입들 (기본 구조)
-export type ViewStatModeType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+export type ViewStatModeType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 
-export interface ViewStatItemType {
+export type ViewStatItemType = {
   date: string;
-  viewCount: number;
-}
+  count: number;
+};
 
-export interface SharePlatformStatItemType {
+// 플랫폼별 공유 통계
+export type SharePlatformStatItemType = {
   platform: string;
   count: number;
-  ratio: number;
-}
+};
 
-export interface AnalyzePostItemType {
+export type AnalyzePostItemType = {
   dateStart: string;
   dateEnd: string;
-  postCount: number;
+  publishCount: number;
+  updateCount: number;
+  deleteCount: number;
   viewCount: number;
-  shareCount: number;
   bookmarkCount: number;
-}
-
-export interface AverageViewStatItemType {
-  averageViews: number;
-  totalPosts: number;
-  totalViews: number;
-}
-
-export interface AverageBookmarkStatItemType {
-  averageBookmarks: number;
-  totalPosts: number;
-  totalBookmarks: number;
-}
-
-export interface TopPopularPostItemType {
-  pstNo: number;
-  postTitle: string;
-  viewCount: number;
   shareCount: number;
-  bookmarkCount: number;
-}
-
-export interface TopCommentPostItemType {
-  pstNo: number;
-  postTitle: string;
   commentCount: number;
-}
+};
 
-export interface PostStatusRatioItemType {
-  status: string;
+// 포스트 평균 조회수 통계
+export type AverageViewStatItemType = {
+  dateStart: string;
+  dateEnd: string;
+  avgViewCount: number;
+};
+
+// 포스트당 평균 북마크 수 통계
+export type AverageBookmarkStatItemType = {
+  dateStart: string;
+  dateEnd: string;
+  avgBookmarkCount: number;
+};
+
+// 인기 포스트 TOP N (조회수 기준)
+export type TopPopularPostItemType = {
+  pstNo: number;
+  title: string;
+  viewCount: number;
+  publishDate: string;
+};
+
+// 댓글 많은 포스트 TOP N
+export type TopCommentPostItemType = {
+  pstNo: number;
+  title: string;
+  commentCount: number;
+  publishDate: string;
+};
+
+// 포스트 상태 비율
+export type PostStatusRatioItemType = {
+  status: 'EMPTY' | 'WRITING' | 'FINISHED';
   count: number;
   ratio: number;
-}
+};

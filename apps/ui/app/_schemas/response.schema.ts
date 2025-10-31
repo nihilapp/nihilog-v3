@@ -27,18 +27,8 @@ const listSchema = <TData = any>(dataSchema: z.ZodType<TData> = z.any()) => (
   })
 );
 
-type ResponseType<TData = any> = z.infer<ReturnType<typeof responseSchema<TData>>>;
-type ListResponseType<TData = any> = z.infer<ReturnType<typeof listResponseSchema<TData>>>;
-type ListType<TData = any> = z.infer<ReturnType<typeof listSchema<TData>>>;
-
 export {
   responseSchema,
   listResponseSchema,
   listSchema
-};
-
-export type {
-  ResponseType,
-  ListResponseType,
-  ListType
 };

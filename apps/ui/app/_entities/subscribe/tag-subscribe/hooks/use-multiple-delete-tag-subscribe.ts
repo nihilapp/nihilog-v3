@@ -1,22 +1,18 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
-import { useDelete } from '@/_entities/common/hooks';
+import { useDeletes } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
 import type { DeleteTagSubscribeType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
-interface OptionType extends MutationOptionsType<MultipleResultType, DeleteTagSubscribeType> {}
-
 /**
  * @description 다수 태그 구독을 일괄 해제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useMultipleDeleteTagSubscribe(options: OptionType = {}) {
+export function useMultipleDeleteTagSubscribe() {
   const invalidateCache = useInvalidateTagSubscribeCache();
 
-  const mutation = useDelete<MultipleResultType, DeleteTagSubscribeType>({
+  const mutation = useDeletes<MultipleResultType, DeleteTagSubscribeType>({
     url: [
       'users',
       'subscribes',
@@ -42,7 +38,6 @@ export function useMultipleDeleteTagSubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

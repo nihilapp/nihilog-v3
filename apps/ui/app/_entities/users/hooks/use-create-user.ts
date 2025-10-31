@@ -1,20 +1,18 @@
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateUsersCache } from '@/_entities/users/users.keys';
 import { getToastStyle } from '@/_libs';
 import type { CreateUserType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
-interface OptionType extends MutationOptionsType<SelectUserInfoType, CreateUserType> {}
-
 /**
  * @description 새 사용자 계정을 생성하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
  */
-export function useCreateUser(options: OptionType = {}) {
+export function useCreateUser() {
   const invalidateCache = useInvalidateUsersCache();
+  const router = useRouter();
 
   const mutation = usePost<SelectUserInfoType, CreateUserType>({
     url: [ 'users', ],
@@ -28,6 +26,9 @@ export function useCreateUser(options: OptionType = {}) {
 
       // 사용자 관련 캐시 무효화
       invalidateCache();
+
+      // 회원가입 성공 후 로그인 페이지로 이동
+      router.push('/auth/signin');
     },
     errorCallback(error) {
       toast.error(
@@ -37,7 +38,6 @@ export function useCreateUser(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

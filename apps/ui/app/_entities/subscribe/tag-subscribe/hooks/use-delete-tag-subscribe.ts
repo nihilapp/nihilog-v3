@@ -1,27 +1,22 @@
 import { toast } from 'sonner';
 
-import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
 import { getToastStyle } from '@/_libs';
-import type { DeleteTagSubscribeType } from '@/_schemas';
-import type { ResponseType } from '@/_types';
-
-interface OptionType extends MutationOptionsType<ResponseType<boolean>, DeleteTagSubscribeType> {}
 
 /**
  * @description 태그 구독을 해제하는 커스텀 훅
- * @param {OptionType} [options] - 뮤테이션 옵션 (선택사항)
+ * @param {number} tagSbcrNo - 태그 구독 번호
  */
-export function useDeleteTagSubscribe(options: OptionType = {}) {
+export function useDeleteTagSubscribe(tagSbcrNo: number) {
   const invalidateCache = useInvalidateTagSubscribeCache();
 
-  const mutation = useDelete<ResponseType<boolean>, DeleteTagSubscribeType>({
-    url: (variables) => [
+  const mutation = useDelete<boolean>({
+    url: [
       'users',
       'subscribes',
       'tags',
-      variables.tagSbcrNo?.toString() || '0',
+      tagSbcrNo.toString(),
     ],
     callback(res) {
       toast.success(
@@ -42,7 +37,6 @@ export function useDeleteTagSubscribe(options: OptionType = {}) {
         }
       );
     },
-    ...options,
   });
 
   return mutation;

@@ -1,10 +1,9 @@
 export { useDone } from './use-done';
 export { useLoading } from './use-loading';
 
-// API 훅들
-export { useGet } from './api/use-get';
-export { useGetInfinite } from './api/use-get-infinite';
-export { usePost } from './api/use-post';
-export { usePut } from './api/use-put';
-export { usePatch } from './api/use-patch';
-export { useDelete } from './api/use-delete';
+export { useGet } from './query/use-get';
+export { usePost } from './query/use-post';
+export { usePut } from './query/use-put';
+export { usePatch } from './query/use-patch';
+export { useDelete } from './query/use-delete';
+export { useDeletes } from './query/use-deletes';

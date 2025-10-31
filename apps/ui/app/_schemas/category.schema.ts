@@ -1,13 +1,14 @@
 import { z } from 'zod';
 
-// 공통 스키마 import
-import { ynEnumSchema, baseSearchSchema } from './common.schema';
-import { dateTimeRegex } from './common.schema';
+import { commonSchema, dateTimeMessage, dateTimeRegex } from './common.schema';
+import { baseSearchSchema } from './search.schema';
 
-// 카테고리 요청 스키마들
-
-// 카테고리 생성 스키마
-export const createCategorySchema = z.object({
+export const categoryInfoSchema = commonSchema.extend({
+  ctgryNo: z.coerce
+    .number()
+    .int('카테고리 번호는 정수여야 합니다.')
+    .positive('카테고리 번호는 양수여야 합니다.')
+    .optional(),
   ctgryNm: z.string()
     .min(
       1,
@@ -39,70 +40,15 @@ export const createCategorySchema = z.object({
     .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
     .positive('상위 카테고리 번호는 양수여야 합니다.'),
-  useYn: ynEnumSchema.default('Y'),
-  delYn: ynEnumSchema.default('N'),
-}).partial({
-  ctgryExpln: true,
-  ctgryColr: true,
-  useYn: true,
-  delYn: true,
-}).required({
-  ctgryNm: true,
-  ctgryStp: true,
-  upCtgryNo: true,
-});
-
-// 카테고리 수정 스키마
-export const updateCategorySchema = z.object({
-  ctgryNo: z.coerce
+  rowNo: z.coerce
     .number()
-    .int('카테고리 번호는 정수여야 합니다.')
-    .positive('카테고리 번호는 양수여야 합니다.')
+    .int('행 번호는 정수여야 합니다.')
+    .positive('행 번호는 양수여야 합니다.')
     .optional(),
-  ctgryNm: z.string()
-    .min(
-      1,
-      '카테고리명은 필수입니다.'
-    )
-    .max(
-      100,
-      '카테고리명은 100자를 초과할 수 없습니다.'
-    )
-    .optional(),
-  ctgryExpln: z.string()
-    .max(
-      200,
-      '카테고리 설명은 200자를 초과할 수 없습니다.'
-    )
-    .nullable()
-    .optional(),
-  ctgryColr: z.string()
-    .regex(
-      /^#[0-9A-Fa-f]{6}$/,
-      '색상은 #RRGGBB 형식이어야 합니다.'
-    )
-    .nullable()
-    .optional(),
-  ctgryStp: z.coerce
+  totalCnt: z.coerce
     .number()
-    .int('카테고리 정렬순은 정수여야 합니다.')
-    .positive('카테고리 정렬순은 양수여야 합니다.')
-    .optional(),
-  upCtgryNo: z.coerce
-    .number()
-    .int('상위 카테고리 번호는 정수여야 합니다.')
-    .positive('상위 카테고리 번호는 양수여야 합니다.')
-    .optional(),
-  useYn: ynEnumSchema.optional(),
-  delYn: ynEnumSchema.optional(),
-}).partial();
-
-// 카테고리 삭제 스키마
-export const deleteCategorySchema = z.object({
-  ctgryNo: z.coerce
-    .number()
-    .int('카테고리 번호는 정수여야 합니다.')
-    .positive('카테고리 번호는 양수여야 합니다.')
+    .int('총 개수는 정수여야 합니다.')
+    .positive('총 개수는 양수여야 합니다.')
     .optional(),
   ctgryNoList: z.array(z.coerce
     .number()
@@ -111,32 +57,59 @@ export const deleteCategorySchema = z.object({
     .optional(),
 });
 
-// 카테고리 검색 스키마
-export const searchCategorySchema = baseSearchSchema.extend({
-  useYn: ynEnumSchema.optional(),
-  delYn: ynEnumSchema.optional(),
-  ctgryNm: z.string()
-    .min(
-      1,
-      '카테고리명은 필수입니다.'
-    )
-    .max(
-      100,
-      '카테고리명은 100자를 초과할 수 없습니다.'
-    )
-    .optional(),
-  ctgryColr: z.string()
-    .regex(
-      /^#[0-9A-Fa-f]{6}$/,
-      '색상은 #RRGGBB 형식이어야 합니다.'
-    )
-    .nullable()
-    .optional(),
-  upCtgryNo: z.coerce
-    .number()
-    .int('상위 카테고리 번호는 정수여야 합니다.')
-    .positive('상위 카테고리 번호는 양수여야 합니다.')
-    .optional(),
+// CtgryInfo 테이블 컬럼만 pick (Prisma 테이블 구조)
+export const ctgryInfoTableSchema = categoryInfoSchema.pick({
+  ctgryNo: true,
+  ctgryNm: true,
+  ctgryExpln: true,
+  ctgryColr: true,
+  ctgryStp: true,
+  upCtgryNo: true,
+  useYn: true,
+  delYn: true,
+  crtNo: true,
+  crtDt: true,
+  updtNo: true,
+  updtDt: true,
+  delNo: true,
+  delDt: true,
+});
+
+export const createCategorySchema = categoryInfoSchema.pick({
+  ctgryNm: true,
+  ctgryExpln: true,
+  ctgryColr: true,
+  ctgryStp: true,
+  upCtgryNo: true,
+  useYn: true,
+  delYn: true,
+})
+  .partial()
+  .required({
+    ctgryNm: true,
+    ctgryStp: true,
+    upCtgryNo: true,
+  });
+
+export const updateCategorySchema = categoryInfoSchema.omit({
+  rowNo: true,
+  totalCnt: true,
+  ctgryNoList: true,
+}).partial();
+
+export const deleteCategorySchema = categoryInfoSchema.pick({
+  ctgryNo: true,
+  ctgryNoList: true,
+});
+
+export const searchCategorySchema = baseSearchSchema.partial().extend({
+  ...categoryInfoSchema.pick({
+    useYn: true,
+    delYn: true,
+    ctgryNm: true,
+    ctgryColr: true,
+    upCtgryNo: true,
+  }).shape,
   srchType: z.enum(
     [
       'ctgryNm',
@@ -162,18 +135,19 @@ export const searchCategorySchema = baseSearchSchema.extend({
   crtDtFrom: z.string()
     .regex(
       dateTimeRegex,
-      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+      dateTimeMessage
     )
     .optional(),
   crtDtTo: z.string()
     .regex(
       dateTimeRegex,
-      'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.'
+      dateTimeMessage
     )
     .optional(),
 }).partial();
 
-// 타입 추출
+export type CategoryInfoType = z.infer<typeof categoryInfoSchema>;
+export type CtgryInfoTableType = z.infer<typeof ctgryInfoTableSchema>;
 export type CreateCategoryType = z.infer<typeof createCategorySchema>;
 export type UpdateCategoryType = z.infer<typeof updateCategorySchema>;
 export type DeleteCategoryType = z.infer<typeof deleteCategorySchema>;

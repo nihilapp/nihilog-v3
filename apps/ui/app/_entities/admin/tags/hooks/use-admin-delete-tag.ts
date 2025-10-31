@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import type { MutationOptionsType } from '@/_types';
 import { useDelete } from '@/_entities/common/hooks';
 import { getToastStyle } from '@/_libs';
-import type { DeleteTagType } from '@/_schemas';
+import type { DeleteTagType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 

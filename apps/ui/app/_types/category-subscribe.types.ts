@@ -1,21 +1,16 @@
-// 카테고리 구독 관련 타입 정의 (기본 구조)
+import type {
+  CtgrySbcrMpngTableType
+} from '../_schemas';
 
-export interface CategorySubscribeMappingType {
-  ctgrySbcrNo: number;
-  sbcrNo: number;
-  ctgryNo: number;
-  useYn: 'Y' | 'N';
-  delYn: 'Y' | 'N';
-  crtNo?: number;
-  crtDt: string;
-  updtNo?: number;
-  updtDt: string;
-  delNo?: number;
-  delDt?: string;
-}
+// 단일 카테고리 구독 조회 (category 정보 포함)
+export type SelectCtgrySbcrMpngType = CtgrySbcrMpngTableType & {
+  category: {
+    ctgryNm: string;
+  };
+};
 
-export type SelectCategorySubscribeMappingType = CategorySubscribeMappingType;
-export type SelectCategorySubscribeMappingListItemType = CategorySubscribeMappingType & {
+// 목록 조회 항목 (페이징 정보 포함)
+export type SelectCtgrySbcrMpngListItemType = SelectCtgrySbcrMpngType & {
   totalCnt: number;
   rowNo: number;
 };
