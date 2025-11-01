@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CommentStatus, Prisma, type PrismaClient } from '@prisma/client';
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -689,6 +690,15 @@ export class CommentRepository {
           creator: true,
         },
       });
+
+      if (!comment) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.COMMENT.ADMIN.NOT_FOUND
+        );
+      }
 
       return prismaResponse(
         true,

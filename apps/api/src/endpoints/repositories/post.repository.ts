@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePostBookmarkDto, CreatePostShareLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
@@ -110,6 +111,15 @@ export class PostRepository {
         },
       });
 
+      if (!post) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.POST.ADMIN.NOT_FOUND
+        );
+      }
+
       return prismaResponse(
         true,
         post
@@ -132,6 +142,47 @@ export class PostRepository {
           category: true,
         },
       });
+
+      if (!post) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.POST.ADMIN.NOT_FOUND
+        );
+      }
+
+      return prismaResponse(
+        true,
+        post
+      );
+    }
+    catch (error) {
+      return prismaError(error as PrismaClientKnownRequestError);
+    }
+  }
+
+  /**
+   * @description 제목으로 포스트 조회
+   * @param pstTtl 포스트 제목
+   */
+  async getPostByPstTtl(pstTtl: string): Promise<RepoResponseType<SelectPostType> | null> {
+    try {
+      const post = await this.prisma.pstInfo.findFirst({
+        where: { pstTtl, },
+        include: {
+          category: true,
+        },
+      });
+
+      if (!post) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.POST.ADMIN.NOT_FOUND
+        );
+      }
 
       return prismaResponse(
         true,

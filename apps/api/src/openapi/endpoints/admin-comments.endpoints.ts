@@ -523,6 +523,27 @@ export const registerAdminCommentsEndpoints = () => {
                     }
                   ),
                 },
+                invalidStatus: {
+                  summary: '유효하지 않은 댓글 상태',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.ADMIN.INVALID_STATUS
+                  ),
+                },
+                contentRequired: {
+                  summary: '댓글 내용은 필수',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.CONTENT_REQUIRED
+                  ),
+                },
+                contentTooLong: {
+                  summary: '댓글 내용이 너무 김',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.CONTENT_TOO_LONG
+                  ),
+                },
                 error: {
                   summary: '관리자 댓글 일괄 수정 실패',
                   value: createError(

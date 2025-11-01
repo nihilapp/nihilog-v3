@@ -89,6 +89,13 @@ export const registerCommentsEndpoints = () => {
                   CreateExample.comment('detail')
                 ),
               },
+              notFound: {
+                summary: '댓글을 찾을 수 없음',
+                value: createError(
+                  'NOT_FOUND',
+                  MESSAGE.COMMENT.USER.NOT_FOUND
+                ),
+              },
               error: {
                 summary: '댓글 상세 조회 실패',
                 value: createError(
@@ -134,6 +141,41 @@ export const registerCommentsEndpoints = () => {
                     'SUCCESS',
                     MESSAGE.COMMENT.USER.CREATE_SUCCESS,
                     CreateExample.comment('detail')
+                  ),
+                },
+                postNotFound: {
+                  summary: '포스트를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.COMMENT.USER.POST_NOT_FOUND
+                  ),
+                },
+                parentNotFound: {
+                  summary: '부모 댓글을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.COMMENT.USER.PARENT_NOT_FOUND
+                  ),
+                },
+                parentDeleted: {
+                  summary: '부모 댓글이 삭제됨',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.PARENT_DELETED
+                  ),
+                },
+                parentWrongPost: {
+                  summary: '부모 댓글이 다른 포스트에 속함',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.PARENT_WRONG_POST
+                  ),
+                },
+                contentRequired: {
+                  summary: '댓글 내용은 필수',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.CONTENT_REQUIRED
                   ),
                 },
                 error: {
@@ -193,6 +235,69 @@ export const registerCommentsEndpoints = () => {
                     CreateExample.comment('detail')
                   ),
                 },
+                notFound: {
+                  summary: '댓글을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.COMMENT.USER.NOT_FOUND
+                  ),
+                },
+                alreadyDeleted: {
+                  summary: '이미 삭제된 댓글',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.ALREADY_DELETED
+                  ),
+                },
+                unauthorized: {
+                  summary: '댓글 수정 권한 없음',
+                  value: createError(
+                    'UNAUTHORIZED',
+                    MESSAGE.COMMENT.USER.UNAUTHORIZED
+                  ),
+                },
+                contentRequired: {
+                  summary: '댓글 내용은 필수',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.CONTENT_REQUIRED
+                  ),
+                },
+                contentTooLong: {
+                  summary: '댓글 내용이 너무 김',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.CONTENT_TOO_LONG
+                  ),
+                },
+                parentNotFound: {
+                  summary: '부모 댓글을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.COMMENT.USER.PARENT_NOT_FOUND
+                  ),
+                },
+                parentDeleted: {
+                  summary: '부모 댓글이 삭제됨',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.PARENT_DELETED
+                  ),
+                },
+                parentWrongPost: {
+                  summary: '부모 댓글이 다른 포스트에 속함',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.PARENT_WRONG_POST
+                  ),
+                },
+                parentSelf: {
+                  summary: '자기 자신을 부모 댓글로 설정할 수 없음',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.PARENT_SELF
+                  ),
+                },
                 error: {
                   summary: '댓글 수정 실패',
                   value: createError(
@@ -241,6 +346,27 @@ export const registerCommentsEndpoints = () => {
                     'SUCCESS',
                     MESSAGE.COMMENT.USER.DELETE_SUCCESS,
                     true
+                  ),
+                },
+                notFound: {
+                  summary: '댓글을 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.COMMENT.USER.NOT_FOUND
+                  ),
+                },
+                alreadyDeleted: {
+                  summary: '이미 삭제된 댓글',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.COMMENT.USER.ALREADY_DELETED
+                  ),
+                },
+                unauthorized: {
+                  summary: '댓글 삭제 권한 없음',
+                  value: createError(
+                    'UNAUTHORIZED',
+                    MESSAGE.COMMENT.USER.UNAUTHORIZED
                   ),
                 },
                 error: {

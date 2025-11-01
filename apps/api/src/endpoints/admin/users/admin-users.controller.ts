@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Query
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
@@ -35,7 +36,10 @@ import { AdminUserService } from './admin-users.service';
 
 @Controller('admin/users')
 export class AdminUserController {
-  constructor(private readonly usersService: AdminUserService) { }
+  constructor(
+    private readonly usersService: AdminUserService,
+    private readonly configService: ConfigService
+  ) { }
 
   // ========================================================
   // 사용자 통계 관련 엔드포인트
@@ -550,7 +554,7 @@ export class AdminUserController {
   }
 
   /**
-   * @description 최초 어드민 생성 (개발 환경에서만)
+   * @description 최초 어드민 생성 (개발 환경에서만 또는 마스터 키로)
    * @param createUserData 사용자 생성 정보
    */
   @Endpoint({
@@ -561,23 +565,34 @@ export class AdminUserController {
     },
   })
   async adminCreateAdmin(@Body() createUserData: CreateUserDto): Promise<ResponseDto<SelectUserInfoType>> {
-    // 개발 환경이 아니면 접근 거부
-    if (process.env.NODE_ENV !== 'development') {
-      return createError(
-        'FORBIDDEN',
-        MESSAGE.COMMON.DEVELOPMENT_ONLY
-      );
+    // 환경 변수 조작 방지를 위해 ConfigService 사용
+    const environment = this.configService.get<string>('app.environment');
+    const masterKey = this.configService.get<string>('app.masterKey');
+
+    // 개발 환경이 아니면 접근 거부 (또는 마스터 키 검증)
+    if (environment !== 'development') {
+      // 마스터 키 검증 옵션 (선택적)
+      if (masterKey && createUserData.masterKey) {
+        if (createUserData.masterKey !== masterKey) {
+          return createError(
+            'FORBIDDEN',
+            MESSAGE.COMMON.INVALID_MASTER_KEY
+          );
+        }
+        // 마스터 키가 일치하면 계속 진행
+      }
+      else {
+        return createError(
+          'FORBIDDEN',
+          MESSAGE.COMMON.DEVELOPMENT_ONLY
+        );
+      }
     }
 
     // 최초 어드민 생성 (req.user 없이)
     const result = await this.usersService.createUser(
       null,
       createUserData
-    );
-
-    console.log(
-      'result',
-      result
     );
 
     if (!result?.success) {

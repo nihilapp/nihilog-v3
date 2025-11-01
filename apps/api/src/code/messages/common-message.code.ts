@@ -13,4 +13,5 @@ export const COMMON_MESSAGES = {
 
   // ===== 개발 환경 전용 메시지 =====
   DEVELOPMENT_ONLY: '이 기능은 개발 환경에서만 사용할 수 있습니다.',
+  INVALID_MASTER_KEY: '마스터 키가 올바르지 않습니다.',
 } as const;

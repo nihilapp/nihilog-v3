@@ -388,6 +388,20 @@ export const registerAdminPostsEndpoints = () => {
                     CreateExample.post('detail')
                   ),
                 },
+                conflictSlug: {
+                  summary: '포스트 슬러그 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.POST.ADMIN.SLUG_DUPLICATE
+                  ),
+                },
+                invalidCategory: {
+                  summary: '유효하지 않은 카테고리',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.POST.ADMIN.INVALID_CATEGORY
+                  ),
+                },
                 error: {
                   summary: '새 포스트 작성 실패',
                   value: createError(
@@ -448,6 +462,27 @@ export const registerAdminPostsEndpoints = () => {
                     'SUCCESS',
                     MESSAGE.POST.ADMIN.UPDATE_SUCCESS,
                     CreateExample.post('detail')
+                  ),
+                },
+                notFound: {
+                  summary: '포스트를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.POST.ADMIN.NOT_FOUND
+                  ),
+                },
+                conflictSlug: {
+                  summary: '포스트 슬러그 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.POST.ADMIN.SLUG_DUPLICATE
+                  ),
+                },
+                invalidCategory: {
+                  summary: '유효하지 않은 카테고리',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.POST.ADMIN.INVALID_CATEGORY
                   ),
                 },
                 error: {
@@ -559,6 +594,13 @@ export const registerAdminPostsEndpoints = () => {
                     'SUCCESS',
                     MESSAGE.POST.ADMIN.DELETE_SUCCESS,
                     true
+                  ),
+                },
+                notFound: {
+                  summary: '포스트를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.POST.ADMIN.NOT_FOUND
                   ),
                 },
                 error: {

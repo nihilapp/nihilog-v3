@@ -674,6 +674,13 @@ export const registerAdminTagsEndpoints = () => {
                     }
                   ),
                 },
+                conflict: {
+                  summary: '태그 이름 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.TAG.ADMIN.NAME_IN_USE
+                  ),
+                },
                 error: {
                   summary: '태그 생성 실패',
                   value: createError(
@@ -827,6 +834,20 @@ export const registerAdminTagsEndpoints = () => {
                     }
                   ),
                 },
+                notFound: {
+                  summary: '태그를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.TAG.ADMIN.NOT_FOUND
+                  ),
+                },
+                conflict: {
+                  summary: '태그 이름 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.TAG.ADMIN.NAME_IN_USE
+                  ),
+                },
                 error: {
                   summary: '태그 수정 실패',
                   value: createError(
@@ -954,6 +975,13 @@ export const registerAdminTagsEndpoints = () => {
                     'SUCCESS',
                     MESSAGE.TAG.ADMIN.DELETE_SUCCESS,
                     true
+                  ),
+                },
+                notFound: {
+                  summary: '태그를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.TAG.ADMIN.NOT_FOUND
                   ),
                 },
                 error: {
@@ -1216,6 +1244,27 @@ export const registerAdminTagsEndpoints = () => {
                     }
                   ),
                 },
+                postNotFound: {
+                  summary: '포스트를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.POST.ADMIN.NOT_FOUND
+                  ),
+                },
+                tagNotFound: {
+                  summary: '태그를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.TAG.ADMIN.NOT_FOUND
+                  ),
+                },
+                conflict: {
+                  summary: '태그 매핑이 이미 존재함',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS
+                  ),
+                },
                 error: {
                   summary: '태그 매핑 추가 실패',
                   value: createError(
@@ -1300,6 +1349,27 @@ export const registerAdminTagsEndpoints = () => {
                         },
                       ],
                     }
+                  ),
+                },
+                postNotFound: {
+                  summary: '포스트를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.POST.ADMIN.NOT_FOUND
+                  ),
+                },
+                tagNotFound: {
+                  summary: '태그를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.TAG.ADMIN.NOT_FOUND
+                  ),
+                },
+                conflict: {
+                  summary: '태그 매핑이 이미 존재함',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.TAG.ADMIN.MAPPING_ALREADY_EXISTS
                   ),
                 },
                 error: {

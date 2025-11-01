@@ -184,6 +184,16 @@ export const createUserSchema = userInfoSchema.pick({
   userRole: true,
 }).extend({
   password: passwordSchema,
+  masterKey: z.string()
+    .min(
+      1,
+      '마스터 키를 입력해주세요.'
+    )
+    .optional()
+    .openapi({
+      description: '마스터 키 (프로덕션 환경에서 어드민 생성 시 필요, 개발 환경에서는 선택적)',
+      example: 'your-secure-master-key-here',
+    }),
 });
 
 export const updateUserSchema = userInfoSchema.pick({

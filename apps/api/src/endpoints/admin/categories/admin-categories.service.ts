@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type {
@@ -21,6 +22,7 @@ import type {
 } from '@/endpoints/prisma/types/category.types';
 import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminCategoriesService {
@@ -164,40 +166,115 @@ export class AdminCategoriesService {
 
   /**
    * @description 카테고리 생성
+   * @param userNo 사용자 번호
    * @param createData 카테고리 생성 데이터
    */
-  async adminCreateCategory(createData: CreateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
-    // TODO: 관리자 권한 확인 로직 추가
-    const adminUserNo = 1; // 임시 관리자 번호
+  async adminCreateCategory(userNo: number, createData: CreateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
+    // 카테고리명 중복 확인
+    if (createData.ctgryNm) {
+      const existingCategory = await this.categoryRepository.getCategoryByCtgryNm(createData.ctgryNm);
+
+      if (existingCategory?.success && existingCategory.data) {
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.CATEGORY.ADMIN.NAME_IN_USE
+        );
+      }
+    }
+
+    // 상위 카테고리 존재 확인
+    if (createData.upCtgryNo) {
+      const parentCategory = await this.categoryRepository.getCategoryByCtgryNo(createData.upCtgryNo);
+
+      if (!parentCategory?.success || !parentCategory.data) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
+        );
+      }
+    }
+
     return this.categoryRepository.createCategory(
-      adminUserNo,
+      userNo,
       createData
     );
   }
 
   /**
    * @description 다수 카테고리 생성
+   * @param userNo 사용자 번호
    * @param createData 카테고리 생성 데이터
    */
-  async adminMultipleCreateCategory(createData: CreateCategoryDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
-    // TODO: 관리자 권한 확인 로직 추가
-    const adminUserNo = 1; // 임시 관리자 번호
+  async adminMultipleCreateCategory(userNo: number, createData: CreateCategoryDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.categoryRepository.multipleCreateCategory(
-      adminUserNo,
+      userNo,
       createData
     );
   }
 
   /**
    * @description 카테고리 수정
+   * @param userNo 사용자 번호
    * @param ctgryNo 카테고리 번호
    * @param updateData 카테고리 수정 데이터
    */
-  async adminUpdateCategory(ctgryNo: number, updateData: UpdateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
-    // TODO: 관리자 권한 확인 로직 추가
-    const adminUserNo = 1; // 임시 관리자 번호
+  async adminUpdateCategory(userNo: number, ctgryNo: number, updateData: UpdateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
+    // 카테고리 존재 확인
+    const existingCategory = await this.categoryRepository.getCategoryByCtgryNo(ctgryNo);
+
+    if (!existingCategory?.success || !existingCategory.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+      );
+    }
+
+    // 카테고리명 중복 확인 (자신 제외)
+    if (updateData.ctgryNm && updateData.ctgryNm !== existingCategory.data.ctgryNm) {
+      const categoryWithSameName = await this.categoryRepository.getCategoryByCtgryNm(updateData.ctgryNm);
+
+      if (categoryWithSameName?.success && categoryWithSameName.data) {
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.CATEGORY.ADMIN.NAME_IN_USE
+        );
+      }
+    }
+
+    // 상위 카테고리 존재 확인
+    if (updateData.upCtgryNo) {
+      const parentCategory = await this.categoryRepository.getCategoryByCtgryNo(updateData.upCtgryNo);
+
+      if (!parentCategory?.success || !parentCategory.data) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
+        );
+      }
+
+      // 자기 자신을 상위 카테고리로 설정하는 것을 방지
+      if (updateData.upCtgryNo === ctgryNo) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
+        );
+      }
+    }
+
     return this.categoryRepository.updateCategory(
-      adminUserNo,
+      userNo,
       {
         ...updateData,
         ctgryNo,
@@ -207,39 +284,48 @@ export class AdminCategoriesService {
 
   /**
    * @description 다수 카테고리 수정
+   * @param userNo 사용자 번호
    * @param updateData 카테고리 수정 데이터
    */
-  async adminMultipleUpdateCategory(updateData: UpdateCategoryDto & { ctgryNoList: number[] }): Promise<RepoResponseType<MultipleResultType> | null> {
-    // TODO: 관리자 권한 확인 로직 추가
-    const adminUserNo = 1; // 임시 관리자 번호
+  async adminMultipleUpdateCategory(userNo: number, updateData: UpdateCategoryDto & { ctgryNoList: number[] }): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.categoryRepository.multipleUpdateCategory(
-      adminUserNo,
+      userNo,
       updateData
     );
   }
 
   /**
    * @description 카테고리 삭제
+   * @param userNo 사용자 번호
    * @param ctgryNo 카테고리 번호
    */
-  async adminDeleteCategory(ctgryNo: number): Promise<RepoResponseType<boolean> | null> {
-    // TODO: 관리자 권한 확인 로직 추가
-    const adminUserNo = 1; // 임시 관리자 번호
+  async adminDeleteCategory(userNo: number, ctgryNo: number): Promise<RepoResponseType<boolean> | null> {
+    // 카테고리 존재 확인
+    const existingCategory = await this.categoryRepository.getCategoryByCtgryNo(ctgryNo);
+
+    if (!existingCategory?.success || !existingCategory.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+      );
+    }
+
     return this.categoryRepository.deleteCategory(
-      adminUserNo,
+      userNo,
       { ctgryNo, }
     );
   }
 
   /**
    * @description 다수 카테고리 삭제
+   * @param userNo 사용자 번호
    * @param deleteData 카테고리 삭제 데이터
    */
-  async adminMultipleDeleteCategory(deleteData: DeleteCategoryDto): Promise<RepoResponseType<MultipleResultType> | null> {
-    // TODO: 관리자 권한 확인 로직 추가
-    const adminUserNo = 1; // 임시 관리자 번호
+  async adminMultipleDeleteCategory(userNo: number, deleteData: DeleteCategoryDto): Promise<RepoResponseType<MultipleResultType> | null> {
     return this.categoryRepository.multipleDeleteCategory(
-      adminUserNo,
+      userNo,
       deleteData
     );
   }

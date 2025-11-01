@@ -36,7 +36,18 @@ export class CategoriesService {
    * @param ctgryNo 카테고리 번호
    */
   async getCategoryByCtgryNo(ctgryNo: number): Promise<RepoResponseType<SelectCategoryType> | null> {
-    return this.categoryRepository.getCategoryByCtgryNo(ctgryNo);
+    const result = await this.categoryRepository.getCategoryByCtgryNo(ctgryNo);
+
+    if (!result?.success) {
+      return prismaResponse(
+        false,
+        null,
+        result?.error?.code || 'NOT_FOUND',
+        MESSAGE.CATEGORY.USER.NOT_FOUND
+      );
+    }
+
+    return result;
   }
 
   /**
@@ -44,6 +55,17 @@ export class CategoriesService {
    * @param ctgryNm 카테고리명
    */
   async getCategoryByCtgryNm(ctgryNm: string): Promise<RepoResponseType<SelectCategoryType> | null> {
-    return this.categoryRepository.getCategoryByCtgryNm(ctgryNm);
+    const result = await this.categoryRepository.getCategoryByCtgryNm(ctgryNm);
+
+    if (!result?.success) {
+      return prismaResponse(
+        false,
+        null,
+        result?.error?.code || 'NOT_FOUND',
+        MESSAGE.CATEGORY.USER.NAME_NOT_FOUND
+      );
+    }
+
+    return result;
   }
 }

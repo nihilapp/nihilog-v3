@@ -23,6 +23,9 @@ export const COMMENT_MESSAGES = {
     CONTENT_TOO_LONG: '댓글 내용이 너무 깁니다. (최대 1000자)',
     POST_NOT_FOUND: '댓글을 작성할 포스트를 찾을 수 없습니다.',
     PARENT_NOT_FOUND: '답글을 작성할 댓글을 찾을 수 없습니다.',
+    PARENT_DELETED: '부모 댓글이 삭제되어 답글을 작성할 수 없습니다.',
+    PARENT_WRONG_POST: '부모 댓글이 다른 포스트에 속하여 답글을 작성할 수 없습니다.',
+    PARENT_SELF: '자기 자신을 부모 댓글로 설정할 수 없습니다.',
     UNAUTHORIZED: '댓글을 수정/삭제할 권한이 없습니다.',
   },
 

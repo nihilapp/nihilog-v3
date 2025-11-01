@@ -42,6 +42,9 @@ declare namespace NodeJS {
     APP_VERSION: string;
     APP_URL: string;
 
+    // 보안 설정
+    MASTER_KEY?: string; // 프로덕션에서 어드민 생성을 위한 마스터 키 (선택적)
+
     // Node.js 환경
     NODE_ENV: 'development' | 'production' | 'test';
   }

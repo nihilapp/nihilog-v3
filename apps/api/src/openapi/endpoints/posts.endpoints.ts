@@ -92,6 +92,13 @@ export const registerPostsEndpoints = () => {
                   MESSAGE.POST.USER.NOT_FOUND
                 ),
               },
+              invalidSlug: {
+                summary: '유효하지 않은 포스트 슬러그',
+                value: createError(
+                  'NOT_FOUND',
+                  MESSAGE.POST.USER.INVALID_SLUG
+                ),
+              },
               error: {
                 summary: '포스트 상세 조회 실패',
                 value: createError(
@@ -141,6 +148,13 @@ export const registerPostsEndpoints = () => {
                 value: createError(
                   'NOT_FOUND',
                   MESSAGE.POST.USER.NOT_FOUND
+                ),
+              },
+              invalidSlug: {
+                summary: '유효하지 않은 포스트 슬러그',
+                value: createError(
+                  'NOT_FOUND',
+                  MESSAGE.POST.USER.INVALID_SLUG
                 ),
               },
               error: {

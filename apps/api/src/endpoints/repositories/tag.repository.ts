@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+import { MESSAGE } from '@/code/messages';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, CreateTagDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto, SearchTagDto, UpdateTagDto } from '@/dto/tag.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -876,6 +877,15 @@ export class TagRepository {
         where: { tagNo, },
       });
 
+      if (!tag) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.TAG.ADMIN.NOT_FOUND
+        );
+      }
+
       return prismaResponse(
         true,
         tag
@@ -895,6 +905,15 @@ export class TagRepository {
       const tag = await this.prisma.tagInfo.findUnique({
         where: { tagNm, },
       });
+
+      if (!tag) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.TAG.ADMIN.NOT_FOUND
+        );
+      }
 
       return prismaResponse(
         true,

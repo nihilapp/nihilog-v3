@@ -23,12 +23,16 @@ import type {
   TagCreatorStatItemType,
   TagCleanupRecommendationItemType
 } from '@/endpoints/prisma/types/tag.types';
+import { PostRepository } from '@/endpoints/repositories/post.repository';
 import { TagRepository } from '@/endpoints/repositories/tag.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminTagsService {
-  constructor(private readonly tagRepository: TagRepository) { }
+  constructor(
+    private readonly tagRepository: TagRepository,
+    private readonly postRepository: PostRepository
+  ) { }
 
   // ========================================================
   // 태그 통계 관련 메서드
@@ -198,7 +202,31 @@ export class AdminTagsService {
    * @param updateData 태그 수정 데이터
    */
   async adminUpdateTag(userNo: number, tagNo: number, updateData: UpdateTagDto): Promise<RepoResponseType<SelectTagInfoType> | null> {
-    // 태그는 이름을 바꿀 이유가 별로 없음.
+    // 태그 존재 확인
+    const existingTag = await this.tagRepository.getTagByTagNo(tagNo);
+
+    if (!existingTag?.success || !existingTag.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.TAG.ADMIN.NOT_FOUND
+      );
+    }
+
+    // 태그명 중복 확인 (자신 제외)
+    if (updateData.tagNm && updateData.tagNm !== existingTag.data.tagNm) {
+      const tagWithSameName = await this.tagRepository.getTagByTagNm(updateData.tagNm);
+
+      if (tagWithSameName?.success && tagWithSameName.data) {
+        return prismaResponse(
+          false,
+          null,
+          'CONFLICT',
+          MESSAGE.TAG.ADMIN.NAME_IN_USE
+        );
+      }
+    }
 
     return this.tagRepository.updateTag(
       userNo,
@@ -227,6 +255,18 @@ export class AdminTagsService {
    * @param tagNo 태그 번호
    */
   async adminDeleteTag(userNo: number, tagNo: number): Promise<RepoResponseType<boolean> | null> {
+    // 태그 존재 확인
+    const existingTag = await this.tagRepository.getTagByTagNo(tagNo);
+
+    if (!existingTag?.success || !existingTag.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.TAG.ADMIN.NOT_FOUND
+      );
+    }
+
     return this.tagRepository.deleteTag(
       userNo,
       tagNo
@@ -271,7 +311,29 @@ export class AdminTagsService {
    * @param createData 태그 매핑 추가 데이터
    */
   async adminAddTagMapping(userNo: number, createData: CreatePstTagMpngDto): Promise<RepoResponseType<SelectPstTagMpngType> | null> {
-    // 태그 중복
+    // 포스트 존재 확인
+    const post = await this.postRepository.getPostByPstNo(createData.pstNo);
+    if (!post?.success || !post.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.POST.ADMIN.NOT_FOUND
+      );
+    }
+
+    // 태그 존재 확인
+    const tag = await this.tagRepository.getTagByTagNo(createData.tagNo);
+    if (!tag?.success || !tag.data) {
+      return prismaResponse(
+        false,
+        null,
+        'NOT_FOUND',
+        MESSAGE.TAG.ADMIN.NOT_FOUND
+      );
+    }
+
+    // 태그 매핑 중복 확인
     const findTag = await this.tagRepository
       .getPostTagMappingByTagNo(
         createData.tagNo,
@@ -299,6 +361,29 @@ export class AdminTagsService {
    */
   async adminMultipleAddTagMapping(userNo: number, createData: CreatePstTagMpngDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
     for (const item of createData) {
+      // 포스트 존재 확인
+      const post = await this.postRepository.getPostByPstNo(item.pstNo);
+      if (!post?.success || !post.data) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.POST.ADMIN.NOT_FOUND
+        );
+      }
+
+      // 태그 존재 확인
+      const tag = await this.tagRepository.getTagByTagNo(item.tagNo);
+      if (!tag?.success || !tag.data) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.TAG.ADMIN.NOT_FOUND
+        );
+      }
+
+      // 태그 매핑 중복 확인
       const findTag = await this.tagRepository
         .getPostTagMappingByTagNo(
           item.tagNo,

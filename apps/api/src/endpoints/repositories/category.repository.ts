@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Prisma, type PrismaClient } from '@prisma/client';
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+import { MESSAGE } from '@/code/messages';
 import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -912,6 +913,15 @@ export class CategoryRepository {
         },
       });
 
+      if (!category) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+        );
+      }
+
       return prismaResponse(
         true,
         category
@@ -935,6 +945,15 @@ export class CategoryRepository {
           childCategories: true,
         },
       });
+
+      if (!category) {
+        return prismaResponse(
+          false,
+          null,
+          'NOT_FOUND',
+          MESSAGE.CATEGORY.ADMIN.NAME_NOT_FOUND
+        );
+      }
 
       return prismaResponse(
         true,

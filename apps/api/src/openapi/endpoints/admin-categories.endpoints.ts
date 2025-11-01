@@ -824,6 +824,13 @@ export const registerAdminCategoriesEndpoints = () => {
                     MESSAGE.CATEGORY.ADMIN.NAME_IN_USE
                   ),
                 },
+                parentNotFound: {
+                  summary: '상위 카테고리를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
+                  ),
+                },
                 error: {
                   summary: '카테고리 생성 실패',
                   value: createError(
@@ -943,6 +950,20 @@ export const registerAdminCategoriesEndpoints = () => {
                   value: createError(
                     'NOT_FOUND',
                     MESSAGE.CATEGORY.ADMIN.NOT_FOUND
+                  ),
+                },
+                conflict: {
+                  summary: '카테고리 이름 중복',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.CATEGORY.ADMIN.NAME_IN_USE
+                  ),
+                },
+                parentNotFound: {
+                  summary: '상위 카테고리를 찾을 수 없음',
+                  value: createError(
+                    'NOT_FOUND',
+                    MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
                   ),
                 },
                 error: {

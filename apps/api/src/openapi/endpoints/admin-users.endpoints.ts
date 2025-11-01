@@ -785,14 +785,14 @@ export const registerAdminUsersEndpoints = () => {
     },
   });
 
-  // POST /admin/users/admin - 최초 어드민 생성 (개발 환경에서만)
+  // POST /admin/users/admin - 최초 어드민 생성 (개발 환경 또는 마스터 키)
   openApiRegistry.registerPath({
     method: 'post',
     path: '/admin/users/admin',
     summary: '🔐 최초 어드민 생성',
-    description: '개발 환경에서만 사용 가능한 최초 어드민 계정 생성 기능입니다. 프로덕션 환경에서는 접근이 제한됩니다.',
+    description: '최초 어드민 계정 생성 기능입니다. 개발 환경에서는 마스터 키 없이 사용 가능하며, 프로덕션 환경에서는 마스터 키가 필요합니다. 요청 Body에 `masterKey` 필드를 포함하여 전달하세요.',
     tags: [ 'admin-users', ],
-    // 개발 환경에서만 인증 없이 접근 가능
+    // 개발 환경에서만 인증 없이 접근 가능 (프로덕션에서는 마스터 키 필요)
     request: {
       body: {
         content: {
@@ -818,10 +818,17 @@ export const registerAdminUsersEndpoints = () => {
                 ),
               },
               forbidden: {
-                summary: '개발 환경에서만 사용 가능',
+                summary: '개발 환경에서만 사용 가능 (또는 마스터 키 필요)',
                 value: createError(
                   'FORBIDDEN',
                   MESSAGE.COMMON.DEVELOPMENT_ONLY
+                ),
+              },
+              invalidMasterKey: {
+                summary: '마스터 키가 올바르지 않음',
+                value: createError(
+                  'FORBIDDEN',
+                  MESSAGE.COMMON.INVALID_MASTER_KEY
                 ),
               },
               invalidParameter: {

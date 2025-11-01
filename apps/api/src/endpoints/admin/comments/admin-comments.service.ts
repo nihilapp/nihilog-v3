@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { CommentStatus } from '@prisma/client';
 
+import { MESSAGE } from '@/code/messages';
 import type { DeleteCommentDto, UpdateCommentDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type {
@@ -16,6 +18,7 @@ import type {
 } from '@/endpoints/prisma/types/comment.types';
 import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CommentRepository } from '@/endpoints/repositories/comment.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class AdminCommentsService {
@@ -123,6 +126,44 @@ export class AdminCommentsService {
    * @param updateData 수정 데이터
    */
   async adminMultipleUpdateComment(userNo: number, updateData: UpdateCommentDto): Promise<RepoResponseType<MultipleResultType> | null> {
+    // 상태 유효성 검증
+    if (updateData.cmntSts !== undefined) {
+      const validStatuses = [
+        CommentStatus.PENDING,
+        CommentStatus.APPROVED,
+        CommentStatus.REJECTED,
+        CommentStatus.SPAM,
+      ];
+      if (!validStatuses.includes(updateData.cmntSts)) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.COMMENT.ADMIN.INVALID_STATUS
+        );
+      }
+    }
+
+    // 댓글 내용 검증 (USER 메시지 사용 - 일반 사용자와 동일한 검증 규칙)
+    if (updateData.cmntCntnt !== undefined) {
+      if (!updateData.cmntCntnt || updateData.cmntCntnt.trim().length === 0) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.COMMENT.USER.CONTENT_REQUIRED
+        );
+      }
+      if (updateData.cmntCntnt.length > 1000) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.COMMENT.USER.CONTENT_TOO_LONG
+        );
+      }
+    }
+
     return this.commentRepository.multipleUpdateComment(
       userNo,
       updateData

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { MESSAGE } from '@/code/messages';
 import type { SearchPostDto } from '@/dto';
 import type { CreatePostBookmarkDto, CreatePostShareLogDto, CreatePostViewLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
@@ -12,6 +13,7 @@ import type {
   SelectPostViewLogType
 } from '@/endpoints/prisma/types/post.types';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
+import { prismaResponse } from '@/utils/prismaResponse';
 
 @Injectable()
 export class PostsService {
@@ -30,7 +32,18 @@ export class PostsService {
    * @param pstNo 포스트 번호
    */
   async getPostByPstNo(pstNo: number): Promise<RepoResponseType<SelectPostType> | null> {
-    return this.postRepository.getPostByPstNo(pstNo);
+    const result = await this.postRepository.getPostByPstNo(pstNo);
+
+    if (!result?.success) {
+      return prismaResponse(
+        false,
+        null,
+        result?.error?.code || 'NOT_FOUND',
+        MESSAGE.POST.USER.NOT_FOUND
+      );
+    }
+
+    return result;
   }
 
   /**
@@ -38,7 +51,18 @@ export class PostsService {
    * @param pstCd 포스트 슬러그
    */
   async getPostByPstCd(pstCd: string): Promise<RepoResponseType<SelectPostType> | null> {
-    return this.postRepository.getPostByPstCd(pstCd);
+    const result = await this.postRepository.getPostByPstCd(pstCd);
+
+    if (!result?.success) {
+      return prismaResponse(
+        false,
+        null,
+        result?.error?.code || 'NOT_FOUND',
+        MESSAGE.POST.USER.INVALID_SLUG
+      );
+    }
+
+    return result;
   }
 
   /**

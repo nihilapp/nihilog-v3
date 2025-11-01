@@ -59,10 +59,20 @@ export const databaseConfig = registerAs(
   })
 );
 
+// 앱 환경 설정 객체 (민감 정보)
+export const appConfig = registerAs(
+  'app',
+  () => ({
+    environment: process.env.NODE_ENV || 'development',
+    masterKey: process.env.MASTER_KEY || '',
+  })
+);
+
 // 민감 정보 설정 객체들을 배열로 내보내기
 export default [
   jwtConfig,
   nodemailerConfig,
   initialAdminConfig,
   databaseConfig,
+  appConfig,
 ];

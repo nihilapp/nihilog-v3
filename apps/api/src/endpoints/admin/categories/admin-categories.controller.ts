@@ -4,12 +4,13 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  Req,
   UseGuards
 } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
-import { ResponseDto } from '@/dto';
+import { AuthRequest, ResponseDto } from '@/dto';
 import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import { AnalyzeStatDto } from '@/dto/common.dto';
 import type { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
@@ -504,14 +505,21 @@ export class AdminCategoriesController {
 
   /**
    * @description 카테고리 생성
+   * @param req 요청 객체
    * @param createData 카테고리 생성 데이터
    */
   @Endpoint({
     endpoint: '',
     method: 'POST',
   })
-  async adminCreateCategory(@Body() createData: CreateCategoryDto): Promise<ResponseDto<SelectCategoryType>> {
-    const result = await this.adminCategoriesService.adminCreateCategory(createData);
+  async adminCreateCategory(
+    @Req() req: AuthRequest,
+    @Body() createData: CreateCategoryDto
+  ): Promise<ResponseDto<SelectCategoryType>> {
+    const result = await this.adminCategoriesService.adminCreateCategory(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -529,14 +537,21 @@ export class AdminCategoriesController {
 
   /**
    * @description 다수 카테고리 생성
+   * @param req 요청 객체
    * @param createData 카테고리 생성 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
     method: 'POST',
   })
-  async adminMultipleCreateCategory(@Body() createData: CreateCategoryDto[]): Promise<ResponseDto<MultipleResultType>> {
-    const result = await this.adminCategoriesService.adminMultipleCreateCategory(createData);
+  async adminMultipleCreateCategory(
+    @Req() req: AuthRequest,
+    @Body() createData: CreateCategoryDto[]
+  ): Promise<ResponseDto<MultipleResultType>> {
+    const result = await this.adminCategoriesService.adminMultipleCreateCategory(
+      req.user.userNo,
+      createData
+    );
 
     if (!result?.success) {
       return createError(
@@ -554,6 +569,7 @@ export class AdminCategoriesController {
 
   /**
    * @description 카테고리 수정
+   * @param req 요청 객체
    * @param ctgryNo 카테고리 번호
    * @param updateData 카테고리 수정 데이터
    */
@@ -561,11 +577,13 @@ export class AdminCategoriesController {
     endpoint: '/:ctgryNo',
     method: 'PATCH',
   })
-  async adminUpdateCategory(@Param(
-    'ctgryNo',
-    ParseIntPipe
-  ) ctgryNo: number, @Body() updateData: UpdateCategoryDto): Promise<ResponseDto<SelectCategoryType>> {
+  async adminUpdateCategory(
+    @Req() req: AuthRequest,
+    @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
+    @Body() updateData: UpdateCategoryDto
+  ): Promise<ResponseDto<SelectCategoryType>> {
     const result = await this.adminCategoriesService.adminUpdateCategory(
+      req.user.userNo,
       ctgryNo,
       updateData
     );
@@ -586,14 +604,21 @@ export class AdminCategoriesController {
 
   /**
    * @description 다수 카테고리 수정
+   * @param req 요청 객체
    * @param updateData 카테고리 수정 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
     method: 'PATCH',
   })
-  async adminMultipleUpdateCategory(@Body() updateData: UpdateCategoryDto & { ctgryNoList: number[] }): Promise<ResponseDto<MultipleResultType>> {
-    const result = await this.adminCategoriesService.adminMultipleUpdateCategory(updateData);
+  async adminMultipleUpdateCategory(
+    @Req() req: AuthRequest,
+    @Body() updateData: UpdateCategoryDto & { ctgryNoList: number[] }
+  ): Promise<ResponseDto<MultipleResultType>> {
+    const result = await this.adminCategoriesService.adminMultipleUpdateCategory(
+      req.user.userNo,
+      updateData
+    );
 
     if (!result?.success) {
       return createError(
@@ -611,17 +636,21 @@ export class AdminCategoriesController {
 
   /**
    * @description 카테고리 삭제
+   * @param req 요청 객체
    * @param ctgryNo 카테고리 번호
    */
   @Endpoint({
     endpoint: '/:ctgryNo',
     method: 'DELETE',
   })
-  async adminDeleteCategory(@Param(
-    'ctgryNo',
-    ParseIntPipe
-  ) ctgryNo: number): Promise<ResponseDto<boolean>> {
-    const result = await this.adminCategoriesService.adminDeleteCategory(ctgryNo);
+  async adminDeleteCategory(
+    @Req() req: AuthRequest,
+    @Param('ctgryNo', ParseIntPipe) ctgryNo: number
+  ): Promise<ResponseDto<boolean>> {
+    const result = await this.adminCategoriesService.adminDeleteCategory(
+      req.user.userNo,
+      ctgryNo
+    );
 
     if (!result?.success) {
       return createError(
@@ -639,14 +668,21 @@ export class AdminCategoriesController {
 
   /**
    * @description 다수 카테고리 삭제
+   * @param req 요청 객체
    * @param deleteData 카테고리 삭제 데이터
    */
   @Endpoint({
     endpoint: '/multiple',
     method: 'DELETE',
   })
-  async adminMultipleDeleteCategory(@Body() deleteData: DeleteCategoryDto): Promise<ResponseDto<MultipleResultType>> {
-    const result = await this.adminCategoriesService.adminMultipleDeleteCategory(deleteData);
+  async adminMultipleDeleteCategory(
+    @Req() req: AuthRequest,
+    @Body() deleteData: DeleteCategoryDto
+  ): Promise<ResponseDto<MultipleResultType>> {
+    const result = await this.adminCategoriesService.adminMultipleDeleteCategory(
+      req.user.userNo,
+      deleteData
+    );
 
     if (!result?.success) {
       return createError(

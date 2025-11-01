@@ -55,23 +55,25 @@
 
 `md/check.md`의 컨트롤러 명과 실제 엔티티 폴더 구조의 매핑:
 
-1. ✅ AuthController → `apps/ui/app/_entities/auth/hooks/`
-2. ✅ UserController → `apps/ui/app/_entities/users/hooks/`
-3. ✅ PostsController → `apps/ui/app/_entities/posts/hooks/`
-4. ✅ TagController → `apps/ui/app/_entities/tags/hooks/`
-5. ✅ CommentsController → `apps/ui/app/_entities/comments/hooks/`
-6. ✅ CategoriesController → `apps/ui/app/_entities/categories/hooks/`
-7. ✅ CategorySubscribeController → `apps/ui/app/_entities/subscribe/category-subscribe/hooks/`
-8. ✅ TagSubscribeController → `apps/ui/app/_entities/subscribe/tag-subscribe/hooks/`
-9. ✅ AdminController → `apps/ui/app/_entities/admin/hooks/`
-10. ✅ AdminUserController → `apps/ui/app/_entities/admin/users/hooks/`
-11. ✅ AdminPostsController → `apps/ui/app/_entities/admin/posts/hooks/`
-12. ✅ AdminSubscribeController → `apps/ui/app/_entities/admin/subscribe/hooks/`
-13. ✅ AdminCategorySubscribeController → `apps/ui/app/_entities/admin/subscribes/categories/hooks/`
-14. ✅ AdminTagSubscribeController → `apps/ui/app/_entities/admin/subscribes/tags/hooks/`
-15. ✅ AdminTagsController → `apps/ui/app/_entities/admin/tags/hooks/`
-16. ✅ AdminCommentsController → `apps/ui/app/_entities/admin/comments/hooks/`
-17. ✅ AdminCategoriesController → `apps/ui/app/_entities/admin/categories/hooks/`
+- [x] AuthController → `apps/ui/app/_entities/auth/hooks/` ✅ (5개 엔드포인트 = 5개 훅)
+- [x] UserController → `apps/ui/app/_entities/users/hooks/` ✅ (6개 엔드포인트 = 6개 훅)
+- [x] PostsController → `apps/ui/app/_entities/posts/hooks/` ✅ (11개 엔드포인트 = 11개 훅)
+- [x] TagController → `apps/ui/app/_entities/tags/hooks/` ✅ (3개 엔드포인트 = 3개 훅)
+- [x] CommentsController → `apps/ui/app/_entities/comments/hooks/` ✅ (5개 엔드포인트 = 5개 훅)
+- [x] CategoriesController → `apps/ui/app/_entities/categories/hooks/` ✅ (3개 엔드포인트 = 3개 훅)
+- [x] CategorySubscribeController → `apps/ui/app/_entities/subscribe/category-subscribe/hooks/` ✅ (8개 엔드포인트 = 8개 훅)
+- [x] TagSubscribeController → `apps/ui/app/_entities/subscribe/tag-subscribe/hooks/` ✅ (8개 엔드포인트 = 8개 훅)
+- [x] AdminController → `apps/ui/app/_entities/admin/hooks/` ✅ (1개 엔드포인트 = 1개 훅)
+- [x] AdminUserController → `apps/ui/app/_entities/admin/users/hooks/` ✅ (20개 엔드포인트 = 20개 훅)
+- [x] AdminPostsController → `apps/ui/app/_entities/admin/posts/hooks/` ✅ (12개 엔드포인트 = 12개 훅)
+- [x] AdminSubscribeController → `apps/ui/app/_entities/admin/subscribe/hooks/` ✅ (10개 엔드포인트 = 10개 훅)
+- [x] AdminCategorySubscribeController → `apps/ui/app/_entities/admin/subscribes/categories/hooks/` ✅ (3개 엔드포인트 = 3개 훅)
+- [x] AdminTagSubscribeController → `apps/ui/app/_entities/admin/subscribes/tags/hooks/` ✅ (3개 엔드포인트 = 3개 훅)
+- [x] AdminTagsController → `apps/ui/app/_entities/admin/tags/hooks/` ✅ (25개 엔드포인트 = 25개 훅)
+- [x] AdminCommentsController → `apps/ui/app/_entities/admin/comments/hooks/` ✅ (12개 엔드포인트 = 12개 훅)
+- [x] AdminCategoriesController → `apps/ui/app/_entities/admin/categories/hooks/` ✅ (22개 엔드포인트 = 22개 훅)
+
+**총 157개 엔드포인트, 157개 훅 파일 모두 일치 확인 완료**
 
 # 작업 결과 보고
 
