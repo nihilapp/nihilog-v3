@@ -120,6 +120,16 @@ export class AdminUserService {
    * @param daysThreshold 비활성 기준 일수
    */
   async getInactiveUsersList(daysThreshold: number = 30): Promise<RepoResponseType<InactiveUsersListItemType[]> | null> {
+    // 비활성 기준 일수 범위 검증 (1일 ~ 365일)
+    if (daysThreshold < 1 || daysThreshold > 365) {
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.USER.STATISTICS.INVALID_DAYS_THRESHOLD
+      );
+    }
+
     return this.userRepository.getInactiveUsersList(daysThreshold);
   }
 
@@ -184,6 +194,25 @@ export class AdminUserService {
    * @param userNm 사용자명
    */
   async getUserByNm(userNm: string): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    // 사용자명 길이 검증 (2자 ~ 30자)
+    if (!userNm || userNm.length < 2) {
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.USER.USER.NAME_TOO_SHORT
+      );
+    }
+
+    if (userNm.length > 30) {
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.USER.USER.NAME_TOO_LONG
+      );
+    }
+
     return this.userRepository.getUserByName(userNm);
   }
 
@@ -192,6 +221,18 @@ export class AdminUserService {
    * @param emlAddr 이메일 주소
    */
   async getUserByEmail(emlAddr: string): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    // 이메일 형식 검증
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emlAddr || !emailRegex.test(emlAddr)) {
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.USER.USER.EMAIL_INVALID
+      );
+    }
+
     return this.userRepository.getUserByEmail(emlAddr);
   }
 
@@ -201,6 +242,16 @@ export class AdminUserService {
    * @param createUserData 사용자 생성 정보
    */
   async createUser(user: JwtPayload | null, createUserData: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    // 필수값 체크
+    if (!createUserData.emlAddr || !createUserData.userNm || !createUserData.password) {
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.USER.USER.INVALID_PARAMETER
+      );
+    }
+
     const { password, ...createUserDataWithoutPassword } = createUserData;
     // 이메일 중복 확인
     const findUser = await this.userRepository.getUserByEmail(createUserDataWithoutPassword.emlAddr);
@@ -219,6 +270,18 @@ export class AdminUserService {
       );
     }
 
+    // 이름 중복 확인
+    const findUserByName = await this.userRepository.getUserByName(createUserDataWithoutPassword.userNm);
+
+    if (findUserByName?.success && findUserByName.data) {
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.USER.USER.USERNAME_EXISTS
+      );
+    }
+
     // 비밀번호 해시화
     const hashedPassword = await bcrypt.hash(
       password,
@@ -228,7 +291,7 @@ export class AdminUserService {
     // 사용자 계정 생성 (user가 null이면 최초 생성자 없음)
     return this.userRepository.createUser(
       user?.userNo || null,
-      createUserDataWithoutPassword,
+      createUserDataWithoutPassword as CreateUserDto,
       hashedPassword
     );
   }
@@ -247,7 +310,7 @@ export class AdminUserService {
       return findUser;
     }
 
-    // 사용자명 변경 시 중복 확인
+    // 사용자명 변경 시 중복 확인 (유효성 검증은 Zod 스키마에서 처리)
     if (updateUserData.userNm) {
       const existingUser = await this.userRepository.getUserByName(updateUserData.userNm);
 
@@ -317,6 +380,18 @@ export class AdminUserService {
         'BAD_REQUEST',
         MESSAGE.COMMON.INVALID_REQUEST
       );
+    }
+
+    // 사용자 번호 유효성 검증 (양수만 허용)
+    for (const userNo of userNoList) {
+      if (!userNo || userNo <= 0 || !Number.isInteger(userNo)) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.USER.USER.INVALID_USER_NO
+        );
+      }
     }
 
     return this.userRepository.adminMultipleDeleteUser(

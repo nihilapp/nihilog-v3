@@ -57,17 +57,27 @@ export class AdminController {
     );
 
     if (!result?.success) {
+      // 업데이트된 필드에 따라 적절한 기본 에러 메시지 선택
+      const defaultErrorMessage = updateProfileData.proflImg !== undefined && updateProfileData.proflImg !== null
+        ? MESSAGE.USER.USER.IMAGE_CHANGE_ERROR
+        : MESSAGE.USER.USER.UPDATE_ERROR;
+
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.USER.PROFILE.UPDATE_ERROR
+        result?.error?.message || defaultErrorMessage
       );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
+    // 업데이트된 필드에 따라 적절한 메시지 선택
+    const successMessage = updateProfileData.proflImg !== undefined && updateProfileData.proflImg !== null
+      ? MESSAGE.USER.USER.IMAGE_CHANGE_SUCCESS
+      : MESSAGE.USER.USER.UPDATE_SUCCESS;
+
     return createResponse(
       'SUCCESS',
-      MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+      successMessage,
       userToReturn
     );
   }

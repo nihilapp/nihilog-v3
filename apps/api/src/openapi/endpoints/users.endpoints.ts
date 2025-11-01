@@ -34,7 +34,7 @@ export const registerUserEndpoints = () => {
                   summary: '프로필 조회 성공',
                   value: createResponse(
                     'SUCCESS',
-                    MESSAGE.USER.PROFILE.GET_SUCCESS,
+                    MESSAGE.USER.USER.FETCH_SUCCESS,
                     CreateExample.user('detail')
                   ),
                 },
@@ -129,11 +129,25 @@ export const registerUserEndpoints = () => {
                   CreateExample.user('detail')
                 ),
               },
+              invalidParameter: {
+                summary: '필수 정보 누락',
+                value: createError(
+                  'BAD_REQUEST',
+                  MESSAGE.USER.USER.INVALID_PARAMETER
+                ),
+              },
               emailInUse: {
                 summary: '이메일 중복',
                 value: createError(
                   'CONFLICT',
                   MESSAGE.USER.USER.EMAIL_EXISTS
+                ),
+              },
+              usernameExists: {
+                summary: '사용자명 중복',
+                value: createError(
+                  'CONFLICT',
+                  MESSAGE.USER.USER.USERNAME_EXISTS
                 ),
               },
               createError: {
@@ -179,7 +193,15 @@ export const registerUserEndpoints = () => {
                   summary: '프로필 수정 성공',
                   value: createResponse(
                     'SUCCESS',
-                    MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+                    MESSAGE.USER.USER.UPDATE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                imageChangeSuccess: {
+                  summary: '프로필 이미지 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.IMAGE_CHANGE_SUCCESS,
                     CreateExample.user('detail')
                   ),
                 },
@@ -195,6 +217,13 @@ export const registerUserEndpoints = () => {
                   value: createError(
                     'CONFLICT',
                     MESSAGE.USER.USER.NAME_EXISTS
+                  ),
+                },
+                imageChangeError: {
+                  summary: '프로필 이미지 변경 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.IMAGE_CHANGE_ERROR
                   ),
                 },
               },
@@ -286,7 +315,7 @@ export const registerUserEndpoints = () => {
                   summary: '프로필 삭제 성공',
                   value: createResponse(
                     'SUCCESS',
-                    MESSAGE.USER.PROFILE.DELETE_SUCCESS,
+                    MESSAGE.USER.USER.DELETE_SUCCESS,
                     true
                   ),
                 },

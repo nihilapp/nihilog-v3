@@ -38,7 +38,15 @@ export const registerAdminEndpoints = () => {
                   summary: '프로필 수정 성공',
                   value: createResponse(
                     'SUCCESS',
-                    MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+                    MESSAGE.USER.USER.UPDATE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
+                imageChangeSuccess: {
+                  summary: '프로필 이미지 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.IMAGE_CHANGE_SUCCESS,
                     CreateExample.user('detail')
                   ),
                 },
@@ -46,7 +54,7 @@ export const registerAdminEndpoints = () => {
                   summary: '관리자를 찾을 수 없음',
                   value: createError(
                     'NOT_FOUND',
-                    MESSAGE.USER.USER.ADMIN_NOT_FOUND
+                    MESSAGE.USER.USER.NOT_FOUND
                   ),
                 },
                 conflict: {
@@ -56,11 +64,18 @@ export const registerAdminEndpoints = () => {
                     MESSAGE.USER.USER.NAME_EXISTS
                   ),
                 },
+                imageChangeError: {
+                  summary: '프로필 이미지 변경 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.IMAGE_CHANGE_ERROR
+                  ),
+                },
                 error: {
                   summary: '프로필 업데이트 실패',
                   value: createError(
                     'INTERNAL_SERVER_ERROR',
-                    MESSAGE.USER.PROFILE.UPDATE_ERROR
+                    MESSAGE.USER.USER.UPDATE_ERROR
                   ),
                 },
               },

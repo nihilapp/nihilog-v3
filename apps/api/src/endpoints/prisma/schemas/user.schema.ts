@@ -1,6 +1,7 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
+import { USER_MESSAGES } from '@/code/messages/user-message.code';
 import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/prisma/schemas/common.schema';
 import { userRoleSchema as baseUserRoleSchema } from '@/endpoints/prisma/schemas/enums.schema';
 
@@ -47,7 +48,7 @@ export const userInfoSchema = commonSchema.extend({
       description: '사용자 번호',
       example: 1,
     }),
-  emlAddr: z.email('올바른 이메일 형식을 입력해주세요.')
+  emlAddr: z.email(USER_MESSAGES.USER.EMAIL_INVALID)
     .openapi({
       description: '사용자 이메일 주소 (올바른 이메일 형식)',
       example: 'user@example.com',
@@ -55,11 +56,11 @@ export const userInfoSchema = commonSchema.extend({
   userNm: z.string()
     .min(
       2,
-      '사용자명은 2자 이상이어야 합니다.'
+      USER_MESSAGES.USER.NAME_TOO_SHORT
     )
     .max(
       30,
-      '사용자명은 30자 이하여야 합니다.'
+      USER_MESSAGES.USER.NAME_TOO_LONG
     )
     .openapi({
       description: '사용자명 (2-30자)',
@@ -83,7 +84,7 @@ export const userInfoSchema = commonSchema.extend({
   userBiogp: z.string()
     .max(
       500,
-      '자기소개는 500자 이하여야 합니다.'
+      '자기소개는 500자를 초과할 수 없습니다.'
     )
     .nullable()
     .optional()

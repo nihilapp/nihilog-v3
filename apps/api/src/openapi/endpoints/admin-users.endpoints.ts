@@ -362,6 +362,13 @@ export const registerAdminUsersEndpoints = () => {
                     CreateUserAnalyze.createInactiveUsersListExample()
                   ),
                 },
+                badRequest: {
+                  summary: '잘못된 비활성 기준 일수',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.USER.STATISTICS.INVALID_DAYS_THRESHOLD
+                  ),
+                },
                 error: {
                   summary: '비활성 사용자 목록 조회 실패',
                   value: createError(
@@ -498,7 +505,7 @@ export const registerAdminUsersEndpoints = () => {
                   summary: '사용자 목록 조회 성공',
                   value: createResponse(
                     'SUCCESS',
-                    MESSAGE.USER.USER.SEARCH_SUCCESS,
+                    MESSAGE.USER.USER.LIST_SUCCESS,
                     {
                       list: [ CreateExample.user('list'), ],
                       totalCnt: 1,
@@ -516,7 +523,7 @@ export const registerAdminUsersEndpoints = () => {
                   summary: '사용자 목록 조회 실패',
                   value: createError(
                     'INTERNAL_SERVER_ERROR',
-                    MESSAGE.USER.USER.SEARCH_ERROR
+                    MESSAGE.USER.USER.LIST_ERROR
                   ),
                 },
               },
@@ -614,6 +621,20 @@ export const registerAdminUsersEndpoints = () => {
                     CreateExample.user()
                   ),
                 },
+                badRequest: {
+                  summary: '사용자명이 너무 짧음',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.USER.USER.NAME_TOO_SHORT
+                  ),
+                },
+                badRequestLong: {
+                  summary: '사용자명이 너무 김',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.USER.USER.NAME_TOO_LONG
+                  ),
+                },
                 notFound: {
                   summary: '사용자를 찾을 수 없음',
                   value: createError(
@@ -663,6 +684,13 @@ export const registerAdminUsersEndpoints = () => {
                     'SUCCESS',
                     MESSAGE.USER.USER.FETCH_SUCCESS,
                     CreateExample.user('detail')
+                  ),
+                },
+                badRequest: {
+                  summary: '유효하지 않은 이메일 형식',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.USER.USER.EMAIL_INVALID
                   ),
                 },
                 notFound: {
@@ -717,11 +745,25 @@ export const registerAdminUsersEndpoints = () => {
                     CreateExample.user('detail')
                   ),
                 },
-                conflict: {
+                invalidParameter: {
+                  summary: '필수 정보 누락',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.USER.USER.INVALID_PARAMETER
+                  ),
+                },
+                emailConflict: {
                   summary: '이미 존재하는 이메일',
                   value: createError(
                     'CONFLICT',
                     MESSAGE.USER.USER.EMAIL_EXISTS
+                  ),
+                },
+                usernameConflict: {
+                  summary: '이미 존재하는 사용자명',
+                  value: createError(
+                    'CONFLICT',
+                    MESSAGE.USER.USER.USERNAME_EXISTS
                   ),
                 },
                 error: {
@@ -782,11 +824,25 @@ export const registerAdminUsersEndpoints = () => {
                   MESSAGE.COMMON.DEVELOPMENT_ONLY
                 ),
               },
-              conflict: {
+              invalidParameter: {
+                summary: '필수 정보 누락',
+                value: createError(
+                  'BAD_REQUEST',
+                  MESSAGE.USER.USER.INVALID_PARAMETER
+                ),
+              },
+              emailConflict: {
                 summary: '이미 존재하는 이메일',
                 value: createError(
                   'CONFLICT',
                   MESSAGE.USER.USER.EMAIL_EXISTS
+                ),
+              },
+              usernameConflict: {
+                summary: '이미 존재하는 사용자명',
+                value: createError(
+                  'CONFLICT',
+                  MESSAGE.USER.USER.USERNAME_EXISTS
                 ),
               },
               error: {
@@ -842,6 +898,14 @@ export const registerAdminUsersEndpoints = () => {
                     CreateExample.user('detail')
                   ),
                 },
+                imageChangeSuccess: {
+                  summary: '프로필 이미지 변경 성공',
+                  value: createResponse(
+                    'SUCCESS',
+                    MESSAGE.USER.USER.IMAGE_CHANGE_SUCCESS,
+                    CreateExample.user('detail')
+                  ),
+                },
                 notFound: {
                   summary: '사용자를 찾을 수 없음',
                   value: createError(
@@ -854,6 +918,13 @@ export const registerAdminUsersEndpoints = () => {
                   value: createError(
                     'CONFLICT',
                     MESSAGE.USER.USER.NAME_EXISTS
+                  ),
+                },
+                imageChangeError: {
+                  summary: '프로필 이미지 변경 실패',
+                  value: createError(
+                    'INTERNAL_SERVER_ERROR',
+                    MESSAGE.USER.USER.IMAGE_CHANGE_ERROR
                   ),
                 },
                 error: {
@@ -1031,6 +1102,13 @@ export const registerAdminUsersEndpoints = () => {
                   value: createError(
                     'BAD_REQUEST',
                     MESSAGE.COMMON.INVALID_REQUEST
+                  ),
+                },
+                invalidUserNo: {
+                  summary: '유효하지 않은 사용자 번호',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.USER.USER.INVALID_USER_NO
                   ),
                 },
                 error: {

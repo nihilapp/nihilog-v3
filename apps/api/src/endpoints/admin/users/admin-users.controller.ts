@@ -264,6 +264,7 @@ export class AdminUserController {
     },
   })
   async getInactiveUsersList(@Query('daysThreshold') daysThreshold?: number): Promise<ResponseDto<InactiveUsersListItemType[]>> {
+    // daysThreshold가 제공된 경우 Service에서 검증하므로 기본값만 설정
     const result = await this.usersService.getInactiveUsersList(daysThreshold || 30);
 
     if (!result?.success) {
@@ -368,13 +369,13 @@ export class AdminUserController {
     if (!result?.success) {
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.USER.USER.SEARCH_ERROR
+        result?.error?.message || MESSAGE.USER.USER.LIST_ERROR
       );
     }
 
     return removeSensitiveInfoFromListResponse(createResponse(
       'SUCCESS',
-      MESSAGE.USER.USER.SEARCH_SUCCESS,
+      MESSAGE.USER.USER.LIST_SUCCESS,
       result.data
     ));
   }
@@ -520,6 +521,13 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
+    if (!req.user) {
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.COMMON.UNAUTHORIZED
+      );
+    }
+
     const result = await this.usersService.createUser(
       req.user,
       createUserData
@@ -614,6 +622,13 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
+    if (!req.user) {
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.COMMON.UNAUTHORIZED
+      );
+    }
+
     const result = await this.usersService.updateUser(
       req.user.userNo,
       userNo,
@@ -621,17 +636,27 @@ export class AdminUserController {
     );
 
     if (!result?.success) {
+      // 업데이트된 필드에 따라 적절한 기본 에러 메시지 선택
+      const defaultErrorMessage = updateUserData.proflImg !== undefined && updateUserData.proflImg !== null
+        ? MESSAGE.USER.USER.IMAGE_CHANGE_ERROR
+        : MESSAGE.USER.USER.UPDATE_ERROR;
+
       return createError(
         result?.error?.code || 'INTERNAL_SERVER_ERROR',
-        result?.error?.message || MESSAGE.USER.USER.UPDATE_ERROR
+        result?.error?.message || defaultErrorMessage
       );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
 
+    // 업데이트된 필드에 따라 적절한 메시지 선택
+    const successMessage = updateUserData.proflImg !== undefined && updateUserData.proflImg !== null
+      ? MESSAGE.USER.USER.IMAGE_CHANGE_SUCCESS
+      : MESSAGE.USER.USER.UPDATE_SUCCESS;
+
     return createResponse(
       'SUCCESS',
-      MESSAGE.USER.USER.UPDATE_SUCCESS,
+      successMessage,
       userToReturn
     );
   }
@@ -657,6 +682,13 @@ export class AdminUserController {
   ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
+    }
+
+    if (!req.user) {
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.COMMON.UNAUTHORIZED
+      );
     }
 
     const result = await this.usersService.multipleUpdateUser(
@@ -702,6 +734,13 @@ export class AdminUserController {
       return req.errorResponse;
     }
 
+    if (!req.user) {
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.COMMON.UNAUTHORIZED
+      );
+    }
+
     const result = await this.usersService.adminDeleteUser(
       req.user.userNo,
       userNo
@@ -740,6 +779,13 @@ export class AdminUserController {
   ): Promise<ResponseDto<MultipleResultType>> {
     if (req.errorResponse) {
       return req.errorResponse;
+    }
+
+    if (!req.user) {
+      return createError(
+        'UNAUTHORIZED',
+        MESSAGE.COMMON.UNAUTHORIZED
+      );
     }
 
     const result = await this.usersService.adminMultipleDeleteUser(

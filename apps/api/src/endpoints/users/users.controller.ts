@@ -51,7 +51,7 @@ export class UserController {
     const userToReturn = removeSensitiveInfo(result.data);
     return createResponse(
       'SUCCESS',
-      MESSAGE.USER.PROFILE.GET_SUCCESS,
+      MESSAGE.USER.USER.FETCH_SUCCESS,
       userToReturn
     );
   }
@@ -152,16 +152,32 @@ export class UserController {
     );
 
     if (!result?.success) {
+      // 에러 코드가 NOT_FOUND인 경우와 그 외 경우를 구분
+      const errorCode = result?.error?.code || 'NOT_FOUND';
+
+      // 업데이트된 필드에 따라 적절한 기본 에러 메시지 선택
+      const defaultErrorMessage = errorCode === 'NOT_FOUND'
+        ? MESSAGE.USER.USER.NOT_FOUND
+        : (updateData.proflImg !== undefined && updateData.proflImg !== null
+          ? MESSAGE.USER.USER.IMAGE_CHANGE_ERROR
+          : MESSAGE.USER.USER.UPDATE_ERROR);
+
       return createError(
-        result?.error?.code || 'NOT_FOUND',
-        result?.error?.message || MESSAGE.USER.USER.NOT_FOUND
+        errorCode,
+        result?.error?.message || defaultErrorMessage
       );
     }
 
     const userToReturn = removeSensitiveInfo(result.data);
+
+    // 업데이트된 필드에 따라 적절한 메시지 선택
+    const successMessage = updateData.proflImg !== undefined && updateData.proflImg !== null
+      ? MESSAGE.USER.USER.IMAGE_CHANGE_SUCCESS
+      : MESSAGE.USER.USER.UPDATE_SUCCESS;
+
     return createResponse(
       'SUCCESS',
-      MESSAGE.USER.PROFILE.UPDATE_SUCCESS,
+      successMessage,
       userToReturn
     );
   }
@@ -240,7 +256,7 @@ export class UserController {
 
     return createResponse(
       'SUCCESS',
-      MESSAGE.USER.PROFILE.DELETE_SUCCESS,
+      MESSAGE.USER.USER.DELETE_SUCCESS,
       result.data
     );
   }

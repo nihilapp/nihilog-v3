@@ -30,7 +30,7 @@ export class AdminService {
       return currentUser; // Repository 에러를 그대로 전달
     }
 
-    // 사용자명 변경 시 중복 확인
+    // 사용자명 변경 시 중복 확인 (유효성 검증은 Zod 스키마에서 처리)
     if (userNm) {
       const existingUser = await this.userRepository.getUserByName(userNm);
 

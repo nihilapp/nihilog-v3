@@ -4,102 +4,59 @@
 export const USER_MESSAGES = {
   USER: {
     // 성공 메시지
-    CREATE_SUCCESS: '사용자가 생성되었습니다.',
-    UPDATE_SUCCESS: '사용자 정보가 수정되었습니다.',
-    IMAGE_CHANGE_SUCCESS: '프로필 이미지가 변경되었습니다.',
-    SEARCH_SUCCESS: '사용자 검색을 완료했습니다.',
-    FETCH_SUCCESS: '사용자 정보를 조회했습니다.',
-    DELETE_SUCCESS: '사용자가 삭제되었습니다.',
+    CREATE_SUCCESS: '사용자가 생성되었습니다.', // v
+    UPDATE_SUCCESS: '사용자 정보가 수정되었습니다.', // v
+    IMAGE_CHANGE_SUCCESS: '프로필 이미지가 변경되었습니다.', // v
+    FETCH_SUCCESS: '사용자 정보를 조회했습니다.', // v
+    LIST_SUCCESS: '사용자 목록을 조회했습니다.', // v
+    DELETE_SUCCESS: '사용자가 삭제되었습니다.', // v
+    DELETE_MULTIPLE_SUCCESS: '선택한 사용자들이 삭제되었습니다.',
 
     // 에러 메시지
-    CREATE_ERROR: '사용자 생성에 실패했습니다.',
-    UPDATE_ERROR: '사용자 정보 수정에 실패했습니다.',
-    IMAGE_CHANGE_ERROR: '프로필 이미지 변경에 실패했습니다.',
-    SEARCH_ERROR: '사용자 검색에 실패했습니다.',
-    FETCH_ERROR: '사용자 정보 조회에 실패했습니다.',
-    INFO_NOT_FOUND: '사용자 정보를 찾을 수 없습니다.',
-    DELETE_ERROR: '사용자 삭제에 실패했습니다.',
-    EMAIL_EXISTS: '이미 사용 중인 이메일입니다.',
-    NAME_EXISTS: '이미 존재하는 이름입니다.',
-    NOT_FOUND: '사용자를 찾을 수 없습니다.',
-    ADMIN_NOT_FOUND: '관리자를 찾을 수 없습니다.',
-    INVALID_INPUT: '이메일, 사용자명, 비밀번호는 필수 입력 항목입니다.',
-  },
-
-  PROFILE: {
-    // 조회 관련
-    GET_SUCCESS: '프로필 정보를 조회했습니다.',
-    GET_BY_EMAIL_SUCCESS: '이메일로 프로필을 조회했습니다.',
-    LIST_SUCCESS: '프로필 목록을 조회했습니다.',
-    NOT_FOUND: '해당 프로필을 찾을 수 없습니다.',
-
-    // 생성/수정 관련
-    CREATE_SUCCESS: '프로필이 생성되었습니다.',
-    UPDATE_SUCCESS: '프로필 정보가 수정되었습니다.',
-    PROFILE_UPDATE_SUCCESS: '프로필이 성공적으로 업데이트되었습니다.',
-
-    // 삭제 관련
-    DELETE_SUCCESS: '프로필이 삭제되었습니다.',
-    DELETE_MULTIPLE_SUCCESS: '선택한 프로필들이 삭제되었습니다.',
-
-    // 중복 체크 관련
-    EMAIL_EXISTS: '이미 사용 중인 이메일입니다.',
-    USERNAME_EXISTS: '이미 존재하는 사용자명입니다.',
-
-    // 이미지 관련
-    IMAGE_CHANGE_SUCCESS: '프로필 이미지가 변경되었습니다.',
-
-    // 에러 메시지
-    GET_ERROR: '프로필 정보 조회에 실패했습니다.',
-    GET_BY_EMAIL_ERROR: '이메일로 프로필 조회에 실패했습니다.',
-    SEARCH_ERROR: '프로필 목록 조회에 실패했습니다.',
-    CREATE_ERROR: '프로필 생성에 실패했습니다.',
-    UPDATE_ERROR: '프로필 정보 수정에 실패했습니다.',
-    DELETE_ERROR: '프로필 삭제에 실패했습니다.',
-    DELETE_MULTIPLE_ERROR: '다중 프로필 삭제에 실패했습니다.',
-    IMAGE_CHANGE_ERROR: '프로필 이미지 변경에 실패했습니다.',
-    UPDATE_FAILED: '프로필 업데이트에 실패했습니다.',
-    VALIDATION_FAILED: '프로필 정보가 올바르지 않습니다.',
-    DATA_REQUIRED: '필수 프로필 정보가 누락되었습니다.',
-    EMAIL_INVALID: '올바른 이메일 형식이 아닙니다.',
-    NAME_REQUIRED: '이름은 필수 입력 항목입니다.',
-    NAME_TOO_LONG: '이름은 50자를 초과할 수 없습니다.',
-    BIO_TOO_LONG: '자기소개는 500자를 초과할 수 없습니다.',
+    CREATE_ERROR: '사용자 생성에 실패했습니다.', // v
+    UPDATE_ERROR: '사용자 정보 수정에 실패했습니다.', // v
+    IMAGE_CHANGE_ERROR: '프로필 이미지 변경에 실패했습니다.', // v
+    LIST_ERROR: '사용자 목록 조회에 실패했습니다.', // v
+    NOT_FOUND: '사용자를 찾을 수 없습니다.', // v
+    DELETE_ERROR: '사용자 삭제에 실패했습니다.', // v
+    DELETE_MULTIPLE_ERROR: '다중 사용자 삭제에 실패했습니다.',
+    VALIDATION_FAILED: '사용자 정보가 올바르지 않습니다.',
+    INVALID_PARAMETER: '필수 사용자 정보가 누락되었습니다.', // v
+    EMAIL_EXISTS: '이미 사용 중인 이메일입니다.', // v
+    NAME_EXISTS: '이미 존재하는 이름입니다.', // v
+    USERNAME_EXISTS: '이미 존재하는 사용자명입니다.', // v
+    EMAIL_INVALID: '올바른 이메일 형식이 아닙니다.', // v
+    NAME_TOO_SHORT: '사용자명은 2자 이상이어야 합니다.', // v
+    NAME_TOO_LONG: '사용자명은 30자를 초과할 수 없습니다.', // v
     IMAGE_INVALID: '올바른 이미지 파일이 아닙니다.',
-    PROFILE_UPDATE_FAILED: '프로필 업데이트에 실패했습니다.',
-    PROFILE_VALIDATION_FAILED: '프로필 정보가 유효하지 않습니다.',
-    PROFILE_DATA_REQUIRED: '프로필 데이터가 필요합니다.',
-    PROFILE_EMAIL_INVALID: '유효하지 않은 이메일 형식입니다.',
-    PROFILE_NAME_REQUIRED: '사용자명은 필수 입력 항목입니다.',
-    PROFILE_NAME_TOO_LONG: '사용자명이 너무 깁니다. (최대 50자)',
-    PROFILE_BIO_TOO_LONG: '소개가 너무 깁니다. (최대 500자)',
-    PROFILE_IMAGE_INVALID: '유효하지 않은 프로필 이미지입니다.',
+    INVALID_USER_NO: '유효하지 않은 사용자 번호입니다.', // v
   },
 
   // 사용자 통계 관련 메시지
   STATISTICS: {
     // 성공 메시지
-    ANALYZE_SUCCESS: '사용자 분석 통계를 조회했습니다.',
-    ACTIVE_USER_ANALYSIS_SUCCESS: '활성 사용자 분석을 조회했습니다.',
-    TOP_CONTRIBUTION_SUCCESS: '사용자별 기여도 TOP N을 조회했습니다.',
-    TOP_POST_COUNT_SUCCESS: '사용자별 포스트 작성 수 TOP N을 조회했습니다.',
-    TOP_COMMENT_COUNT_SUCCESS: '사용자별 댓글 작성 수 TOP N을 조회했습니다.',
-    ROLE_DISTRIBUTION_SUCCESS: '역할별 사용자 분포를 조회했습니다.',
-    STATUS_DISTRIBUTION_SUCCESS: '상태별 사용자 분포를 조회했습니다.',
-    INACTIVE_USERS_SUCCESS: '비활성 사용자 목록을 조회했습니다.',
-    GROWTH_RATE_SUCCESS: '사용자 성장률을 조회했습니다.',
-    RETENTION_RATE_SUCCESS: '사용자 유지율을 조회했습니다.',
+    ANALYZE_SUCCESS: '사용자 분석 통계를 조회했습니다.', // v
+    ACTIVE_USER_ANALYSIS_SUCCESS: '활성 사용자 분석을 조회했습니다.', // v
+    TOP_CONTRIBUTION_SUCCESS: '사용자별 기여도 TOP N을 조회했습니다.', // v
+    TOP_POST_COUNT_SUCCESS: '사용자별 포스트 작성 수 TOP N을 조회했습니다.', // v
+    TOP_COMMENT_COUNT_SUCCESS: '사용자별 댓글 작성 수 TOP N을 조회했습니다.', // v
+    ROLE_DISTRIBUTION_SUCCESS: '역할별 사용자 분포를 조회했습니다.', // v
+    STATUS_DISTRIBUTION_SUCCESS: '상태별 사용자 분포를 조회했습니다.', // v
+    INACTIVE_USERS_SUCCESS: '비활성 사용자 목록을 조회했습니다.', // v
+    GROWTH_RATE_SUCCESS: '사용자 성장률을 조회했습니다.', // v
+    RETENTION_RATE_SUCCESS: '사용자 유지율을 조회했습니다.', // v
 
     // 에러 메시지
-    ANALYZE_ERROR: '사용자 분석 통계 조회에 실패했습니다.',
-    ACTIVE_USER_ANALYSIS_ERROR: '활성 사용자 분석 조회에 실패했습니다.',
-    TOP_CONTRIBUTION_ERROR: '사용자별 기여도 TOP N 조회에 실패했습니다.',
-    TOP_POST_COUNT_ERROR: '사용자별 포스트 작성 수 TOP N 조회에 실패했습니다.',
-    TOP_COMMENT_COUNT_ERROR: '사용자별 댓글 작성 수 TOP N 조회에 실패했습니다.',
-    ROLE_DISTRIBUTION_ERROR: '역할별 사용자 분포 조회에 실패했습니다.',
-    STATUS_DISTRIBUTION_ERROR: '상태별 사용자 분포 조회에 실패했습니다.',
-    INACTIVE_USERS_ERROR: '비활성 사용자 목록 조회에 실패했습니다.',
-    GROWTH_RATE_ERROR: '사용자 성장률 조회에 실패했습니다.',
-    RETENTION_RATE_ERROR: '사용자 유지율 조회에 실패했습니다.',
+    ANALYZE_ERROR: '사용자 분석 통계 조회에 실패했습니다.', // v
+    ACTIVE_USER_ANALYSIS_ERROR: '활성 사용자 분석 조회에 실패했습니다.', // v
+    TOP_CONTRIBUTION_ERROR: '사용자별 기여도 TOP N 조회에 실패했습니다.', // v
+    TOP_POST_COUNT_ERROR: '사용자별 포스트 작성 수 TOP N 조회에 실패했습니다.', // v
+    TOP_COMMENT_COUNT_ERROR: '사용자별 댓글 작성 수 TOP N 조회에 실패했습니다.', // v
+    ROLE_DISTRIBUTION_ERROR: '역할별 사용자 분포 조회에 실패했습니다.', // v
+    STATUS_DISTRIBUTION_ERROR: '상태별 사용자 분포 조회에 실패했습니다.', // v
+    INACTIVE_USERS_ERROR: '비활성 사용자 목록 조회에 실패했습니다.', // v
+    GROWTH_RATE_ERROR: '사용자 성장률 조회에 실패했습니다.', // v
+    RETENTION_RATE_ERROR: '사용자 유지율 조회에 실패했습니다.', // v
+    INVALID_DAYS_THRESHOLD: '비활성 기준 일수는 1일부터 365일 사이여야 합니다.', // v
   },
 } as const;

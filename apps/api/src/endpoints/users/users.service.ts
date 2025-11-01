@@ -41,6 +41,16 @@ export class UserService {
    * @param createUserDto 사용자 계정 생성 정보
    */
   async createUser(createUserDto: CreateUserDto): Promise<RepoResponseType<SelectUserInfoType> | null> {
+    // 필수값 체크
+    if (!createUserDto.emlAddr || !createUserDto.userNm || !createUserDto.password) {
+      return prismaResponse(
+        false,
+        null,
+        'BAD_REQUEST',
+        MESSAGE.USER.USER.INVALID_PARAMETER
+      );
+    }
+
     const findUser = await this.userRepository.getUserByEmail(createUserDto.emlAddr);
 
     if (findUser?.success && findUser.data) {
@@ -49,6 +59,18 @@ export class UserService {
         null,
         'CONFLICT',
         MESSAGE.USER.USER.EMAIL_EXISTS
+      );
+    }
+
+    // 이름 중복 확인
+    const findUserByName = await this.userRepository.getUserByName(createUserDto.userNm);
+
+    if (findUserByName?.success && findUserByName.data) {
+      return prismaResponse(
+        false,
+        null,
+        'CONFLICT',
+        MESSAGE.USER.USER.USERNAME_EXISTS
       );
     }
 
@@ -102,6 +124,9 @@ export class UserService {
         );
       }
     }
+
+    // 프로필 이미지 변경 성공 메시지 사용을 위한 처리
+    // (실제 이미지 변경은 Repository에서 처리되므로 여기서는 메시지만 준비)
 
     return this.userRepository.updateUser(
       user.userNo,
