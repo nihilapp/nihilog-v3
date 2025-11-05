@@ -1,35 +1,15 @@
 'use client';
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
+import { Box } from '@/_components/ui/box';
 
-import { cn } from '@/_libs';
-
-interface Props
-  extends React.HTMLAttributes<HTMLElement>,
-  VariantProps<typeof cssVariants> {
-  className?: string;
+interface Props {
+  children?: React.ReactNode;
 }
 
-const cssVariants = cva(
-  [ 'flex-1', ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
-
-export function CommonMain({ className, children, ...props }: Props) {
+export function CommonMain({ children, }: Props) {
   return (
-    <main
-      className={cn(
-        cssVariants({}),
-        className
-      )}
-      {...props}
-    >
+    <Box.Panel mode='main'>
       {children}
-    </main>
+    </Box.Panel>
   );
 }

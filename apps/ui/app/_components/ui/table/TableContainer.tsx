@@ -12,7 +12,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'w-full bg-white border border-black-100', ],
+  [ 'w-full bg-white border border-black-100 table-fixed', ],
   {
     variants: {},
     defaultVariants: {},

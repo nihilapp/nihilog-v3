@@ -1,35 +1,11 @@
 'use client';
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
+import { Box } from '@/_components/ui/box';
 
-import { cn } from '@/_libs';
-
-interface Props
-  extends React.HTMLAttributes<HTMLElement>,
-  VariantProps<typeof cssVariants> {
-  className?: string;
-}
-
-const cssVariants = cva(
-  [ '', ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
-
-export function CommonSide({ className, ...props }: Props) {
+export function CommonSide() {
   return (
-    <aside
-      className={cn(
-        cssVariants({}),
-        className
-      )}
-      {...props}
-    >
+    <Box.Panel mode='aside' className='w-[300px]'>
       content
-    </aside>
+    </Box.Panel>
   );
 }

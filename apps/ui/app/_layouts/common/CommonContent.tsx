@@ -1,40 +1,22 @@
 'use client';
 
-import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
+import { Box } from '@/_components/ui/box';
 import { CommonMain } from '@/_layouts/common/CommonMain';
 import { CommonSide } from '@/_layouts/common/CommonSide';
-import { cn } from '@/_libs';
 
-interface Props
-  extends React.HTMLAttributes<HTMLElement>,
-  VariantProps<typeof cssVariants> {
-  className?: string;
+interface Props {
+  children?: React.ReactNode;
 }
 
-const cssVariants = cva(
-  [ 'flex flex-row flex-1 p-2', ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
-
-export function CommonContent({ className, children, ...props }: Props) {
+export function CommonContent({ children, }: Props) {
   return (
-    <section
-      className={cn(
-        cssVariants({}),
-        className
-      )}
-      {...props}
-    >
+    <Box.Divider layout='flex' className='flex-1 p-2 gap-2'>
       <CommonSide />
       <CommonMain>
         {children}
       </CommonMain>
-    </section>
+    </Box.Divider>
   );
 }

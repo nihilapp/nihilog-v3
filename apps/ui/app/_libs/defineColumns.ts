@@ -14,7 +14,8 @@ export function defineColumns<TData>() {
       ) => ReactNode;
       className?: string[] | string;
       style?: string | React.CSSProperties;
-      align?: 'left' | 'center' | 'right' | 'justify';
+      thAlign?: 'left' | 'center' | 'right' | 'justify';
+      tdAlign?: 'left' | 'center' | 'right' | 'justify';
     }
   ): TableColumn<TData, K> => {
     return {

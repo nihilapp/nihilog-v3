@@ -14,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ '', ],
+  [ 'w-full ', ],
   {
     variants: {
       layout: {

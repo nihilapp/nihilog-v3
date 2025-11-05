@@ -13,7 +13,10 @@ export type TableColumn<
   ) => ReactNode;
   className?: string[] | string;
   style?: string | CSSProperties;
-  align?: 'left' | 'center' | 'right' | 'justify';
+  thAlign?: 'left' | 'center' | 'right' | 'justify';
+  tdAlign?: 'left' | 'center' | 'right' | 'justify';
+  width?: string | number;
+  minWidth?: string | number;
 };
 
 // export type TableColumn<TData> = {

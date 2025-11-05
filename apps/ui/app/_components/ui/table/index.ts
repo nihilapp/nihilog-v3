@@ -4,6 +4,7 @@ import { TableContainer } from '@/_components/ui/table/TableContainer';
 import { TableFooter } from '@/_components/ui/table/TableFooter';
 import { TableHeader } from '@/_components/ui/table/TableHeader';
 import { TableRow } from '@/_components/ui/table/TableRow';
+import { TableTemplate } from '@/_components/ui/table/TableTemplate';
 import { TableTitle } from '@/_components/ui/table/TableTitle';
 
 export const Table = {
@@ -14,4 +15,5 @@ export const Table = {
   Row: TableRow,
   Cell: TableCell,
   Title: TableTitle,
+  Template: TableTemplate,
 };
