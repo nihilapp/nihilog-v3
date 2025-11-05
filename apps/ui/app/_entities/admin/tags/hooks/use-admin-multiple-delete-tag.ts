@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useDeletes } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { DeleteTagType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
@@ -19,25 +16,11 @@ export function useAdminMultipleDeleteTag() {
       'tags',
       'multiple',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // Admin Tags 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

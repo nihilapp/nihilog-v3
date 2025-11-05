@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { usePost } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { CreatePostViewLogSchemaType } from '@/_schemas';
 import type { SelectPostViewLogType } from '@/_types';
 
@@ -14,22 +11,8 @@ export function useCreatePostViewLog() {
       'posts',
       'view-logs',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-    },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    callback(_res) {},
+    errorCallback(_error) {},
   });
 
   return mutation;

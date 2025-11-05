@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { usePost } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { CreateTagType } from '@/_schemas';
 import type { SelectTagInfoType } from '@/_types';
 
@@ -18,25 +15,11 @@ export function useAdminCreateTag() {
       'admin',
       'tags',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // Admin Tags 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

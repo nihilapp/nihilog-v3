@@ -5,19 +5,17 @@ export type {
   MultipleResultType,
   ResponseType,
   ErrorType,
-  RepoResponseType
-} from './common.types';
-
-// React Query 관련 타입 export
-export type {
+  RepoResponseType,
   OkType,
-  ErrorType as CommonErrorType,
   OpenGraphType,
   SiteMetadata,
-  QueryOptionType,
-  MutationOptionsType,
-  InfiniteQueryOptionType,
-  OptionType
+  OptionType,
+  YnType,
+  UserRoleType,
+  PostStatusType,
+  BaseSearchType,
+  AnalyzeStatType,
+  Menu
 } from './common.types';
 
 // 사용자 타입 export
@@ -135,3 +133,9 @@ export type {
   SelectTagSbcrMpngType,
   SelectTagSbcrMpngListItemType
 } from './tag-subscribe.types';
+
+// 컴포넌트 타입 export
+export type {
+  TableColumn,
+  TableProps
+} from './component/table.types';

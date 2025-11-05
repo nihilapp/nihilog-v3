@@ -1,8 +1,5 @@
-import { toast } from 'sonner';
-
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePost } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { SelectUserInfoType } from '@/_types';
 
 /**
@@ -16,24 +13,11 @@ export function useRefreshToken() {
       'auth',
       'refresh',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
+    callback(_res) {
       // 인증 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

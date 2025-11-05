@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useGet } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { SearchPostType } from '@/_schemas';
 import type { ListType, SelectPostListItemType } from '@/_types';
 
@@ -13,17 +10,8 @@ export function useGetPostList(params: SearchPostType) {
   const query = useGet<ListType<SelectPostListItemType>>({
     url: [ 'posts', ],
     params,
-    callback(_res) {
-      //
-    },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    callback(_res) {},
+    errorCallback(_error) {},
   });
 
   return query;

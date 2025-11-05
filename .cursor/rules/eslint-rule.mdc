@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+**CRITICAL**:eslint의 경우 error 가 아니면 수정작업을 하지 않아도 됩니다.

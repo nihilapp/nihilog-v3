@@ -12,7 +12,7 @@ const publicPaths = [
 ];
 
 export const config = {
-  // 미들웨어는 정적 파일, Next.js 내부 파일, API 라우트를 제외한 모든 경로에서 실행됩니다.
+  // 프록시는 정적 파일, Next.js 내부 파일, API 라우트를 제외한 모든 경로에서 실행됩니다.
   matcher: [ '/((?!_next/static|_next/image|favicon.ico|api|images).*)', ],
 };
 
@@ -94,7 +94,7 @@ async function attemptTokenRefresh(refreshToken: string): Promise<NextResponse |
   return response;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, } = request.nextUrl;
 
   // 요청된 경로가 공개 경로인지 확인합니다.
@@ -183,7 +183,7 @@ export async function middleware(request: NextRequest) {
       // 개발 환경에서는 자세한 에러 정보를, 프로덕션에서는 간단한 메시지만 로깅
       if (process.env.NODE_ENV === 'development') {
         console.error(
-          '미들웨어 토큰 갱신 실패 (상세):',
+          '프록시 토큰 갱신 실패 (상세):',
           {
             error: error instanceof Error
               ? error.message
@@ -198,7 +198,7 @@ export async function middleware(request: NextRequest) {
       }
       else {
         console.error(
-          '미들웨어 토큰 갱신 실패:',
+          '프록시 토큰 갱신 실패:',
           pathname
         );
       }

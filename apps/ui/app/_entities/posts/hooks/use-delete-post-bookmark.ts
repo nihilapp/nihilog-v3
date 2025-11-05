@@ -1,8 +1,5 @@
-import { toast } from 'sonner';
-
 import { useDeletes } from '@/_entities/common/hooks';
 import { useInvalidatePostsBookmarkCache } from '@/_entities/posts/posts.keys';
-import { getToastStyle } from '@/_libs';
 import type { DeletePostBookmarkType } from '@/_schemas';
 
 /**
@@ -16,25 +13,11 @@ export function useDeletePostBookmark() {
       'posts',
       'bookmarks',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 북마크 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

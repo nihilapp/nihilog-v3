@@ -1,8 +1,5 @@
-import { toast } from 'sonner';
-
 import { useDelete } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
-import { getToastStyle } from '@/_libs';
 
 /**
  * @description 카테고리 구독을 해제하는 커스텀 훅
@@ -18,25 +15,11 @@ export function useDeleteCategorySubscribe(ctgrySbcrNo: number) {
       'categories',
       ctgrySbcrNo.toString(),
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 카테고리 구독 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

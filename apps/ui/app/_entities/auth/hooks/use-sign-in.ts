@@ -1,10 +1,8 @@
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePost } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
-import type { SignInType } from '@/_types';
+import type { SignInType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
 /**
@@ -20,13 +18,6 @@ export function useSignIn() {
       'signin',
     ],
     callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
       // 인증 관련 캐시 무효화
       invalidateCache();
 
@@ -37,14 +28,7 @@ export function useSignIn() {
         router.push('/');
       }
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

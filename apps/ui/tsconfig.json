@@ -16,7 +16,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -33,13 +33,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./app/*"],
-      "@repo/config/*": ["../../packages/config/*"],
-      "@repo/dto/*": ["../../packages/dto/dist/*"],
-      "@repo/message": ["../../packages/message/dist/index.js"],
-      "@repo/message/*": ["../../packages/message/dist/*"],
-      "@repo/drizzle": ["../../packages/drizzle/dist"],
-      "@repo/drizzle/*": ["../../packages/drizzle/dist/*"]
+      "@/*": ["./app/*"]
     },
     "target": "ES2017"
   },
@@ -51,7 +45,8 @@
     "**/*.d.ts",
     "build/types/**/*.ts",
     "postcss.config.js",
-    "eslint.config.js"
+    "eslint.config.js",
+    "build/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

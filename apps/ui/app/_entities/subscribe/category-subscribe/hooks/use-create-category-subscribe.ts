@@ -1,8 +1,5 @@
-import { toast } from 'sonner';
-
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
-import { getToastStyle } from '@/_libs';
 import type { CreateCategorySubscribeType } from '@/_schemas';
 import type { SelectCtgrySbcrMpngType } from '@/_types';
 
@@ -20,25 +17,11 @@ export function useCreateCategorySubscribe(ctgryNo: number) {
       'categories',
       ctgryNo.toString(),
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 카테고리 구독 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

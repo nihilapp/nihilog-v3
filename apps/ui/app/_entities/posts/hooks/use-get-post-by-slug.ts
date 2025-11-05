@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useGet } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { SelectPostType } from '@/_types';
 
 /**
@@ -17,16 +14,8 @@ export function useGetPostBySlug(pstCd: string) {
     ],
     enabled: !!pstCd,
     callback(_res) {
-      //
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return query;

@@ -3,9 +3,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import type { QueryOptionType, OkType } from '@/_types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
+import type { QueryOptionType, OkType } from '@/_types';
 import type { ErrorType } from '@/_types';
 
 interface UseGetOptions<TData = unknown> extends QueryOptionType<TData> {

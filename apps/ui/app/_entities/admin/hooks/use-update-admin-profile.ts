@@ -1,9 +1,7 @@
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 import { useInvalidateAdminCache } from '@/_entities/admin/admin.keys';
 import { usePut } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { UpdateUserType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
@@ -19,13 +17,8 @@ export function useAdminUpdateProfile() {
       'admin',
       'profile',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
+    callback(_res) {
+      //
 
       // 관리자 관련 캐시 무효화
       invalidateCache();
@@ -33,13 +26,9 @@ export function useAdminUpdateProfile() {
       // 프로필 수정 후 관리자 대시보드로 이동
       router.push('/admin/dashboard');
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
+    errorCallback(_error) {
+      //
+
     },
   });
 

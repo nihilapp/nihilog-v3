@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { usePut } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { UpdateUserType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
@@ -20,25 +17,11 @@ export function useAdminUpdateUser(userNo: number) {
       'users',
       userNo.toString(),
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // Admin Users 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

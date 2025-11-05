@@ -59,16 +59,19 @@ interface Props {
 export default function AppLayout({ children, }: Props) {
   return (
     <html lang='ko' className='h-full'>
-      <head>
+      <body suppressHydrationWarning className='h-full flex flex-col'>
+        <Providers>{children}</Providers>
         {siteConfig.google.adSrc && (
-          <Script async src={siteConfig.google.adSrc} crossOrigin='anonymous' />
+          <Script
+            async
+            src={siteConfig.google.adSrc}
+            crossOrigin='anonymous'
+            strategy='afterInteractive'
+          />
         )}
         {siteConfig.google.analyticsId && (
           <GoogleAnalytics gaId={siteConfig.google.analyticsId} />
         )}
-      </head>
-      <body suppressHydrationWarning className='h-full'>
-        <Providers>{children}</Providers>
       </body>
     </html>
   );

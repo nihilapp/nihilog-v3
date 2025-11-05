@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useDelete } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
@@ -18,25 +15,11 @@ export function useAdminDeletePost(pstNo: number) {
       'posts',
       pstNo.toString(),
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // Admin Posts 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

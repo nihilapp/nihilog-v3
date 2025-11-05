@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { usePatch } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { UpdateCommentType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
@@ -19,25 +16,11 @@ export function useAdminMultipleUpdateComment() {
       'comments',
       'multiple',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // Admin Comments 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

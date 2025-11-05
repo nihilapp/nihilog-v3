@@ -1,9 +1,6 @@
-import { toast } from 'sonner';
-
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateUserSubscribeCache } from '@/_entities/users/users.keys';
-import { getToastStyle } from '@/_libs';
-import type { UpdateSubscribeType } from '@/_types';
+import type { UpdateSubscribeType } from '@/_schemas';
 import type { SelectUserSbcrInfoType } from '@/_types';
 
 /**
@@ -17,25 +14,11 @@ export function useUpdateUserSubscribe() {
       'users',
       'subscribe',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 구독 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

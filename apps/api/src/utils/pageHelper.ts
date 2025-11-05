@@ -3,11 +3,11 @@ export function pageHelper(
   strtRow?: number,
   endRow?: number
 ): { limit: number | undefined;
-  offset: number | undefined; } {
+  offset: number; } {
   if (page == null || endRow == null) {
     return {
       limit: undefined,
-      offset: undefined,
+      offset: 0,
     };
   }
 
@@ -17,7 +17,7 @@ export function pageHelper(
   };
 
   pagination.startRow = page > 0
-    ? strtRow
+    ? strtRow ?? 0
     : page * endRow;
   pagination.endRow = endRow;
 

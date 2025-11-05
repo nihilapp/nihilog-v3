@@ -3,9 +3,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import type { InfiniteQueryOptionType, OkType } from '@/_types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
+import type { InfiniteQueryOptionType, OkType } from '@/_types';
 import type { ErrorType } from '@/_types';
 
 interface UseGetInfiniteOptions<TPageData = unknown, TPageParam = unknown> extends Omit<InfiniteQueryOptionType<TPageData, TPageParam>, 'getNextPageParam' | 'getPreviousPageParam'> {

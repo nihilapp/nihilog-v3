@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useGet } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { CategoriesWithoutSubscribersItemType } from '@/_types';
 
 /**
@@ -15,22 +12,8 @@ export function useAdminGetCategoriesWithoutSubscribers() {
       'analyze',
       'no-subscribers',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-    },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    callback(_res) {},
+    errorCallback(_error) {},
   });
 
   return query;

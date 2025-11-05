@@ -1,9 +1,7 @@
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePost } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { ResponseType } from '@/_types';
 
 /**
@@ -18,28 +16,14 @@ export function useSignOut() {
       'auth',
       'signout',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 인증 관련 캐시 무효화
       removeCache();
 
       // 로그아웃 후 홈으로 이동
       router.push('/');
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

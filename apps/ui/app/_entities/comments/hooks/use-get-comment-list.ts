@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useGet } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { SearchCommentType } from '@/_schemas';
 import type { ListType, SelectCommentListItemType } from '@/_types';
 
@@ -13,22 +10,8 @@ export function useGetCommentList(params?: SearchCommentType) {
   const query = useGet<ListType<SelectCommentListItemType>>({
     url: [ 'comments', ],
     params,
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-    },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    callback(_res) {},
+    errorCallback(_error) {},
   });
 
   return query;

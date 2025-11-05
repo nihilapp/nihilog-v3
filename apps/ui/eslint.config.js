@@ -1,3 +1,6 @@
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import js from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
 import htmlPlugin from 'eslint-plugin-html';
@@ -7,6 +10,9 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const config = [
   // 기본 추천 설정
@@ -190,7 +196,10 @@ const config = [
       ],
       '@stylistic/array-bracket-newline': [
         'error',
-        { multiline: true, minItems: 2, },
+        {
+          multiline: true,
+          minItems: 2,
+        },
       ],
       '@stylistic/jsx-quotes': [
         'error',
@@ -199,9 +208,15 @@ const config = [
 
       // 함수 정의/호출 줄바꿈 규칙
       // multiline: 여러 줄에 걸친 매개변수일 때 괄호도 줄바꿈
-      '@stylistic/function-paren-newline': ['error', 'multiline'],
+      '@stylistic/function-paren-newline': [
+        'error',
+        'multiline',
+      ],
       // always: 각 인자를 별도 줄에 배치
-      '@stylistic/function-call-argument-newline': ['error', 'always'],
+      '@stylistic/function-call-argument-newline': [
+        'error',
+        'always',
+      ],
 
       // import-x 규칙
       'import-x/extensions': 'off',
@@ -371,7 +386,7 @@ const config = [
       parser: tseslint.parser,
       parserOptions: {
         project: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: __dirname,
       },
     },
     settings: {
@@ -430,6 +445,9 @@ const config = [
       'import-x/no-extraneous-dependencies': 'off',
     },
     languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+      },
       globals: {
         ...globals.node,
       },

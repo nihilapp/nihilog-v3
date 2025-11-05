@@ -1,11 +1,4 @@
-import type {
-  UseQueryOptions,
-  UseMutationOptions,
-  UseInfiniteQueryOptions,
-  InfiniteData,
-  QueryKey
-} from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
+import type { IconType } from 'react-icons/lib';
 
 // 응답 타입 정의
 export type ResponseType<TData = unknown> = {
@@ -53,7 +46,7 @@ export type RepoResponseType<TData = unknown> = {
 // 공통 옵션 타입
 export type OptionType<TData = unknown, TBody = unknown> = {
   url: (string | number)[];
-  params?: Record<string, string> | {} | object;
+  params?: Record<string, string | number | boolean | null | undefined | (string | number)[]>;
   body?: TBody;
   ttl?: number;
   enabled?: boolean;
@@ -96,33 +89,6 @@ export interface SiteMetadata {
     | 'noindex, follow';
 }
 
-// React Query 옵션 타입들
-export type QueryOptionType<TData = unknown, TError = AxiosError<ErrorType>> = Omit<
-  UseQueryOptions<OkType<TData>, TError, OkType<TData>>,
-  'queryKey' | 'queryFn' | 'enabled'
->;
-
-export type MutationOptionsType<
-  TData = unknown,
-  TVariables = unknown,
-  TError = AxiosError<ErrorType>
-> = Omit<UseMutationOptions<OkType<TData>, TError, TVariables>, 'mutationFn' | 'enabled'>;
-
-export type InfiniteQueryOptionType<
-  TPageData = unknown,
-  TPageParam = unknown,
-  TError = AxiosError<ErrorType>
-> = Omit<
-  UseInfiniteQueryOptions<
-    OkType<TPageData>,
-    TError,
-    InfiniteData<OkType<TPageData>, TPageParam>,
-    QueryKey,
-    TPageParam
-  >,
-  'queryKey' | 'queryFn' | 'enabled'
->;
-
 // ========================================================
 // 요청 타입 (스키마에서 추출)
 // ========================================================
@@ -152,3 +118,10 @@ export type AnalyzeStatType = {
   period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
   limit?: number;
 };
+
+export interface Menu {
+  icon: IconType;
+  name: string;
+  url: string;
+  children?: Menu[];
+}

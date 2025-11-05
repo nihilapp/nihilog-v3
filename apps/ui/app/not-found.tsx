@@ -1,7 +1,10 @@
-export default function NotFound() {
+import { NotFound } from '@/_components/common/not-found/NotFound';
+import { CommonLayout } from '@/_layouts/common/CommonLayout';
+
+export default function NotFoundPage() {
   return (
-    <>
-      <h2>Not Found</h2>
-    </>
+    <CommonLayout>
+      <NotFound />
+    </CommonLayout>
   );
 }

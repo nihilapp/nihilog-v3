@@ -1,9 +1,6 @@
-import { toast } from 'sonner';
-
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePut } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
-import type { ChangePasswordType } from '@/_types';
+import type { ChangePasswordType } from '@/_schemas';
 import type { SelectUserInfoType } from '@/_types';
 
 /**
@@ -17,25 +14,11 @@ export function useChangePassword() {
       'auth',
       'password',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 인증 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

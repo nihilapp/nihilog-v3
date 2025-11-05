@@ -175,7 +175,7 @@ Configure in `.env.local` (see `.env.local.example`):
 ### Key Files
 
 - `next.config.ts` - Next.js configuration with Turbopack
-- `middleware.ts` - Authentication and routing logic
+- `proxy.ts` - Authentication and routing logic (Next.js 16 proxy)
 - `eslint.config.js` - ESLint rules with TypeScript/React
 - `tsconfig.json` - TypeScript configuration with strict rules
 - `components.json` - shadcn/ui configuration

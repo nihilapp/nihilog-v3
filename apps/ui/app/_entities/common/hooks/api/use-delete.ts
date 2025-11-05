@@ -3,9 +3,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import type { MutationOptionsType, OkType } from '@/_types';
 import { useDone, useLoading } from '@/_entities/common/hooks';
 import { Api } from '@/_libs/tools/axios.tools';
+import type { MutationOptionsType, OkType } from '@/_types';
 import type { ErrorType } from '@/_types';
 
 interface UseDeleteOptions<TData = unknown, TVariables = unknown> extends MutationOptionsType<TData, TVariables> {

@@ -17,7 +17,24 @@ export function useGet<TData = unknown, TBody = unknown>({
 }: OptionType<TData, TBody>) {
   const urlString = url.join('/');
 
-  const queryString = new URLSearchParams(params).toString();
+  // params를 Record<string, string>으로 변환
+  const stringParams: Record<string, string> = {};
+  Object.entries(params).forEach(([
+    key,
+    value,
+  ]) => {
+    if (value !== undefined && value !== null) {
+      if (Array.isArray(value)) {
+        // 배열의 경우 각 요소를 문자열로 변환하여 쉼표로 구분
+        stringParams[key] = value.map(String).join(',');
+      }
+      else {
+        stringParams[key] = String(value);
+      }
+    }
+  });
+
+  const queryString = new URLSearchParams(stringParams).toString();
 
   const finalUrl = queryString
     ? `${urlString}?${queryString}`

@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useGet } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { SearchCategorySubscribeType } from '@/_schemas';
 import type { ListType, SelectCtgrySbcrMpngListItemType } from '@/_types';
 
@@ -18,22 +15,8 @@ export function useGetCategorySubscribeList(params?: SearchCategorySubscribeType
       'search',
     ],
     params,
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-    },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    callback(_res) {},
+    errorCallback(_error) {},
   });
 
   return query;

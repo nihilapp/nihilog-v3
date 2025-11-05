@@ -1,8 +1,6 @@
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 
 import { usePost } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { CreatePostType } from '@/_schemas';
 import type { SelectPostType } from '@/_types';
 
@@ -25,26 +23,12 @@ export function useAdminCreatePost() {
         return;
       }
 
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
       // Admin Posts 관련 캐시 무효화
       invalidateCache();
 
       router.push(`/admin/posts/edit?pstNo=${res.data.pstNo}`);
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

@@ -1,8 +1,5 @@
-import { toast } from 'sonner';
-
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidatePostsBookmarkCache } from '@/_entities/posts/posts.keys';
-import { getToastStyle } from '@/_libs';
 import type { CreatePostBookmarkType } from '@/_schemas';
 import type { SelectPostBookmarkType } from '@/_types';
 
@@ -17,25 +14,11 @@ export function useCreatePostBookmark() {
       'posts',
       'bookmarks',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 북마크 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

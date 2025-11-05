@@ -4,6 +4,8 @@ import { siteConfig } from './app/_config/config';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  reactCompiler: true,
+  cacheComponents: true,
   images: {
     remotePatterns: [
       {
@@ -31,16 +33,13 @@ const nextConfig: NextConfig = {
     },
   },
   pageExtensions: [
-    'tsx', 'ts',
+    'tsx',
+    'ts',
   ],
   distDir: 'build',
   reactStrictMode: false,
   compiler: {
     styledComponents: true,
-  },
-  eslint: {
-    dirs: [],
-    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,

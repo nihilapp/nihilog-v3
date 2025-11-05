@@ -1,8 +1,5 @@
-import { toast } from 'sonner';
-
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
-import { getToastStyle } from '@/_libs';
 import type { CreateTagSubscribeType } from '@/_schemas';
 import type { MultipleResultType } from '@/_types';
 
@@ -19,25 +16,11 @@ export function useMultipleCreateTagSubscribe() {
       'tags',
       'multiple',
     ],
-    callback(res) {
-      toast.success(
-        res.message,
-        {
-          style: getToastStyle('success'),
-        }
-      );
-
+    callback(_res) {
       // 태그 구독 관련 캐시 무효화
       invalidateCache();
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return mutation;

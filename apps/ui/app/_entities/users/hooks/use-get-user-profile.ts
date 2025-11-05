@@ -1,7 +1,4 @@
-import { toast } from 'sonner';
-
 import { useGet } from '@/_entities/common/hooks';
-import { getToastStyle } from '@/_libs';
 import type { SelectUserInfoType } from '@/_types';
 
 /**
@@ -14,16 +11,8 @@ export function useGetUserProfile() {
       'profile',
     ],
     callback(_res) {
-      //
     },
-    errorCallback(error) {
-      toast.error(
-        error.message,
-        {
-          style: getToastStyle('error'),
-        }
-      );
-    },
+    errorCallback(_error) {},
   });
 
   return query;
