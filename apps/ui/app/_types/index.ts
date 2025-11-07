@@ -136,6 +136,5 @@ export type {
 
 // 컴포넌트 타입 export
 export type {
-  TableColumn,
-  TableProps
-} from './component/table.types';
+  ColumnType
+} from './component/column.types';

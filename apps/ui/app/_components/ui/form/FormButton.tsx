@@ -8,7 +8,7 @@ import { cn } from '@/_libs';
 interface Props
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   type?: 'submit' | 'reset';
   label: string;
   onClick?: () => void;

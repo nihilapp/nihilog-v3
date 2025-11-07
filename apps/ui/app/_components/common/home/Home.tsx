@@ -1,20 +1,26 @@
 'use client';
 
 import { DateTime } from 'luxon';
+import { useState } from 'react';
 
 import { AsyncBoundary } from '@/_components/common/AsyncBoundary';
 import { Button } from '@/_components/common/Button';
 import { Box } from '@/_components/ui/box';
-import { Table } from '@/_components/ui/table';
+import { List } from '@/_components/ui/list';
 import { useGetPostList } from '@/_entities/posts/hooks';
 import { defineColumns } from '@/_libs/defineColumns';
 import type { SelectCategoryType, SelectPostListItemType } from '@/_types';
 
 interface Props {
-  className?: string;
+  className?: string | string[];
 }
 
-export function Home({}: Props) {
+export function Home({ }: Props) {
+  const [
+    listSelectedItems,
+    setListSelectedItems,
+  ] = useState<Set<string>>(new Set());
+
   const { response, loading, done, } = useGetPostList({
     endRow: 10,
     orderBy: 'LATEST',
@@ -28,9 +34,8 @@ export function Home({}: Props) {
     column({
       key: 'rowNo',
       label: 'No.',
-      thAlign: 'center',
-      tdAlign: 'center',
-      className: 'w-[60px]',
+      align: 'center',
+      className: '',
       render: (_row, value, _index) => {
         return value as number;
       },
@@ -38,8 +43,7 @@ export function Home({}: Props) {
     column({
       key: 'pstTtl',
       label: '제목',
-      thAlign: 'center',
-      tdAlign: 'justify',
+      align: 'justify',
       render: (row, value, _index) => {
         const title = value as string;
 
@@ -47,7 +51,8 @@ export function Home({}: Props) {
           <Button
             mode='ghost'
             type='link'
-            href={`/posts/${row.pstNo}`}
+            color='blue'
+            href={`/posts/${row.pstCd}`}
             size='block'
             label={title}
           />
@@ -57,22 +62,25 @@ export function Home({}: Props) {
     column({
       key: 'category',
       label: '카테고리',
-      thAlign: 'center',
-      tdAlign: 'center',
+      align: 'center',
       className: 'w-[10%]',
       render: (_row, value, _index) => {
         const categoryNm = (value as SelectCategoryType)?.ctgryNm;
 
         return (
-          <Button mode='outline' color='black' size='block' label={categoryNm || '미분류'} />
+          <Button
+            mode='outline'
+            color='black'
+            size='block'
+            label={categoryNm || '미분류'}
+          />
         );
       },
     }),
     column({
       key: 'publDt',
       label: '발행일',
-      thAlign: 'center',
-      tdAlign: 'center',
+      align: 'center',
       className: 'w-[25%]',
       render: (_row, value, _index) => {
         const publishedDate = DateTime.fromISO(value as string).toFormat('yyyy년 MM월 dd일 HH:mm:ss');
@@ -81,6 +89,12 @@ export function Home({}: Props) {
       },
     }),
   ];
+
+  const onListSelectionChange = (selectedItems: Set<string> | string[]) => {
+    setListSelectedItems(selectedItems as Set<string>);
+  };
+
+  console.log(listSelectedItems);
 
   return (
     <AsyncBoundary
@@ -91,10 +105,15 @@ export function Home({}: Props) {
         title='최근 10개 게시글'
       />
       <Box.Content>
-        <Table.Template
+        <List.Template
           columns={columns}
           data={response?.data?.list ?? []}
+          selectLabel='선택'
+          selectionMode='multiple'
           emptyMessage='게시글이 없습니다.'
+          rowKey='pstNo'
+          selectedItems={listSelectedItems}
+          onSelectionChange={onListSelectionChange}
         />
       </Box.Content>
     </AsyncBoundary>

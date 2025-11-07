@@ -9,9 +9,9 @@ import { CommonNav } from '@/_layouts/common/CommonNav';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLElement>,
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
 }
 
 const cssVariants = cva(
@@ -36,7 +36,7 @@ export function CommonHeader({ className, ...props }: Props) {
 
       <div className='flex flex-row gap-5 items-center'>
         <CommonNav />
-        <div className='w-[2px] h-[15px] bg-black-200' />
+        <div className='w-[2px] h-[15px] bg-black-300' />
         <AuthButtons />
       </div>
     </header>

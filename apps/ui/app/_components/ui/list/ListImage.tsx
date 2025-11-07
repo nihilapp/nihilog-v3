@@ -6,13 +6,13 @@ import React from 'react';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLTableSectionElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
 }
 
 const cssVariants = cva(
-  [ '', ],
+  [ 'size-[300px]', ],
   {
     variants: {},
     defaultVariants: {},
@@ -20,14 +20,16 @@ const cssVariants = cva(
   }
 );
 
-export function TableBody({ className, ...props }: Props) {
+export function ListImage({ className, ...props }: Props) {
   return (
-    <tbody
+    <div
       className={cn(
         cssVariants({}),
         className
       )}
       {...props}
-    />
+    >
+      content
+    </div>
   );
 }

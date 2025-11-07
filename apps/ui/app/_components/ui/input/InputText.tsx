@@ -6,15 +6,15 @@ import React from 'react';
 import { cn } from '@/_libs';
 
 interface Props
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'type'>,
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'type' | 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   type?: 'text' | 'number' | 'email' | 'password';
   as?: 'input' | 'textarea';
 }
 
 const cssVariants = cva(
-  [ 'border border-black-200 rounded-2 p-2', ],
+  [ 'border border-black-300 rounded-2 p-2', ],
   {
     variants: {},
     defaultVariants: {},

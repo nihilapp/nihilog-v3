@@ -30,7 +30,7 @@ export function SignInForm() {
   };
 
   return (
-    <Box.Panel modal width={500}>
+    <Box.Panel>
       <Box.Top title='로그인' />
       <Box.Content>
         <Form.Container

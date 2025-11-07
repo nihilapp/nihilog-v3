@@ -6,13 +6,13 @@ import React from 'react';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLTableElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
 }
 
 const cssVariants = cva(
-  [ 'w-full bg-white border border-black-100 table-fixed', ],
+  [ 'flex flex-col gap-4', ],
   {
     variants: {},
     defaultVariants: {},
@@ -20,9 +20,9 @@ const cssVariants = cva(
   }
 );
 
-export function TableContainer({ className, children, ...props }: Props) {
+export function ListContainer({ className, children, ...props }: Props) {
   return (
-    <table
+    <div
       className={cn(
         cssVariants({}),
         className
@@ -30,6 +30,6 @@ export function TableContainer({ className, children, ...props }: Props) {
       {...props}
     >
       {children}
-    </table>
+    </div>
   );
 }

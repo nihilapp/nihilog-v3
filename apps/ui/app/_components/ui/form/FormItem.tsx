@@ -8,7 +8,7 @@ import { cn } from '@/_libs';
 interface FormItemProps<TFieldValues extends FieldValues = FieldValues>
   extends Omit<ControllerProps<TFieldValues>, 'name' | 'control'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   label?: string;
   name: FieldPath<TFieldValues>;
 }

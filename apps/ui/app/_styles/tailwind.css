@@ -7,9 +7,11 @@
 @import "./layout/flex.css";
 
 @import "./utility/layout.css";
+@import "./utility/scrollbar.css";
 
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
+@plugin "@iconify/tailwind4";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -57,7 +59,7 @@
   }
 
   body {
-    @apply bg-black-50;
+    @apply bg-black-100;
   }
 
   button {

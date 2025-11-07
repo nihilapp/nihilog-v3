@@ -8,7 +8,7 @@ interface Props {
 
 export function CommonMain({ children, }: Props) {
   return (
-    <Box.Panel mode='main'>
+    <Box.Panel mode='main' className='overflow-y-auto'>
       {children}
     </Box.Panel>
   );

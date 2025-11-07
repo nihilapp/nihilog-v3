@@ -9,9 +9,9 @@ import { Logo } from '@/_components/common/Logo';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
 }
 
 interface NavItem {

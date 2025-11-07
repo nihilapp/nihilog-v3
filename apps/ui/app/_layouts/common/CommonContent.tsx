@@ -12,7 +12,7 @@ interface Props {
 
 export function CommonContent({ children, }: Props) {
   return (
-    <Box.Divider layout='flex' className='flex-1 p-2 gap-2'>
+    <Box.Divider layout='flex' className='flex-1 p-2 gap-2 overflow-y-hidden'>
       <CommonSide />
       <CommonMain>
         {children}

@@ -6,14 +6,14 @@ import React from 'react';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   title: string;
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-2', ],
+  [ 'flex flex-col gap-2 mb-5', ],
   {
     variants: {},
     defaultVariants: {},

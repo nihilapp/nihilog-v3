@@ -8,9 +8,9 @@ import React from 'react';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLHeadingElement>,
+  extends Omit<React.HTMLAttributes<HTMLHeadingElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   width?: number;
   height?: number;
 }

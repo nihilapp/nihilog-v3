@@ -21,7 +21,7 @@ type ButtonProps = BaseProps & {
   type?: 'button';
 } & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'children'>
 & VariantProps<typeof buttonCva> & {
-  className?: string;
+  className?: string | string[];
 };
 
 type LinkProps = BaseProps & {
@@ -29,13 +29,13 @@ type LinkProps = BaseProps & {
   href: string;
 } & Omit<React.ComponentProps<typeof Link>, 'href' | 'children' | 'className'>
 & VariantProps<typeof linkCva> & {
-  className?: string;
+  className?: string | string[];
 };
 
 type Props = ButtonProps | LinkProps;
 
 const buttonCva = cva(
-  [ 'py-1 px-2 rounded-2 transition-colors duration-200', ],
+  [ 'px-2 rounded-2 transition-colors duration-200 box-border', ],
   {
     variants: {
       mode: {
@@ -130,7 +130,7 @@ const buttonCva = cva(
       {
         mode: 'normal',
         color: 'white',
-        className: 'bg-white text-black-900 border border-black-200 hover:bg-black-50',
+        className: 'bg-white text-black-900 border border-black-300 hover:bg-black-50',
       },
       {
         mode: 'ghost',
@@ -263,7 +263,7 @@ const linkCva = cva(
       {
         mode: 'normal',
         color: 'white',
-        className: 'bg-white text-black-900 border border-black-200 hover:bg-black-50',
+        className: 'bg-white text-black-900 border border-black-300 hover:bg-black-50',
       },
       {
         mode: 'ghost',

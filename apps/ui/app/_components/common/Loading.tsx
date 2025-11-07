@@ -7,9 +7,9 @@ import { FaSpinner } from 'react-icons/fa';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   message?: string;
 }
 

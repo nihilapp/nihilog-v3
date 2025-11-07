@@ -10,7 +10,7 @@ import { cn } from '@/_libs';
 interface Props<TFieldValues extends FieldValues = FieldValues>
   extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   form: UseFormReturn<TFieldValues>;
   onSubmit: SubmitHandler<TFieldValues>;
 }

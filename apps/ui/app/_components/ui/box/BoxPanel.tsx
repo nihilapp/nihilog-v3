@@ -6,16 +6,16 @@ import React from 'react';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLElement>,
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
   mode?: 'div' | 'section' | 'main' | 'aside';
   colspan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   rowspan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-2 p-2 bg-white rounded-2 shadow-md border border-black-100', ],
+  [ 'flex flex-col gap-2 p-4 bg-white rounded-2 shadow-md border border-black-200', ],
   {
     variants: {
       Mode: {

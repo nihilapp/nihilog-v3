@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import type { TableColumn } from '@/_types';
+import type { ColumnType } from '@/_types';
 
 export function defineColumns<TData>() {
   return <K extends Extract<keyof TData, string>>(
@@ -13,14 +13,13 @@ export function defineColumns<TData>() {
         index: number
       ) => ReactNode;
       className?: string[] | string;
-      style?: string | React.CSSProperties;
-      thAlign?: 'left' | 'center' | 'right' | 'justify';
-      tdAlign?: 'left' | 'center' | 'right' | 'justify';
+      style?: React.CSSProperties;
+      align?: 'left' | 'center' | 'right' | 'justify';
     }
-  ): TableColumn<TData, K> => {
+  ): ColumnType<TData, K> => {
     return {
       ...column,
       key: column.key as K,
-    } satisfies TableColumn<TData, K>;
+    } satisfies ColumnType<TData, K>;
   };
 }

@@ -8,9 +8,9 @@ import { FaRegCopyright } from 'react-icons/fa';
 import { cn } from '@/_libs';
 
 interface Props
-  extends React.HTMLAttributes<HTMLElement>,
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'className'>,
   VariantProps<typeof cssVariants> {
-  className?: string;
+  className?: string | string[];
 }
 
 const cssVariants = cva(
