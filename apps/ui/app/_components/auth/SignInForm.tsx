@@ -30,12 +30,14 @@ export function SignInForm() {
   };
 
   return (
-    <Box.Panel>
-      <Box.Top title='로그인' />
-      <Box.Content>
+    <Box.Panel full className='p-2 md:p-4'>
+      <Box.Content className={[ 'items-center justify-center', ]}>
+        <Box.Top title='로그인' />
+
         <Form.Container
           form={form}
           onSubmit={onSubmitForm}
+          className='w-full max-w-[500px]'
         >
           <Form.Field>
             <Form.Item<SignInType>

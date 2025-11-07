@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
@@ -88,12 +89,19 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
         </span>
         {checkbox
           ? (
-            <input
-              type='checkbox'
-              checked={checked}
-              onChange={onChange}
-              className='cursor-pointer w-5 h-5 mx-auto'
-            />
+            <button
+              type='button'
+              onClick={onChange}
+              className='cursor-pointer mx-auto'
+            >
+              {checked
+                ? (
+                  <Icon icon='material-symbols:check-box' className='size-6' />
+                )
+                : (
+                  <Icon icon='material-symbols:check-box-outline' className='size-6' />
+                )}
+            </button>
           )
           : (
             <span className='text-black-base'>{itemValue}</span>

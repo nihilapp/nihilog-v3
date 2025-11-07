@@ -20,7 +20,7 @@ interface NavItem {
 }
 
 const cssVariants = cva(
-  [ 'layout-header', ],
+  [ 'layout-header flex-col md:flex-row gap-2 md:gap-0', ],
   {
     variants: {},
     defaultVariants: {},
@@ -61,11 +61,12 @@ export function AuthHeader({ className, ...props }: Props) {
 
       {visibleItems.length > 0 && (
         <nav>
-          <ul className='flex flex-row gap-2'>
+          <ul className='flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base'>
             {visibleItems.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  className='block p-1 md:p-0'
                 >
                   {item.label}
                 </Link>

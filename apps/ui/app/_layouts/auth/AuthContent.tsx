@@ -13,7 +13,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-row flex-1', ],
+  [ 'flex flex-row flex-1 min-h-0 overflow-y-hidden', ],
   {
     variants: {},
     defaultVariants: {},

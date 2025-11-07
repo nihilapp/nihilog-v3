@@ -15,7 +15,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'layout-header', ],
+  [ 'layout-header flex-col md:flex-row gap-2 md:gap-0', ],
   {
     variants: {},
     defaultVariants: {},
@@ -34,9 +34,9 @@ export function CommonHeader({ className, ...props }: Props) {
     >
       <Logo />
 
-      <div className='flex flex-row gap-5 items-center'>
+      <div className='flex flex-col md:flex-row gap-2 md:gap-5 items-center'>
         <CommonNav />
-        <div className='w-[2px] h-[15px] bg-black-300' />
+        <div className='hidden md:block w-[2px] h-[15px] bg-black-300' />
         <AuthButtons />
       </div>
     </header>

@@ -33,12 +33,14 @@ export function SubscribeForm() {
   };
 
   return (
-    <Box.Panel modal width={500}>
-      <Box.Top title='회원가입' />
-      <Box.Content>
+    <Box.Panel full className='p-2 md:p-4'>
+      <Box.Content className={[ 'items-center justify-center', ]}>
+        <Box.Top title='회원가입' />
+
         <Form.Container
           form={form}
           onSubmit={onSubmitForm}
+          className='w-full max-w-[500px]'
         >
           <Form.Field>
             <Form.Item<CreateUserType>

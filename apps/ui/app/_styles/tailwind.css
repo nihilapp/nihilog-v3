@@ -11,7 +11,10 @@
 
 @plugin "@tailwindcss/typography";
 @plugin "tailwindcss-animate";
-@plugin "@iconify/tailwind4";
+@plugin "@iconify/tailwind4" {
+  prefix: "icon";
+  scale: 1.2;
+}
 
 @custom-variant dark (&:where(.dark, .dark *));
 

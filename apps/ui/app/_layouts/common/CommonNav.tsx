@@ -54,7 +54,7 @@ export function CommonNav({ className, ...props }: Props) {
       )}
       {...props}
     >
-      <ul className='flex flex-row gap-2'>
+      <ul className='flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base'>
         {navItems.map((item) => (
           <li key={item.href}>
             <Button

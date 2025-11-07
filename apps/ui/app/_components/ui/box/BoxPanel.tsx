@@ -10,6 +10,7 @@ interface Props
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   mode?: 'div' | 'section' | 'main' | 'aside';
+  full?: boolean;
   colspan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   rowspan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 }
@@ -60,6 +61,7 @@ const cssVariants = cva(
 
 export function BoxPanel({
   className,
+  full,
   mode: Mode = 'div',
   colspan,
   rowspan,
@@ -74,7 +76,8 @@ export function BoxPanel({
           colspan,
           rowspan,
         }),
-        className
+        className,
+        full && 'h-full flex flex-col'
       )}
       {...props}
     >

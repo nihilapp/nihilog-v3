@@ -48,7 +48,7 @@ export function CommonFooter({ className, ...props }: Props) {
       )}
       {...props}
     >
-      <small className='flex flex-row gap-1 items-center justify-center'>
+      <small className='flex flex-row gap-1 items-center justify-center text-xs md:text-sm'>
         <span>
           <FaRegCopyright />
           <span className='sr-only'>Copyright</span>

@@ -48,7 +48,7 @@ export function AuthButtons({ className, ...props }: Props) {
         )}
         {...props}
       >
-        <ul className='flex flex-row items-center gap-2'>
+        <ul className='flex flex-col md:flex-row items-center gap-1 md:gap-2 text-sm md:text-base'>
           {!isLoggedIn && (
             <>
               <li>

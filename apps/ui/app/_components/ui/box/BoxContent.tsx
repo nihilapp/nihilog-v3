@@ -12,7 +12,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex-1', ],
+  [ 'flex-1 flex flex-col', ],
   {
     variants: {},
     defaultVariants: {},

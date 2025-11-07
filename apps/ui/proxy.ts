@@ -5,7 +5,7 @@ import { siteConfig } from './app/_config/config';
 // 인증이 필요 없는 공개 경로 목록입니다.
 const publicPaths = [
   '/auth/signin',
-  '/auth/signup',
+  '/auth/subscribe',
   '/auth/admin/signup',
   '/auth/forgot-password',
   '/auth/reset-password',

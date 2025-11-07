@@ -12,7 +12,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'w-full flex flex-row items-center justify-center p-2', ],
+  [ 'w-full h-full min-h-0 flex flex-row items-center justify-center p-2 md:p-4 overflow-y-auto', ],
   {
     variants: {},
     defaultVariants: {},
