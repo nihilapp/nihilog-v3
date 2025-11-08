@@ -6,7 +6,7 @@ import { Box } from '@/_components/ui/box';
 import { SideToggleButton } from '@/_layouts/common/SideToggleButton';
 import { cn } from '@/_libs';
 
-export function CommonSide() {
+export function AdminSide() {
   const [
     isCollapsed,
     setIsCollapsed,

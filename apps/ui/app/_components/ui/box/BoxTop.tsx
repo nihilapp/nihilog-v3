@@ -1,19 +1,20 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
+  extends ReactElementProps<HTMLDivElement>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
+  showTitle?: boolean;
   title: string;
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-2 mb-5', ],
+  [ 'flex flex-row gap-2 items-center justify-between mb-5', ],
   {
     variants: {},
     defaultVariants: {},
@@ -21,7 +22,7 @@ const cssVariants = cva(
   }
 );
 
-export function BoxTop({ className, title, children, ...props }: Props) {
+export function BoxTop({ className, showTitle = true, title, children, ...props }: Props) {
   return (
     <div
       className={cn(
@@ -30,7 +31,7 @@ export function BoxTop({ className, title, children, ...props }: Props) {
       )}
       {...props}
     >
-      <h2 className='text-h6 font-bold'>{title}</h2>
+      {showTitle && <h2 className='text-h6 font-bold'>{title}</h2>}
       {children}
     </div>
   );

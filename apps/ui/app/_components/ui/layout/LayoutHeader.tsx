@@ -6,13 +6,15 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLDivElement>,
-  VariantProps<typeof cssVariants> {
+  extends ReactElementProps, VariantProps<typeof cssVariants> {
   className?: string | string[];
+  custom?: {
+    div?: string | string[];
+  };
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-2', ],
+  [ '', ],
   {
     variants: {},
     defaultVariants: {},
@@ -20,7 +22,7 @@ const cssVariants = cva(
   }
 );
 
-export function FormField({ className, children, ...props }: Props) {
+export function LayoutHeader({ className, ...props }: Props) {
   return (
     <div
       className={cn(
@@ -29,7 +31,7 @@ export function FormField({ className, children, ...props }: Props) {
       )}
       {...props}
     >
-      {children}
+      content
     </div>
   );
 }

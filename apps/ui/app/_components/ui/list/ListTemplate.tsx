@@ -16,7 +16,7 @@ interface Props {
   onSelectionChange?: ((selectedItem: string) => void) | ((selectedItems: Set<string> | string[]) => void);
   showSelectAll?: boolean;
   itemDirection?: 'row' | 'col';
-  classNames?: {
+  custom?: {
     container?: string;
     item?: string;
     cell?: string;
@@ -36,7 +36,7 @@ export function ListTemplate({
   onSelectionChange: onSelectionChange,
   showSelectAll: _showSelectAll,
   itemDirection,
-  classNames,
+  custom,
 }: Props) {
   const getRowId = (row: any): string => {
     return String(row[rowKey]);
@@ -82,7 +82,7 @@ export function ListTemplate({
   };
 
   return (
-    <List.Container className={classNames?.container}>
+    <List.Container className={custom?.container}>
       {
         data.length > 0
           ? (
@@ -93,7 +93,7 @@ export function ListTemplate({
                   direction={itemDirection}
                   className={cn([
                     getIsSelected(getRowId(row)) && 'border-black-base',
-                    classNames?.item,
+                    custom?.item,
                   ])}
                 >
                   {selectionMode === 'single' && onSelectionChange && (
@@ -105,7 +105,7 @@ export function ListTemplate({
                       onChange={() => onSingleSelect(getRowId(row))}
                       className={cn([
                         'flex-none shrink-0 w-[40px] min-w-[40px] max-w-[40px]',
-                        classNames?.cell,
+                        custom?.cell,
                       ])}
                     />
                   )}
@@ -118,7 +118,7 @@ export function ListTemplate({
                       onChange={() => onMultipleSelect(getRowId(row))}
                       className={cn([
                         'flex-none shrink-0 w-[40px] min-w-[40px] max-w-[40px]',
-                        classNames?.cell,
+                        custom?.cell,
                       ])}
                     />
                   )}
@@ -133,7 +133,7 @@ export function ListTemplate({
                           colIndex
                         )
                         : row[col.key]}
-                      className={cn([ classNames?.cell, ])}
+                      className={cn([ custom?.cell, ])}
                     />
                   ))}
                 </List.Item>
@@ -143,7 +143,7 @@ export function ListTemplate({
           : (
             <List.Empty
               emptyMessage={emptyMessage}
-              className={classNames?.empty}
+              className={custom?.empty}
             />
           )
       }

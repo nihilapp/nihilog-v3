@@ -1,12 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { InputText } from '@/_components/ui/input';
-import { useSignIn } from '@/_entities/auth/hooks';
+import { useGetSession, useSignIn } from '@/_entities/auth/hooks';
 import { signInSchema, type SignInType } from '@/_schemas';
 
 export function SignInForm() {
@@ -19,6 +20,7 @@ export function SignInForm() {
     },
   });
 
+  const { response, loading, done, error, } = useGetSession();
   const signIn = useSignIn();
 
   const onSubmitForm: SubmitHandler<SignInType> = (data) => {
@@ -28,6 +30,21 @@ export function SignInForm() {
   const onResetForm = () => {
     form.reset();
   };
+
+  useEffect(
+    () => {
+      console.log(response);
+      console.log(loading);
+      console.log(done);
+      console.log(error);
+    },
+    [
+      response,
+      loading,
+      done,
+      error,
+    ]
+  );
 
   return (
     <Box.Panel full className='p-2 md:p-4'>

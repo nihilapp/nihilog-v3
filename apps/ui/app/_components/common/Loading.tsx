@@ -1,13 +1,13 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 import { FaSpinner } from 'react-icons/fa';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'className'>,
+  extends ReactElementProps<HTMLDivElement>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   message?: string;

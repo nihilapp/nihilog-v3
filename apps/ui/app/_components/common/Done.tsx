@@ -1,15 +1,22 @@
 'use client';
 
-import React from 'react';
+import type React from 'react';
 
-interface Props {
+import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
+
+interface Props extends ReactElementProps<HTMLDivElement> {
+  className?: string | string[];
   children?: React.ReactNode;
 }
 
-export function Done({ children, }: Props) {
+export function Done({ className, children, ...props }: Props) {
   return (
-    <>
+    <div
+      className={cn(className)}
+      {...props}
+    >
       {children}
-    </>
+    </div>
   );
 }

@@ -2,7 +2,7 @@
 
 # 컴포넌트 폴더 경로
 
-## \_components
+## `_components`
 
 - `apps/ui/app/_components`
 - `apps/ui/app/_components/admin`
@@ -13,12 +13,13 @@
 - `apps/ui/app/_components/common/not-found`
 - `apps/ui/app/_components/ui`
 - `apps/ui/app/_components/ui/box`
+- `apps/ui/app/_components/ui/layout`
 - `apps/ui/app/_components/ui/form`
 - `apps/ui/app/_components/ui/input`
 - `apps/ui/app/_components/ui/list`
 - `apps/ui/app/_components/ui/table`
 
-## \_layouts
+## `_layouts`
 
 - `apps/ui/app/_layouts`
 - `apps/ui/app/_layouts/admin`

@@ -3,14 +3,15 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends Omit<React.HTMLAttributes<HTMLHeadingElement>, 'className'>,
+  extends ReactElementProps<HTMLHeadingElement>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
+  text?: string;
   width?: number;
   height?: number;
 }
@@ -24,7 +25,7 @@ const cssVariants = cva(
   }
 );
 
-export function Logo({ className, width = 25, height = 25, ...props }: Props) {
+export function Logo({ className, text = 'NIHILOG', width = 25, height = 25, ...props }: Props) {
   return (
     <Link href='/'>
       <h1
@@ -43,7 +44,7 @@ export function Logo({ className, width = 25, height = 25, ...props }: Props) {
           className='block object-contain'
         />
 
-        <span className='text-lg font-900'>NIHILOG</span>
+        <span className='text-lg font-900'>{text}</span>
       </h1>
     </Link>
   );

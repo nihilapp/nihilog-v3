@@ -45,7 +45,7 @@ const navItems: NavItem[] = [
   },
 ];
 
-export function CommonNav({ className, ...props }: Props) {
+export function AdminNav({ className, ...props }: Props) {
   return (
     <nav
       className={cn(

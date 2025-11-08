@@ -4,22 +4,27 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 import { Done } from './Done';
 import { Loading } from './Loading';
 
 interface Props
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends ReactElementProps<HTMLDivElement>,
   VariantProps<typeof cssVariants> {
+  className?: string | string[];
   loading: boolean;
   done: boolean;
   mode?: 'normal' | 'session';
-  loadingClassName?: string;
-  doneClassName?: string;
   loadingMessage?: string;
-  Loading?: React.ComponentType<React.HTMLAttributes<HTMLDivElement> & { message?: string }>;
-  Done?: React.ComponentType<React.HTMLAttributes<HTMLDivElement>>;
+  Loading?: React.ComponentType<ReactElementProps<HTMLDivElement> & { message?: string;
+    className?: string | string[]; }>;
+  Done?: React.ComponentType<ReactElementProps<HTMLDivElement> & { className?: string | string[] }>;
   children?: React.ReactNode;
+  custom?: {
+    loading?: string | string[];
+    done?: string | string[];
+  };
 }
 
 const cssVariants = cva(
@@ -35,12 +40,11 @@ export function AsyncBoundary({
   loading,
   done,
   mode = 'normal',
-  loadingClassName,
-  doneClassName,
   loadingMessage,
   Loading: LoadingComponent = Loading,
   Done: DoneComponent = Done,
   children,
+  custom,
   ...props
 }: Props) {
   if (loading) {
@@ -48,7 +52,7 @@ export function AsyncBoundary({
       <LoadingComponent
         className={cn(
           cssVariants({}),
-          loadingClassName
+          custom?.loading
         )}
         message={loadingMessage}
         {...props}
@@ -61,7 +65,7 @@ export function AsyncBoundary({
       <DoneComponent
         className={cn(
           cssVariants({}),
-          doneClassName
+          custom?.done
         )}
         {...props}
       >
@@ -76,7 +80,7 @@ export function AsyncBoundary({
       <DoneComponent
         className={cn(
           cssVariants({}),
-          doneClassName
+          custom?.done
         )}
         {...props}
       >

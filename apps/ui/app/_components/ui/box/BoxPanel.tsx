@@ -1,12 +1,12 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'className'>,
+  extends ReactElementProps<HTMLElement>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   mode?: 'div' | 'section' | 'main' | 'aside';

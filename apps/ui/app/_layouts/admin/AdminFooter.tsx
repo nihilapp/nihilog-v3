@@ -23,7 +23,7 @@ const cssVariants = cva(
   }
 );
 
-export function CommonFooter({ className, ...props }: Props) {
+export function AdminFooter({ className, ...props }: Props) {
   const [
     year,
     setYear,

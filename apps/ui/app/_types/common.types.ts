@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { IconType } from 'react-icons/lib';
 
 // 응답 타입 정의
@@ -88,6 +89,11 @@ export interface SiteMetadata {
     | 'index, nofollow'
     | 'noindex, follow';
 }
+
+export type ReactElementProps<
+  ElementType = HTMLElement,
+  ExcludedKeys extends keyof React.HTMLAttributes<ElementType> = never
+> = Omit<React.HTMLAttributes<ElementType>, 'className' | ExcludedKeys>;
 
 // ========================================================
 // 요청 타입 (스키마에서 추출)
