@@ -37,8 +37,6 @@ export function CommonLayout({ children, }: Props) {
     },
   ];
 
-  // TODO: auth 메뉴 로그인 전 로그인 후 프롭으로 전달.
-
   const beforeSignInMenu: Menu[] = [
     {
       icon: <Icon icon='mdi:user-add' />,
@@ -76,11 +74,11 @@ export function CommonLayout({ children, }: Props) {
   return (
     <>
       <Frame.Header text='NIHILOG'>
+        <Frame.Nav menu={navMenu} />
         <Frame.AuthButtons
           beforeSignInMenu={beforeSignInMenu}
           afterSignInMenu={afterSignInMenu}
         />
-        <Frame.Nav menu={navMenu} />
       </Frame.Header>
       <Frame.Content withSide sidePosition='left'>
         {children}

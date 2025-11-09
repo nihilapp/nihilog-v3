@@ -18,7 +18,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col md:flex-row gap-2 overflow-y-hidden', ],
+  [ 'flex flex-col md:flex-row gap-2 overflow-y-hidden flex-1 p-2', ],
   {
     variants: {},
     defaultVariants: {},
@@ -49,7 +49,13 @@ export function FrameContent({ className, withSide = false, sidePosition = 'left
         </Frame.Side>
       )}
 
-      <Frame.Main>
+      <Frame.Main
+        className={cn(
+          !isMoSm && sidePosition === 'left' && 'order-2',
+          !isMoSm && sidePosition === 'right' && 'order-1',
+          isMoSm && 'order-1'
+        )}
+      >
         main
       </Frame.Main>
     </div>

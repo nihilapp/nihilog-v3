@@ -10,31 +10,33 @@ interface Props {
   children?: React.ReactNode;
 }
 
-const navMenu: Menu[] = [
-  {
-    icon: <Icon icon='mdi:home' />,
-    name: '홈',
-    url: '/',
-  },
-  {
-    icon: <Icon icon='mdi:post-outline' />,
-    name: '포스트',
-    url: '/posts',
-  },
-  {
-    icon: <Icon icon='mdi:tag' />,
-    name: '태그 클라우드',
-    url: '/tags',
-  },
-  {
-    icon: <Icon icon='mdi:archive' />,
-    name: '아카이브',
-    url: '/archive',
-  },
-];
+// TODO: 어드민 메뉴 조정 필요.
 
 export function AdminLayout({ children, }: Props) {
   const signOut = useSignOut();
+
+  const navMenu: Menu[] = [
+    {
+      icon: <Icon icon='mdi:home' />,
+      name: '홈',
+      url: '/',
+    },
+    {
+      icon: <Icon icon='mdi:post-outline' />,
+      name: '포스트',
+      url: '/posts',
+    },
+    {
+      icon: <Icon icon='mdi:tag' />,
+      name: '태그 클라우드',
+      url: '/tags',
+    },
+    {
+      icon: <Icon icon='mdi:archive' />,
+      name: '아카이브',
+      url: '/archive',
+    },
+  ];
 
   const afterSignInMenu: Menu[] = [
     {

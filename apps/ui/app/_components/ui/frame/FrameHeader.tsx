@@ -35,7 +35,9 @@ export function FrameHeader({ className, text, children, ...props }: Props) {
     >
       <Logo text={text} />
 
-      {children}
+      <div className='flex flex-row gap-2 items-center justify-end'>
+        {children}
+      </div>
     </header>
   );
 }
