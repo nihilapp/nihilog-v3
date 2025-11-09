@@ -1,11 +1,11 @@
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Prisma } from '@nihilog/db';
 
 import { MESSAGE } from '@/code/messages';
 import { PRISMA_ERROR_CODE } from '@/code/prisma.code';
 import { prismaResponse } from '@/utils/prismaResponse';
 
-export function prismaError(error: PrismaClientKnownRequestError) {
-  if (!(error instanceof PrismaClientKnownRequestError)) {
+export function prismaError(error: Prisma.PrismaClientKnownRequestError) {
+  if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
     return prismaResponse(
       false,
       null,

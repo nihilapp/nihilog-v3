@@ -13,11 +13,14 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --config eslint.config.mjs",
     "lint:fix": "eslint \"{src,apps,libs}/**/*.ts\" --config eslint.config.mjs --fix",
-    "db:generate": "pnpm prisma generate",
-    "db:migrate": "pnpm prisma migrate dev",
-    "db:studio": "pnpm prisma studio"
+    "db:generate": "pnpm --filter @nihilog/db generate",
+    "db:migrate": "pnpm --filter @nihilog/db migrate:dev",
+    "db:studio": "pnpm --filter @nihilog/db studio"
   },
   "dependencies": {
+    "@nihilog/code": "workspace:*",
+    "@nihilog/db": "workspace:*",
+    "@nihilog/schemas": "workspace:*",
     "@asteasolutions/zod-to-openapi": "^8.1.0",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "^11.1.0",
@@ -35,7 +38,6 @@
     "@nestjs/platform-fastify": "^11.1.8",
     "@nestjs/swagger": "^11.2.1",
     "@nestjs/throttler": "^6.4.0",
-    "@prisma/client": "^6.19.0",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/lodash": "^4.17.20",

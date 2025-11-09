@@ -1,6 +1,5 @@
+import type { AnalyzePostItemType, AverageViewStatItemType, AverageBookmarkStatItemType, TopPopularPostItemType, TopCommentPostItemType, PostStatusRatioItemType, SharePlatformStatItemType } from '@nihilog/schemas';
 import { DateTime } from 'luxon';
-
-import type { AnalyzePostItemType, AverageViewStatItemType, AverageBookmarkStatItemType, TopPopularPostItemType, TopCommentPostItemType, PostStatusRatioItemType, SharePlatformStatItemType } from '@/endpoints/prisma/types/post.types';
 
 import { timeToString } from './timeHelper';
 

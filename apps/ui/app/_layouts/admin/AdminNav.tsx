@@ -2,12 +2,12 @@
 
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { Button } from '@/_components/common/Button';
+import { Button } from '@/_components/ui/button';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLElement>,
+  extends ReactElementProps<'nav'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
 }
@@ -57,8 +57,7 @@ export function AdminNav({ className, ...props }: Props) {
       <ul className='flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base'>
         {navItems.map((item) => (
           <li key={item.href}>
-            <Button
-              type='menu'
+            <Button.Menu
               label={item.label}
               href={item.href}
             />

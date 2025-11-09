@@ -8,7 +8,7 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLHeadingElement>,
+  extends ReactElementProps<'h1'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   text?: string;

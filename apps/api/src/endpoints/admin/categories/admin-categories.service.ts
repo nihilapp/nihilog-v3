@@ -1,8 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
-import { MESSAGE } from '@/code/messages';
-import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
-import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type {
   SelectCategoryListItemType,
   SelectCategoryType,
@@ -19,8 +15,12 @@ import type {
   UnusedCategoryItemType,
   CategorySubscriberGrowthRateItemType,
   CategoriesWithoutSubscribersItemType
-} from '@/endpoints/prisma/types/category.types';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+} from '@nihilog/schemas';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
+
+import { MESSAGE } from '@/code/messages';
+import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

@@ -9,13 +9,13 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLElement>,
+  extends ReactElementProps<'header'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
 }
 
 const cssVariants = cva(
-  [ 'layout-header flex-col md:flex-row gap-2 md:gap-0', ],
+  [ 'frame-header flex-col md:flex-row gap-2 md:gap-0', ],
   {
     variants: {},
     defaultVariants: {},

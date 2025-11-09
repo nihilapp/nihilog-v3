@@ -6,7 +6,7 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLElement>,
+  extends ReactElementProps<'div'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   mode?: 'div' | 'section' | 'main' | 'aside';
@@ -19,7 +19,7 @@ const cssVariants = cva(
   [ 'flex flex-col gap-2 p-4 bg-white rounded-2 shadow-md border border-black-200', ],
   {
     variants: {
-      Mode: {
+      mode: {
         div: [ 'flex-1', ],
         section: [ 'flex-1', ],
         main: [ 'flex-1', ],
@@ -62,26 +62,87 @@ const cssVariants = cva(
 export function BoxPanel({
   className,
   full,
-  mode: Mode = 'div',
+  mode = 'div',
   colspan,
   rowspan,
   children,
   ...props
 }: Props) {
-  return (
-    <Mode
-      className={cn(
-        cssVariants({
-          Mode,
-          colspan,
-          rowspan,
-        }),
-        className,
-        full && 'h-full flex flex-col'
-      )}
-      {...props}
-    >
-      {children}
-    </Mode>
-  );
+  if (mode === 'div') {
+    return (
+      <div
+        className={cn(
+          cssVariants({
+            mode,
+            colspan,
+            rowspan,
+          }),
+          className,
+          full && 'h-full flex flex-col'
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  if (mode === 'section') {
+    return (
+      <section
+        className={cn(
+          cssVariants({
+            mode,
+            colspan,
+            rowspan,
+          }),
+          className,
+          full && 'h-full flex flex-col'
+        )}
+        {...props}
+      >
+        {children}
+      </section>
+    );
+  }
+
+  if (mode === 'main') {
+    return (
+      <main
+        className={cn(
+          cssVariants({
+            mode,
+            colspan,
+            rowspan,
+          }),
+          className,
+          full && 'h-full flex flex-col'
+        )}
+        {...props}
+      >
+        {children}
+      </main>
+    );
+  }
+
+  if (mode === 'aside') {
+    return (
+      <aside
+        className={cn(
+          cssVariants({
+            mode,
+            colspan,
+            rowspan,
+          }),
+          className,
+          full && 'h-full flex flex-col'
+        )}
+        {...props}
+      >
+        {children}
+      </aside>
+    );
+  }
+
+  return null;
 }

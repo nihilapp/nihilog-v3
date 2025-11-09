@@ -11,7 +11,7 @@ import type {
   CommentReplyRatioItemType,
   CommentAverageDepthItemType,
   PostsWithoutCommentsItemType
-} from '@/endpoints/prisma/types/comment.types';
+} from '@nihilog/schemas';
 
 import { timeToString } from './timeHelper';
 

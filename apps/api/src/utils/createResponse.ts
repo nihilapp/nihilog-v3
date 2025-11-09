@@ -1,5 +1,6 @@
-import { RESPONSE_CODE } from '@/code/response.code';
-import type { ResponseType } from '@/endpoints/prisma/types/common.types';
+import { RESPONSE_CODE } from '@nihilog/code';
+import type { ResponseType } from '@nihilog/schemas';
+
 import { timeToString } from '@/utils/timeHelper';
 
 export function createResponse<TData = any>(

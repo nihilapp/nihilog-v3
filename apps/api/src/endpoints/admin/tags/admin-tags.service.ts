@@ -4,7 +4,7 @@ import { MESSAGE } from '@/code/messages';
 import type { CreateTagDto, UpdateTagDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type {
   SelectPstTagMpngListItemType,
   SelectPstTagMpngType,
@@ -22,7 +22,7 @@ import type {
   TagStatusDistributionItemType,
   TagCreatorStatItemType,
   TagCleanupRecommendationItemType
-} from '@/endpoints/prisma/types/tag.types';
+} from '@nihilog/schemas';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 import { TagRepository } from '@/endpoints/repositories/tag.repository';
 import { prismaResponse } from '@/utils/prismaResponse';

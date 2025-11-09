@@ -1,9 +1,7 @@
+import { analyzeStatSchema, createUserSchema, updateUserSchema, searchUserSchema, deleteMultipleUsersSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
-import { createUserSchema } from '@/endpoints/prisma/schemas/user.schema';
-import { updateUserSchema, searchUserSchema, deleteMultipleUsersSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 import { CreateUserAnalyze } from '@/utils/createUserAnalyze';

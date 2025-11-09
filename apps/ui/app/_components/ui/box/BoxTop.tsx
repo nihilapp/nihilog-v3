@@ -6,7 +6,7 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLDivElement>,
+  extends ReactElementProps<'div'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   showTitle?: boolean;

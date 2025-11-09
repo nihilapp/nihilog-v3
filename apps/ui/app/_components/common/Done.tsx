@@ -5,7 +5,7 @@ import type React from 'react';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
-interface Props extends ReactElementProps<HTMLDivElement> {
+interface Props extends ReactElementProps<'div'> {
   className?: string | string[];
   children?: React.ReactNode;
 }

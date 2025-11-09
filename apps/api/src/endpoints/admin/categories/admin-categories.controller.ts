@@ -7,14 +7,6 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common';
-
-import { MESSAGE } from '@/code/messages';
-import { Endpoint } from '@/decorators/endpoint.decorator';
-import { AuthRequest, ResponseDto } from '@/dto';
-import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
-import { AnalyzeStatDto } from '@/dto/common.dto';
-import type { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
-import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import type {
   SelectCategoryListItemType,
   SelectCategoryType,
@@ -31,8 +23,16 @@ import type {
   UnusedCategoryItemType,
   CategorySubscriberGrowthRateItemType,
   CategoriesWithoutSubscribersItemType
-} from '@/endpoints/prisma/types/category.types';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+} from '@nihilog/schemas';
+import type { ListType, MultipleResultType } from '@nihilog/schemas';
+
+import { MESSAGE } from '@/code/messages';
+import { Endpoint } from '@/decorators/endpoint.decorator';
+import { AuthRequest, ResponseDto } from '@/dto';
+import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
+import { AnalyzeStatDto } from '@/dto/common.dto';
+import type { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
+import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/categories')
@@ -579,7 +579,10 @@ export class AdminCategoriesController {
   })
   async adminUpdateCategory(
     @Req() req: AuthRequest,
-    @Param('ctgryNo', ParseIntPipe) ctgryNo: number,
+    @Param(
+      'ctgryNo',
+      ParseIntPipe
+    ) ctgryNo: number,
     @Body() updateData: UpdateCategoryDto
   ): Promise<ResponseDto<SelectCategoryType>> {
     const result = await this.adminCategoriesService.adminUpdateCategory(
@@ -645,7 +648,10 @@ export class AdminCategoriesController {
   })
   async adminDeleteCategory(
     @Req() req: AuthRequest,
-    @Param('ctgryNo', ParseIntPipe) ctgryNo: number
+    @Param(
+      'ctgryNo',
+      ParseIntPipe
+    ) ctgryNo: number
   ): Promise<ResponseDto<boolean>> {
     const result = await this.adminCategoriesService.adminDeleteCategory(
       req.user.userNo,

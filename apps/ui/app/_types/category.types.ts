@@ -1,5 +1,8 @@
 import type { CtgryInfoTableType } from '../_schemas';
 
+// 주의: _schemas의 CategoryInfoType과는 다릅니다.
+// _schemas의 CategoryInfoType은 전체 스키마 타입이고,
+// 이 CategoryInfoType은 테이블 컬럼만 포함하는 별칭입니다.
 export type CategoryInfoType = CtgryInfoTableType;
 
 export type SelectCategoryType = CtgryInfoTableType & {

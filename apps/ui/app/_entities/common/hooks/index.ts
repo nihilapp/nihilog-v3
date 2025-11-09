@@ -1,5 +1,6 @@
 export { useDone } from './use-done';
 export { useLoading } from './use-loading';
+export { useResponsive } from './use-responsive';
 
 export { useGet } from './query/use-get';
 export { usePost } from './query/use-post';

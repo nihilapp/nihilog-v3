@@ -10,8 +10,8 @@ import {
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, CreateTagSubscribeDto, UpdateTagSubscribeDto, DeleteTagSubscribeDto } from '@/dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
+import type { ListType, MultipleResultType } from '@nihilog/schemas';
+import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 import { TagSubscribeService } from './tag-subscribe.service';

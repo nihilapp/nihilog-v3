@@ -4,8 +4,8 @@ import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, CreateCommentDto, SearchCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
 import { CommentsService } from '@/endpoints/comments/comments.service';
-import type { SelectCommentListItemType, SelectCommentType } from '@/endpoints/prisma/types/comment.types';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
+import type { SelectCommentListItemType, SelectCommentType } from '@nihilog/schemas';
+import type { ListType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 @Controller('comments')

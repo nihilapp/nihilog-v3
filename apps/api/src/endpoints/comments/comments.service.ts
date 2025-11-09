@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import type { SelectCommentListItemType, SelectCommentType } from '@nihilog/schemas';
+import type { ListType, RepoResponseType } from '@nihilog/schemas';
+import { searchCommentSchema } from '@nihilog/schemas';
 
 import { MESSAGE } from '@/code/messages';
 import type { CreateCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
-import { searchCommentSchema } from '@/endpoints/prisma/schemas/comment.schema';
-import type { SelectCommentListItemType, SelectCommentType } from '@/endpoints/prisma/types/comment.types';
-import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CommentRepository } from '@/endpoints/repositories/comment.repository';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 import { prismaResponse } from '@/utils/prismaResponse';

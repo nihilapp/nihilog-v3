@@ -1,5 +1,6 @@
-import { RESPONSE_CODE } from '@/code/response.code';
-import type { ErrorType } from '@/endpoints/prisma/types/common.types';
+import { RESPONSE_CODE } from '@nihilog/code';
+import type { ErrorType } from '@nihilog/schemas';
+
 import { timeToString } from '@/utils/timeHelper';
 
 export function createError(

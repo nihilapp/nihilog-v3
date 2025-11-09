@@ -6,7 +6,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
-import { InputText } from '@/_components/ui/input';
+import { Input } from '@/_components/ui/input';
 import { useGetSession, useSignIn } from '@/_entities/auth/hooks';
 import { signInSchema, type SignInType } from '@/_schemas';
 
@@ -61,7 +61,7 @@ export function SignInForm() {
               name='emlAddr'
               label='이메일'
               render={({ field, }) => (
-                <InputText
+                <Input.Text
                   type='email'
                   autoComplete='username'
                   {...field}
@@ -75,7 +75,7 @@ export function SignInForm() {
               name='password'
               label='비밀번호'
               render={({ field, }) => (
-                <InputText
+                <Input.Text
                   type='password'
                   autoComplete='current-password'
                   {...field}

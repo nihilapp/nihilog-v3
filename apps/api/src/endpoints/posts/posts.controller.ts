@@ -5,8 +5,8 @@ import { Endpoint } from '@/decorators/endpoint.decorator';
 import { type AuthRequest, CreatePostBookmarkDto, DeletePostBookmarkDto, type ResponseDto, SearchPostDto } from '@/dto';
 import { CreatePostShareLogDto, CreatePostViewLogDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import { PostsService } from '@/endpoints/posts/posts.service';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
-import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostListItemType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
+import type { ListType } from '@nihilog/schemas';
+import type { SelectPostBookmarkListItemType, SelectPostBookmarkType, SelectPostListItemType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 @Controller('posts')

@@ -1,5 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   createPostBookmarkSchema,
   createPostSchema,
@@ -10,7 +8,8 @@ import {
   searchPostBookmarkSchema,
   searchPostSchema,
   updatePostSchema
-} from '@/endpoints/prisma/schemas/post.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 // 포스트 생성 DTO
 export class CreatePostDto extends createZodDto(createPostSchema) {}

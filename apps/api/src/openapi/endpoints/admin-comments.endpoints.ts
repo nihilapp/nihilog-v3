@@ -1,11 +1,11 @@
+import {
+  updateCommentSchema,
+  deleteCommentSchema,
+  analyzeStatSchema
+} from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import {
-  updateCommentSchema,
-  deleteCommentSchema
-} from '@/endpoints/prisma/schemas/comment.schema';
-import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateCommentAnalyze } from '@/utils/createCommentAnalyze';
 

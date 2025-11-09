@@ -15,7 +15,7 @@ import {
 } from '@/dto/category-subscribe.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { MultipleResultType } from '@nihilog/schemas';
 import { CategorySubscribeService } from '@/endpoints/subscribe/category-subscribe/category-subscribe.service';
 import { createError, createResponse } from '@/utils';
 

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from '@nihilog/db';
 
 type DateSeriesUnit = 'day' | 'week' | 'month' | 'year';
 

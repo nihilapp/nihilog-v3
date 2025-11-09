@@ -14,7 +14,7 @@ import type {
   UnusedCategoryItemType,
   CategorySubscriberGrowthRateItemType,
   CategoriesWithoutSubscribersItemType
-} from '@/endpoints/prisma/types/category.types';
+} from '@nihilog/schemas';
 
 import { timeToString } from './timeHelper';
 

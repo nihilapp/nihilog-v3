@@ -1,7 +1,7 @@
+import { searchCategorySchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { searchCategorySchema } from '@/endpoints/prisma/schemas/category.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 

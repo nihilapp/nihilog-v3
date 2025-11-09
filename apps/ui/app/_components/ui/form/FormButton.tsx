@@ -1,12 +1,12 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>,
+  extends ReactElementProps<'button', 'type'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   type?: 'submit' | 'reset';

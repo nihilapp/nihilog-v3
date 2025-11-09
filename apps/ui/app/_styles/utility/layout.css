@@ -1,7 +1,7 @@
-@utility layout-header {
-  @apply flex flex-row justify-between items-center p-2 border-b border-black-200 bg-white text-black-base;
+@utility frame-header {
+  @apply flex flex-row justify-between items-center p-2 border-b border-black-200 bg-white text-black-900;
 }
 
-@utility layout-footer {
-  @apply border-t border-black-200 p-2 text-black-base bg-white;
+@utility frame-footer {
+  @apply border-t border-black-200 p-2 text-black-900 bg-white;
 }

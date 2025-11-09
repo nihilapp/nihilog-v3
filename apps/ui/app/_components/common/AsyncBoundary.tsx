@@ -10,16 +10,16 @@ import { Done } from './Done';
 import { Loading } from './Loading';
 
 interface Props
-  extends ReactElementProps<HTMLDivElement>,
+  extends ReactElementProps<'div'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   loading: boolean;
   done: boolean;
   mode?: 'normal' | 'session';
   loadingMessage?: string;
-  Loading?: React.ComponentType<ReactElementProps<HTMLDivElement> & { message?: string;
+  Loading?: React.ComponentType<ReactElementProps<'div'> & { message?: string;
     className?: string | string[]; }>;
-  Done?: React.ComponentType<ReactElementProps<HTMLDivElement> & { className?: string | string[] }>;
+  Done?: React.ComponentType<ReactElementProps<'div'> & { className?: string | string[] }>;
   children?: React.ReactNode;
   custom?: {
     loading?: string | string[];

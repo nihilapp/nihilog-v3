@@ -5,7 +5,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
-import { InputText } from '@/_components/ui/input';
+import { Input } from '@/_components/ui/input';
 import { useCreateUser } from '@/_entities/users/hooks';
 import { createUserSchema, type CreateUserType } from '@/_schemas';
 
@@ -47,7 +47,7 @@ export function SubscribeForm() {
               name='emlAddr'
               label='이메일'
               render={({ field, }) => (
-                <InputText
+                <Input.Text
                   type='email'
                   autoComplete='username'
                   {...field}
@@ -61,7 +61,7 @@ export function SubscribeForm() {
               name='userNm'
               label='이름'
               render={({ field, }) => (
-                <InputText
+                <Input.Text
                   type='text'
                   autoComplete='name'
                   {...field}
@@ -87,7 +87,7 @@ export function SubscribeForm() {
               name='password'
               label='비밀번호'
               render={({ field, }) => (
-                <InputText
+                <Input.Text
                   type='password'
                   autoComplete='new-password'
                   {...field}
@@ -101,7 +101,7 @@ export function SubscribeForm() {
               name='passwordConfirm'
               label='비밀번호 확인'
               render={({ field, }) => (
-                <InputText
+                <Input.Text
                   type='password'
                   autoComplete='new-password'
                   {...field}

@@ -17,8 +17,8 @@ import type {
   CommentReplyRatioItemType,
   CommentAverageDepthItemType,
   PostsWithoutCommentsItemType
-} from '@/endpoints/prisma/types/comment.types';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+} from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/comments')

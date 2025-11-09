@@ -5,13 +5,16 @@ export {
   dateTimeMessage,
   ynEnumSchema,
   analyzeStatSchema,
-  type YnType,
   type AnalyzeStatType
 } from './common.schema';
 
 // Enums 스키마 export
 export {
+  ynSchema,
+  userRoleSchema,
   postStatusSchema,
+  type YnType,
+  type UserRoleType,
   type PostStatusType
 } from './enums.schema';
 
@@ -56,7 +59,6 @@ export {
   type WithdrawType,
   type SearchUserType,
   type PartialUserInfoType,
-  type UserRoleType,
   userInfoTableSchema,
   type UserInfoTableType
 } from './user.schema';

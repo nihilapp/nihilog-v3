@@ -1,14 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-
-import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
-import { PRISMA } from '@/endpoints/prisma/prisma.module';
+import { PrismaClient, type Prisma } from '@nihilog/db';
 import type {
   SelectCtgrySbcrMpngListItemType,
   SelectCtgrySbcrMpngType
-} from '@/endpoints/prisma/types/category-subscribe.types';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+} from '@nihilog/schemas';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
+
+import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
+import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -135,7 +134,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -164,7 +163,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -271,7 +270,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -370,7 +369,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -403,7 +402,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -445,7 +444,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -500,7 +499,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -541,7 +540,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -586,7 +585,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -622,7 +621,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -669,7 +668,7 @@ export class CategorySubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 }

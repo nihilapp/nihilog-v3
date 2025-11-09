@@ -6,7 +6,7 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLElement>,
+  extends ReactElementProps<'main'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
 }

@@ -1,11 +1,10 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   createCommentSchema,
   updateCommentSchema,
   deleteCommentSchema,
   searchCommentSchema
-} from '@/endpoints/prisma/schemas/comment.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 export class CreateCommentDto extends createZodDto(createCommentSchema) { }
 

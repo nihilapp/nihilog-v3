@@ -13,11 +13,11 @@
 - `apps/ui/app/_components/common/not-found`
 - `apps/ui/app/_components/ui`
 - `apps/ui/app/_components/ui/box`
-- `apps/ui/app/_components/ui/layout`
+- `apps/ui/app/_components/ui/button`
 - `apps/ui/app/_components/ui/form`
 - `apps/ui/app/_components/ui/input`
+- `apps/ui/app/_components/ui/layout`
 - `apps/ui/app/_components/ui/list`
-- `apps/ui/app/_components/ui/table`
 
 ## `_layouts`
 

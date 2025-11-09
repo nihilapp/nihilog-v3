@@ -10,8 +10,8 @@ import {
 import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, CreateCategorySubscribeDto, UpdateCategorySubscribeDto, DeleteCategorySubscribeDto } from '@/dto';
-import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@/endpoints/prisma/types/category-subscribe.types';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@nihilog/schemas';
+import type { ListType, MultipleResultType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 import { CategorySubscribeService } from './category-subscribe.service';

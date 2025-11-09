@@ -310,7 +310,6 @@ export type SignInType = z.infer<typeof signInSchema>;
 export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
 export type ChangePasswordType = z.infer<typeof changePasswordSchema>;
 export type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
-export type UserRoleType = z.infer<typeof userRoleSchema>;
 export type PartialUserInfoType = z.infer<typeof partialUserInfoSchema>;
 export type SearchUserType = z.infer<typeof searchUserSchema>;
 export type WithdrawType = z.infer<typeof withdrawSchema>;

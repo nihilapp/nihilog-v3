@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 import { MESSAGE } from '@/code/messages';
 import type { SearchTagDto } from '@/dto/tag.dto';
-import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagInfoListItemType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type { RepoResponseType } from '@nihilog/schemas';
+import type { SelectTagInfoListItemType, SelectTagInfoType } from '@nihilog/schemas';
 import { TagRepository } from '@/endpoints/repositories/tag.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

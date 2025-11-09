@@ -3,13 +3,13 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { AsyncBoundary } from '@/_components/common/AsyncBoundary';
-import { Button } from '@/_components/common/Button';
+import { Button } from '@/_components/ui/button';
 import { useGetSession, useSignOut } from '@/_entities/auth/hooks';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLElement>,
+  extends ReactElementProps<'nav'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
 }
@@ -52,15 +52,13 @@ export function AuthButtons({ className, ...props }: Props) {
           {!isLoggedIn && (
             <>
               <li>
-                <Button
-                  type='link'
+                <Button.Link
                   label='구독'
                   href='/auth/subscribe'
                 />
               </li>
               <li>
-                <Button
-                  type='link'
+                <Button.Link
                   label='로그인'
                   href='/auth/signin'
                 />
@@ -71,8 +69,7 @@ export function AuthButtons({ className, ...props }: Props) {
             <>
               {response.data.userRole === 'USER' && (
                 <li>
-                  <Button
-                    type='link'
+                  <Button.Link
                     label='구독 정보'
                     href='/profile'
                   />
@@ -80,16 +77,14 @@ export function AuthButtons({ className, ...props }: Props) {
               )}
               {response.data.userRole === 'ADMIN' && (
                 <li>
-                  <Button
-                    type='link'
+                  <Button.Link
                     label='관리자 페이지'
                     href='/admin/dashboard'
                   />
                 </li>
               )}
               <li>
-                <Button
-                  type='button'
+                <Button.Action
                   label='로그아웃'
                   onClick={onClickSignOut}
                 />

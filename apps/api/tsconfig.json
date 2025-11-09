@@ -19,7 +19,10 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@nihilog/code": ["../../packages/code/src"],
+      "@nihilog/db": ["../../packages/db/output"],
+      "@nihilog/schemas": ["../../packages/schemas/src"]
     }
   },
   "include": [

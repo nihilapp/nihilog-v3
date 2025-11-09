@@ -1,6 +1,6 @@
 import type { ResponseDto } from '@/dto/response.dto';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
-import type { SelectUserInfoListItemType, SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import type { ListType } from '@nihilog/schemas';
+import type { SelectUserInfoListItemType, SelectUserInfoType } from '@nihilog/schemas';
 
 /**
  * 단일 사용자 객체에서 민감정보 제거

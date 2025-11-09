@@ -1,6 +1,3 @@
-import { z } from 'zod';
-
-import { MESSAGE } from '@/code/messages';
 import {
   searchPostSchema,
   createPostBookmarkSchema,
@@ -8,7 +5,10 @@ import {
   searchPostBookmarkSchema,
   createPostViewLogSchema,
   createPostShareLogSchema
-} from '@/endpoints/prisma/schemas/post.schema';
+} from '@nihilog/schemas';
+import { z } from 'zod';
+
+import { MESSAGE } from '@/code/messages';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 

@@ -5,10 +5,10 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { UserRoleType } from '@nihilog/schemas';
 
 import { MESSAGE } from '@/code/messages';
 import { ResponseDto } from '@/dto/response.dto';
-import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 import { createError } from '@/utils';
 
 import { JwtPayload } from './jwt.strategy';

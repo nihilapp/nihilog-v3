@@ -15,7 +15,7 @@ import {
   UpdateTagSubscribeDto
 } from '@/dto/tag-subscribe.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { MultipleResultType } from '@nihilog/schemas';
 import { TagSubscribeService } from '@/endpoints/subscribe/tag-subscribe/tag-subscribe.service';
 import { createError, createResponse } from '@/utils';
 

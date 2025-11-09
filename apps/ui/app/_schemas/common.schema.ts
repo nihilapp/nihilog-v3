@@ -13,9 +13,6 @@ export const ynEnumSchema = ynSchema.refine(
   }
 );
 
-// 타입 추출
-export type YnType = z.infer<typeof ynEnumSchema>;
-
 export const commonSchema = z.object({
   useYn: ynEnumSchema
     .default('Y'),

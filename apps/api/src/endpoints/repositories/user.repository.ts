@@ -1,13 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-
-import { CreateAdminDto } from '@/dto/admin.dto';
-import { CreateUserDto } from '@/dto/auth.dto';
-import type { AnalyzeStatDto } from '@/dto/common.dto';
-import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
-import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import { Prisma, PrismaClient } from '@nihilog/db';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type {
   SelectUserInfoListItemType,
   SelectUserInfoType,
@@ -21,7 +14,13 @@ import type {
   InactiveUsersListItemType,
   UserGrowthRateItemType,
   UserRetentionRateItemType
-} from '@/endpoints/prisma/types/user.types';
+} from '@nihilog/schemas';
+
+import { CreateAdminDto } from '@/dto/admin.dto';
+import { CreateUserDto } from '@/dto/auth.dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
+import { UpdateUserDto, type SearchUserDto } from '@/dto/user.dto';
+import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
@@ -202,7 +201,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -265,7 +264,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -352,7 +351,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -391,7 +390,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -430,7 +429,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -470,7 +469,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -518,7 +517,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -551,7 +550,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -595,7 +594,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -679,7 +678,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -710,7 +709,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
       // return null;
     }
   }
@@ -752,7 +751,7 @@ export class UserRepository {
         'createUser',
         error
       );
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -785,7 +784,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -821,7 +820,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -923,7 +922,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -950,7 +949,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -977,7 +976,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -1031,7 +1030,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -1081,7 +1080,7 @@ export class UserRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 }

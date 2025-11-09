@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { MESSAGE } from '@/code/messages';
 import type { SearchPostDto } from '@/dto';
 import type { CreatePostBookmarkDto, CreatePostShareLogDto, CreatePostViewLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
-import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, RepoResponseType } from '@nihilog/schemas';
 import type {
   SelectPostBookmarkListItemType,
   SelectPostBookmarkType,
@@ -11,7 +11,7 @@ import type {
   SelectPostType,
   SelectPostShareLogType,
   SelectPostViewLogType
-} from '@/endpoints/prisma/types/post.types';
+} from '@nihilog/schemas';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

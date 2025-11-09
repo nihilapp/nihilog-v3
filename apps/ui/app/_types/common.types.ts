@@ -1,5 +1,4 @@
 import type React from 'react';
-import type { IconType } from 'react-icons/lib';
 
 // 응답 타입 정의
 export type ResponseType<TData = unknown> = {
@@ -91,43 +90,30 @@ export interface SiteMetadata {
 }
 
 export type ReactElementProps<
-  ElementType = HTMLElement,
-  ExcludedKeys extends keyof React.HTMLAttributes<ElementType> = never
-> = Omit<React.HTMLAttributes<ElementType>, 'className' | ExcludedKeys>;
+  ComponentOrTag extends keyof React.JSX.IntrinsicElements | React.ComponentType<any> = 'div',
+  ExcludedKeys extends keyof React.ComponentProps<ComponentOrTag> = never
+> = Omit<React.ComponentProps<ComponentOrTag>, 'className' | ExcludedKeys>;
 
 // ========================================================
-// 요청 타입 (스키마에서 추출)
+// 요청 타입 (스키마에서 re-export)
 // ========================================================
 
-// Y/N 플래그 타입
-export type YnType = 'Y' | 'N';
+// 스키마에서 정의된 타입들을 re-export
+export type {
+  YnType,
+  UserRoleType,
+  PostStatusType,
+  BaseSearchType,
+  AnalyzeStatType
+} from '@/_schemas';
 
-// 사용자 역할 타입
-export type UserRoleType = 'USER' | 'ADMIN';
-
-// 게시물 상태 타입
-export type PostStatusType = 'EMPTY' | 'WRITING' | 'FINISHED';
-
-// 범용 검색 스키마 타입
-export type BaseSearchType = {
-  strtRow?: number;
-  endRow?: number;
-  srchType?: string;
-  srchKywd?: string;
-  page?: number;
-};
-
-// 통계 분석 스키마 타입
-export type AnalyzeStatType = {
-  dateStart: string;
-  dateEnd: string;
-  period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-  limit?: number;
-};
+import type { UserRoleType } from '@/_schemas';
 
 export interface Menu {
-  icon: IconType;
+  icon: React.ReactNode;
   name: string;
-  url: string;
+  url?: string;
+  action?: () => void;
+  role?: UserRoleType[];
   children?: Menu[];
 }

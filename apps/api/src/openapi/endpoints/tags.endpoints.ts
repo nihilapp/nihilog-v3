@@ -1,7 +1,7 @@
+import { searchTagSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { searchTagSchema } from '@/endpoints/prisma/schemas/tag.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 

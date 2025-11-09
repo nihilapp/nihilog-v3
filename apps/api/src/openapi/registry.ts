@@ -82,7 +82,7 @@ import {
   updateCommentSchema,
   deleteCommentSchema,
   searchCommentSchema
-} from '@/endpoints/prisma/schemas';
+} from '@nihilog/schemas';
 
 // 전역 OpenAPI 레지스트리 생성
 export const openApiRegistry = new OpenAPIRegistry();

@@ -4,8 +4,8 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 
 import { AsyncBoundary } from '@/_components/common/AsyncBoundary';
-import { Button } from '@/_components/common/Button';
 import { Box } from '@/_components/ui/box';
+import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
 import { useGetPostList } from '@/_entities/posts/hooks';
 import { defineColumns } from '@/_libs/defineColumns';
@@ -48,9 +48,8 @@ export function Home({ }: Props) {
         const title = value as string;
 
         return (
-          <Button
+          <Button.Link
             mode='ghost'
-            type='link'
             color='blue'
             href={`/posts/${row.pstCd}`}
             size='block'
@@ -68,7 +67,7 @@ export function Home({ }: Props) {
         const categoryNm = (value as SelectCategoryType)?.ctgryNm;
 
         return (
-          <Button
+          <Button.Action
             mode='outline'
             color='black'
             size='block'

@@ -21,13 +21,13 @@ import {
 } from '@/dto/subscribe.dto';
 import { AdminSubscribeService } from '@/endpoints/admin/subscribe/admin-user-subscribe.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { MultipleResultType } from '@nihilog/schemas';
 import type {
   AnalyzeSubscribeStatItemType,
   SubscribeNotificationDistributionItemType,
   TotalActiveNotificationUsersItemType,
   TotalInactiveNotificationUsersItemType
-} from '@/endpoints/prisma/types/subscribe.types';
+} from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/subscribes')

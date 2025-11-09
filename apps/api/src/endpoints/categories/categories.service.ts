@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { searchCategorySchema } from '@nihilog/schemas';
+import type { SelectCategoryListItemType, SelectCategoryType } from '@nihilog/schemas';
+import type { ListType, RepoResponseType } from '@nihilog/schemas';
 
 import { MESSAGE } from '@/code/messages';
 import type { SearchCategoryDto } from '@/dto/category.dto';
-import { searchCategorySchema } from '@/endpoints/prisma/schemas/category.schema';
-import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints/prisma/types/category.types';
-import type { ListType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

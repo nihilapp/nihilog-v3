@@ -10,8 +10,8 @@ import { ResponseDto, AuthRequest } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
-import type { SelectUserSbcrInfoType } from '@/endpoints/prisma/types/subscribe.types';
-import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import { UserService } from '@/endpoints/users/users.service';
 import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 

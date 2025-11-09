@@ -4,14 +4,14 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
+import { UserRoleType } from '@nihilog/schemas';
+import type { RepoResponseType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
 import { MESSAGE } from '@/code/messages';
 import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
-import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
-import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 import { timeToString } from '@/utils/timeHelper';

@@ -11,7 +11,7 @@ import type { AuthRequest } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 
 import { AdminService } from './admin.service';

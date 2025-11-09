@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { searchTagSubscribeSchema } from '@nihilog/schemas';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
+import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@nihilog/schemas';
 
 import { MESSAGE } from '@/code/messages';
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
-import { searchTagSubscribeSchema } from '@/endpoints/prisma/schemas/tag-subscribe.schema';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@/endpoints/prisma/types/tag-subscribe.types';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

@@ -1,5 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   createTagSchema,
   updateTagSchema,
@@ -9,7 +7,8 @@ import {
   deletePstTagMpngSchema,
   searchTagSchema,
   searchPstTagMpngSchema
-} from '@/endpoints/prisma/schemas/tag.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 // 태그 생성 DTO
 export class CreateTagDto extends createZodDto(createTagSchema) {}

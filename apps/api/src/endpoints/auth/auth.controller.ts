@@ -4,15 +4,15 @@ import {
   Req,
   Res
 } from '@nestjs/common';
+import { MESSAGE, RESPONSE_CODE } from '@nihilog/code';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
-import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
 import { ResponseDto } from '@/dto/response.dto';
 import { UserInfoDto } from '@/dto/user.dto';
-import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 import { createError, createResponse } from '@/utils';
 import { clearCookie, setCookie } from '@/utils/setCookie';
 
@@ -49,7 +49,7 @@ export class AuthController {
 
     if (!result?.success) {
       return createError(
-        result?.error?.code || 'UNAUTHORIZED',
+        (result?.error?.code as keyof typeof RESPONSE_CODE) || 'UNAUTHORIZED',
         result?.error?.message || MESSAGE.AUTH.INVALID_CREDENTIALS
       );
     }

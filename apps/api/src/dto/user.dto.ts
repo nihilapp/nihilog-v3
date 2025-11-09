@@ -1,12 +1,11 @@
-import { Exclude } from 'class-transformer';
-import { createZodDto } from 'nestjs-zod';
-
 import {
   updateUserSchema,
   userInfoSchema,
   deleteMultipleUsersSchema,
   searchUserSchema
-} from '@/endpoints/prisma/schemas/user.schema';
+} from '@nihilog/schemas';
+import { Exclude } from 'class-transformer';
+import { createZodDto } from 'nestjs-zod';
 
 // 사용자 조회 DTO
 export class UserInfoDto extends createZodDto(userInfoSchema.partial()) {

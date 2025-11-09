@@ -7,15 +7,7 @@ import {
   Query
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-
-import { MESSAGE } from '@/code/messages';
-import { Endpoint } from '@/decorators/endpoint.decorator';
-import { AuthRequest, UpdateUserDto } from '@/dto';
-import { CreateUserDto } from '@/dto/auth.dto';
-import type { AnalyzeStatDto } from '@/dto/common.dto';
-import { ResponseDto } from '@/dto/response.dto';
-import { SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType } from '@nihilog/schemas';
 import type {
   SelectUserInfoListItemType,
   SelectUserInfoType,
@@ -29,7 +21,15 @@ import type {
   InactiveUsersListItemType,
   UserGrowthRateItemType,
   UserRetentionRateItemType
-} from '@/endpoints/prisma/types/user.types';
+} from '@nihilog/schemas';
+
+import { MESSAGE } from '@/code/messages';
+import { Endpoint } from '@/decorators/endpoint.decorator';
+import { AuthRequest, UpdateUserDto } from '@/dto';
+import { CreateUserDto } from '@/dto/auth.dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
+import { ResponseDto } from '@/dto/response.dto';
+import { SearchUserDto, DeleteMultipleUsersDto } from '@/dto/user.dto';
 import { createError, createResponse, removeSensitiveInfoFromListResponse, removeSensitiveInfo } from '@/utils';
 
 import { AdminUserService } from './admin-users.service';

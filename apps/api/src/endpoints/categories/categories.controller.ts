@@ -9,8 +9,8 @@ import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { SearchCategoryDto } from '@/dto/category.dto';
-import type { SelectCategoryListItemType, SelectCategoryType } from '@/endpoints/prisma/types/category.types';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
+import type { SelectCategoryListItemType, SelectCategoryType } from '@nihilog/schemas';
+import type { ListType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 import { CategoriesService } from './categories.service';

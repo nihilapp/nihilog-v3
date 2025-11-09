@@ -1,5 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   tagSubscribeSchema,
   tagSubscribeItemListSchema,
@@ -7,7 +5,8 @@ import {
   updateTagSubscribeSchema,
   deleteTagSubscribeSchema,
   searchTagSubscribeSchema
-} from '@/endpoints/prisma/schemas/tag-subscribe.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 export class TagSubscribeDto extends createZodDto(tagSubscribeSchema) {}
 

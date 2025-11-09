@@ -9,7 +9,7 @@ import type {
   InactiveUsersListItemType,
   UserGrowthRateItemType,
   UserRetentionRateItemType
-} from '@/endpoints/prisma/types/user.types';
+} from '@nihilog/schemas';
 
 export class CreateUserAnalyze {
   // 사용자 분석 통계 예시 데이터

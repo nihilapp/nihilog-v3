@@ -1,8 +1,7 @@
+import { analyzeStatSchema, createPostSchema, deletePostSchema, updatePostSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
-import { createPostSchema, deletePostSchema, updatePostSchema } from '@/endpoints/prisma/schemas/post.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 import { CreatePostAnalyze } from '@/utils/createPostAnalyze';

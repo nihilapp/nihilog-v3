@@ -5,7 +5,7 @@ import type {
   SubscribeNotificationDistributionItemType,
   TotalActiveNotificationUsersItemType,
   TotalInactiveNotificationUsersItemType
-} from '@/endpoints/prisma/types/subscribe.types';
+} from '@nihilog/schemas';
 
 import { timeToString } from './timeHelper';
 

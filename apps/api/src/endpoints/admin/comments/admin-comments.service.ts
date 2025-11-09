@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CommentStatus } from '@prisma/client';
-
-import { MESSAGE } from '@/code/messages';
-import type { DeleteCommentDto, UpdateCommentDto } from '@/dto';
-import type { AnalyzeStatDto } from '@/dto/common.dto';
+import { CommentStatus } from '@nihilog/db';
 import type {
   AnalyzeCommentStatItemType,
   TopPostsByCommentItemType,
@@ -15,8 +11,12 @@ import type {
   CommentReplyRatioItemType,
   CommentAverageDepthItemType,
   PostsWithoutCommentsItemType
-} from '@/endpoints/prisma/types/comment.types';
-import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+} from '@nihilog/schemas';
+import type { MultipleResultType, RepoResponseType } from '@nihilog/schemas';
+
+import { MESSAGE } from '@/code/messages';
+import type { DeleteCommentDto, UpdateCommentDto } from '@/dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { CommentRepository } from '@/endpoints/repositories/comment.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

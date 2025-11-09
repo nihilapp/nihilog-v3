@@ -1,8 +1,7 @@
+import { analyzeStatSchema, updateTagSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
-import { updateTagSchema } from '@/endpoints/prisma/schemas/tag.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateTagAnalyze } from '@/utils/createTagAnalyze';
 

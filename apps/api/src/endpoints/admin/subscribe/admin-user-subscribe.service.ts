@@ -1,4 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { searchSubscribeSchema } from '@nihilog/schemas';
+import type { MultipleResultType, RepoResponseType } from '@nihilog/schemas';
+import type {
+  SelectUserSbcrInfoType,
+  SelectUserSbcrInfoListItemType,
+  AnalyzeSubscribeStatItemType,
+  SubscribeNotificationDistributionItemType,
+  TotalActiveNotificationUsersItemType,
+  TotalInactiveNotificationUsersItemType
+} from '@nihilog/schemas';
 
 import { MESSAGE } from '@/code/messages';
 import type { DeleteSubscribeDto } from '@/dto';
@@ -9,16 +19,6 @@ import {
   UpdateSubscribeDto,
   type SearchSubscribeDto
 } from '@/dto/subscribe.dto';
-import { searchSubscribeSchema } from '@/endpoints/prisma/schemas/subscribe.schema';
-import type { MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type {
-  SelectUserSbcrInfoType,
-  SelectUserSbcrInfoListItemType,
-  AnalyzeSubscribeStatItemType,
-  SubscribeNotificationDistributionItemType,
-  TotalActiveNotificationUsersItemType,
-  TotalInactiveNotificationUsersItemType
-} from '@/endpoints/prisma/types/subscribe.types';
 import { SubscribeRepository } from '@/endpoints/repositories/subscribe.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

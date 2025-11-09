@@ -7,8 +7,8 @@ import { AnalyzeStatDto } from '@/dto/common.dto';
 import { CreatePostDto, UpdatePostDto } from '@/dto/post.dto';
 import { AdminPostsService } from '@/endpoints/admin/posts/admin-posts.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { MultipleResultType } from '@/endpoints/prisma/types/common.types';
-import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType, AverageBookmarkStatItemType, TopPopularPostItemType, TopCommentPostItemType, PostStatusRatioItemType } from '@/endpoints/prisma/types/post.types';
+import type { MultipleResultType } from '@nihilog/schemas';
+import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType, AverageBookmarkStatItemType, TopPopularPostItemType, TopCommentPostItemType, PostStatusRatioItemType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/posts')

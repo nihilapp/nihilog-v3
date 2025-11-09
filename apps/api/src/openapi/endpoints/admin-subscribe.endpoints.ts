@@ -1,8 +1,7 @@
+import { analyzeStatSchema, searchSubscribeSchema, createSubscribeSchema, updateSubscribeSchema, deleteSubscribeSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
-import { searchSubscribeSchema, createSubscribeSchema, updateSubscribeSchema, deleteSubscribeSchema } from '@/endpoints/prisma/schemas/subscribe.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 import { CreateSubscribeAnalyze } from '@/utils/createSubscribeAnalyze';

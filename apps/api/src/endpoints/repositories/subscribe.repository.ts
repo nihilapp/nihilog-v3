@@ -1,11 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-
-import type { AnalyzeStatDto } from '@/dto/common.dto';
-import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto } from '@/dto/subscribe.dto';
-import { PRISMA } from '@/endpoints/prisma/prisma.module';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import { PrismaClient, type Prisma } from '@nihilog/db';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type {
   SelectUserSbcrInfoType,
   SelectUserSbcrInfoListItemType,
@@ -13,7 +8,11 @@ import type {
   SubscribeNotificationDistributionItemType,
   TotalActiveNotificationUsersItemType,
   TotalInactiveNotificationUsersItemType
-} from '@/endpoints/prisma/types/subscribe.types';
+} from '@nihilog/schemas';
+
+import type { AnalyzeStatDto } from '@/dto/common.dto';
+import { UpdateSubscribeDto, CreateSubscribeDto, SearchSubscribeDto } from '@/dto/subscribe.dto';
+import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -40,20 +39,20 @@ export class SubscribeRepository {
         WITH subscription_stats AS (
           SELECT
             COUNT(CASE WHEN crt_dt::timestamptz >= ${startDt}::timestamptz
-                      AND crt_dt::timestamptz <= ${endDt}::timestamptz
-                 THEN 1 END) as new_subscription_count,
+                          AND crt_dt::timestamptz <= ${endDt}::timestamptz
+                     THEN 1 END) as new_subscription_count,
             COUNT(CASE WHEN del_dt::timestamptz >= ${startDt}::timestamptz
-                      AND del_dt::timestamptz <= ${endDt}::timestamptz
-                      AND del_yn = 'Y'
-                 THEN 1 END) as delete_subscription_count,
+                          AND del_dt::timestamptz <= ${endDt}::timestamptz
+                          AND del_yn = 'Y'
+                     THEN 1 END) as delete_subscription_count,
             COUNT(CASE WHEN use_yn = 'Y' AND del_yn = 'N'
-                 THEN 1 END) as active_subscription_count,
+                     THEN 1 END) as active_subscription_count,
             COUNT(CASE WHEN eml_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
-                 THEN 1 END) as email_notification_count,
+                     THEN 1 END) as email_notification_count,
             COUNT(CASE WHEN new_pst_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
-                 THEN 1 END) as new_post_notification_count,
+                     THEN 1 END) as new_post_notification_count,
             COUNT(CASE WHEN cmnt_rpl_ntfy_yn = 'Y' AND use_yn = 'Y' AND del_yn = 'N'
-                 THEN 1 END) as comment_reply_notification_count
+                     THEN 1 END) as comment_reply_notification_count
           FROM user_sbcr_info
         )
         SELECT
@@ -74,7 +73,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -128,7 +127,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -158,7 +157,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -188,7 +187,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -222,7 +221,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -261,7 +260,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -373,7 +372,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -414,7 +413,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -463,7 +462,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -497,7 +496,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 
@@ -547,7 +546,7 @@ export class SubscribeRepository {
       );
     }
     catch (error) {
-      return prismaError(error as PrismaClientKnownRequestError);
+      return prismaError(error as Prisma.PrismaClientKnownRequestError);
     }
   }
 }

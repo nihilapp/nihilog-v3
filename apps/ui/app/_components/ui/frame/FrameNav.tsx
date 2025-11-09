@@ -1,0 +1,64 @@
+'use client';
+
+import { cva, type VariantProps } from 'class-variance-authority';
+
+import { Button } from '@/_components/ui/button';
+import { cn } from '@/_libs';
+import type { Menu, ReactElementProps } from '@/_types/common.types';
+
+interface Props
+  extends ReactElementProps<'nav'>, VariantProps<typeof cssVariants> {
+  custom?: {
+    nav?: string | string[];
+    ul?: string | string[];
+    li?: string | string[];
+    button?: string | string[];
+  };
+  menu: Menu[];
+}
+
+const cssVariants = cva(
+  [ 'frame-nav flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base', ],
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: [],
+  }
+);
+
+export function FrameNav({ custom, menu, ...props }: Props) {
+  return (
+    <nav
+      className={cn(
+        cssVariants({}),
+        custom?.nav
+      )}
+      {...props}
+    >
+      <ul className={cn([
+        'flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base',
+        custom?.ul,
+      ])}
+      >
+        {menu?.map((item) => (
+          <li
+            className={cn([
+              '',
+              custom?.li,
+            ])}
+            key={item.name}
+          >
+            <Button.Menu
+              label={item.name}
+              href={item.url ?? ''}
+              className={cn([
+                '',
+                custom?.button,
+              ])}
+            />
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}

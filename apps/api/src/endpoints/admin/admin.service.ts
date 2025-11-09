@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { MESSAGE } from '@/code/messages';
 import { UpdateUserDto } from '@/dto/user.dto';
 import { JwtPayload } from '@/endpoints/auth/jwt.strategy';
-import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
-import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
+import type { RepoResponseType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

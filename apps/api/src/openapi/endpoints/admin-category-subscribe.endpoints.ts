@@ -1,11 +1,11 @@
-import { z } from 'zod';
-
-import { MESSAGE } from '@/code/messages';
 import {
   createCategorySubscribeSchema,
   updateCategorySubscribeSchema,
   deleteCategorySubscribeSchema
-} from '@/endpoints/prisma/schemas/category-subscribe.schema';
+} from '@nihilog/schemas';
+import { z } from 'zod';
+
+import { MESSAGE } from '@/code/messages';
 import { createError, createResponse } from '@/utils';
 
 import { openApiRegistry } from '../registry';

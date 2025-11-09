@@ -1,16 +1,15 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>, 'type' | 'className'>,
+  extends ReactElementProps<'input', 'type'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   type?: 'text' | 'number' | 'email' | 'password';
-  as?: 'input' | 'textarea';
 }
 
 const cssVariants = cva(
@@ -22,34 +21,15 @@ const cssVariants = cva(
   }
 );
 
-export const InputText = React.forwardRef<
-  HTMLInputElement | HTMLTextAreaElement,
-  Props
->(({ className, type = 'text', as = 'input', ...props }, ref) => {
-  if (as === 'textarea') {
-    return (
-      <textarea
-        ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
-        className={cn(
-          cssVariants({}),
-          className
-        )}
-        {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
-      />
-    );
-  }
-
+export function InputText({ className, type = 'text', ...props }: Props) {
   return (
     <input
-      ref={ref as React.ForwardedRef<HTMLInputElement>}
       type={type}
       className={cn(
         cssVariants({}),
         className
       )}
-      {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+      {...props}
     />
   );
-});
-
-InputText.displayName = 'InputText';
+}

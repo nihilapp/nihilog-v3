@@ -33,7 +33,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./app/*"]
+      "@/*": ["./app/*"],
+      "@nihilog/schemas": ["../../packages/schemas/src"]
     },
     "target": "ES2017"
   },

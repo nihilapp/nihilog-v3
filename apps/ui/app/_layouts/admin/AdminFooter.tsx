@@ -9,13 +9,13 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLElement>,
+  extends ReactElementProps<'footer'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
 }
 
 const cssVariants = cva(
-  [ 'layout-footer', ],
+  [ 'frame-footer', ],
   {
     variants: {},
     defaultVariants: {},

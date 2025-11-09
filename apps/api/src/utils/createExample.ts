@@ -1,10 +1,5 @@
+import type { SelectCategoryType, SelectCommentType, SelectPostBookmarkType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType, SelectTagInfoType, SelectUserInfoType } from '@nihilog/schemas';
 import { DateTime } from 'luxon';
-
-import type { SelectCategoryType } from '@/endpoints/prisma/types/category.types';
-import type { SelectCommentType } from '@/endpoints/prisma/types/comment.types';
-import { SelectPostBookmarkType, SelectPostType, SelectPostShareLogType, SelectPostViewLogType } from '@/endpoints/prisma/types/post.types';
-import type { SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
-import type { SelectUserInfoType } from '@/endpoints/prisma/types/user.types';
 
 import { timeToString } from './timeHelper';
 

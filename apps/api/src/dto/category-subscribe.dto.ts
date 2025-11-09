@@ -1,5 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   categorySubscribeSchema,
   categorySubscribeItemListSchema,
@@ -7,7 +5,8 @@ import {
   updateCategorySubscribeSchema,
   deleteCategorySubscribeSchema,
   searchCategorySubscribeSchema
-} from '@/endpoints/prisma/schemas/category-subscribe.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 // 카테고리 구독 기본 DTO
 export class CategorySubscribeDto extends createZodDto(categorySubscribeSchema) {}

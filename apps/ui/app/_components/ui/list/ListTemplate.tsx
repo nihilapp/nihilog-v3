@@ -92,7 +92,7 @@ export function ListTemplate({
                   key={getRowId(row)}
                   direction={itemDirection}
                   className={cn([
-                    getIsSelected(getRowId(row)) && 'border-black-base',
+                    getIsSelected(getRowId(row)) && 'border-black-900',
                     custom?.item,
                   ])}
                 >

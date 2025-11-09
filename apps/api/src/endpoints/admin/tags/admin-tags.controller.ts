@@ -7,7 +7,7 @@ import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto } from '@/dto/tag.dto';
 import { AdminTagsService } from '@/endpoints/admin/tags/admin-tags.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
-import type { ListType, MultipleResultType } from '@/endpoints/prisma/types/common.types';
+import type { ListType, MultipleResultType } from '@nihilog/schemas';
 import type {
   SelectPstTagMpngListItemType,
   SelectPstTagMpngType,
@@ -25,7 +25,7 @@ import type {
   TagStatusDistributionItemType,
   TagCreatorStatItemType,
   TagCleanupRecommendationItemType
-} from '@/endpoints/prisma/types/tag.types';
+} from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 @Controller('admin/tags')

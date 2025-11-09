@@ -1,11 +1,10 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   createCategorySchema,
   updateCategorySchema,
   deleteCategorySchema,
   searchCategorySchema
-} from '@/endpoints/prisma/schemas/category.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 export class CreateCategoryDto extends createZodDto(createCategorySchema) {}
 export class UpdateCategoryDto extends createZodDto(updateCategorySchema) {}

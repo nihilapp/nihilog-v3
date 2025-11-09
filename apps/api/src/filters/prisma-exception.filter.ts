@@ -1,6 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { Prisma } from '@nihilog/db';
 import type { FastifyReply } from 'fastify';
 
 import { RESPONSE_CODE } from '@/code/response.code';
@@ -15,7 +14,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
     const reply = ctx.getResponse<FastifyReply>();
 
     // Prisma 에러인 경우 상세 매핑
-    if (exception instanceof Prisma.PrismaClientKnownRequestError || exception instanceof PrismaClientKnownRequestError) {
+    if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       const code = exception.code;
 
       // 기본값

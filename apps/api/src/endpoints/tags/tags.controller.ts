@@ -9,8 +9,8 @@ import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { SearchTagDto } from '@/dto/tag.dto';
-import type { ListType } from '@/endpoints/prisma/types/common.types';
-import type { SelectTagInfoListItemType, SelectTagInfoType } from '@/endpoints/prisma/types/tag.types';
+import type { ListType } from '@nihilog/schemas';
+import type { SelectTagInfoListItemType, SelectTagInfoType } from '@nihilog/schemas';
 import { createError, createResponse } from '@/utils';
 
 import { TagService } from './tags.service';

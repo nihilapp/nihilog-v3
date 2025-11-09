@@ -1,14 +1,14 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 import type { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
 import { FormProvider } from 'react-hook-form';
 
 import { cn } from '@/_libs';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props<TFieldValues extends FieldValues = FieldValues>
-  extends Omit<React.FormHTMLAttributes<HTMLFormElement>, 'onSubmit'>,
+  extends ReactElementProps<'form', 'onSubmit'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   form: UseFormReturn<TFieldValues>;

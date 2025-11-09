@@ -1,6 +1,5 @@
+import { changePasswordSchema, createUserSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, withdrawSchema } from '@nihilog/schemas';
 import { createZodDto } from 'nestjs-zod';
-
-import { changePasswordSchema, createUserSchema, forgotPasswordSchema, resetPasswordSchema, signInSchema, withdrawSchema } from '@/endpoints/prisma/schemas/user.schema';
 
 // 회원가입 DTO
 export class CreateUserDto extends createZodDto(createUserSchema) {}

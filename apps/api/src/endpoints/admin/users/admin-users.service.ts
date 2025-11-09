@@ -1,13 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import bcrypt from 'bcrypt';
-
-import { MESSAGE } from '@/code/messages';
-import { CreateUserDto } from '@/dto/auth.dto';
-import type { AnalyzeStatDto } from '@/dto/common.dto';
-import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
-import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
-import { searchUserSchema } from '@/endpoints/prisma/schemas/user.schema';
-import type { ListType, MultipleResultType, RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import { searchUserSchema } from '@nihilog/schemas';
+import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type {
   SelectUserInfoType,
   SelectUserInfoListItemType,
@@ -21,7 +14,14 @@ import type {
   InactiveUsersListItemType,
   UserGrowthRateItemType,
   UserRetentionRateItemType
-} from '@/endpoints/prisma/types/user.types';
+} from '@nihilog/schemas';
+import bcrypt from 'bcrypt';
+
+import { MESSAGE } from '@/code/messages';
+import { CreateUserDto } from '@/dto/auth.dto';
+import type { AnalyzeStatDto } from '@/dto/common.dto';
+import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';
+import type { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
 

@@ -1,12 +1,11 @@
-import { createZodDto } from 'nestjs-zod';
-
 import {
   userSubscribeSchema,
   createSubscribeSchema,
   updateSubscribeSchema,
   searchSubscribeSchema,
   deleteSubscribeSchema
-} from '@/endpoints/prisma/schemas/subscribe.schema';
+} from '@nihilog/schemas';
+import { createZodDto } from 'nestjs-zod';
 
 // 구독 정보 조회 DTO
 export class UserSubscribeDto extends createZodDto(userSubscribeSchema.partial()) {}

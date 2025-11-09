@@ -1,6 +1,5 @@
-import { RESPONSE_CODE } from '@/code';
-import { MESSAGE } from '@/code/messages';
-import type { RepoResponseType } from '@/endpoints/prisma/types/common.types';
+import { RESPONSE_CODE, MESSAGE } from '@nihilog/code';
+import type { RepoResponseType } from '@nihilog/schemas';
 
 export function prismaResponse<TData = unknown>(
   success: boolean,
@@ -12,7 +11,9 @@ export function prismaResponse<TData = unknown>(
     return {
       success: false,
       error: {
-        code: code || 'INTERNAL_SERVER_ERROR',
+        code: code
+          ? RESPONSE_CODE[code]
+          : RESPONSE_CODE.INTERNAL_SERVER_ERROR,
         message: message || MESSAGE.COMMON.ERROR,
       },
     };

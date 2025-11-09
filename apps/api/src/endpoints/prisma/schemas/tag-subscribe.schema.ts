@@ -98,6 +98,7 @@ export const createTagSubscribeSchema = tagSubscribeSchema.pick({
 
 // 태그 구독 수정용 스키마
 export const updateTagSubscribeSchema = tagSubscribeSchema.pick({
+  tagSbcrNo: true,
   sbcrNo: true,
   tagNo: true,
   useYn: true,

@@ -1,13 +1,13 @@
-import { z } from 'zod';
-
-import { MESSAGE } from '@/code/messages';
 import {
+  analyzeStatSchema,
   createCategorySchema,
   updateCategorySchema,
   deleteCategorySchema,
   searchCategorySchema
-} from '@/endpoints/prisma/schemas/category.schema';
-import { analyzeStatSchema } from '@/endpoints/prisma/schemas/common.schema';
+} from '@nihilog/schemas';
+import { z } from 'zod';
+
+import { MESSAGE } from '@/code/messages';
 import { createError, createResponse } from '@/utils';
 import { CreateCategoryAnalyze } from '@/utils/createCategoryAnalyze';
 import { CreateExample } from '@/utils/createExample';

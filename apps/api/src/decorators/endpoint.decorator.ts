@@ -1,9 +1,9 @@
 import { applyDecorators, HttpCode, HttpStatus, UseGuards, Get, Post, Put, Patch, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
+import { UserRoleType } from '@nihilog/schemas';
 
 import { JwtAuthGuard } from '@/endpoints/auth/jwt-auth.guard';
 import { RoleAuthGuard, Roles } from '@/endpoints/auth/role-auth.guard';
-import { UserRoleType } from '@/endpoints/prisma/schemas/user.schema';
 
 type EndpointOptions = {
   endpoint: string;

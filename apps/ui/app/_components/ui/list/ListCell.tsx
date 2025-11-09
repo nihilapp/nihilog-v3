@@ -8,7 +8,7 @@ import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
-  extends ReactElementProps<HTMLDivElement>,
+  extends ReactElementProps<'div'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
   checkbox?: boolean;
@@ -105,7 +105,7 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
             </button>
           )
           : (
-            <span className='text-black-base'>{itemValue}</span>
+            <span className='text-black-900'>{itemValue}</span>
           )}
 
       </React.Fragment>

@@ -5,13 +5,14 @@ alwaysApply: true
 # 리액트 컴포넌트 규칙
 
 1. **CRITICAL** 컴포넌트는 화살표 함수가 아닌, 함수 선언식 으로 작성합니다. 파일 이름과 컴포넌트의 이름은 같아야 합니다.
-2. **CRITICAL** `apps/ui/app/(common)/_components/ui` 폴더에 있는 **shadcn** 컴포넌트를 제외한 모든 사용자 정의 컴포넌트는 **cva** 구조를 가져야 합니다.
+2. **CRITICAL** `apps/ui/app/(common)/_components/ui` 폴더에 있는 **shadcn** 컴포넌트를 제외한 모든 사용자 정의 컴포넌트는 참고 1의 **cva** 구조를 가져야 합니다.
 3. **CRITICAL** 컴포넌트의 이름은 `PascalCase` 로 작성합니다.
 4. 컴포넌트는 tailwindcss 를 사용하며, `apps/ui/_styles/tailwind.css` 를 참고해서 스타일을 작성합니다. 커스텀이 되어있기 때문에 공식 클래스를 사용할 수 없는 케이스도 존재합니다.
 5. **CRITICAL** 상호작용 함수의 이름은 무조건 `on<Event><Target>` 형식으로 작성합니다.
 6. **CRITICAL** 함수나 변수에 **handle** 이라는 단어를 사용하지 않습니다.
+7. **CRITICAL** 모든 컴포넌트는 참고 2와 같이 프롭 타이핑을 해야 합니다. `Omit<React....>` 가 아니라 `ReactElementProps<ElementType, 'ExcludedKeys'>` 형식으로 작성합니다. 또한 인터페이스의 기본 프롭은 className, custom 입니다.
 
-# 참고
+# 참고 1
 
 cva 구조 예시
 
@@ -21,4 +22,20 @@ const cssVariants = cva(["flex flex-col gap-2"], {
   defaultVariants: {},
   compoundVariants: [],
 });
+```
+
+# 참고 2
+
+```typescript
+interface Props
+  extends ReactElementProps<HTMLElement>,
+    VariantProps<typeof cssVariants> {
+  className?: string | string[];
+  custom?: {
+    nav?: string | string[];
+    ul?: string | string[];
+    li?: string | string[];
+    button?: string | string[];
+  };
+}
 ```

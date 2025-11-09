@@ -14,7 +14,7 @@ import type {
   TagStatusDistributionItemType,
   TagCreatorStatItemType,
   TagCleanupRecommendationItemType
-} from '@/endpoints/prisma/types/tag.types';
+} from '@nihilog/schemas';
 
 import { timeToString } from './timeHelper';
 

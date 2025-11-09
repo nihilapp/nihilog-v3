@@ -1,14 +1,15 @@
 packages:
   - apps/*
+  - packages/*
 
 onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@parcel/watcher'
-  - '@prisma/client'
-  - '@prisma/engines'
-  - '@scarf/scarf'
-  - '@swc/core'
-  - '@tailwindcss/oxide'
+  - "@nestjs/core"
+  - "@parcel/watcher"
+  - "@prisma/client"
+  - "@prisma/engines"
+  - "@scarf/scarf"
+  - "@swc/core"
+  - "@tailwindcss/oxide"
   - bcrypt
   - esbuild
   - prisma

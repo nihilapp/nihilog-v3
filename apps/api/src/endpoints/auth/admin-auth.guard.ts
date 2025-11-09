@@ -3,10 +3,10 @@ import {
   Injectable
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { userRoleSchema } from '@nihilog/schemas';
 
 import { MESSAGE } from '@/code/messages';
 import { ResponseDto } from '@/dto/response.dto';
-import { userRoleSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError } from '@/utils';
 
 import { JwtPayload } from './jwt.strategy';

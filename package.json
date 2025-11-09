@@ -9,8 +9,18 @@
     "api:ncu": "cd apps/api && ncu",
     "api:ncu:update": "cd apps/api && ncu -u",
     "ui:ncu": "cd apps/ui && ncu",
-    "ui:ncu:update": "cd apps/ui && ncu -u"
+    "ui:ncu:update": "cd apps/ui && ncu -u",
+    "db:generate": "pnpm --filter @nihilog/db generate",
+    "db:migrate": "pnpm --filter @nihilog/db migrate:dev",
+    "db:migrate:deploy": "pnpm --filter @nihilog/db migrate:deploy",
+    "db:studio": "pnpm --filter @nihilog/db studio",
+    "db:format": "pnpm --filter @nihilog/db format",
+    "schemas:build": "pnpm --filter @nihilog/schemas build",
+    "code:build": "pnpm --filter @nihilog/code build"
   },
   "keywords": [],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.5.0"
+  }
 }

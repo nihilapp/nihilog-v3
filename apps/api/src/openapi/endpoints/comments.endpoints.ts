@@ -1,11 +1,11 @@
-import { z } from 'zod';
-
-import { MESSAGE } from '@/code/messages';
 import {
   searchCommentSchema,
   createCommentSchema,
   updateCommentSchema
-} from '@/endpoints/prisma/schemas/comment.schema';
+} from '@nihilog/schemas';
+import { z } from 'zod';
+
+import { MESSAGE } from '@/code/messages';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 

@@ -1,7 +1,7 @@
+import { updateUserSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
 import { MESSAGE } from '@/code/messages';
-import { updateUserSchema } from '@/endpoints/prisma/schemas/user.schema';
 import { createError, createResponse } from '@/utils';
 import { CreateExample } from '@/utils/createExample';
 
