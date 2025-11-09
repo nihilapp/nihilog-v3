@@ -1,9 +1,9 @@
+import type { CreateUserType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import { useRouter } from 'next/navigation';
 
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateUsersCache } from '@/_entities/users/users.keys';
-import type { CreateUserType } from '@/_schemas';
-import type { SelectUserInfoType } from '@/_types';
 
 /**
  * @description 새 사용자 계정을 생성하는 커스텀 훅

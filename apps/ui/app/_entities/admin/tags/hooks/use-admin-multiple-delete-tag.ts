@@ -1,6 +1,7 @@
+import type { DeleteTagType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useDeletes } from '@/_entities/common/hooks';
-import type { DeleteTagType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 

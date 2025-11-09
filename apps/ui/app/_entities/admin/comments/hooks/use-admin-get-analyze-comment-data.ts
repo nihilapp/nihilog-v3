@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { AnalyzeCommentStatItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { AnalyzeCommentStatItemType } from '@/_types';
 
 /**
  * @description 댓글 분석 통계 데이터를 조회하는 커스텀 훅

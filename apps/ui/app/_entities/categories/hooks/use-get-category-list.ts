@@ -1,6 +1,7 @@
+import type { SearchCategoryType } from '@nihilog/schemas';
+import type { ListType, SelectCategoryListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchCategoryType } from '@/_schemas/category.schema';
-import type { ListType, SelectCategoryListItemType } from '@/_types';
 
 /**
  * @description 카테고리 목록을 조회하는 커스텀 훅

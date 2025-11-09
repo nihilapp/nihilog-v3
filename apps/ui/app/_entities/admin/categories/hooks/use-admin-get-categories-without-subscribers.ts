@@ -1,5 +1,6 @@
+import type { CategoriesWithoutSubscribersItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { CategoriesWithoutSubscribersItemType } from '@/_types';
 
 /**
  * @description 구독자가 없는 카테고리 목록을 조회하는 커스텀 훅

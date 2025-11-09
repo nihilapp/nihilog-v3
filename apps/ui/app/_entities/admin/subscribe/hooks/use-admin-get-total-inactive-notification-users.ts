@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { TotalInactiveNotificationUsersItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { TotalInactiveNotificationUsersItemType } from '@/_types';
 
 /**
  * @description 전체 알림 비활성 사용자 수 통계를 조회하는 커스텀 훅

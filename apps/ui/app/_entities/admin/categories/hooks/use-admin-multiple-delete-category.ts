@@ -1,7 +1,8 @@
+import type { DeleteCategoryType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/admin-categories.keys';
 import { useDeletes } from '@/_entities/common/hooks';
-import type { DeleteCategoryType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 /**
  * @description 다수 카테고리를 일괄 삭제하는 커스텀 훅

@@ -1,7 +1,8 @@
+import type { UpdateSubscribeType } from '@nihilog/schemas';
+import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
+
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateUserSubscribeCache } from '@/_entities/users/users.keys';
-import type { UpdateSubscribeType } from '@/_schemas';
-import type { SelectUserSbcrInfoType } from '@/_types';
 
 /**
  * @description 이메일 구독 설정을 변경하는 커스텀 훅

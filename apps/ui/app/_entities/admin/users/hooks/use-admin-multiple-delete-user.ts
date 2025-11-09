@@ -1,6 +1,7 @@
+import type { DeleteMultipleUsersType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useDeletes } from '@/_entities/common/hooks';
-import type { DeleteMultipleUsersType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 

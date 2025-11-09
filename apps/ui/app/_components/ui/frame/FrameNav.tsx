@@ -4,7 +4,8 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Button } from '@/_components/ui/button';
 import { cn } from '@/_libs';
-import type { Menu, ReactElementProps } from '@/_types/common.types';
+import type { Menu } from '@/_types';
+import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
   extends ReactElementProps<'nav'>, VariantProps<typeof cssVariants> {

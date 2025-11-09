@@ -1,6 +1,7 @@
+import type { CreatePstTagMpngType } from '@nihilog/schemas';
+import type { SelectPstTagMpngType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
-import type { CreatePstTagMpngType } from '@/_schemas';
-import type { SelectPstTagMpngType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 

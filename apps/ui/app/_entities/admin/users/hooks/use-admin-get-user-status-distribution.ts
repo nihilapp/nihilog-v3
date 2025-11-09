@@ -1,5 +1,6 @@
+import type { UserStatusDistributionItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { UserStatusDistributionItemType } from '@/_types';
 
 /**
  * @description 상태별 사용자 분포를 조회하는 커스텀 훅

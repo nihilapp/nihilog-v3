@@ -1,9 +1,9 @@
+import type { UpdateUserType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import { useRouter } from 'next/navigation';
 
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateUsersCache } from '@/_entities/users/users.keys';
-import type { UpdateUserType } from '@/_schemas';
-import type { SelectUserInfoType } from '@/_types';
 
 /**
  * @description 프로필 정보를 수정하는 커스텀 훅

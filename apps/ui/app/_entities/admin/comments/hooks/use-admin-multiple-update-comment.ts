@@ -1,6 +1,7 @@
+import type { UpdateCommentType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { usePatch } from '@/_entities/common/hooks';
-import type { UpdateCommentType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminCommentsCache } from '../admin-comments.keys';
 

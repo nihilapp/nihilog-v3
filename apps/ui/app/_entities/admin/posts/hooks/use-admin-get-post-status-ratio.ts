@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { PostStatusRatioItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { PostStatusRatioItemType } from '@/_types';
 
 /**
  * @description 포스트 상태 비율을 조회하는 커스텀 훅

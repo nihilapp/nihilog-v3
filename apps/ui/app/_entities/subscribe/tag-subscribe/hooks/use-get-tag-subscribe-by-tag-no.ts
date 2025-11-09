@@ -1,6 +1,7 @@
+import type { SearchTagSubscribeType } from '@nihilog/schemas';
+import type { ListType, SelectTagSbcrMpngListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchTagSubscribeType } from '@/_schemas';
-import type { ListType, SelectTagSbcrMpngListItemType } from '@/_types';
 
 /**
  * @description 특정 태그의 구독 상태를 조회하는 커스텀 훅

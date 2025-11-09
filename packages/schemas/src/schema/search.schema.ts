@@ -4,7 +4,9 @@ import { z } from 'zod';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
-// 범용 검색 스키마 (기본 필드만)
+/**
+ * @description 범용 검색 스키마 (기본 필드만)
+ */
 export const baseSearchSchema = z.object({
   strtRow: z.coerce
     .number()
@@ -60,5 +62,9 @@ export const baseSearchSchema = z.object({
     }),
 });
 
-// 타입 추출
+// 타입 정의
+
+/**
+ * @description 범용 검색 타입
+ */
 export type BaseSearchType = z.infer<typeof baseSearchSchema>;

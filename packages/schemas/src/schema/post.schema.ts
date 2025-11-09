@@ -10,7 +10,9 @@ import { categoryInfoSchema } from './category.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
-// 포스트 상태 스키마 (에러 메시지 및 OpenAPI 설정 추가)
+/**
+ * @description 포스트 상태 스키마 (에러 메시지 및 OpenAPI 설정 추가)
+ */
 const postStatusSchema = basePostStatusSchema
   .refine(
     (val) => val === 'EMPTY' || val === 'WRITING' || val === 'FINISHED',
@@ -23,7 +25,9 @@ const postStatusSchema = basePostStatusSchema
     example: 'EMPTY',
   });
 
-// 카테고리 정보가 포함된 포스트 스키마
+/**
+ * @description 카테고리 정보가 포함된 포스트 스키마
+ */
 export const postSchema = commonSchema.extend({
   pstNo: z.coerce
     .number()
@@ -201,7 +205,9 @@ export const postSchema = commonSchema.extend({
     }),
 });
 
-// 포스트 생성 스키마
+/**
+ * @description 포스트 생성 스키마
+ */
 export const createPostSchema = postSchema.pick({
   pstTtl: true,
   pstSmry: true,
@@ -234,7 +240,9 @@ export const createPostSchema = postSchema.pick({
   delYn: true,
 });
 
-// 포스트 수정 스키마 (단일/다건 통합)
+/**
+ * @description 포스트 수정 스키마 (단일/다건 통합)
+ */
 export const updatePostSchema = postSchema.partial().pick({
   pstTtl: true,
   pstSmry: true,
@@ -258,7 +266,9 @@ export const updatePostSchema = postSchema.partial().pick({
   delDt: true,
 });
 
-// 포스트 검색 스키마 (기본 검색 스키마 확장)
+/**
+ * @description 포스트 검색 스키마 (기본 검색 스키마 확장)
+ */
 export const searchPostSchema = baseSearchSchema.extend({
   ...postSchema.pick({
     delYn: true,
@@ -321,7 +331,9 @@ export const searchPostSchema = baseSearchSchema.extend({
     }),
 }).partial();
 
-// 포스트 삭제 스키마 (포스트 번호 또는 리스트 선택)
+/**
+ * @description 포스트 삭제 스키마 (포스트 번호 또는 리스트 선택)
+ */
 export const deletePostSchema = postSchema.pick({
   pstNoList: true,
 }).refine(
@@ -331,7 +343,9 @@ export const deletePostSchema = postSchema.pick({
   }
 );
 
-// 포스트 북마크 스키마 (포스트와 카테고리 정보 포함)
+/**
+ * @description 포스트 북마크 스키마 (포스트와 카테고리 정보 포함)
+ */
 export const postBookmarkSchema = commonSchema.extend({
   bkmrkNo: z.coerce
     .number()
@@ -365,15 +379,24 @@ export const postBookmarkSchema = commonSchema.extend({
     }),
 });
 
+/**
+ * @description 포스트 북마크 생성 스키마
+ */
 export const createPostBookmarkSchema = postBookmarkSchema.pick({
   userNo: true,
   pstNo: true,
 });
 
+/**
+ * @description 포스트 북마크 삭제 스키마
+ */
 export const deletePostBookmarkSchema = postBookmarkSchema.pick({
   bkmrkNo: true,
 });
 
+/**
+ * @description 포스트 북마크 검색 스키마
+ */
 export const searchPostBookmarkSchema = baseSearchSchema.extend({
   ...postBookmarkSchema.pick({
     pstNo: true,
@@ -381,18 +404,9 @@ export const searchPostBookmarkSchema = baseSearchSchema.extend({
   }).shape,
 }).partial();
 
-// 타입 추출
-export type PostType = z.infer<typeof postSchema>;
-export type PostInfoType = Partial<PostType>;
-export type CreatePostType = z.infer<typeof createPostSchema>;
-export type UpdatePostType = z.infer<typeof updatePostSchema>;
-export type DeletePostType = z.infer<typeof deletePostSchema>;
-export type SearchPostType = z.infer<typeof searchPostSchema>;
-export type CreatePostBookmarkType = z.infer<typeof createPostBookmarkSchema>;
-export type DeletePostBookmarkType = z.infer<typeof deletePostBookmarkSchema>;
-export type SearchPostBookmarkType = z.infer<typeof searchPostBookmarkSchema>;
-
-// 포스트 조회 로그 스키마
+/**
+ * @description 포스트 조회 로그 스키마
+ */
 export const postViewLogSchema = z.object({
   viewNo: z.coerce
     .number()
@@ -428,7 +442,9 @@ export const postViewLogSchema = z.object({
     }),
 });
 
-// 포스트 조회 로그 생성 스키마
+/**
+ * @description 포스트 조회 로그 생성 스키마
+ */
 export const createPostViewLogSchema = z.object({
   pstNo: z.coerce
     .number()
@@ -450,7 +466,9 @@ export const createPostViewLogSchema = z.object({
     }),
 });
 
-// 포스트 공유 로그 스키마
+/**
+ * @description 포스트 공유 로그 스키마
+ */
 export const postShareLogSchema = z.object({
   shrnNo: z.coerce
     .number()
@@ -484,15 +502,78 @@ export const postShareLogSchema = z.object({
     }),
 });
 
-// 포스트 공유 로그 생성 스키마
+/**
+ * @description 포스트 공유 로그 생성 스키마
+ */
 export const createPostShareLogSchema = postShareLogSchema.pick({
   pstNo: true,
   shrnSite: true,
   shrnDt: true,
 });
 
-// 타입 추출
+// 타입 정의
+
+/**
+ * @description 포스트 타입
+ */
+export type PostType = z.infer<typeof postSchema>;
+
+/**
+ * @description 포스트 정보 타입
+ */
+export type PostInfoType = Partial<PostType>;
+
+/**
+ * @description 포스트 생성 타입
+ */
+export type CreatePostType = z.infer<typeof createPostSchema>;
+
+/**
+ * @description 포스트 수정 타입
+ */
+export type UpdatePostType = z.infer<typeof updatePostSchema>;
+
+/**
+ * @description 포스트 삭제 타입
+ */
+export type DeletePostType = z.infer<typeof deletePostSchema>;
+
+/**
+ * @description 포스트 검색 타입
+ */
+export type SearchPostType = z.infer<typeof searchPostSchema>;
+
+/**
+ * @description 포스트 북마크 생성 타입
+ */
+export type CreatePostBookmarkType = z.infer<typeof createPostBookmarkSchema>;
+
+/**
+ * @description 포스트 북마크 삭제 타입
+ */
+export type DeletePostBookmarkType = z.infer<typeof deletePostBookmarkSchema>;
+
+/**
+ * @description 포스트 북마크 검색 타입
+ */
+export type SearchPostBookmarkType = z.infer<typeof searchPostBookmarkSchema>;
+
+/**
+ * @description 포스트 조회 로그 스키마 타입
+ */
 export type PostViewLogSchemaType = z.infer<typeof postViewLogSchema>;
+
+/**
+ * @description 포스트 조회 로그 생성 스키마 타입
+ */
 export type CreatePostViewLogSchemaType = z.infer<typeof createPostViewLogSchema>;
+
+/**
+ * @description 포스트 공유 로그 스키마 타입
+ */
 export type PostShareLogSchemaType = z.infer<typeof postShareLogSchema>;
+
+/**
+ * @description 포스트 공유 로그 생성 스키마 타입
+ */
 export type CreatePostShareLogSchemaType = z.infer<typeof createPostShareLogSchema>;

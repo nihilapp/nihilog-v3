@@ -1,6 +1,7 @@
+import type { SearchCommentType } from '@nihilog/schemas';
+import type { ListType, SelectCommentListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchCommentType } from '@/_schemas';
-import type { ListType, SelectCommentListItemType } from '@/_types';
 
 /**
  * @description 댓글 목록을 조회하는 커스텀 훅

@@ -1,19 +1,23 @@
 import type { UserInfo } from '@nihilog/db';
 
-// 단일 사용자 조회
+/**
+ * @description 단일 사용자 조회
+ */
 export type SelectUserInfoType = UserInfo;
 
-// 목록 조회 항목 (페이징 정보 포함)
+/**
+ * @description 목록 조회 항목 (페이징 정보 포함)
+ */
 export type SelectUserInfoListItemType = UserInfo & {
   totalCnt: number;
   rowNo: number;
 };
 
-// ========================================================
 // 사용자 통계 관련 타입
-// ========================================================
 
-// 사용자 분석 통계 (9개 지표 통합)
+/**
+ * @description 사용자 분석 통계 (9개 지표 통합)
+ */
 export type AnalyzeUserStatItemType = {
   dateStart: string;
   dateEnd: string;
@@ -28,7 +32,9 @@ export type AnalyzeUserStatItemType = {
   categorySubscribeCount: number;
 };
 
-// 활성 사용자 분석
+/**
+ * @description 활성 사용자 분석
+ */
 export type ActiveUserAnalysisItemType = {
   period: string;
   activeUserCount: number;
@@ -36,7 +42,9 @@ export type ActiveUserAnalysisItemType = {
   activeUserRatio: number;
 };
 
-// 사용자별 기여도 TOP N
+/**
+ * @description 사용자별 기여도 TOP N
+ */
 export type TopUsersByContributionItemType = {
   userNo: number;
   userName: string;
@@ -48,7 +56,9 @@ export type TopUsersByContributionItemType = {
   lastActivityDate: string;
 };
 
-// 사용자별 포스트 작성 수 TOP N
+/**
+ * @description 사용자별 포스트 작성 수 TOP N
+ */
 export type TopUsersByPostCountItemType = {
   userNo: number;
   userName: string;
@@ -57,7 +67,9 @@ export type TopUsersByPostCountItemType = {
   lastPostDate: string;
 };
 
-// 사용자별 댓글 작성 수 TOP N
+/**
+ * @description 사용자별 댓글 작성 수 TOP N
+ */
 export type TopUsersByCommentCountItemType = {
   userNo: number;
   userName: string;
@@ -66,21 +78,27 @@ export type TopUsersByCommentCountItemType = {
   lastCommentDate: string;
 };
 
-// 역할별 사용자 분포
+/**
+ * @description 역할별 사용자 분포
+ */
 export type UserRoleDistributionItemType = {
   role: string;
   count: number;
   ratio: number;
 };
 
-// 상태별 사용자 분포
+/**
+ * @description 상태별 사용자 분포
+ */
 export type UserStatusDistributionItemType = {
   status: string;
   count: number;
   ratio: number;
 };
 
-// 비활성 사용자 목록
+/**
+ * @description 비활성 사용자 목록
+ */
 export type InactiveUsersListItemType = {
   userNo: number;
   userName: string;
@@ -89,7 +107,9 @@ export type InactiveUsersListItemType = {
   daysSinceLastLogin: number;
 };
 
-// 사용자 성장률
+/**
+ * @description 사용자 성장률
+ */
 export type UserGrowthRateItemType = {
   dateStart: string;
   dateEnd: string;
@@ -98,7 +118,9 @@ export type UserGrowthRateItemType = {
   currentUserCount: number;
 };
 
-// 사용자 유지율
+/**
+ * @description 사용자 유지율
+ */
 export type UserRetentionRateItemType = {
   period: string;
   retentionRate: number;

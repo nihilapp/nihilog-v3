@@ -1,5 +1,6 @@
+import type { CommentStatusDistributionItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { CommentStatusDistributionItemType } from '@/_types';
 
 /**
  * @description 댓글 상태별 분포를 조회하는 커스텀 훅

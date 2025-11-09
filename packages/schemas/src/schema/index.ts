@@ -5,7 +5,8 @@ export {
   dateTimeMessage,
   ynEnumSchema,
   analyzeStatSchema,
-  type YnType
+  type YnType,
+  type AnalyzeStatType
 } from './common.schema';
 
 export {

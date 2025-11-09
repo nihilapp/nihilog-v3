@@ -1,6 +1,7 @@
+import type { SearchSubscribeType } from '@nihilog/schemas';
+import type { ListType, SelectUserSbcrInfoListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchSubscribeType } from '@/_schemas';
-import type { ListType, SelectUserSbcrInfoListItemType } from '@/_types';
 
 /**
  * @description 전체 사용자 구독 설정 목록을 조회하는 커스텀 훅

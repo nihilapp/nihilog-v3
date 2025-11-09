@@ -22,12 +22,12 @@ export type SelectPstTagMpngListItemType = SelectPstTagMpngType & {
   totalCnt: number;
 };
 
-// ========================================================
 // 태그 통계 관련 타입
-// ========================================================
 
-// 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
-// - tagNo 없으면 전체, 있으면 해당 태그만
+/**
+ * @description 태그 분석 통계 (시간대별 합산) - 9개 지표 통합
+ * - tagNo 없으면 전체, 있으면 해당 태그만
+ */
 export type AnalyzeTagStatItemType = {
   dateStart: string;
   dateEnd: string;
@@ -45,12 +45,12 @@ export type AnalyzeTagStatItemType = {
   activeSubscriberCount: number; // 활성 구독자 수
 };
 
-// ========================================================
 // 파생 지표 타입 (12개)
-// ========================================================
 
-// 1. 사용량 분석 (3개)
-// 태그별 사용 횟수 TOP N
+/**
+ * @description 1. 사용량 분석 (3개)
+ * 태그별 사용 횟수 TOP N
+ */
 export type TopUsedTagItemType = {
   tagNo: number;
   tagNm: string;
@@ -59,7 +59,9 @@ export type TopUsedTagItemType = {
   lastUsedDate: string;
 };
 
-// 태그별 사용 추이
+/**
+ * @description 태그별 사용 추이
+ */
 export type TagUsageTrendItemType = {
   dateStart: string;
   dateEnd: string;
@@ -68,7 +70,9 @@ export type TagUsageTrendItemType = {
   usageCount: number;
 };
 
-// 미사용 태그 목록
+/**
+ * @description 미사용 태그 목록
+ */
 export type UnusedTagItemType = {
   tagNo: number;
   tagNm: string;
@@ -76,8 +80,10 @@ export type UnusedTagItemType = {
   daysSinceCreation: number;
 };
 
-// 2. 구독 분석 (3개)
-// 태그별 구독자 수 TOP N
+/**
+ * @description 2. 구독 분석 (3개)
+ * 태그별 구독자 수 TOP N
+ */
 export type TopTagsBySubscriberItemType = {
   tagNo: number;
   tagNm: string;
@@ -86,7 +92,9 @@ export type TopTagsBySubscriberItemType = {
   lastSubscriberDate: string;
 };
 
-// 태그별 구독자 성장률
+/**
+ * @description 태그별 구독자 성장률
+ */
 export type TagSubscriberGrowthRateItemType = {
   dateStart: string;
   dateEnd: string;
@@ -97,7 +105,9 @@ export type TagSubscriberGrowthRateItemType = {
   previousSubscriberCount: number;
 };
 
-// 구독자 없는 태그 목록
+/**
+ * @description 구독자 없는 태그 목록
+ */
 export type TagWithoutSubscribersItemType = {
   tagNo: number;
   tagNm: string;
@@ -105,8 +115,10 @@ export type TagWithoutSubscribersItemType = {
   createDate: string;
 };
 
-// 3. 효율성 분석 (3개)
-// 태그별 사용 효율성
+/**
+ * @description 3. 효율성 분석 (3개)
+ * 태그별 사용 효율성
+ */
 export type TagUsageEfficiencyItemType = {
   tagNo: number;
   tagNm: string;
@@ -115,7 +127,9 @@ export type TagUsageEfficiencyItemType = {
   efficiencyRatio: number; // 사용 횟수 / 구독자 수
 };
 
-// 태그별 평균 사용 빈도
+/**
+ * @description 태그별 평균 사용 빈도
+ */
 export type TagAverageUsageFrequencyItemType = {
   tagNo: number;
   tagNm: string;
@@ -124,7 +138,9 @@ export type TagAverageUsageFrequencyItemType = {
   averageFrequency: number; // 총 사용 횟수 / 활성 기간
 };
 
-// 태그 생명주기 분석
+/**
+ * @description 태그 생명주기 분석
+ */
 export type TagLifecycleItemType = {
   tagNo: number;
   tagNm: string;
@@ -134,15 +150,19 @@ export type TagLifecycleItemType = {
   isActive: boolean;
 };
 
-// 4. 관리 통계 (3개)
-// 태그 상태별 분포
+/**
+ * @description 4. 관리 통계 (3개)
+ * 태그 상태별 분포
+ */
 export type TagStatusDistributionItemType = {
   status: 'ACTIVE' | 'INACTIVE' | 'DELETED';
   count: number;
   ratio: number;
 };
 
-// 태그 생성자별 통계
+/**
+ * @description 태그 생성자별 통계
+ */
 export type TagCreatorStatItemType = {
   creatorNo: number;
   creatorName: string;
@@ -151,7 +171,9 @@ export type TagCreatorStatItemType = {
   lastCreateDate: string;
 };
 
-// 태그 정리 필요도
+/**
+ * @description 태그 정리 필요도
+ */
 export type TagCleanupRecommendationItemType = {
   tagNo: number;
   tagNm: string;

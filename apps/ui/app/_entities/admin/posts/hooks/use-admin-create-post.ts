@@ -1,8 +1,8 @@
+import type { CreatePostType } from '@nihilog/schemas';
+import type { SelectPostType } from '@nihilog/schemas';
 import { useRouter } from 'next/navigation';
 
 import { usePost } from '@/_entities/common/hooks';
-import type { CreatePostType } from '@/_schemas';
-import type { SelectPostType } from '@/_types';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 

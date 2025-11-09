@@ -1,5 +1,6 @@
+import type { SelectPstTagMpngType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SelectPstTagMpngType } from '@/_types';
 
 /**
  * @description 태그 번호로 매핑을 조회하는 커스텀 훅

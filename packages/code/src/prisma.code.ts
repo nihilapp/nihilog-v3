@@ -63,4 +63,3 @@ export const PRISMA_ERROR_CODE = {
  * Prisma 에러 코드 타입
  */
 export type PrismaErrorCode = keyof typeof PRISMA_ERROR_CODE;
-

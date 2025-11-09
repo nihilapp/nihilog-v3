@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { CategorySubscriberGrowthRateItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { CategorySubscriberGrowthRateItemType } from '@/_types';
 
 /**
  * @description 카테고리 구독자 성장률을 조회하는 커스텀 훅

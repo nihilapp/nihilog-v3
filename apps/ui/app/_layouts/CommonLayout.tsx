@@ -11,7 +11,7 @@ interface Props {
   children?: React.ReactNode;
 }
 
-export function CommonLayout({ children, ...props }: Props) {
+export function CommonLayout({ children, }: Props) {
   const signOut = useSignOut();
 
   const navMenu: Menu[] = [
@@ -76,7 +76,10 @@ export function CommonLayout({ children, ...props }: Props) {
   return (
     <>
       <Frame.Header text='NIHILOG'>
-        <Frame.AuthButtons />
+        <Frame.AuthButtons
+          beforeSignInMenu={beforeSignInMenu}
+          afterSignInMenu={afterSignInMenu}
+        />
         <Frame.Nav menu={navMenu} />
       </Frame.Header>
       <Frame.Content withSide sidePosition='left'>

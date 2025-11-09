@@ -1,9 +1,9 @@
+import type { UpdateUserType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 import { useRouter } from 'next/navigation';
 
 import { useInvalidateAdminCache } from '@/_entities/admin/admin.keys';
 import { usePut } from '@/_entities/common/hooks';
-import type { UpdateUserType } from '@/_schemas';
-import type { SelectUserInfoType } from '@/_types';
 
 /**
  * @description 관리자 프로필을 수정하는 커스텀 훅

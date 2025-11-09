@@ -1,5 +1,6 @@
+import type { InactiveUsersListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { InactiveUsersListItemType } from '@/_types';
 
 /**
  * @description 비활성 사용자 목록을 조회하는 커스텀 훅

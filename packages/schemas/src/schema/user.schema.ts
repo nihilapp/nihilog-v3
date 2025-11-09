@@ -18,7 +18,9 @@ const USER_MESSAGES = {
   },
 };
 
-// 사용자 권한 스키마 (에러 메시지 추가)
+/**
+ * @description 사용자 권한 스키마 (에러 메시지 추가)
+ */
 export const userRoleSchema = baseUserRoleSchema.refine(
   (val) => val === 'USER' || val === 'ADMIN',
   {
@@ -26,7 +28,9 @@ export const userRoleSchema = baseUserRoleSchema.refine(
   }
 );
 
-// 공통 비밀번호 스키마
+/**
+ * @description 공통 비밀번호 스키마
+ */
 export const passwordSchema = z.string()
   .min(
     10,
@@ -47,6 +51,9 @@ export const passwordSchema = z.string()
 
 // Zod 스키마 정의
 
+/**
+ * @description 사용자 정보 스키마
+ */
 export const userInfoSchema = commonSchema.extend({
   userNo: z.coerce.number()
     .int('사용자 번호는 정수여야 합니다.')
@@ -176,6 +183,10 @@ export const userInfoSchema = commonSchema.extend({
 });
 
 // 커스텀 스키마 정의
+
+/**
+ * @description 사용자 생성 스키마
+ */
 export const createUserSchema = userInfoSchema.pick({
   emlAddr: true,
   userNm: true,
@@ -194,6 +205,9 @@ export const createUserSchema = userInfoSchema.pick({
     }),
 });
 
+/**
+ * @description 사용자 수정 스키마
+ */
 export const updateUserSchema = userInfoSchema.pick({
   userNm: true,
   userRole: true,
@@ -214,10 +228,16 @@ export const updateUserSchema = userInfoSchema.pick({
   userNoList: true,
 }).partial();
 
+/**
+ * @description 다중 사용자 삭제 스키마
+ */
 export const deleteMultipleUsersSchema = userInfoSchema.pick({
   userNoList: true,
 });
 
+/**
+ * @description 로그인 스키마
+ */
 export const signInSchema = userInfoSchema.pick({
   emlAddr: true,
 }).extend({
@@ -232,10 +252,16 @@ export const signInSchema = userInfoSchema.pick({
     }),
 });
 
+/**
+ * @description 비밀번호 찾기 스키마
+ */
 export const forgotPasswordSchema = userInfoSchema.pick({
   emlAddr: true,
 });
 
+/**
+ * @description 비밀번호 변경 스키마
+ */
 export const changePasswordSchema = z.object({
   currentPassword: z.string()
     .min(
@@ -249,6 +275,9 @@ export const changePasswordSchema = z.object({
   newPassword: passwordSchema,
 });
 
+/**
+ * @description 비밀번호 리셋 스키마
+ */
 export const resetPasswordSchema = z.object({
   resetToken: z.string()
     .min(
@@ -262,7 +291,9 @@ export const resetPasswordSchema = z.object({
   newPassword: passwordSchema,
 });
 
-// 회원탈퇴용 스키마
+/**
+ * @description 회원탈퇴용 스키마
+ */
 export const withdrawSchema = z.object({
   password: z.string()
     .min(
@@ -275,7 +306,9 @@ export const withdrawSchema = z.object({
     }),
 });
 
-// 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
+/**
+ * @description 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
+ */
 export const searchUserSchema = baseSearchSchema.extend({
   ...userInfoSchema.pick({
     delYn: true,
@@ -356,19 +389,69 @@ export const searchUserSchema = baseSearchSchema.extend({
     }),
 }).partial();
 
-// 모든 항목이 선택값인 스키마
+/**
+ * @description 모든 항목이 선택값인 스키마
+ */
 export const partialUserInfoSchema = userInfoSchema.partial();
 
-// 타입 추출
+// 타입 정의
+
+/**
+ * @description 사용자 정보 타입
+ */
 export type UserInfoType = z.infer<typeof userInfoSchema>;
+
+/**
+ * @description 사용자 생성 타입
+ */
 export type CreateUserType = z.infer<typeof createUserSchema>;
+
+/**
+ * @description 사용자 수정 타입
+ */
 export type UpdateUserType = z.infer<typeof updateUserSchema>;
+
+/**
+ * @description 다중 사용자 삭제 타입
+ */
 export type DeleteMultipleUsersType = z.infer<typeof deleteMultipleUsersSchema>;
+
+/**
+ * @description 로그인 타입
+ */
 export type SignInType = z.infer<typeof signInSchema>;
+
+/**
+ * @description 비밀번호 찾기 타입
+ */
 export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
+
+/**
+ * @description 비밀번호 변경 타입
+ */
 export type ChangePasswordType = z.infer<typeof changePasswordSchema>;
+
+/**
+ * @description 비밀번호 리셋 타입
+ */
 export type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
+
+/**
+ * @description 사용자 역할 타입
+ */
 export type UserRoleType = z.infer<typeof userRoleSchema>;
+
+/**
+ * @description 부분 사용자 정보 타입
+ */
 export type PartialUserInfoType = z.infer<typeof partialUserInfoSchema>;
+
+/**
+ * @description 사용자 검색 타입
+ */
 export type SearchUserType = z.infer<typeof searchUserSchema>;
+
+/**
+ * @description 회원탈퇴 타입
+ */
 export type WithdrawType = z.infer<typeof withdrawSchema>;

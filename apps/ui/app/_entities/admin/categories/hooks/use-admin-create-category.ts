@@ -1,7 +1,8 @@
+import type { CreateCategoryType } from '@nihilog/schemas';
+import type { SelectCategoryType } from '@nihilog/schemas';
+
 import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/admin-categories.keys';
 import { usePost } from '@/_entities/common/hooks';
-import type { CreateCategoryType } from '@/_schemas';
-import type { SelectCategoryType } from '@/_types';
 
 /**
  * @description 카테고리를 생성하는 커스텀 훅

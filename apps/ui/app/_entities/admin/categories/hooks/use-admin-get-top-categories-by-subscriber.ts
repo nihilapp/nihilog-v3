@@ -1,5 +1,6 @@
+import type { TopCategoriesBySubscriberItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { TopCategoriesBySubscriberItemType } from '@/_types';
 
 /**
  * @description 카테고리별 구독자 수 TOP N을 조회하는 커스텀 훅

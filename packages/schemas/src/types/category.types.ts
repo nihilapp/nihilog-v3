@@ -12,12 +12,12 @@ export type SelectCategoryListItemType = SelectCategoryType & {
   rowNo: number;
 };
 
-// ========================================================
 // 카테고리 통계 관련 타입
-// ========================================================
 
-// 카테고리 분석 통계 (시간대별 합산) - 9개 지표 통합
-// - ctgryNo 없으면 전체, 있으면 해당 카테고리만
+/**
+ * @description 카테고리 분석 통계 (시간대별 합산) - 9개 지표 통합
+ * - ctgryNo 없으면 전체, 있으면 해당 카테고리만
+ */
 export type AnalyzeCategoryStatItemType = {
   dateStart: string;
   dateEnd: string;
@@ -37,12 +37,12 @@ export type AnalyzeCategoryStatItemType = {
   commentCount: number; // 카테고리별 댓글 수
 };
 
-// ========================================================
 // 파생 지표 타입 (10개)
-// ========================================================
 
-// 1. 카테고리 인기도 분석 (4개)
-// 카테고리별 인기 지수 TOP N (조회 + 북마크 + 공유 가중치 합산)
+/**
+ * @description 1. 카테고리 인기도 분석 (4개)
+ * 카테고리별 인기 지수 TOP N (조회 + 북마크 + 공유 가중치 합산)
+ */
 export type TopPopularCategoryItemType = {
   ctgryNo: number;
   ctgryNm: string;
@@ -54,7 +54,9 @@ export type TopPopularCategoryItemType = {
   lastUsedDate: string;
 };
 
-// 구독자 많은 카테고리 TOP N
+/**
+ * @description 구독자 많은 카테고리 TOP N
+ */
 export type TopCategoriesBySubscriberItemType = {
   ctgryNo: number;
   ctgryNm: string;
@@ -63,51 +65,65 @@ export type TopCategoriesBySubscriberItemType = {
   lastSubscriberDate: string;
 };
 
-// 평균 북마크 수 / 카테고리
+/**
+ * @description 평균 북마크 수 / 카테고리
+ */
 export type AverageBookmarkPerCategoryItemType = {
   dateStart: string;
   dateEnd: string;
   avgBookmarkCount: number;
 };
 
-// 카테고리별 평균 조회수
+/**
+ * @description 카테고리별 평균 조회수
+ */
 export type AverageViewPerCategoryItemType = {
   dateStart: string;
   dateEnd: string;
   avgViewCount: number;
 };
 
-// 2. 카테고리 계층 분석 (3개)
-// 계층별 카테고리 분포 (상위/하위 카테고리 비율)
+/**
+ * @description 2. 카테고리 계층 분석 (3개)
+ * 계층별 카테고리 분포 (상위/하위 카테고리 비율)
+ */
 export type CategoryHierarchyDistributionItemType = {
   hierarchyLevel: 'ROOT' | 'CHILD';
   count: number;
   ratio: number;
 };
 
-// 계층별 포스트 분포
+/**
+ * @description 계층별 포스트 분포
+ */
 export type CategoryHierarchyPostDistributionItemType = {
   hierarchyLevel: 'ROOT' | 'CHILD';
   postCount: number;
   ratio: number;
 };
 
-// 계층별 구독자 분포
+/**
+ * @description 계층별 구독자 분포
+ */
 export type CategoryHierarchySubscriberDistributionItemType = {
   hierarchyLevel: 'ROOT' | 'CHILD';
   subscriberCount: number;
   ratio: number;
 };
 
-// 3. 카테고리 관리 통계 (3개)
-// 카테고리 상태별 분포 (활성/비활성/삭제된 카테고리 비율)
+/**
+ * @description 3. 카테고리 관리 통계 (3개)
+ * 카테고리 상태별 분포 (활성/비활성/삭제된 카테고리 비율)
+ */
 export type CategoryStatusDistributionItemType = {
   status: 'ACTIVE' | 'INACTIVE' | 'DELETED';
   count: number;
   ratio: number;
 };
 
-// 카테고리 생성자별 통계
+/**
+ * @description 카테고리 생성자별 통계
+ */
 export type CategoryCreatorStatItemType = {
   creatorNo: number;
   creatorName: string;
@@ -116,7 +132,9 @@ export type CategoryCreatorStatItemType = {
   lastCreateDate: string;
 };
 
-// 미사용 카테고리 목록 (포스트가 없는 카테고리)
+/**
+ * @description 미사용 카테고리 목록 (포스트가 없는 카테고리)
+ */
 export type UnusedCategoryItemType = {
   ctgryNo: number;
   ctgryNm: string;
@@ -124,8 +142,10 @@ export type UnusedCategoryItemType = {
   daysSinceCreation: number;
 };
 
-// 4. 카테고리 구독 분석 (2개 추가)
-// 카테고리별 구독자 성장률 (시계열)
+/**
+ * @description 4. 카테고리 구독 분석 (2개 추가)
+ * 카테고리별 구독자 성장률 (시계열)
+ */
 export type CategorySubscriberGrowthRateItemType = {
   dateStart: string;
   dateEnd: string;
@@ -136,7 +156,9 @@ export type CategorySubscriberGrowthRateItemType = {
   growthRate: number; // (현재 - 이전) / 이전 * 100
 };
 
-// 구독자 없는 카테고리 목록
+/**
+ * @description 구독자 없는 카테고리 목록
+ */
 export type CategoriesWithoutSubscribersItemType = {
   ctgryNo: number;
   ctgryNm: string;

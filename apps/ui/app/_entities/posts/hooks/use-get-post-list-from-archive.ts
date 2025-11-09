@@ -1,6 +1,7 @@
+import type { SearchPostType } from '@nihilog/schemas';
+import type { ListType, SelectPostListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchPostType } from '@/_schemas';
-import type { ListType, SelectPostListItemType } from '@/_types';
 
 /**
  * @description 년월별 포스트 목록을 조회하는 커스텀 훅

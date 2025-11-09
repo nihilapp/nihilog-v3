@@ -1,6 +1,7 @@
+import type { SearchTagType } from '@nihilog/schemas';
+import type { ListType, SelectTagInfoListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchTagType } from '@/_schemas';
-import type { ListType, SelectTagInfoListItemType } from '@/_types';
 
 /**
  * @description 태그 목록을 조회하는 커스텀 훅

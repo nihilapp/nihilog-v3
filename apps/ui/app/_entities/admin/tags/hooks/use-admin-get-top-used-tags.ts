@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { TopUsedTagItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { TopUsedTagItemType } from '@/_types';
 
 /**
  * @description 태그별 사용 횟수 TOP N을 조회하는 커스텀 훅

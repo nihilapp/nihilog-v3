@@ -1,5 +1,6 @@
+import type { SelectUserInfoType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SelectUserInfoType } from '@/_types';
 
 /**
  * @description 사용자 번호로 사용자를 조회하는 커스텀 훅

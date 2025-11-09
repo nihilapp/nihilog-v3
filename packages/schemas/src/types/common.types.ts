@@ -1,19 +1,25 @@
 import { RESPONSE_CODE } from '@nihilog/code';
 
-// 리스트 형식의 데이터 타입
+/**
+ * @description 리스트 형식의 데이터 타입
+ */
 export type ListType<TData = unknown> = {
   list: TData[];
   totalCnt: number;
 };
 
-// 다중 작업 결과 타입
+/**
+ * @description 다중 작업 결과 타입
+ */
 export type MultipleResultType = {
   successCnt: number;
   failCnt: number;
   failNoList: number[];
 };
 
-// 응답 타입
+/**
+ * @description 응답 타입
+ */
 export type ResponseType<TData = unknown> = {
   error: false;
   code: keyof typeof RESPONSE_CODE;
@@ -22,7 +28,9 @@ export type ResponseType<TData = unknown> = {
   responseTime: string;
 };
 
-// 에러 타입
+/**
+ * @description 에러 타입
+ */
 export type ErrorType = {
   error: true;
   code: keyof typeof RESPONSE_CODE;
@@ -31,7 +39,9 @@ export type ErrorType = {
   responseTime: string;
 };
 
-// 리포지토리 응답 타입 (code는 실제 값)
+/**
+ * @description 리포지토리 응답 타입 (code는 실제 값)
+ */
 export type RepoResponseType<TData = unknown> = {
   success: boolean;
   data?: TData | null;

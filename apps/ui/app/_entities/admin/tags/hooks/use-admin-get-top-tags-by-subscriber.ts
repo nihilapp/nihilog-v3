@@ -1,5 +1,6 @@
+import type { TopTagsBySubscriberItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { TopTagsBySubscriberItemType } from '@/_types';
 
 /**
  * @description 태그별 구독자 수 TOP N을 조회하는 커스텀 훅

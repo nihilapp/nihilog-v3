@@ -1,5 +1,6 @@
+import type { CategoryStatusDistributionItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { CategoryStatusDistributionItemType } from '@/_types';
 
 /**
  * @description 카테고리 상태별 분포를 조회하는 커스텀 훅

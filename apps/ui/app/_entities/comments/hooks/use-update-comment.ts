@@ -1,7 +1,8 @@
+import type { UpdateCommentType } from '@nihilog/schemas';
+import type { SelectCommentType } from '@nihilog/schemas';
+
 import { useInvalidateCommentsCache } from '@/_entities/comments/comments.keys';
 import { usePut } from '@/_entities/common/hooks';
-import type { UpdateCommentType } from '@/_schemas';
-import type { SelectCommentType } from '@/_types';
 
 /**
  * @description 댓글을 수정하는 커스텀 훅

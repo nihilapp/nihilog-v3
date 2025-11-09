@@ -1,5 +1,6 @@
+import type { CategoryHierarchyPostDistributionItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { CategoryHierarchyPostDistributionItemType } from '@/_types';
 
 /**
  * @description 카테고리 계층별 포스트 분포를 조회하는 커스텀 훅

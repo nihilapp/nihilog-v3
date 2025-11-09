@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { CommentAverageDepthItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { CommentAverageDepthItemType } from '@/_types';
 
 /**
  * @description 평균 답글 깊이를 조회하는 커스텀 훅

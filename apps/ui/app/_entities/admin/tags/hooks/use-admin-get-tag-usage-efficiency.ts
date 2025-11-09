@@ -1,5 +1,6 @@
+import type { TagUsageEfficiencyItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { TagUsageEfficiencyItemType } from '@/_types';
 
 /**
  * @description 태그별 사용 효율성을 조회하는 커스텀 훅

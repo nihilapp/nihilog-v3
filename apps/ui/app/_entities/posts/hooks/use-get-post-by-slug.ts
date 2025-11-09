@@ -1,5 +1,6 @@
+import type { SelectPostType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SelectPostType } from '@/_types';
 
 /**
  * @description 포스트 슬러그로 포스트를 조회하는 커스텀 훅

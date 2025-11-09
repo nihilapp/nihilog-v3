@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { ActiveUserAnalysisItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { ActiveUserAnalysisItemType } from '@/_types';
 
 /**
  * @description 활성 사용자 분석을 조회하는 커스텀 훅

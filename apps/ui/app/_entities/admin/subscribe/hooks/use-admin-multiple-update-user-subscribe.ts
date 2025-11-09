@@ -1,6 +1,7 @@
+import type { UpdateSubscribeType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { usePut } from '@/_entities/common/hooks';
-import type { UpdateSubscribeType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
 

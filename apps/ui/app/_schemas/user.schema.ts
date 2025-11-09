@@ -1,146 +1,8 @@
+import { createUserSchema, changePasswordSchema, resetPasswordSchema, passwordSchema } from '@nihilog/schemas';
 import { z } from 'zod';
 
-import { commonSchema, dateTimeMessage, dateTimeRegex } from './common.schema';
-import { userRoleSchema as baseUserRoleSchema } from './enums.schema';
-import { baseSearchSchema } from './search.schema';
-
-// 사용자 권한 스키마 (에러 메시지 추가)
-export const userRoleSchema = baseUserRoleSchema.refine(
-  (val) => val === 'USER' || val === 'ADMIN',
-  {
-    message: '사용자 권한은 필수입니다.',
-  }
-);
-
-// 공통 비밀번호 스키마
-export const passwordSchema = z.string()
-  .min(
-    10,
-    '비밀번호는 10자 이상이어야 합니다.'
-  )
-  .max(
-    30,
-    '비밀번호는 30자 이하여야 합니다.'
-  )
-  .regex(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-    '비밀번호는 영문 대소문자, 숫자, 특수문자(@$!%*?&)를 각각 1개 이상 포함해야 합니다.'
-  );
-
-// Zod 스키마 정의
-
-export const userInfoSchema = commonSchema.extend({
-  userNo: z.coerce.number()
-    .int('사용자 번호는 정수여야 합니다.')
-    .positive('사용자 번호는 양수여야 합니다.')
-    .optional(),
-  emlAddr: z.email('올바른 이메일 형식을 입력해주세요.'),
-  userNm: z.string()
-    .min(
-      2,
-      '사용자명은 2자 이상이어야 합니다.'
-    )
-    .max(
-      30,
-      '사용자명은 30자 이하여야 합니다.'
-    ),
-  userRole: userRoleSchema,
-  proflImg: z.url('올바른 URL 형식을 입력해주세요.')
-    .max(
-      1024,
-      '프로필 이미지 URL은 1024자 이하여야 합니다.'
-    )
-    .nullable().optional(),
-  userBiogp: z.string()
-    .max(
-      500,
-      '자기소개는 500자 이하여야 합니다.'
-    )
-    .nullable()
-    .optional(),
-  encptPswd: z.string()
-    .min(
-      1,
-      '암호화된 비밀번호는 필수입니다.'
-    )
-    .max(
-      255,
-      '암호화된 비밀번호는 255자 이하여야 합니다.'
-    )
-    .optional(),
-  reshToken: z.string()
-    .max(
-      500,
-      '리프레시 토큰은 500자 이하여야 합니다.'
-    )
-    .nullable()
-    .optional(),
-  lastLgnDt: z.string()
-    .regex(
-      dateTimeRegex,
-      dateTimeMessage
-    )
-    .nullable()
-    .optional(),
-  lastPswdChgDt: z.string()
-    .regex(
-      dateTimeRegex,
-      dateTimeMessage
-    )
-    .nullable()
-    .optional(),
-  rowNo: z.coerce.number()
-    .int('행 번호는 정수여야 합니다.')
-    .nullable()
-    .optional(),
-  totalCnt: z.coerce.number()
-    .int('총 행 수는 정수여야 합니다.')
-    .nullable()
-    .optional(),
-  userNoList: z.array(z.coerce.number())
-    .nullable()
-    .optional(),
-});
-
-export const selectUserInfoSchema = userInfoSchema.omit({
-  rowNo: true,
-  totalCnt: true,
-  userNoList: true,
-});
-
-export const selectUserInfoListSchema = userInfoSchema.omit({
-  userNoList: true,
-});
-
-// UserInfo 테이블 컬럼만 pick (Prisma 테이블 구조)
-export const userInfoTableSchema = userInfoSchema.pick({
-  userNo: true,
-  emlAddr: true,
-  userNm: true,
-  userRole: true,
-  proflImg: true,
-  userBiogp: true,
-  encptPswd: true,
-  reshToken: true,
-  useYn: true,
-  delYn: true,
-  lastLgnDt: true,
-  lastPswdChgDt: true,
-  crtNo: true,
-  crtDt: true,
-  updtNo: true,
-  updtDt: true,
-  delNo: true,
-  delDt: true,
-});
-
-// 커스텀 스키마 정의
-export const createUserSchema = userInfoSchema.pick({
-  emlAddr: true,
-  userNm: true,
-  userRole: true,
-}).extend({
-  password: passwordSchema,
+// 스키마 정의
+export const createUserUISchema = createUserSchema.extend({
   passwordConfirm: passwordSchema,
 }).refine(
   (data) => data.password === data.passwordConfirm,
@@ -150,51 +12,7 @@ export const createUserSchema = userInfoSchema.pick({
   }
 );
 
-export const updateUserSchema = userInfoSchema.pick({
-  userNm: true,
-  userRole: true,
-  proflImg: true,
-  userBiogp: true,
-  useYn: true,
-  delYn: true,
-  delDt: true,
-  encptPswd: true,
-  reshToken: true,
-  lastLgnDt: true,
-  lastPswdChgDt: true,
-  crtNo: true,
-  crtDt: true,
-  updtNo: true,
-  updtDt: true,
-  delNo: true,
-  userNoList: true,
-}).partial();
-
-export const deleteMultipleUsersSchema = userInfoSchema.pick({
-  userNoList: true,
-});
-
-export const signInSchema = userInfoSchema.pick({
-  emlAddr: true,
-}).extend({
-  password: z.string()
-    .min(
-      1,
-      '비밀번호를 입력해주세요.'
-    ),
-});
-
-export const forgotPasswordSchema = userInfoSchema.pick({
-  emlAddr: true,
-});
-
-export const changePasswordSchema = z.object({
-  currentPassword: z.string()
-    .min(
-      1,
-      '현재 비밀번호를 입력해주세요.'
-    ),
-  newPassword: passwordSchema,
+export const changePasswordUISchema = changePasswordSchema.extend({
   newPasswordConfirm: passwordSchema,
 }).refine(
   (data) => data.newPassword === data.newPasswordConfirm,
@@ -204,13 +22,7 @@ export const changePasswordSchema = z.object({
   }
 );
 
-export const resetPasswordSchema = z.object({
-  resetToken: z.string()
-    .min(
-      1,
-      '리셋 토큰을 입력해주세요.'
-    ),
-  newPassword: passwordSchema,
+export const resetPasswordUISchema = resetPasswordSchema.extend({
   newPasswordConfirm: passwordSchema,
 }).refine(
   (data) => data.newPassword === data.newPasswordConfirm,
@@ -220,96 +32,7 @@ export const resetPasswordSchema = z.object({
   }
 );
 
-// 회원탈퇴용 스키마
-export const withdrawSchema = z.object({
-  password: z.string()
-    .min(
-      1,
-      '비밀번호를 입력해주세요.'
-    ),
-  passwordConfirm: z.string()
-    .min(
-      1,
-      '비밀번호를 확인해주세요.'
-    ),
-}).refine(
-  (data) => data.password === data.passwordConfirm,
-  {
-    message: '비밀번호가 일치하지 않습니다.',
-    path: [ 'passwordConfirm', ],
-  }
-);
-
-// 사용자 검색 전용 스키마 (기본 검색 스키마 확장)
-export const searchUserSchema = baseSearchSchema.extend({
-  ...userInfoSchema.pick({
-    delYn: true,
-    useYn: true,
-    userRole: true,
-  }).shape,
-  srchType: z.enum(
-    [
-      'userNm',
-      'emlAddr',
-    ],
-    {
-      error: '검색 타입은 userNm, emlAddr 중 하나여야 합니다.',
-    }
-  ).optional(),
-  // 날짜 범위 필터
-  crtDtFrom: z.string()
-    .regex(
-      dateTimeRegex,
-      dateTimeMessage
-    )
-    .optional(),
-  crtDtTo: z.string()
-    .regex(
-      dateTimeRegex,
-      dateTimeMessage
-    )
-    .optional(),
-  lastLgnDtFrom: z.string()
-    .regex(
-      dateTimeRegex,
-      dateTimeMessage
-    )
-    .optional(),
-  lastLgnDtTo: z.string()
-    .regex(
-      dateTimeRegex,
-      dateTimeMessage
-    )
-    .optional(),
-  // 정렬 옵션
-  orderBy: z.enum(
-    [
-      'NAME_ASC',
-      'NAME_DESC',
-      'SUBSCRIBE_LATEST',
-      'SUBSCRIBE_OLDEST',
-      'LOGIN_LATEST',
-      'LOGIN_OLDEST',
-    ],
-    {
-      error: '정렬 옵션은 NAME_ASC, NAME_DESC, SUBSCRIBE_LATEST, SUBSCRIBE_OLDEST, LOGIN_LATEST, LOGIN_OLDEST 중 하나여야 합니다.',
-    }
-  ).optional(),
-}).partial();
-
-// 모든 항목이 선택값인 스키마
-export const partialUserInfoSchema = userInfoSchema.partial();
-
-// 타입 추출
-export type UserInfoType = z.infer<typeof userInfoSchema>;
-export type UserInfoTableType = z.infer<typeof userInfoTableSchema>;
-export type CreateUserType = z.infer<typeof createUserSchema>;
-export type UpdateUserType = z.infer<typeof updateUserSchema>;
-export type DeleteMultipleUsersType = z.infer<typeof deleteMultipleUsersSchema>;
-export type SignInType = z.infer<typeof signInSchema>;
-export type ForgotPasswordType = z.infer<typeof forgotPasswordSchema>;
-export type ChangePasswordType = z.infer<typeof changePasswordSchema>;
-export type ResetPasswordType = z.infer<typeof resetPasswordSchema>;
-export type PartialUserInfoType = z.infer<typeof partialUserInfoSchema>;
-export type SearchUserType = z.infer<typeof searchUserSchema>;
-export type WithdrawType = z.infer<typeof withdrawSchema>;
+// 타입 정의
+export type CreateUserUISchemaType = z.infer<typeof createUserUISchema>;
+export type ChangePasswordUISchemaType = z.infer<typeof changePasswordUISchema>;
+export type ResetPasswordUISchemaType = z.infer<typeof resetPasswordUISchema>;

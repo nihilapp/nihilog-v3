@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { CommentSpamRateItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { CommentSpamRateItemType } from '@/_types';
 
 /**
  * @description 스팸 댓글 비율을 조회하는 커스텀 훅

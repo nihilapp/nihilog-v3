@@ -7,6 +7,9 @@ import { baseSearchSchema } from './search.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
+/**
+ * @description 카테고리 구독 스키마
+ */
 export const categorySubscribeSchema = commonSchema.extend({
   ctgrySbcrNo: z.coerce.number()
     .int('구독 카테고리 번호는 정수여야 합니다.')
@@ -84,12 +87,17 @@ export const categorySubscribeSchema = commonSchema.extend({
     }),
 });
 
+/**
+ * @description 카테고리 구독 아이템 리스트 스키마
+ */
 export const categorySubscribeItemListSchema = categorySubscribeSchema.pick({
   ctgryNo: true,
   ctgryNm: true,
 });
 
-// 카테고리 구독 생성용 스키마
+/**
+ * @description 카테고리 구독 생성용 스키마
+ */
 export const createCategorySubscribeSchema = categorySubscribeSchema.pick({
   sbcrNo: true,
   ctgryNo: true,
@@ -98,7 +106,9 @@ export const createCategorySubscribeSchema = categorySubscribeSchema.pick({
   ctgryNo: true,
 });
 
-// 카테고리 구독 수정용 스키마
+/**
+ * @description 카테고리 구독 수정용 스키마
+ */
 export const updateCategorySubscribeSchema = categorySubscribeSchema.pick({
   ctgrySbcrNo: true,
   sbcrNo: true,
@@ -109,13 +119,17 @@ export const updateCategorySubscribeSchema = categorySubscribeSchema.pick({
   ctgrySbcrNoList: true,
 }).partial();
 
-// 카테고리 구독 삭제용 스키마
+/**
+ * @description 카테고리 구독 삭제용 스키마
+ */
 export const deleteCategorySubscribeSchema = categorySubscribeSchema.pick({
   ctgrySbcrNoList: true,
   sbcrNo: true,
 }).partial();
 
-// 카테고리 구독 검색용 스키마
+/**
+ * @description 카테고리 구독 검색용 스키마
+ */
 export const searchCategorySubscribeSchema = baseSearchSchema.extend({
   ...categorySubscribeSchema.pick({
     delYn: true,
@@ -171,10 +185,39 @@ export const searchCategorySubscribeSchema = baseSearchSchema.extend({
     }),
 }).partial();
 
+// 타입 정의
+
+/**
+ * @description 카테고리 구독 타입
+ */
 export type CategorySubscribeType = z.infer<typeof categorySubscribeSchema>;
+
+/**
+ * @description 카테고리 구독 정보 타입
+ */
 export type CategorySubscribeInfoType = Partial<CategorySubscribeType>;
+
+/**
+ * @description 카테고리 구독 아이템 리스트 타입
+ */
 export type CategorySubscribeItemListType = z.infer<typeof categorySubscribeItemListSchema>;
+
+/**
+ * @description 카테고리 구독 생성 타입
+ */
 export type CreateCategorySubscribeType = z.infer<typeof createCategorySubscribeSchema>;
+
+/**
+ * @description 카테고리 구독 수정 타입
+ */
 export type UpdateCategorySubscribeType = z.infer<typeof updateCategorySubscribeSchema>;
+
+/**
+ * @description 카테고리 구독 삭제 타입
+ */
 export type DeleteCategorySubscribeType = z.infer<typeof deleteCategorySubscribeSchema>;
+
+/**
+ * @description 카테고리 구독 검색 타입
+ */
 export type SearchCategorySubscribeType = z.infer<typeof searchCategorySubscribeSchema>;

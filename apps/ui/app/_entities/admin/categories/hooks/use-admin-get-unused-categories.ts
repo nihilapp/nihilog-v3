@@ -1,5 +1,6 @@
+import type { UnusedCategoryItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { UnusedCategoryItemType } from '@/_types';
 
 /**
  * @description 사용되지 않는 카테고리 목록을 조회하는 커스텀 훅

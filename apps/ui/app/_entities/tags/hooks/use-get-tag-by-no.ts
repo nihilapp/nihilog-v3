@@ -1,5 +1,6 @@
+import type { SelectTagInfoType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SelectTagInfoType } from '@/_types';
 
 /**
  * @description 태그 번호로 태그를 조회하는 커스텀 훅

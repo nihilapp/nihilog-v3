@@ -9,7 +9,9 @@ extendZodWithOpenApi(z);
 export const dateTimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 export const dateTimeMessage = 'YYYY-MM-DD HH:MM:SS 형식이어야 합니다.';
 
-// Y/N enum 스키마 (에러 메시지 추가)
+/**
+ * @description Y/N enum 스키마 (에러 메시지 추가)
+ */
 export const ynEnumSchema = ynSchema.refine(
   (val) => val === 'Y' || val === 'N',
   {
@@ -17,9 +19,9 @@ export const ynEnumSchema = ynSchema.refine(
   }
 );
 
-// 타입 추출
-export type YnType = z.infer<typeof ynEnumSchema>;
-
+/**
+ * @description 공통 스키마 (사용 여부, 삭제 여부, 생성/수정/삭제 정보 포함)
+ */
 export const commonSchema = z.object({
   useYn: ynEnumSchema
     .default('Y')
@@ -92,7 +94,9 @@ export const commonSchema = z.object({
     }),
 });
 
-// 포스트 조회수 통계 스키마
+/**
+ * @description 포스트 조회수 통계 스키마
+ */
 export const analyzeStatSchema = z.object({
   mode: z.enum([
     'day',
@@ -131,3 +135,15 @@ export const analyzeStatSchema = z.object({
       example: 10,
     }),
 });
+
+// 타입 정의
+
+/**
+ * @description Y/N enum 타입
+ */
+export type YnType = z.infer<typeof ynEnumSchema>;
+
+/**
+ * @description 포스트 조회수 통계 타입
+ */
+export type AnalyzeStatType = z.infer<typeof analyzeStatSchema>;

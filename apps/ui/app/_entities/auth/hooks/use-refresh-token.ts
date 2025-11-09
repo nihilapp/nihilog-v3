@@ -1,6 +1,7 @@
+import type { SelectUserInfoType } from '@nihilog/schemas';
+
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePost } from '@/_entities/common/hooks';
-import type { SelectUserInfoType } from '@/_types';
 
 /**
  * @description 액세스 토큰을 갱신하는 커스텀 훅

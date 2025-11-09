@@ -1,8 +1,9 @@
+import type { ErrorType } from '@nihilog/schemas';
 import { useMutation } from '@tanstack/react-query';
 
 import { useDone } from '@/_entities/common/hooks/use-done';
-import { Api } from '@/_libs';
-import type { ErrorType, OptionType } from '@/_types';
+import { Api, buildQueryString } from '@/_libs';
+import type { OptionType } from '@/_types';
 
 export function useDelete<TData = unknown>({
   url,
@@ -10,10 +11,10 @@ export function useDelete<TData = unknown>({
   ttl = 0,
   callback,
   errorCallback,
-}: Omit<OptionType<TData, never>, 'body'>) {
+}: OptionType<TData, never>) {
   const urlString = url.join('/');
 
-  const queryString = new URLSearchParams(params).toString();
+  const queryString = buildQueryString(params);
 
   const finalUrl = queryString
     ? `${urlString}?${queryString}`

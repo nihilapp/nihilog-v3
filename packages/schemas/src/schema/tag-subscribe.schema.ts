@@ -7,6 +7,9 @@ import { baseSearchSchema } from './search.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
+/**
+ * @description 태그 구독 스키마
+ */
 export const tagSubscribeSchema = commonSchema.extend({
   tagSbcrNo: z.coerce.number()
     .int('태그 구독 번호는 정수여야 합니다.')
@@ -84,12 +87,17 @@ export const tagSubscribeSchema = commonSchema.extend({
     }),
 });
 
+/**
+ * @description 태그 구독 아이템 리스트 스키마
+ */
 export const tagSubscribeItemListSchema = tagSubscribeSchema.pick({
   tagNo: true,
   tagNm: true,
 });
 
-// 태그 구독 생성용 스키마
+/**
+ * @description 태그 구독 생성용 스키마
+ */
 export const createTagSubscribeSchema = tagSubscribeSchema.pick({
   sbcrNo: true,
   tagNo: true,
@@ -100,7 +108,9 @@ export const createTagSubscribeSchema = tagSubscribeSchema.pick({
   tagNoList: true,
 });
 
-// 태그 구독 수정용 스키마
+/**
+ * @description 태그 구독 수정용 스키마
+ */
 export const updateTagSubscribeSchema = tagSubscribeSchema.pick({
   tagSbcrNo: true,
   sbcrNo: true,
@@ -111,13 +121,17 @@ export const updateTagSubscribeSchema = tagSubscribeSchema.pick({
   tagSbcrNoList: true,
 }).partial();
 
-// 태그 구독 삭제용 스키마
+/**
+ * @description 태그 구독 삭제용 스키마
+ */
 export const deleteTagSubscribeSchema = tagSubscribeSchema.pick({
   tagSbcrNoList: true,
   sbcrNo: true,
 }).partial();
 
-// 태그 구독 검색용 스키마
+/**
+ * @description 태그 구독 검색용 스키마
+ */
 export const searchTagSubscribeSchema = baseSearchSchema.extend({
   ...tagSubscribeSchema.pick({
     delYn: true,
@@ -173,10 +187,39 @@ export const searchTagSubscribeSchema = baseSearchSchema.extend({
     }),
 }).partial();
 
+// 타입 정의
+
+/**
+ * @description 태그 구독 타입
+ */
 export type TagSubscribeType = z.infer<typeof tagSubscribeSchema>;
+
+/**
+ * @description 태그 구독 정보 타입
+ */
 export type TagSubscribeInfoType = Partial<TagSubscribeType>;
+
+/**
+ * @description 태그 구독 아이템 리스트 타입
+ */
 export type TagSubscribeItemListType = z.infer<typeof tagSubscribeItemListSchema>;
+
+/**
+ * @description 태그 구독 생성 타입
+ */
 export type CreateTagSubscribeType = z.infer<typeof createTagSubscribeSchema>;
+
+/**
+ * @description 태그 구독 수정 타입
+ */
 export type UpdateTagSubscribeType = z.infer<typeof updateTagSubscribeSchema>;
+
+/**
+ * @description 태그 구독 삭제 타입
+ */
 export type DeleteTagSubscribeType = z.infer<typeof deleteTagSubscribeSchema>;
+
+/**
+ * @description 태그 구독 검색 타입
+ */
 export type SearchTagSubscribeType = z.infer<typeof searchTagSubscribeSchema>;

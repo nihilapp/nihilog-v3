@@ -1,8 +1,8 @@
+import type { ResponseType } from '@nihilog/schemas';
 import { useRouter } from 'next/navigation';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePost } from '@/_entities/common/hooks';
-import type { ResponseType } from '@/_types';
 
 /**
  * @description 사용자 로그아웃을 처리하는 커스텀 훅

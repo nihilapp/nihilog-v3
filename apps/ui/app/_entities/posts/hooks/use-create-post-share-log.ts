@@ -1,6 +1,7 @@
+import type { CreatePostShareLogSchemaType } from '@nihilog/schemas';
+import type { SelectPostShareLogType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
-import type { CreatePostShareLogSchemaType } from '@/_schemas';
-import type { SelectPostShareLogType } from '@/_types';
 
 /**
  * @description 포스트 공유 로그를 생성하는 커스텀 훅

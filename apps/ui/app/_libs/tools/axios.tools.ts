@@ -1,5 +1,6 @@
 'use client';
 
+import type { ResponseType } from '@nihilog/schemas';
 import axios, {
   AxiosError,
   type AxiosInstance,
@@ -9,7 +10,6 @@ import axios, {
 
 import { RESPONSE_CODE } from '@/_code/response.code';
 import { siteConfig } from '@/_config/config';
-import type { ResponseType } from '@/_types';
 
 /**
  * HTTP 클라이언트 유틸리티

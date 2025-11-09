@@ -1,5 +1,6 @@
+import type { TagCreatorStatItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { TagCreatorStatItemType } from '@/_types';
 
 /**
  * @description 태그 생성자별 통계를 조회하는 커스텀 훅

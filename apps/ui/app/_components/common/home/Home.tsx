@@ -1,5 +1,6 @@
 'use client';
 
+import type { SelectCategoryType, SelectPostListItemType } from '@nihilog/schemas';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 
@@ -9,7 +10,6 @@ import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
 import { useGetPostList } from '@/_entities/posts/hooks';
 import { defineColumns } from '@/_libs/defineColumns';
-import type { SelectCategoryType, SelectPostListItemType } from '@/_types';
 
 interface Props {
   className?: string | string[];

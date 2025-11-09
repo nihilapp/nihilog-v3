@@ -1,5 +1,6 @@
+import type { DeletePstTagMpngType } from '@nihilog/schemas';
+
 import { useDeletes } from '@/_entities/common/hooks';
-import type { DeletePstTagMpngType } from '@/_schemas';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 

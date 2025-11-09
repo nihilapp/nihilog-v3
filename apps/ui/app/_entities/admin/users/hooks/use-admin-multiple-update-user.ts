@@ -1,6 +1,7 @@
+import type { UpdateUserType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { usePut } from '@/_entities/common/hooks';
-import type { UpdateUserType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 

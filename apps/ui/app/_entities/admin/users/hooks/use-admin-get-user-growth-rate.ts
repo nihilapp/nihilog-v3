@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { UserGrowthRateItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { UserGrowthRateItemType } from '@/_types';
 
 /**
  * @description 사용자 성장률을 조회하는 커스텀 훅

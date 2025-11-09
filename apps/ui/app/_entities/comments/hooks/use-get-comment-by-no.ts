@@ -1,5 +1,6 @@
+import type { SelectCommentType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SelectCommentType } from '@/_types';
 
 /**
  * @description 댓글 번호로 댓글을 조회하는 커스텀 훅

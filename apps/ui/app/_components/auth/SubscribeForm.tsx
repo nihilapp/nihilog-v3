@@ -1,18 +1,32 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { createUserSchema, passwordSchema } from '@nihilog/schemas';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { useCreateUser } from '@/_entities/users/hooks';
-import { createUserSchema, type CreateUserType } from '@/_schemas';
+
+// UI 전용 스키마 (passwordConfirm 필드 추가)
+const createUserUISchema = createUserSchema.extend({
+  passwordConfirm: passwordSchema,
+}).refine(
+  (data) => data.password === data.passwordConfirm,
+  {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: [ 'passwordConfirm', ],
+  }
+);
+
+type CreateUserUISchemaType = z.infer<typeof createUserUISchema>;
 
 export function SubscribeForm() {
-  const form = useForm<CreateUserType>({
+  const form = useForm<CreateUserUISchemaType>({
     mode: 'all',
-    resolver: zodResolver(createUserSchema),
+    resolver: zodResolver(createUserUISchema),
     defaultValues: {
       emlAddr: '',
       userNm: '',
@@ -24,8 +38,11 @@ export function SubscribeForm() {
 
   const createUser = useCreateUser();
 
-  const onSubmitForm: SubmitHandler<CreateUserType> = (data) => {
-    createUser.mutate(data);
+  const onSubmitForm: SubmitHandler<CreateUserUISchemaType> = (data) => {
+    // passwordConfirm 필드 제거 후 전송
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordConfirm, ...submitData } = data;
+    createUser.mutate(submitData);
   };
 
   const onResetForm = () => {
@@ -43,7 +60,7 @@ export function SubscribeForm() {
           className='w-full max-w-[500px]'
         >
           <Form.Field>
-            <Form.Item<CreateUserType>
+            <Form.Item<CreateUserUISchemaType>
               name='emlAddr'
               label='이메일'
               render={({ field, }) => (
@@ -57,7 +74,7 @@ export function SubscribeForm() {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateUserType>
+            <Form.Item<CreateUserUISchemaType>
               name='userNm'
               label='이름'
               render={({ field, }) => (
@@ -71,7 +88,7 @@ export function SubscribeForm() {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateUserType>
+            <Form.Item<CreateUserUISchemaType>
               name='userRole'
               render={({ field, }) => (
                 <input
@@ -83,7 +100,7 @@ export function SubscribeForm() {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateUserType>
+            <Form.Item<CreateUserUISchemaType>
               name='password'
               label='비밀번호'
               render={({ field, }) => (
@@ -97,7 +114,7 @@ export function SubscribeForm() {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateUserType>
+            <Form.Item<CreateUserUISchemaType>
               name='passwordConfirm'
               label='비밀번호 확인'
               render={({ field, }) => (

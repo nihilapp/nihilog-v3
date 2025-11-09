@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { TopCommentPostItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { TopCommentPostItemType } from '@/_types';
 
 /**
  * @description 댓글 많은 포스트 TOP N을 조회하는 커스텀 훅

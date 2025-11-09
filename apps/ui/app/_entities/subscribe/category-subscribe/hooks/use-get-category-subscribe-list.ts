@@ -1,6 +1,7 @@
+import type { SearchCategorySubscribeType } from '@nihilog/schemas';
+import type { ListType, SelectCtgrySbcrMpngListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchCategorySubscribeType } from '@/_schemas';
-import type { ListType, SelectCtgrySbcrMpngListItemType } from '@/_types';
 
 /**
  * @description 사용자가 구독한 카테고리 목록을 조회하는 커스텀 훅

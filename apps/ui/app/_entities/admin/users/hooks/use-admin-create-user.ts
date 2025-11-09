@@ -1,6 +1,7 @@
+import type { CreateUserType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
-import type { CreateUserType } from '@/_schemas';
-import type { SelectUserInfoType } from '@/_types';
 
 import { useInvalidateAdminUsersCache } from '../admin-users.keys';
 

@@ -1,7 +1,8 @@
+import type { CreateCategorySubscribeType } from '@nihilog/schemas';
+import type { SelectCtgrySbcrMpngType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidateCategorySubscribeCache } from '@/_entities/subscribe/category-subscribe/category-subscribe.keys';
-import type { CreateCategorySubscribeType } from '@/_schemas';
-import type { SelectCtgrySbcrMpngType } from '@/_types';
 
 /**
  * @description 특정 카테고리를 구독하는 커스텀 훅

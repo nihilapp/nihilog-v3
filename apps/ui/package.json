@@ -15,6 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@nihilog/db": "workspace:*",
     "@nihilog/schemas": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@iconify/react": "^6.0.2",

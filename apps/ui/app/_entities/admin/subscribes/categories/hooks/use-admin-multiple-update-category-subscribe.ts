@@ -1,7 +1,8 @@
+import type { UpdateCategorySubscribeType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useInvalidateAdminSubscribeCache } from '@/_entities/admin/subscribe/admin-subscribe.keys';
 import { usePatch } from '@/_entities/common/hooks';
-import type { UpdateCategorySubscribeType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 /**
  * @description 관리자가 다수 카테고리 구독을 일괄 수정하는 커스텀 훅

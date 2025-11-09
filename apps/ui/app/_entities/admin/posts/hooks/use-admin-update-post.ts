@@ -1,6 +1,7 @@
+import type { UpdatePostType } from '@nihilog/schemas';
+import type { SelectPostType } from '@nihilog/schemas';
+
 import { usePatch } from '@/_entities/common/hooks';
-import type { UpdatePostType } from '@/_schemas';
-import type { SelectPostType } from '@/_types';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 

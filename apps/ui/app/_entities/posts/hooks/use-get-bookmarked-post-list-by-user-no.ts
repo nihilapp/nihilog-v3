@@ -1,6 +1,7 @@
+import type { SearchPostBookmarkType } from '@nihilog/schemas';
+import type { ListType, SelectPostBookmarkListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchPostBookmarkType } from '@/_schemas';
-import type { ListType, SelectPostBookmarkListItemType } from '@/_types';
 
 /**
  * @description 북마크한 포스트 목록을 조회하는 커스텀 훅

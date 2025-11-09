@@ -22,12 +22,12 @@ export type SelectCommentListItemType = SelectCommentType & {
   rowNo: number;
 };
 
-// ========================================================
 // 댓글 통계 관련 타입
-// ========================================================
 
-// 댓글 분석 통계 (시간대별 합산) - 9개 지표 통합
-// - cmntNo 또는 pstNo 없으면 전체, 있으면 해당 댓글/포스트만
+/**
+ * @description 댓글 분석 통계 (시간대별 합산) - 9개 지표 통합
+ * - cmntNo 또는 pstNo 없으면 전체, 있으면 해당 댓글/포스트만
+ */
 export type AnalyzeCommentStatItemType = {
   dateStart: string;
   dateEnd: string;
@@ -45,12 +45,12 @@ export type AnalyzeCommentStatItemType = {
   replyCommentCount: number; // 답글 수
 };
 
-// ========================================================
 // 파생 지표 타입 (9개)
-// ========================================================
 
-// 1. 댓글 활동 분석 (3개)
-// 포스트별 댓글 수 TOP N
+/**
+ * @description 1. 댓글 활동 분석 (3개)
+ * 포스트별 댓글 수 TOP N
+ */
 export type TopPostsByCommentItemType = {
   pstNo: number;
   pstTtl: string;
@@ -59,7 +59,9 @@ export type TopPostsByCommentItemType = {
   lastCommentDate: string;
 };
 
-// 사용자별 댓글 작성 수 TOP N
+/**
+ * @description 사용자별 댓글 작성 수 TOP N
+ */
 export type TopUsersByCommentItemType = {
   userNo: number;
   userName: string;
@@ -68,22 +70,28 @@ export type TopUsersByCommentItemType = {
   lastCommentDate: string;
 };
 
-// 평균 댓글 수 / 포스트
+/**
+ * @description 평균 댓글 수 / 포스트
+ */
 export type AverageCommentPerPostItemType = {
   dateStart: string;
   dateEnd: string;
   avgCommentCount: number;
 };
 
-// 2. 댓글 상태 분석 (3개)
-// 댓글 상태별 분포
+/**
+ * @description 2. 댓글 상태 분석 (3개)
+ * 댓글 상태별 분포
+ */
 export type CommentStatusDistributionItemType = {
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SPAM';
   count: number;
   ratio: number;
 };
 
-// 댓글 승인율
+/**
+ * @description 댓글 승인율
+ */
 export type CommentApprovalRateItemType = {
   dateStart: string;
   dateEnd: string;
@@ -92,7 +100,9 @@ export type CommentApprovalRateItemType = {
   approvedComments: number;
 };
 
-// 스팸 댓글 비율
+/**
+ * @description 스팸 댓글 비율
+ */
 export type CommentSpamRateItemType = {
   dateStart: string;
   dateEnd: string;
@@ -101,8 +111,10 @@ export type CommentSpamRateItemType = {
   spamComments: number;
 };
 
-// 3. 댓글 구조 분석 (3개)
-// 답글 비율
+/**
+ * @description 3. 댓글 구조 분석 (3개)
+ * 답글 비율
+ */
 export type CommentReplyRatioItemType = {
   dateStart: string;
   dateEnd: string;
@@ -111,7 +123,9 @@ export type CommentReplyRatioItemType = {
   replyComments: number;
 };
 
-// 평균 답글 깊이
+/**
+ * @description 평균 답글 깊이
+ */
 export type CommentAverageDepthItemType = {
   dateStart: string;
   dateEnd: string;
@@ -119,7 +133,9 @@ export type CommentAverageDepthItemType = {
   maxDepth: number;
 };
 
-// 댓글 없는 포스트 목록
+/**
+ * @description 댓글 없는 포스트 목록
+ */
 export type PostsWithoutCommentsItemType = {
   pstNo: number;
   pstTtl: string;

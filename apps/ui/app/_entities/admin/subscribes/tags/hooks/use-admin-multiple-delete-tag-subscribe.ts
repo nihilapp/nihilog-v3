@@ -1,7 +1,8 @@
+import type { DeleteTagSubscribeType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useInvalidateAdminSubscribeCache } from '@/_entities/admin/subscribe/admin-subscribe.keys';
 import { useDeletes } from '@/_entities/common/hooks';
-import type { DeleteTagSubscribeType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 /**
  * @description 관리자가 다수 태그 구독을 일괄 삭제하는 커스텀 훅

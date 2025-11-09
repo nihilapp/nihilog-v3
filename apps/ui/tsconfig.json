@@ -34,6 +34,7 @@
     ],
     "paths": {
       "@/*": ["./app/*"],
+      "@nihilog/db": ["../../packages/db/output"],
       "@nihilog/schemas": ["../../packages/schemas/src"]
     },
     "target": "ES2017"

@@ -1,5 +1,6 @@
+import type { SubscribeNotificationDistributionItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SubscribeNotificationDistributionItemType } from '@/_types';
 
 /**
  * @description 알림 설정별 분포 통계를 조회하는 커스텀 훅

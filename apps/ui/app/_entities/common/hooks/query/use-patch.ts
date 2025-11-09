@@ -1,8 +1,9 @@
+import type { ErrorType } from '@nihilog/schemas';
 import { useMutation } from '@tanstack/react-query';
 
 import { useDone } from '@/_entities/common/hooks/use-done';
-import { Api } from '@/_libs';
-import type { ErrorType, OptionType } from '@/_types';
+import { Api, buildQueryString } from '@/_libs';
+import type { OptionType } from '@/_types';
 
 export function usePatch<TData = unknown, TBody = unknown>({
   url,
@@ -13,7 +14,7 @@ export function usePatch<TData = unknown, TBody = unknown>({
 }: OptionType<TData, TBody>) {
   const urlString = url.join('/');
 
-  const queryString = new URLSearchParams(params).toString();
+  const queryString = buildQueryString(params);
 
   const finalUrl = queryString
     ? `${urlString}?${queryString}`

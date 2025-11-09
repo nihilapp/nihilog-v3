@@ -1,6 +1,7 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { AverageCommentPerPostItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { AnalyzeStatType } from '@/_schemas';
-import type { AverageCommentPerPostItemType } from '@/_types';
 
 /**
  * @description 평균 댓글 수 / 포스트를 조회하는 커스텀 훅

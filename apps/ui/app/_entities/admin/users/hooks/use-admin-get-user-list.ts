@@ -1,6 +1,7 @@
+import type { SearchUserType } from '@nihilog/schemas';
+import type { ListType, SelectUserInfoListItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SearchUserType } from '@/_schemas';
-import type { ListType, SelectUserInfoListItemType } from '@/_types';
 
 /**
  * @description 사용자 목록을 조회하는 커스텀 훅

@@ -1,6 +1,7 @@
+import type { UpdateTagType } from '@nihilog/schemas';
+import type { SelectTagInfoType } from '@nihilog/schemas';
+
 import { usePatch } from '@/_entities/common/hooks';
-import type { UpdateTagType } from '@/_schemas';
-import type { SelectTagInfoType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 

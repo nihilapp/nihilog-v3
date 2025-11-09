@@ -1,6 +1,7 @@
+import type { DeletePostBookmarkType } from '@nihilog/schemas';
+
 import { useDeletes } from '@/_entities/common/hooks';
 import { useInvalidatePostsBookmarkCache } from '@/_entities/posts/posts.keys';
-import type { DeletePostBookmarkType } from '@/_schemas';
 
 /**
  * @description 포스트 북마크를 삭제하는 커스텀 훅

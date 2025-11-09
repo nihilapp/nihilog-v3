@@ -7,6 +7,9 @@ import { baseSearchSchema } from './search.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
+/**
+ * @description 댓글 스키마
+ */
 const commentSchema = commonSchema.extend({
   cmntNo: z.coerce
     .number()
@@ -92,6 +95,9 @@ const commentSchema = commonSchema.extend({
     }),
 });
 
+/**
+ * @description 댓글 생성 스키마
+ */
 export const createCommentSchema = commentSchema.pick({
   pstNo: true,
   cmntCntnt: true,
@@ -106,6 +112,9 @@ export const createCommentSchema = commentSchema.pick({
   delYn: true,
 });
 
+/**
+ * @description 댓글 수정 스키마
+ */
 export const updateCommentSchema = commentSchema.partial().pick({
   cmntNoList: true,
   cmntCntnt: true,
@@ -115,10 +124,16 @@ export const updateCommentSchema = commentSchema.partial().pick({
   delYn: true,
 });
 
+/**
+ * @description 댓글 삭제 스키마
+ */
 export const deleteCommentSchema = commentSchema.pick({
   cmntNoList: true,
 }).partial();
 
+/**
+ * @description 댓글 검색 스키마
+ */
 export const searchCommentSchema = baseSearchSchema.partial().extend({
   ...commentSchema.pick({
     pstNo: true,
@@ -181,7 +196,24 @@ export const searchCommentSchema = baseSearchSchema.partial().extend({
     }),
 }).partial();
 
+// 타입 정의
+
+/**
+ * @description 댓글 생성 타입
+ */
 export type CreateCommentType = z.infer<typeof createCommentSchema>;
+
+/**
+ * @description 댓글 수정 타입
+ */
 export type UpdateCommentType = z.infer<typeof updateCommentSchema>;
+
+/**
+ * @description 댓글 삭제 타입
+ */
 export type DeleteCommentType = z.infer<typeof deleteCommentSchema>;
+
+/**
+ * @description 댓글 검색 타입
+ */
 export type SearchCommentType = z.infer<typeof searchCommentSchema>;

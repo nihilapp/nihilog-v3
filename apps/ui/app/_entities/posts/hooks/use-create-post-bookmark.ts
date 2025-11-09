@@ -1,7 +1,8 @@
+import type { CreatePostBookmarkType } from '@nihilog/schemas';
+import type { SelectPostBookmarkType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
 import { useInvalidatePostsBookmarkCache } from '@/_entities/posts/posts.keys';
-import type { CreatePostBookmarkType } from '@/_schemas';
-import type { SelectPostBookmarkType } from '@/_types';
 
 /**
  * @description 포스트 북마크를 생성하는 커스텀 훅

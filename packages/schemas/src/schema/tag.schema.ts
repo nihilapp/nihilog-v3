@@ -7,7 +7,9 @@ import { baseSearchSchema } from './search.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
-// 태그 정보 스키마
+/**
+ * @description 태그 정보 스키마
+ */
 export const tagInfoSchema = commonSchema.extend({
   tagNo: z.coerce
     .number()
@@ -90,7 +92,9 @@ export const tagInfoSchema = commonSchema.extend({
     }),
 });
 
-// 태그 생성 스키마
+/**
+ * @description 태그 생성 스키마
+ */
 export const createTagSchema = tagInfoSchema.pick({
   tagNm: true,
   tagExpln: true,
@@ -104,7 +108,9 @@ export const createTagSchema = tagInfoSchema.pick({
   delYn: true,
 });
 
-// 태그 수정 스키마 (단일/다건 통합)
+/**
+ * @description 태그 수정 스키마 (단일/다건 통합)
+ */
 export const updateTagSchema = tagInfoSchema.partial().pick({
   tagNm: true,
   tagExpln: true,
@@ -118,7 +124,9 @@ export const updateTagSchema = tagInfoSchema.partial().pick({
   delDt: true,
 });
 
-// 태그 검색 스키마 (기본 검색 스키마 확장)
+/**
+ * @description 태그 검색 스키마 (기본 검색 스키마 확장)
+ */
 export const searchTagSchema = baseSearchSchema.extend({
   ...tagInfoSchema.pick({
     delYn: true,
@@ -211,7 +219,9 @@ export const searchTagSchema = baseSearchSchema.extend({
     }),
 }).partial();
 
-// 태그 삭제 스키마 (태그 번호 또는 리스트 선택)
+/**
+ * @description 태그 삭제 스키마 (태그 번호 또는 리스트 선택)
+ */
 export const deleteTagSchema = tagInfoSchema.pick({
   tagNoList: true,
 }).refine(
@@ -221,7 +231,9 @@ export const deleteTagSchema = tagInfoSchema.pick({
   }
 );
 
-// 포스트-태그 매핑 스키마
+/**
+ * @description 포스트-태그 매핑 스키마
+ */
 export const pstTagMpngSchema = commonSchema.extend({
   tagMapNo: z.coerce
     .number()
@@ -282,7 +294,9 @@ export const pstTagMpngSchema = commonSchema.extend({
     }),
 });
 
-// 포스트-태그 매핑 생성 스키마
+/**
+ * @description 포스트-태그 매핑 생성 스키마
+ */
 export const createPstTagMpngSchema = pstTagMpngSchema.pick({
   pstNo: true,
   tagNo: true,
@@ -293,7 +307,9 @@ export const createPstTagMpngSchema = pstTagMpngSchema.pick({
   delYn: true,
 });
 
-// 포스트-태그 매핑 수정 스키마 (단일/다건 통합)
+/**
+ * @description 포스트-태그 매핑 수정 스키마 (단일/다건 통합)
+ */
 export const updatePstTagMpngSchema = pstTagMpngSchema.partial().pick({
   tagMapNo: true,
   pstNo: true,
@@ -307,7 +323,9 @@ export const updatePstTagMpngSchema = pstTagMpngSchema.partial().pick({
   delDt: true,
 });
 
-// 포스트-태그 매핑 검색 스키마 (기본 검색 스키마 확장)
+/**
+ * @description 포스트-태그 매핑 검색 스키마 (기본 검색 스키마 확장)
+ */
 export const searchPstTagMpngSchema = baseSearchSchema.extend({
   ...pstTagMpngSchema.pick({
     pstNo: true,
@@ -315,7 +333,9 @@ export const searchPstTagMpngSchema = baseSearchSchema.extend({
   }).shape,
 }).partial();
 
-// 포스트-태그 매핑 삭제 스키마 (매핑 번호 또는 리스트 선택)
+/**
+ * @description 포스트-태그 매핑 삭제 스키마 (매핑 번호 또는 리스트 선택)
+ */
 export const deletePstTagMpngSchema = pstTagMpngSchema.pick({
   tagMapNo: true,
   tagMapNoList: true,
@@ -326,15 +346,54 @@ export const deletePstTagMpngSchema = pstTagMpngSchema.pick({
   }
 );
 
-// 타입 추출
+// 타입 정의
+
+/**
+ * @description 태그 정보 타입
+ */
 export type TagInfoType = z.infer<typeof tagInfoSchema>;
+
+/**
+ * @description 태그 생성 타입
+ */
 export type CreateTagType = z.infer<typeof createTagSchema>;
+
+/**
+ * @description 태그 수정 타입
+ */
 export type UpdateTagType = z.infer<typeof updateTagSchema>;
+
+/**
+ * @description 태그 검색 타입
+ */
 export type SearchTagType = z.infer<typeof searchTagSchema>;
+
+/**
+ * @description 태그 삭제 타입
+ */
 export type DeleteTagType = z.infer<typeof deleteTagSchema>;
 
+/**
+ * @description 포스트-태그 매핑 타입
+ */
 export type PstTagMpngType = z.infer<typeof pstTagMpngSchema>;
+
+/**
+ * @description 포스트-태그 매핑 생성 타입
+ */
 export type CreatePstTagMpngType = z.infer<typeof createPstTagMpngSchema>;
+
+/**
+ * @description 포스트-태그 매핑 수정 타입
+ */
 export type UpdatePstTagMpngType = z.infer<typeof updatePstTagMpngSchema>;
+
+/**
+ * @description 포스트-태그 매핑 검색 타입
+ */
 export type SearchPstTagMpngType = z.infer<typeof searchPstTagMpngSchema>;
+
+/**
+ * @description 포스트-태그 매핑 삭제 타입
+ */
 export type DeletePstTagMpngType = z.infer<typeof deletePstTagMpngSchema>;

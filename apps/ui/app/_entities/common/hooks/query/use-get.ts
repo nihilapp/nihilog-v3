@@ -1,10 +1,11 @@
+import type { ErrorType } from '@nihilog/schemas';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useDone } from '@/_entities/common/hooks/use-done';
 import { useLoading } from '@/_entities/common/hooks/use-loading';
-import { Api } from '@/_libs';
-import type { ErrorType, OptionType } from '@/_types';
+import { Api, buildQueryString } from '@/_libs';
+import type { OptionType } from '@/_types';
 
 export function useGet<TData = unknown, TBody = unknown>({
   url,
@@ -17,24 +18,7 @@ export function useGet<TData = unknown, TBody = unknown>({
 }: OptionType<TData, TBody>) {
   const urlString = url.join('/');
 
-  // params를 Record<string, string>으로 변환
-  const stringParams: Record<string, string> = {};
-  Object.entries(params).forEach(([
-    key,
-    value,
-  ]) => {
-    if (value !== undefined && value !== null) {
-      if (Array.isArray(value)) {
-        // 배열의 경우 각 요소를 문자열로 변환하여 쉼표로 구분
-        stringParams[key] = value.map(String).join(',');
-      }
-      else {
-        stringParams[key] = String(value);
-      }
-    }
-  });
-
-  const queryString = new URLSearchParams(stringParams).toString();
+  const queryString = buildQueryString(params);
 
   const finalUrl = queryString
     ? `${urlString}?${queryString}`

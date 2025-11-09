@@ -1,6 +1,7 @@
+import type { CreateTagType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
-import type { CreateTagType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
 

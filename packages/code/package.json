@@ -14,9 +14,19 @@
   },
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "lint": "eslint \"src/**/*.ts\" --config eslint.config.mjs",
+    "lint:fix": "eslint \"src/**/*.ts\" --config eslint.config.mjs --fix"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.39.1",
+    "@stylistic/eslint-plugin": "^5.5.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import-x": "^4.16.1",
+    "globals": "^16.5.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.46.3"
   }
 }

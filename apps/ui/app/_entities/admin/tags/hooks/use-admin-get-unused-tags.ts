@@ -1,5 +1,6 @@
+import type { UnusedTagItemType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { UnusedTagItemType } from '@/_types';
 
 /**
  * @description 미사용 태그 목록을 조회하는 커스텀 훅

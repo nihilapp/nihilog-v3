@@ -1,6 +1,7 @@
+import type { CreateSubscribeType } from '@nihilog/schemas';
+import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
+
 import { usePost } from '@/_entities/common/hooks';
-import type { CreateSubscribeType } from '@/_schemas';
-import type { SelectUserSbcrInfoType } from '@/_types';
 
 import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
 

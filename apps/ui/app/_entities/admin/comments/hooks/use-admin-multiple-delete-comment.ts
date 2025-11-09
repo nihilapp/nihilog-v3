@@ -1,6 +1,7 @@
+import type { DeleteCommentType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useDeletes } from '@/_entities/common/hooks';
-import type { DeleteCommentType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 import { useInvalidateAdminCommentsCache } from '../admin-comments.keys';
 

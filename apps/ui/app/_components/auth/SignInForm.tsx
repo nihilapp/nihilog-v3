@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signInSchema, type SignInType } from '@nihilog/schemas';
 import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
@@ -8,7 +9,6 @@ import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { useGetSession, useSignIn } from '@/_entities/auth/hooks';
-import { signInSchema, type SignInType } from '@/_schemas';
 
 export function SignInForm() {
   const form = useForm<SignInType>({

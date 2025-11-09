@@ -7,6 +7,9 @@ import { baseSearchSchema } from './search.schema';
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
 
+/**
+ * @description 카테고리 정보 스키마
+ */
 export const categoryInfoSchema = commonSchema.extend({
   ctgryNo: z.coerce
     .number()
@@ -101,6 +104,9 @@ export const categoryInfoSchema = commonSchema.extend({
     }),
 });
 
+/**
+ * @description 카테고리 생성 스키마
+ */
 export const createCategorySchema = categoryInfoSchema.pick({
   ctgryNm: true,
   ctgryExpln: true,
@@ -117,17 +123,26 @@ export const createCategorySchema = categoryInfoSchema.pick({
     upCtgryNo: true,
   });
 
+/**
+ * @description 카테고리 수정 스키마
+ */
 export const updateCategorySchema = categoryInfoSchema.omit({
   rowNo: true,
   totalCnt: true,
   ctgryNoList: true,
 }).partial();
 
+/**
+ * @description 카테고리 삭제 스키마
+ */
 export const deleteCategorySchema = categoryInfoSchema.pick({
   ctgryNo: true,
   ctgryNoList: true,
 });
 
+/**
+ * @description 카테고리 검색 스키마
+ */
 export const searchCategorySchema = baseSearchSchema.partial().extend({
   ...categoryInfoSchema.pick({
     useYn: true,
@@ -186,8 +201,29 @@ export const searchCategorySchema = baseSearchSchema.partial().extend({
     }),
 }).partial();
 
+// 타입 정의
+
+/**
+ * @description 카테고리 정보 타입
+ */
 export type CategoryInfoType = z.infer<typeof categoryInfoSchema>;
+
+/**
+ * @description 카테고리 생성 타입
+ */
 export type CreateCategoryType = z.infer<typeof createCategorySchema>;
+
+/**
+ * @description 카테고리 수정 타입
+ */
 export type UpdateCategoryType = z.infer<typeof updateCategorySchema>;
+
+/**
+ * @description 카테고리 삭제 타입
+ */
 export type DeleteCategoryType = z.infer<typeof deleteCategorySchema>;
+
+/**
+ * @description 카테고리 검색 타입
+ */
 export type SearchCategoryType = z.infer<typeof searchCategorySchema>;

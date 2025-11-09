@@ -1,7 +1,8 @@
+import type { UpdateTagSubscribeType } from '@nihilog/schemas';
+import type { SelectTagSbcrMpngType } from '@nihilog/schemas';
+
 import { usePut } from '@/_entities/common/hooks';
 import { useInvalidateTagSubscribeCache } from '@/_entities/subscribe/tag-subscribe/tag-subscribe.keys';
-import type { UpdateTagSubscribeType } from '@/_schemas';
-import type { SelectTagSbcrMpngType } from '@/_types';
 
 /**
  * @description 태그 구독 설정을 변경하는 커스텀 훅

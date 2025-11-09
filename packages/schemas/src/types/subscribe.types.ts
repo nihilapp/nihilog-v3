@@ -1,10 +1,10 @@
 import type { Prisma } from '@nihilog/db';
 
-// ========================================================
 // 기존 구독 설정 관련 타입
-// ========================================================
 
-// 단일 구독 설정 조회 (user 정보 포함)
+/**
+ * @description 단일 구독 설정 조회 (user 정보 포함)
+ */
 export type SelectUserSbcrInfoType = Prisma.UserSbcrInfoGetPayload<{
   include: {
     user: {
@@ -16,17 +16,19 @@ export type SelectUserSbcrInfoType = Prisma.UserSbcrInfoGetPayload<{
   };
 }>;
 
-// 목록 조회 항목 (페이징 정보 포함)
+/**
+ * @description 목록 조회 항목 (페이징 정보 포함)
+ */
 export type SelectUserSbcrInfoListItemType = SelectUserSbcrInfoType & {
   totalCnt: number;
   rowNo: number;
 };
 
-// ========================================================
 // 구독 설정 통계 관련 타입
-// ========================================================
 
-// 구독 설정 분석 통계 (시간대별 합산) - 6개 지표 통합
+/**
+ * @description 구독 설정 분석 통계 (시간대별 합산) - 6개 지표 통합
+ */
 export type AnalyzeSubscribeStatItemType = {
   dateStart: string;
   dateEnd: string;
@@ -40,11 +42,11 @@ export type AnalyzeSubscribeStatItemType = {
   commentReplyNotificationCount: number; // 댓글 답글 알림 활성 수
 };
 
-// ========================================================
 // 구독 설정 파생 지표 타입 (3개)
-// ========================================================
 
-// 알림 설정별 분포
+/**
+ * @description 알림 설정별 분포
+ */
 export type SubscribeNotificationDistributionItemType = {
   notificationType: 'EMAIL' | 'NEW_POST' | 'COMMENT_REPLY';
   activeCount: number;
@@ -53,7 +55,9 @@ export type SubscribeNotificationDistributionItemType = {
   activeRatio: number;
 };
 
-// 전체 알림 활성 사용자 수
+/**
+ * @description 전체 알림 활성 사용자 수
+ */
 export type TotalActiveNotificationUsersItemType = {
   dateStart: string;
   dateEnd: string;
@@ -64,7 +68,9 @@ export type TotalActiveNotificationUsersItemType = {
   allNotificationsActiveUsers: number;
 };
 
-// 전체 알림 비활성 사용자 수
+/**
+ * @description 전체 알림 비활성 사용자 수
+ */
 export type TotalInactiveNotificationUsersItemType = {
   dateStart: string;
   dateEnd: string;

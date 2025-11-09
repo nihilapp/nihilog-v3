@@ -1,5 +1,6 @@
+import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
+
 import { useGet } from '@/_entities/common/hooks';
-import type { SelectUserSbcrInfoType } from '@/_types';
 
 /**
  * @description 이메일 구독 설정을 조회하는 커스텀 훅

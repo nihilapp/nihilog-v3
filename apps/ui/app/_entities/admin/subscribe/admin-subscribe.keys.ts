@@ -1,7 +1,6 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
+import type { AnalyzeStatType } from '@nihilog/schemas';
 import { useQueryClient } from '@tanstack/react-query';
-
-import type { AnalyzeStatType } from '@/_types/common.schema';
 
 /**
  * 관리자 구독 관련 쿼리 키 정의

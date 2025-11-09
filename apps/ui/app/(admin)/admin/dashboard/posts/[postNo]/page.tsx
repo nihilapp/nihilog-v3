@@ -1,8 +1,7 @@
-import React from 'react';
+import type { SelectPostType } from '@nihilog/schemas';
 
 import { AdminPostDetail } from '@/_components/admin/posts/AdminPostDetail';
 import { Api, setMeta } from '@/_libs';
-import type { SelectPostType } from '@/_types';
 
 interface Props {
   params: Promise<{

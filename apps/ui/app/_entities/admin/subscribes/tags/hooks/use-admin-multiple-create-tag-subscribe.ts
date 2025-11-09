@@ -1,7 +1,8 @@
+import type { CreateTagSubscribeType } from '@nihilog/schemas';
+import type { MultipleResultType } from '@nihilog/schemas';
+
 import { useInvalidateAdminSubscribeCache } from '@/_entities/admin/subscribe/admin-subscribe.keys';
 import { usePost } from '@/_entities/common/hooks';
-import type { CreateTagSubscribeType } from '@/_schemas';
-import type { MultipleResultType } from '@/_types';
 
 /**
  * @description 관리자가 다수 태그 구독을 일괄 생성하는 커스텀 훅
