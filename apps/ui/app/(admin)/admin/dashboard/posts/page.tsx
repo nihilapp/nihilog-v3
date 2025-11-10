@@ -6,7 +6,7 @@ export const metadata = setMeta({
   url: '/admin/dashboard/posts',
 });
 
-export default function page() {
+export default function AdminPostListPage() {
   return (
     <AdminPostList />
   );

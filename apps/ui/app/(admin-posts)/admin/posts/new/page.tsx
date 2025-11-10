@@ -3,11 +3,11 @@ import { setMeta } from '@/_libs';
 interface Props {}
 
 export const metadata = setMeta({
-  title: '대시보드',
-  url: '/admin/dashboard',
+  title: '',
+  url: '',
 });
 
-export default function AdminDashboardPage() {
+export default function NewPostPage() {
   return (
     <div>content</div>
   );

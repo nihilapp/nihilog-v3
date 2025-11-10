@@ -68,6 +68,7 @@ export function FrameAuthButtons({ className, beforeSignInMenu, afterSignInMenu,
                 {menu.url
                   ? (
                     <Button.Link
+                      icon={menu.icon}
                       label={menu.name}
                       href={menu.url}
                     />
@@ -75,6 +76,7 @@ export function FrameAuthButtons({ className, beforeSignInMenu, afterSignInMenu,
                   : menu.action
                     ? (
                       <Button.Action
+                        icon={menu.icon}
                         label={menu.name}
                         onClick={menu.action}
                       />
@@ -93,6 +95,7 @@ export function FrameAuthButtons({ className, beforeSignInMenu, afterSignInMenu,
                 {menu.url
                   ? (
                     <Button.Link
+                      icon={menu.icon}
                       label={menu.name}
                       href={menu.url}
                     />
@@ -100,6 +103,7 @@ export function FrameAuthButtons({ className, beforeSignInMenu, afterSignInMenu,
                   : menu.action
                     ? (
                       <Button.Action
+                        icon={menu.icon}
                         label={menu.name}
                         onClick={menu.action}
                       />

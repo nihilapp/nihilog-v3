@@ -50,6 +50,7 @@ export function FrameNav({ custom, menu, ...props }: Props) {
             key={item.name}
           >
             <Button.Menu
+              icon={item.icon}
               label={item.name}
               href={item.url ?? ''}
               className={cn([

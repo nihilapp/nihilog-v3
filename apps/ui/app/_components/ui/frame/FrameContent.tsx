@@ -26,7 +26,7 @@ const cssVariants = cva(
   }
 );
 
-export function FrameContent({ className, withSide = false, sidePosition = 'left', ...props }: Props) {
+export function FrameContent({ className, withSide = false, sidePosition = 'left', children, ...props }: Props) {
   const { isMoSm, } = useResponsive();
 
   return (
@@ -39,6 +39,7 @@ export function FrameContent({ className, withSide = false, sidePosition = 'left
     >
       {withSide && (
         <Frame.Side
+          sidePosition={sidePosition}
           className={cn(
             !isMoSm && sidePosition === 'left' && 'order-1',
             !isMoSm && sidePosition === 'right' && 'order-2',
@@ -56,7 +57,7 @@ export function FrameContent({ className, withSide = false, sidePosition = 'left
           isMoSm && 'order-1'
         )}
       >
-        main
+        {children}
       </Frame.Main>
     </div>
   );

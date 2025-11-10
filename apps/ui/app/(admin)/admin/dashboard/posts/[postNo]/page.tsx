@@ -20,7 +20,7 @@ export async function generateMetadata({ params, }: Props) {
   });
 }
 
-export default async function page({ params, }: Props) {
+export default async function AdminPostDetailPage({ params, }: Props) {
   const { postNo, } = await params;
 
   return (

@@ -14,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-row gap-2 items-center justify-between mb-5', ],
+  [ 'flex flex-row gap-2 items-center justify-between', ],
   {
     variants: {},
     defaultVariants: {},

@@ -9,16 +9,16 @@ interface Props
   extends ReactElementProps<'div'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];
-  mode?: 'div' | 'section' | 'main' | 'aside';
   full?: boolean;
-  colspan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-  rowspan?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-2 p-4 bg-white rounded-2 shadow-md border border-black-200', ],
+  [ 'flex flex-col gap-5', ],
   {
     variants: {
+      panel: {
+        true: [ 'p-4 bg-white rounded-2 shadow-md border border-black-200', ],
+      },
       mode: {
         div: [ 'flex-1', ],
         section: [ 'flex-1', ],
@@ -54,7 +54,9 @@ const cssVariants = cva(
         12: [ 'row-span-12', ],
       },
     },
-    defaultVariants: {},
+    defaultVariants: {
+      panel: true,
+    },
     compoundVariants: [],
   }
 );
@@ -65,6 +67,7 @@ export function BoxPanel({
   mode = 'div',
   colspan,
   rowspan,
+  panel,
   children,
   ...props
 }: Props) {
@@ -74,6 +77,7 @@ export function BoxPanel({
         className={cn(
           cssVariants({
             mode,
+            panel,
             colspan,
             rowspan,
           }),
@@ -93,6 +97,7 @@ export function BoxPanel({
         className={cn(
           cssVariants({
             mode,
+            panel,
             colspan,
             rowspan,
           }),
@@ -112,6 +117,7 @@ export function BoxPanel({
         className={cn(
           cssVariants({
             mode,
+            panel,
             colspan,
             rowspan,
           }),
@@ -131,6 +137,7 @@ export function BoxPanel({
         className={cn(
           cssVariants({
             mode,
+            panel,
             colspan,
             rowspan,
           }),

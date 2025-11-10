@@ -2,7 +2,6 @@
 
 import { type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
-import type { IconType } from 'react-icons/lib';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -13,7 +12,7 @@ interface Props
   extends ReactElementProps<typeof Link, 'children' | 'color'>,
   VariantProps<typeof buttonCva> {
   label: string;
-  icon?: IconType;
+  icon?: React.ReactNode;
   href: string;
   className?: string | string[];
   custom?: {
@@ -25,7 +24,7 @@ interface Props
 export function ButtonMenu(props: Props) {
   const {
     label,
-    icon: Icon,
+    icon,
     href,
     mode,
     color,
@@ -48,13 +47,14 @@ export function ButtonMenu(props: Props) {
       href={href}
       {...linkProps}
     >
-      {Icon && (
-        <Icon
-          className={cn(
-            iconCva,
-            custom?.icon
-          )}
-        />
+      {icon && (
+        <span className={cn(
+          iconCva,
+          custom?.icon
+        )}
+        >
+          {icon}
+        </span>
       )}
       <span
         className={cn(

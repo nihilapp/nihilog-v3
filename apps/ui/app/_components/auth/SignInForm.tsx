@@ -47,7 +47,7 @@ export function SignInForm() {
   );
 
   return (
-    <Box.Panel full className='p-2 md:p-4'>
+    <Box.Panel full className='p-2 md:p-4' panel={false}>
       <Box.Content className={[ 'items-center justify-center', ]}>
         <Box.Top title='로그인' />
 

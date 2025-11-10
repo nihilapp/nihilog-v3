@@ -1,7 +1,6 @@
 'use client';
 
 import { type VariantProps } from 'class-variance-authority';
-import type { IconType } from 'react-icons/lib';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -12,7 +11,7 @@ interface Props
   extends ReactElementProps<'button', 'children' | 'color'>,
   VariantProps<typeof buttonCva> {
   label: string;
-  icon?: IconType;
+  icon?: React.ReactNode;
   className?: string | string[];
   custom?: {
     label?: string | string[];
@@ -23,7 +22,7 @@ interface Props
 export function ButtonAction(props: Props) {
   const {
     label,
-    icon: Icon,
+    icon,
     mode,
     color,
     size,
@@ -44,13 +43,14 @@ export function ButtonAction(props: Props) {
       )}
       {...buttonProps}
     >
-      {Icon && (
-        <Icon
-          className={cn(
-            iconCva,
-            custom?.icon
-          )}
-        />
+      {icon && (
+        <span className={cn(
+          iconCva,
+          custom?.icon
+        )}
+        >
+          {icon}
+        </span>
       )}
       <span
         className={cn(

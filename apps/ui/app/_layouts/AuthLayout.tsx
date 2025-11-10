@@ -42,9 +42,7 @@ export function AuthLayout({ children, }: Props) {
         )}
       </Frame.Header>
       <Frame.Content>
-        <Frame.Main className='w-full h-full min-h-0 flex flex-row items-center justify-center p-2 md:p-4 overflow-y-auto'>
-          {children}
-        </Frame.Main>
+        {children}
       </Frame.Content>
       <Frame.Footer />
     </>

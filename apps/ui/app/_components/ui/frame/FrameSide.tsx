@@ -11,9 +11,10 @@ interface Props
   extends ReactElementProps<'aside', 'ref'> {
   className?: string | string[];
   title?: string;
+  sidePosition?: 'left' | 'right';
 }
 
-export function FrameSide({ className, title = '메뉴', children, ...props }: Props) {
+export function FrameSide({ className, title = '메뉴', sidePosition = 'left', children, ...props }: Props) {
   const [
     isCollapsed,
     setIsCollapsed,
@@ -35,11 +36,16 @@ export function FrameSide({ className, title = '메뉴', children, ...props }: P
       )}
       {...props}
     >
-      <Box.Top showTitle={!isCollapsed} title={title}>
+      <Box.Top
+        showTitle={!isCollapsed}
+        title={title}
+        className={cn(sidePosition === 'right' && 'flex-row-reverse')}
+      >
         <Box.Action>
           <Frame.SideToggle
             isCollapsed={isCollapsed}
             onToggleCollapse={onToggleCollapse}
+            sidePosition={sidePosition}
           />
         </Box.Action>
       </Box.Top>

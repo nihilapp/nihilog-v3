@@ -1,12 +1,12 @@
 import { cva } from 'class-variance-authority';
 
 export const buttonCva = cva(
-  [ 'px-2 rounded-2 transition-colors duration-200 box-border', ],
+  [ 'p-2 py-1 rounded-2 transition-colors duration-200 box-border items-center gap-1 [&_svg]:mt-[2px]', ],
   {
     variants: {
       size: {
-        line: [ 'inline-block', ],
-        block: [ 'block w-full', ],
+        line: [ 'inline-flex', ],
+        block: [ 'flex w-full', ],
       },
       mode: {
         normal: [ 'text-white', ],
