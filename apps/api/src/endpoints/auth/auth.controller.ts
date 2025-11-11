@@ -4,7 +4,7 @@ import {
   Req,
   Res
 } from '@nestjs/common';
-import { MESSAGE, RESPONSE_CODE } from '@nihilog/code';
+import { MESSAGE } from '@nihilog/code';
 import type { SelectUserInfoType } from '@nihilog/schemas';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 
@@ -33,10 +33,6 @@ export class AuthController {
     endpoint: '/signin',
     method: 'POST',
     options: {
-      throttle: [
-        5,
-        60000,
-      ],
       serialize: true,
     },
   })
@@ -49,7 +45,7 @@ export class AuthController {
 
     if (!result?.success) {
       return createError(
-        (result?.error?.code as keyof typeof RESPONSE_CODE) || 'UNAUTHORIZED',
+        (result?.error?.code) || 'UNAUTHORIZED',
         result?.error?.message || MESSAGE.AUTH.INVALID_CREDENTIALS
       );
     }

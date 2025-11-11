@@ -17,7 +17,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-header flex-col md:flex-row gap-2 md:gap-0', ],
+  [ 'frame-header flex-col md:flex-row gap-2 md:gap-0 text-md', ],
   {
     variants: {},
     defaultVariants: {},

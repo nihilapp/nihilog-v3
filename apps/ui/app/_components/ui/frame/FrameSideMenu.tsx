@@ -23,7 +23,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-side-menu flex flex-col gap-1', ],
+  [ 'frame-side-menu flex flex-col gap-1 text-md', ],
   {
     variants: {},
     defaultVariants: {},

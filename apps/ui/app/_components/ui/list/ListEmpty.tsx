@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/_libs';
@@ -13,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ '', ],
+  [ 'flex-row-2 items-center justify-center', ],
   {
     variants: {},
     defaultVariants: {},
@@ -30,7 +31,8 @@ export function ListEmpty({ className, emptyMessage, ...props }: Props) {
       )}
       {...props}
     >
-      <span className='text-gray-500'>{emptyMessage}</span>
+      <Icon icon='mdi:file-search-outline' className='size-5' />
+      <span className='text-gray-500 text-center'>{emptyMessage}</span>
     </div>
   );
 }

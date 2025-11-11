@@ -21,7 +21,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col md:flex-row gap-2 overflow-y-hidden flex-1 p-2', ],
+  [ 'flex flex-col md:flex-row gap-2 overflow-y-hidden flex-1 p-2 text-md', ],
   {
     variants: {},
     defaultVariants: {},

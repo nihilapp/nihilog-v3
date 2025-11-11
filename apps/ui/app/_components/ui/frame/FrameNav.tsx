@@ -19,7 +19,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-nav flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base', ],
+  [ 'frame-nav flex flex-col md:flex-row gap-1 md:gap-2 text-md', ],
   {
     variants: {},
     defaultVariants: {},
@@ -37,7 +37,7 @@ export function FrameNav({ custom, menu, ...props }: Props) {
       {...props}
     >
       <ul className={cn([
-        'flex flex-col md:flex-row gap-1 md:gap-2 text-sm md:text-base',
+        'flex flex-col md:flex-row gap-1 md:gap-2 text-md',
         custom?.ul,
       ])}
       >
