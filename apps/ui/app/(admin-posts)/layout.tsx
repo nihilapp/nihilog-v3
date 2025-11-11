@@ -1,13 +1,17 @@
+import { Suspense } from 'react';
+
 import { PostEditorLayout } from '@/_layouts/PostEditorLayout';
 
 interface Props {
   children: React.ReactNode;
 }
 
-export default function layout({ children, }: Props) {
+export default function Layout({ children, }: Props) {
   return (
-    <PostEditorLayout>
-      {children}
-    </PostEditorLayout>
+    <Suspense fallback={<div>Loading...</div>}>
+      <PostEditorLayout>
+        {children}
+      </PostEditorLayout>
+    </Suspense>
   );
 }

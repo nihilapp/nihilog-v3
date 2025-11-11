@@ -5,3 +5,7 @@
 @utility frame-footer {
   @apply border-t border-black-200 p-2 text-black-900 bg-white;
 }
+
+@utility frame-nav-saparator {
+  @apply hidden md:block w-[2px] h-[15px] bg-black-300;
+}

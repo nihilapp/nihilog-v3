@@ -14,6 +14,7 @@ interface Props
   text?: string;
   width?: number;
   height?: number;
+  href?: string;
 }
 
 const cssVariants = cva(
@@ -25,9 +26,9 @@ const cssVariants = cva(
   }
 );
 
-export function Logo({ className, text = 'NIHILOG', width = 25, height = 25, ...props }: Props) {
+export function Logo({ className, text = 'NIHILOG', width = 25, height = 25, href = '/', ...props }: Props) {
   return (
-    <Link href='/'>
+    <Link href={href}>
       <h1
         className={cn(
           cssVariants({}),

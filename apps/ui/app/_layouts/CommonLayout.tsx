@@ -73,8 +73,9 @@ export function CommonLayout({ children, }: Props) {
   ];
   return (
     <>
-      <Frame.Header text='NIHILOG'>
+      <Frame.Header text='NIHILOG' href='/'>
         <Frame.Nav menu={navMenu} />
+        <div className='frame-nav-saparator' />
         <Frame.AuthButtons
           beforeSignInMenu={beforeSignInMenu}
           afterSignInMenu={afterSignInMenu}

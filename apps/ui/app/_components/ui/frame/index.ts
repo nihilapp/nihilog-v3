@@ -5,6 +5,7 @@ import { FrameHeader } from '@/_components/ui/frame/FrameHeader';
 import { FrameMain } from '@/_components/ui/frame/FrameMain';
 import { FrameNav } from '@/_components/ui/frame/FrameNav';
 import { FrameSide } from '@/_components/ui/frame/FrameSide';
+import { FrameSideMenu } from '@/_components/ui/frame/FrameSideMenu';
 import { FrameSideToggleButton } from '@/_components/ui/frame/FrameSideToggleButton';
 
 export const Frame = {
@@ -16,4 +17,5 @@ export const Frame = {
   Footer: FrameFooter,
   SideToggle: FrameSideToggleButton,
   AuthButtons: FrameAuthButtons,
+  SideMenu: FrameSideMenu,
 };

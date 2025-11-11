@@ -36,7 +36,7 @@ export function AuthLayout({ children, }: Props) {
 
   return (
     <>
-      <Frame.Header text='NIHILOG'>
+      <Frame.Header text='NIHILOG' href='/'>
         {visibleMenu.length > 0 && (
           <Frame.Nav menu={visibleMenu} />
         )}

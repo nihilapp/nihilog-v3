@@ -8,7 +8,7 @@ export function NotFound() {
   const pathname = usePathname();
 
   return (
-    <Box.Panel>
+    <Box.Panel panel={false}>
       <div className='flex flex-col items-center justify-center h-full'>
         <p className='text-md mb-5'>
           <span className='font-900 text-red-500'>{pathname} </span>

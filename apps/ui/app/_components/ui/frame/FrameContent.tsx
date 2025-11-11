@@ -5,6 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { Frame } from '@/_components/ui/frame';
 import { useResponsive } from '@/_entities/common/hooks';
 import { cn } from '@/_libs';
+import type { Menu } from '@/_types';
 import type { ReactElementProps } from '@/_types/common.types';
 
 interface Props
@@ -12,6 +13,8 @@ interface Props
   className?: string | string[];
   withSide?: boolean;
   sidePosition?: 'left' | 'right';
+  sideMenu?: Menu[];
+  sideTitle?: string;
   custom?: {
     div?: string | string[];
   };
@@ -26,7 +29,7 @@ const cssVariants = cva(
   }
 );
 
-export function FrameContent({ className, withSide = false, sidePosition = 'left', children, ...props }: Props) {
+export function FrameContent({ className, withSide = false, sidePosition = 'left', sideMenu, sideTitle, children, ...props }: Props) {
   const { isMoSm, } = useResponsive();
 
   return (
@@ -40,13 +43,14 @@ export function FrameContent({ className, withSide = false, sidePosition = 'left
       {withSide && (
         <Frame.Side
           sidePosition={sidePosition}
+          title={sideTitle}
           className={cn(
             !isMoSm && sidePosition === 'left' && 'order-1',
             !isMoSm && sidePosition === 'right' && 'order-2',
             isMoSm && 'order-2'
           )}
         >
-          side
+          {sideMenu && <Frame.SideMenu menu={sideMenu} />}
         </Frame.Side>
       )}
 

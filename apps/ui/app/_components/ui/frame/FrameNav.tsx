@@ -49,15 +49,31 @@ export function FrameNav({ custom, menu, ...props }: Props) {
             ])}
             key={item.name}
           >
-            <Button.Menu
-              icon={item.icon}
-              label={item.name}
-              href={item.url ?? ''}
-              className={cn([
-                '',
-                custom?.button,
-              ])}
-            />
+            {item.url
+              ? (
+                <Button.Link
+                  icon={item.icon}
+                  label={item.name}
+                  href={item.url}
+                  className={cn([
+                    '',
+                    custom?.button,
+                  ])}
+                />
+              )
+              : item.action
+                ? (
+                  <Button.Action
+                    icon={item.icon}
+                    label={item.name}
+                    onClick={item.action}
+                    className={cn([
+                      '',
+                      custom?.button,
+                    ])}
+                  />
+                )
+                : null}
           </li>
         ))}
       </ul>
