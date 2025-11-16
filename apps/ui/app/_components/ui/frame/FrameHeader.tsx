@@ -36,7 +36,7 @@ export function FrameHeader({ className, text, href, children, ...props }: Props
     >
       <Logo text={text} href={href} />
 
-      <div className='flex flex-row gap-2 items-center justify-end'>
+      <div className='flex flex-row gap-2 items-stretch justify-end'>
         {children}
       </div>
     </header>

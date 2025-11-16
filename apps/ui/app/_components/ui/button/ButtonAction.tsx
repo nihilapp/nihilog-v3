@@ -23,9 +23,8 @@ export function ButtonAction(props: Props) {
   const {
     label,
     icon,
-    mode,
-    color,
-    size,
+    display,
+    textSize,
     className,
     custom,
     ...buttonProps
@@ -35,19 +34,21 @@ export function ButtonAction(props: Props) {
     <button
       className={cn(
         buttonCva({
-          mode,
-          color: color as 'red' | 'blue' | 'orange' | 'black' | 'white' | 'grey' | null | undefined,
-          size,
+          display,
+          textSize,
         }),
         className
       )}
       {...buttonProps}
     >
       {icon && (
-        <span className={cn(
-          iconCva,
-          custom?.icon
-        )}
+        <span
+          className={cn(
+            iconCva({
+              textSize,
+            }),
+            custom?.icon
+          )}
         >
           {icon}
         </span>

@@ -13,7 +13,8 @@ extendZodWithOpenApi(z);
  * @description 사용자 구독 기본 스키마
  */
 const userSubscribeBaseSchema = commonSchema.extend({
-  sbcrNo: z.coerce.number()
+  sbcrNo: z
+    .number()
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.')
     .optional()
@@ -21,7 +22,8 @@ const userSubscribeBaseSchema = commonSchema.extend({
       description: '구독 번호',
       example: 1,
     }),
-  userNo: z.coerce.number()
+  userNo: z
+    .number()
     .int('사용자 번호는 정수여야 합니다.')
     .positive('사용자 번호는 양수여야 합니다.')
     .openapi({

@@ -16,7 +16,7 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';

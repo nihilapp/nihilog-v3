@@ -1,8 +1,7 @@
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
-import { RESPONSE_CODE } from '@/code';
-import { MESSAGE } from '@/code/messages';
+import { RESPONSE_CODE, MESSAGE } from '@nihilog/code';
 import { ResponseDto } from '@/dto/response.dto';
 import { timeToString } from '@/utils/timeHelper';
 

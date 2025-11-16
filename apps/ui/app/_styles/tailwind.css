@@ -6,7 +6,9 @@
 @import "./variant/child.css";
 @import "./layout/flex.css";
 
+@import "./utility/button.css";
 @import "./utility/layout.css";
+@import "./utility/menu.css";
 @import "./utility/scrollbar.css";
 
 @plugin "@tailwindcss/typography";
@@ -58,7 +60,7 @@
 
 @layer base {
   * {
-    @apply p-0 m-0 box-border font-sans;
+    @apply p-0 m-0 box-border font-sans text-sm;
   }
 
   body {

@@ -6,11 +6,11 @@ import Link from 'next/link';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
-import { buttonCva, iconCva, labelCva } from './button.cva';
+import { menuCva, menuIconCva, menuLabelCva } from './menu.cva';
 
 interface Props
-  extends ReactElementProps<typeof Link, 'children' | 'color'>,
-  VariantProps<typeof buttonCva> {
+  extends ReactElementProps<typeof Link, 'children'>,
+  VariantProps<typeof menuCva> {
   label: string;
   icon?: React.ReactNode;
   href: string;
@@ -26,9 +26,8 @@ export function ButtonMenu(props: Props) {
     label,
     icon,
     href,
-    mode,
-    color,
-    size,
+    display,
+    textSize,
     className,
     custom,
     ...linkProps
@@ -37,10 +36,9 @@ export function ButtonMenu(props: Props) {
   return (
     <Link
       className={cn(
-        buttonCva({
-          mode: mode ?? 'ghost',
-          color: color as 'red' | 'blue' | 'orange' | 'black' | 'white' | 'grey' | null | undefined,
-          size,
+        menuCva({
+          display,
+          textSize,
         }),
         className
       )}
@@ -48,17 +46,20 @@ export function ButtonMenu(props: Props) {
       {...linkProps}
     >
       {icon && (
-        <span className={cn(
-          iconCva,
-          custom?.icon
-        )}
+        <span
+          className={cn(
+            menuIconCva({
+              textSize,
+            }),
+            custom?.icon
+          )}
         >
           {icon}
         </span>
       )}
       <span
         className={cn(
-          labelCva,
+          menuLabelCva,
           custom?.label
         )}
       >

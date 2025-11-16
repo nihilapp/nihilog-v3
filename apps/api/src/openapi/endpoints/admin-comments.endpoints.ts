@@ -1,3 +1,4 @@
+import { MESSAGE } from '@nihilog/code';
 import {
   updateCommentSchema,
   deleteCommentSchema,
@@ -5,7 +6,6 @@ import {
 } from '@nihilog/schemas';
 import { z } from 'zod';
 
-import { MESSAGE } from '@/code/messages';
 import { createError, createResponse } from '@/utils';
 import { CreateCommentAnalyze } from '@/utils/createCommentAnalyze';
 

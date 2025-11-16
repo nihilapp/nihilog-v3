@@ -11,7 +11,8 @@ extendZodWithOpenApi(z);
  * @description 태그 구독 스키마
  */
 export const tagSubscribeSchema = commonSchema.extend({
-  tagSbcrNo: z.coerce.number()
+  tagSbcrNo: z
+    .number()
     .int('태그 구독 번호는 정수여야 합니다.')
     .positive('태그 구독 번호는 양수여야 합니다.')
     .optional()
@@ -19,7 +20,8 @@ export const tagSubscribeSchema = commonSchema.extend({
       description: '태그 구독 번호',
       example: 1,
     }),
-  sbcrNo: z.coerce.number()
+  sbcrNo: z
+    .number()
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.')
     .optional()
@@ -27,7 +29,8 @@ export const tagSubscribeSchema = commonSchema.extend({
       description: '구독 번호',
       example: 1,
     }),
-  tagNo: z.coerce.number()
+  tagNo: z
+    .number()
     .int('태그 번호는 정수여야 합니다.')
     .positive('태그 번호는 양수여야 합니다.')
     .optional()
@@ -61,7 +64,8 @@ export const tagSubscribeSchema = commonSchema.extend({
       description: '총 개수',
       example: 10,
     }),
-  tagNoList: z.array(z.coerce.number()
+  tagNoList: z.array(z
+    .number()
     .int('태그 번호는 정수여야 합니다.')
     .positive('태그 번호는 양수여야 합니다.'))
     .optional()
@@ -73,7 +77,8 @@ export const tagSubscribeSchema = commonSchema.extend({
         3,
       ],
     }),
-  tagSbcrNoList: z.array(z.coerce.number()
+  tagSbcrNoList: z.array(z
+    .number()
     .int('태그 구독 번호는 정수여야 합니다.')
     .positive('태그 구독 번호는 양수여야 합니다.'))
     .optional()

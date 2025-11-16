@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { SearchPostDto } from '@/dto';
 import type { CreatePostBookmarkDto, CreatePostShareLogDto, CreatePostViewLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
 import type { ListType, RepoResponseType } from '@nihilog/schemas';

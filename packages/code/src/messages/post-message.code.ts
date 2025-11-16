@@ -74,6 +74,7 @@ export const POST_MESSAGES = {
     SLUG_INVALID: '유효하지 않은 포스트 슬러그입니다.',
     SLUG_DUPLICATE: '이미 존재하는 포스트 슬러그입니다.',
     TITLE_DUPLICATE: '이미 존재하는 포스트 제목입니다.',
+    UNAUTHORIZED_AUTHOR: '본인이 작성한 포스트만 수정할 수 있습니다.',
   },
 
   LIKE: {
@@ -108,4 +109,3 @@ export const POST_MESSAGES = {
     NOT_BOOKMARKED: '북마크하지 않은 포스트입니다.',
   },
 } as const;
-

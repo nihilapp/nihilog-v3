@@ -1,6 +1,6 @@
 import { Body, Controller, Param, ParseIntPipe, Query, Req, UseGuards } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, CreateTagDto, ResponseDto, UpdateTagDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';

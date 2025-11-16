@@ -8,7 +8,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, DeleteSubscribeDto, SearchSubscribeDto } from '@/dto';
 import { AnalyzeStatDto } from '@/dto/common.dto';

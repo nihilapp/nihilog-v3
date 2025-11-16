@@ -53,10 +53,13 @@ export type ReactElementProps<
 > = Omit<React.ComponentProps<ComponentOrTag>, 'className' | ExcludedKeys>;
 
 export interface Menu {
+  classNames?: string | string[];
   icon?: React.ReactNode;
   name: string;
   url?: string;
   action?: () => void;
   role?: UserRoleType[];
   children?: Menu[];
+  render?: () => React.ReactNode;
+  visible?: boolean;
 }

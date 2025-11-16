@@ -3,7 +3,7 @@ import { searchCategorySchema } from '@nihilog/schemas';
 import type { SelectCategoryListItemType, SelectCategoryType } from '@nihilog/schemas';
 import type { ListType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { SearchCategoryDto } from '@/dto/category.dto';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
 import { prismaResponse } from '@/utils/prismaResponse';

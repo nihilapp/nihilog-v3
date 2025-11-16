@@ -1,3 +1,4 @@
+import { MESSAGE } from '@nihilog/code';
 import {
   analyzeStatSchema,
   createCategorySchema,
@@ -7,7 +8,6 @@ import {
 } from '@nihilog/schemas';
 import { z } from 'zod';
 
-import { MESSAGE } from '@/code/messages';
 import { createError, createResponse } from '@/utils';
 import { CreateCategoryAnalyze } from '@/utils/createCategoryAnalyze';
 import { CreateExample } from '@/utils/createExample';

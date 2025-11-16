@@ -61,7 +61,7 @@ model UserInfo {
   updtNo        Int?     @map("updt_no")
   updtDt        String   @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("updt_dt")
   delNo         Int?     @map("del_no")
-  delDt         String?  @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("del_dt")
+  delDt         String?  @map("del_dt")
 
   // Relations
   createdCategories         CtgryInfo[]     @relation("CategoryCreator")
@@ -173,9 +173,9 @@ model PstInfo {
   pstStts     PostStatus @default(EMPTY) @map("pst_stts")
   publDt      String?    @default(dbgenerated("to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS\"Z\"')")) @map("publ_dt")
   pinYn       YnStatus   @default(N) @map("pin_yn")
-  rlsYn       YnStatus   @default(Y) @map("rls_yn")
+  rlsYn       YnStatus   @default(N) @map("rls_yn")
   archYn      YnStatus   @default(N) @map("arch_yn")
-  secrYn      YnStatus?  @map("secr_yn")
+  secrYn      YnStatus   @default(N) @map("secr_yn")
   pstPswd     String?    @map("pst_pswd")
   useYn       YnStatus   @default(Y) @map("use_yn")
   delYn       YnStatus   @default(N) @map("del_yn")

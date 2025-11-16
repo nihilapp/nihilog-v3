@@ -10,7 +10,7 @@ import type {
   TotalInactiveNotificationUsersItemType
 } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { DeleteSubscribeDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { ListDto } from '@/dto/response.dto';

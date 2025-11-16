@@ -5,7 +5,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest } from '@/dto';
 import { ResponseDto } from '@/dto/response.dto';

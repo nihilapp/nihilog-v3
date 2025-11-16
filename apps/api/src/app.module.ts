@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AdminModule } from '@/endpoints/admin/admin.module';
@@ -33,12 +31,6 @@ import sensitiveConfig from './config/sensitive.config';
     }),
     PrismaModule,
     RepositoryModule,
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000, // 1분
-        limit: 60, // 60회
-      },
-    ]),
     AuthModule,
     UserModule,
     PostsModule,
@@ -78,11 +70,6 @@ import sensitiveConfig from './config/sensitive.config';
     }),
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  providers: [],
 })
 export class AppModule { }

@@ -11,7 +11,7 @@ extendZodWithOpenApi(z);
  * @description 태그 정보 스키마
  */
 export const tagInfoSchema = commonSchema.extend({
-  tagNo: z.coerce
+  tagNo: z
     .number()
     .int('태그 번호는 정수여야 합니다.')
     .positive('태그 번호는 양수여야 합니다.')
@@ -77,7 +77,7 @@ export const tagInfoSchema = commonSchema.extend({
       example: 10,
     }),
   tagNoList: z
-    .array(z.coerce
+    .array(z
       .number()
       .int('태그 번호는 정수여야 합니다.')
       .positive('태그 번호는 양수여야 합니다.'))
@@ -235,7 +235,7 @@ export const deleteTagSchema = tagInfoSchema.pick({
  * @description 포스트-태그 매핑 스키마
  */
 export const pstTagMpngSchema = commonSchema.extend({
-  tagMapNo: z.coerce
+  tagMapNo: z
     .number()
     .int('태그 매핑 번호는 정수여야 합니다.')
     .positive('태그 매핑 번호는 양수여야 합니다.')
@@ -244,7 +244,7 @@ export const pstTagMpngSchema = commonSchema.extend({
       description: '태그 매핑 번호',
       example: 1,
     }),
-  pstNo: z.coerce
+  pstNo: z
     .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.')
@@ -252,7 +252,7 @@ export const pstTagMpngSchema = commonSchema.extend({
       description: '포스트 번호',
       example: 1,
     }),
-  tagNo: z.coerce
+  tagNo: z
     .number()
     .int('태그 번호는 정수여야 합니다.')
     .positive('태그 번호는 양수여야 합니다.')
@@ -279,7 +279,7 @@ export const pstTagMpngSchema = commonSchema.extend({
       example: 10,
     }),
   tagMapNoList: z
-    .array(z.coerce
+    .array(z
       .number()
       .int('태그 매핑 번호는 정수여야 합니다.')
       .positive('태그 매핑 번호는 양수여야 합니다.'))

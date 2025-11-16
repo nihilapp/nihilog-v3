@@ -134,21 +134,18 @@ export const postSchema = commonSchema.extend({
     description: '고정 여부',
     example: 'N',
   }),
-  rlsYn: ynEnumSchema.default('Y').openapi({
+  rlsYn: ynEnumSchema.default('N').openapi({
     description: '공개 여부',
-    example: 'Y',
+    example: 'N',
   }),
   archYn: ynEnumSchema.default('N').openapi({
     description: '보관 여부',
     example: 'N',
   }),
-  secrYn: ynEnumSchema
-    .nullable()
-    .optional()
-    .openapi({
-      description: '비밀글 여부',
-      example: 'N',
-    }),
+  secrYn: ynEnumSchema.default('N').openapi({
+    description: '비밀글 여부',
+    example: 'N',
+  }),
   pstPswd: z
     .string()
     .max(

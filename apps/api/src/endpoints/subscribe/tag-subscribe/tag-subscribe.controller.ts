@@ -7,7 +7,7 @@ import {
   Query
 } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchTagSubscribeDto, CreateTagSubscribeDto, UpdateTagSubscribeDto, DeleteTagSubscribeDto } from '@/dto';
 import type { ListType, MultipleResultType } from '@nihilog/schemas';

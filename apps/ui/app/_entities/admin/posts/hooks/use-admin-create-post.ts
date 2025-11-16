@@ -3,7 +3,7 @@ import type { SelectPostType } from '@nihilog/schemas';
 import { useRouter } from 'next/navigation';
 
 import { usePost } from '@/_entities/common/hooks';
-import { usePostActions } from '@/_entities/posts/posts.store';
+import { usePostActions } from '@/_stores/posts.store';
 
 import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
 
@@ -28,11 +28,9 @@ export function useAdminCreatePost() {
       // Admin Posts 관련 캐시 무효화
       invalidateCache();
 
-      postActions.setPostNo(res.data.pstNo);
       postActions.setEditMode('create');
 
-      // 주소는 edit 로 바뀔 수도 있음.
-      router.push(`/admin/posts/edit?pstNo=${res.data.pstNo}`);
+      router.push(`/admin/posts/editor?pstNo=${res.data.pstNo}`);
     },
     errorCallback(_error) {},
   });

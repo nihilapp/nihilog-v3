@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { SearchTagDto } from '@/dto/tag.dto';
 import type { RepoResponseType } from '@nihilog/schemas';
 import type { SelectTagInfoListItemType, SelectTagInfoType } from '@nihilog/schemas';

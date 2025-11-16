@@ -2,7 +2,7 @@ import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nest
 import { Prisma } from '@nihilog/db';
 import type { FastifyReply } from 'fastify';
 
-import { RESPONSE_CODE } from '@/code/response.code';
+import { RESPONSE_CODE } from '@nihilog/code';
 import { createError } from '@/utils/createError';
 
 @Catch()

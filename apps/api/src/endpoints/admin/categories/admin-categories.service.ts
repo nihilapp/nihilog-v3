@@ -18,7 +18,7 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';

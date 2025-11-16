@@ -26,7 +26,7 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, ResponseDto } from '@/dto';
 import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';

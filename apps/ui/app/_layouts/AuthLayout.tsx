@@ -42,7 +42,9 @@ export function AuthLayout({ children, }: Props) {
         )}
       </Frame.Header>
       <Frame.Content>
-        {children}
+        <Frame.Main>
+          {children}
+        </Frame.Main>
       </Frame.Content>
       <Frame.Footer />
     </>

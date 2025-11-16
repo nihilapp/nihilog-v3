@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
 import { Prisma, PrismaClient } from '@nihilog/db';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type {
@@ -17,7 +18,6 @@ import type {
   PostStatusRatioItemType
 } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
 import type { CreatePostDto, DeletePostDto, SearchPostDto, UpdatePostDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePostBookmarkDto, CreatePostShareLogDto, DeletePostBookmarkDto, SearchPostBookmarkDto } from '@/dto/post.dto';
@@ -44,8 +44,8 @@ export class PostRepository {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
-        delYn: delYn || 'N',
-        rlsYn: rlsYn || 'Y',
+        ...(delYn !== undefined && { delYn, }),
+        ...(rlsYn !== undefined && { rlsYn, }),
         ...(srchKywd && srchType && {
           [ srchType ]: {
             contains: srchKywd,
@@ -206,8 +206,8 @@ export class PostRepository {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
-        delYn: delYn || 'N',
-        rlsYn: rlsYn || 'Y',
+        ...(delYn !== undefined && { delYn, }),
+        ...(rlsYn !== undefined && { rlsYn, }),
         ...(srchKywd && srchType && {
           [ srchType ]: {
             contains: srchKywd,
@@ -282,8 +282,8 @@ export class PostRepository {
 
       const where: Prisma.PstInfoWhereInput = {
         ctgryNo,
-        delYn: delYn || 'N',
-        rlsYn: rlsYn || 'Y',
+        ...(delYn !== undefined && { delYn, }),
+        ...(rlsYn !== undefined && { rlsYn, }),
         ...(srchKywd && srchType && {
           [ srchType ]: {
             contains: srchKywd,
@@ -351,8 +351,8 @@ export class PostRepository {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, rlsYn, } = searchData;
 
       const where: Prisma.PstInfoWhereInput = {
-        delYn: delYn || 'N',
-        rlsYn: rlsYn || 'Y',
+        ...(delYn !== undefined && { delYn, }),
+        ...(rlsYn !== undefined && { rlsYn, }),
         publDt: {
           startsWith: date,
         },
@@ -956,15 +956,17 @@ export class PostRepository {
 
       const where: Prisma.PstBkmrkMpngWhereInput = {
         userNo,
-        delYn: delYn || 'N',
+        ...(delYn !== undefined && { delYn, }),
         // 특정 포스트의 번호로 조회를 한다.
-        post: {
-          is: {
-            pstNo: {
-              equals: pstNo,
+        ...(pstNo !== undefined && {
+          post: {
+            is: {
+              pstNo: {
+                equals: pstNo,
+              },
             },
           },
-        },
+        }),
       };
 
       const skip = pageHelper(

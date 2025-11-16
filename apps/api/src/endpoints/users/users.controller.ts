@@ -3,15 +3,15 @@ import {
   Body,
   Req
 } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
+import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
+import type { SelectUserInfoType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';
 import { UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';
-import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
-import type { SelectUserInfoType } from '@nihilog/schemas';
 import { UserService } from '@/endpoints/users/users.service';
 import { createError, createResponse, removeSensitiveInfo } from '@/utils';
 
@@ -96,10 +96,6 @@ export class UserController {
     endpoint: '',
     method: 'POST',
     options: {
-      throttle: [
-        3,
-        60000,
-      ],
       serialize: true,
     },
   })

@@ -7,5 +7,5 @@
 }
 
 @utility frame-nav-saparator {
-  @apply hidden md:block w-[2px] h-[15px] bg-black-300;
+  @apply hidden md:block w-1 h-auto bg-black-300;
 }

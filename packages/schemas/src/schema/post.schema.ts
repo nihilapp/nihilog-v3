@@ -1,11 +1,10 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
+import { categoryInfoSchema } from './category.schema';
 import { commonSchema, ynEnumSchema, dateTimeMessage, dateTimeRegex } from './common.schema';
 import { postStatusSchema as basePostStatusSchema } from './enums.schema';
 import { baseSearchSchema } from './search.schema';
-
-import { categoryInfoSchema } from './category.schema';
 
 // Zod에 OpenAPI 확장 적용
 extendZodWithOpenApi(z);
@@ -29,6 +28,9 @@ const postStatusSchema = basePostStatusSchema
  * @description 카테고리 정보가 포함된 포스트 스키마
  */
 export const postSchema = commonSchema.extend({
+  // commonSchema의 기본값 오버라이드 (기본값 제거)
+  delYn: ynEnumSchema.optional(),
+  useYn: ynEnumSchema.optional(),
   pstNo: z.coerce
     .number()
     .int('포스트 번호는 정수여야 합니다.')
@@ -38,7 +40,7 @@ export const postSchema = commonSchema.extend({
       description: '포스트 번호',
       example: 1,
     }),
-  userNo: z.coerce
+  userNo: z
     .number()
     .int('사용자 번호는 정수여야 합니다.')
     .positive('사용자 번호는 양수여야 합니다.')
@@ -46,11 +48,10 @@ export const postSchema = commonSchema.extend({
       description: '사용자 번호',
       example: 1,
     }),
-  ctgryNo: z.coerce
+  ctgryNo: z
     .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '카테고리 번호',
@@ -120,7 +121,7 @@ export const postSchema = commonSchema.extend({
       description: '조회수',
       example: 0,
     }),
-  pstStts: postStatusSchema.default('EMPTY'),
+  pstStts: postStatusSchema.optional(),
   publDt: z
     .string()
     .max(
@@ -133,18 +134,9 @@ export const postSchema = commonSchema.extend({
       description: '발행 일시',
       example: '2024-01-01 00:00:00',
     }),
-  pinYn: ynEnumSchema.default('N').openapi({
-    description: '고정 여부',
-    example: 'N',
-  }),
-  rlsYn: ynEnumSchema.default('Y').openapi({
-    description: '공개 여부',
-    example: 'Y',
-  }),
-  archYn: ynEnumSchema.default('N').openapi({
-    description: '보관 여부',
-    example: 'N',
-  }),
+  pinYn: ynEnumSchema.optional(),
+  rlsYn: ynEnumSchema.optional(),
+  archYn: ynEnumSchema.optional(),
   secrYn: ynEnumSchema
     .nullable()
     .optional()
@@ -183,7 +175,7 @@ export const postSchema = commonSchema.extend({
       example: 10,
     }),
   pstNoList: z
-    .array(z.coerce
+    .array(z
       .number()
       .int('포스트 번호는 정수여야 합니다.')
       .positive('포스트 번호는 양수여야 합니다.'))
@@ -209,6 +201,7 @@ export const postSchema = commonSchema.extend({
  * @description 포스트 생성 스키마
  */
 export const createPostSchema = postSchema.pick({
+  userNo: true,
   pstTtl: true,
   pstSmry: true,
   pstMtxt: true,
@@ -347,7 +340,7 @@ export const deletePostSchema = postSchema.pick({
  * @description 포스트 북마크 스키마 (포스트와 카테고리 정보 포함)
  */
 export const postBookmarkSchema = commonSchema.extend({
-  bkmrkNo: z.coerce
+  bkmrkNo: z
     .number()
     .int('북마크 번호는 정수여야 합니다.')
     .positive('북마크 번호는 양수여야 합니다.')
@@ -355,7 +348,7 @@ export const postBookmarkSchema = commonSchema.extend({
       description: '북마크 번호',
       example: 1,
     }),
-  userNo: z.coerce
+  userNo: z
     .number()
     .int('사용자 번호는 정수여야 합니다.')
     .positive('사용자 번호는 양수여야 합니다.')
@@ -363,7 +356,7 @@ export const postBookmarkSchema = commonSchema.extend({
       description: '사용자 번호',
       example: 1,
     }),
-  pstNo: z.coerce
+  pstNo: z
     .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.')
@@ -446,7 +439,7 @@ export const postViewLogSchema = z.object({
  * @description 포스트 조회 로그 생성 스키마
  */
 export const createPostViewLogSchema = z.object({
-  pstNo: z.coerce
+  pstNo: z
     .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.')
@@ -470,7 +463,7 @@ export const createPostViewLogSchema = z.object({
  * @description 포스트 공유 로그 스키마
  */
 export const postShareLogSchema = z.object({
-  shrnNo: z.coerce
+  shrnNo: z
     .number()
     .int('공유 번호는 정수여야 합니다.')
     .positive('공유 번호는 양수여야 합니다.')
@@ -478,7 +471,7 @@ export const postShareLogSchema = z.object({
       description: '공유 번호',
       example: 1,
     }),
-  pstNo: z.coerce
+  pstNo: z
     .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.')

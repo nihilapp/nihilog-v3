@@ -1,7 +1,7 @@
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
 
-import { USER_MESSAGES } from '@/code/messages/user-message.code';
+import { MESSAGE } from '@nihilog/code';
 import { commonSchema, dateTimeMessage, dateTimeRegex } from '@/endpoints/prisma/schemas/common.schema';
 import { userRoleSchema as baseUserRoleSchema } from '@/endpoints/prisma/schemas/enums.schema';
 
@@ -48,7 +48,7 @@ export const userInfoSchema = commonSchema.extend({
       description: '사용자 번호',
       example: 1,
     }),
-  emlAddr: z.email(USER_MESSAGES.USER.EMAIL_INVALID)
+  emlAddr: z.email(MESSAGE.USER.EMAIL_INVALID)
     .openapi({
       description: '사용자 이메일 주소 (올바른 이메일 형식)',
       example: 'user@example.com',
@@ -56,11 +56,11 @@ export const userInfoSchema = commonSchema.extend({
   userNm: z.string()
     .min(
       2,
-      USER_MESSAGES.USER.NAME_TOO_SHORT
+      MESSAGE.USER.NAME_TOO_SHORT
     )
     .max(
       30,
-      USER_MESSAGES.USER.NAME_TOO_LONG
+      MESSAGE.USER.NAME_TOO_LONG
     )
     .openapi({
       description: '사용자명 (2-30자)',

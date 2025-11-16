@@ -10,7 +10,7 @@ import type { SelectUserInfoType } from '@nihilog/schemas';
 import bcrypt from 'bcrypt';
 import cloneDeep from 'lodash/cloneDeep';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { ChangePasswordDto, SignInDto } from '@/dto/auth.dto';
 import { UserRepository } from '@/endpoints/repositories/user.repository';
 import { prismaResponse } from '@/utils/prismaResponse';

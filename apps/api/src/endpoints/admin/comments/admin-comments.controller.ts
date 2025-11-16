@@ -1,6 +1,6 @@
 import { Body, Controller, Query, Req, UseGuards } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, DeleteCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
 import { AnalyzeStatDto } from '@/dto/common.dto';

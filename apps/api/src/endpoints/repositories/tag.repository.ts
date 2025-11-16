@@ -21,7 +21,7 @@ import type {
   TagCleanupRecommendationItemType
 } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, CreateTagDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto, SearchTagDto, UpdateTagDto } from '@/dto/tag.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';

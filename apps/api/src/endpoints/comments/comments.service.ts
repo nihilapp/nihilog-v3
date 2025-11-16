@@ -3,7 +3,7 @@ import type { SelectCommentListItemType, SelectCommentType } from '@nihilog/sche
 import type { ListType, RepoResponseType } from '@nihilog/schemas';
 import { searchCommentSchema } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
 import { CommentRepository } from '@/endpoints/repositories/comment.repository';
 import { PostRepository } from '@/endpoints/repositories/post.repository';

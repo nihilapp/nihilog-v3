@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Box } from '@/_components/ui/box';
 import { Frame } from '@/_components/ui/frame';
+import { useResponsive } from '@/_entities/common/hooks';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
@@ -15,10 +16,24 @@ interface Props
 }
 
 export function FrameSide({ className, title = '메뉴', sidePosition = 'left', children, ...props }: Props) {
+  const { isMoSm, } = useResponsive();
+
   const [
     isCollapsed,
     setIsCollapsed,
   ] = useState(false);
+
+  useEffect(
+    () => {
+      if (isMoSm) {
+        setIsCollapsed(true);
+      }
+      else {
+        setIsCollapsed(false);
+      }
+    },
+    [ isMoSm, ]
+  );
 
   const onToggleCollapse = () => {
     setIsCollapsed((prev) => !prev);
@@ -28,10 +43,10 @@ export function FrameSide({ className, title = '메뉴', sidePosition = 'left', 
     <Box.Panel
       mode='aside'
       className={cn(
-        'relative transition-all duration-300 overflow-y-auto',
+        'relative transition-all duration-300 overflow-y-auto shrink-0',
         isCollapsed
-          ? 'w-full md:w-[60px]'
-          : 'w-full md:w-[300px]',
+          ? 'w-[60px]'
+          : 'w-[300px]',
         className
       )}
       {...props}

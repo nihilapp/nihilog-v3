@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { UpdateUserDto } from '@/dto/user.dto';
 import { JwtPayload } from '@/endpoints/auth/jwt.strategy';
 import type { RepoResponseType } from '@nihilog/schemas';

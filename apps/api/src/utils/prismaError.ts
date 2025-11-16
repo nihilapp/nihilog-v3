@@ -1,7 +1,6 @@
 import { Prisma } from '@nihilog/db';
 
-import { MESSAGE } from '@/code/messages';
-import { PRISMA_ERROR_CODE } from '@/code/prisma.code';
+import { MESSAGE, PRISMA_ERROR_CODE } from '@nihilog/code';
 import { prismaResponse } from '@/utils/prismaResponse';
 
 export function prismaError(error: Prisma.PrismaClientKnownRequestError) {

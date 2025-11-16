@@ -3,7 +3,7 @@ import { searchTagSubscribeSchema } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type { SelectTagSbcrMpngListItemType, SelectTagSbcrMpngType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateTagSubscribeDto, DeleteTagSubscribeDto, SearchTagSubscribeDto, UpdateTagSubscribeDto } from '@/dto';
 import { TagSubscribeRepository } from '@/endpoints/repositories/tag-subscribe.repository';
 import { prismaResponse } from '@/utils/prismaResponse';

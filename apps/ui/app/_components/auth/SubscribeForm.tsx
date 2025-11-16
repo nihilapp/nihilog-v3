@@ -42,7 +42,14 @@ export function SubscribeForm() {
     // passwordConfirm 필드 제거 후 전송
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordConfirm, ...submitData } = data;
-    createUser.mutate(submitData);
+    createUser.mutate(
+      submitData,
+      {
+        onSuccess() {
+          form.reset();
+        },
+      }
+    );
   };
 
   const onResetForm = () => {

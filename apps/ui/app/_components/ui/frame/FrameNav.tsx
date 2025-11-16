@@ -1,6 +1,7 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
+import { usePathname } from 'next/navigation';
 
 import { Button } from '@/_components/ui/button';
 import { cn } from '@/_libs';
@@ -19,7 +20,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-nav flex flex-col md:flex-row gap-1 md:gap-2 text-md', ],
+  [ 'frame-nav flex flex-col md:flex-row text-md', ],
   {
     variants: {},
     defaultVariants: {},
@@ -28,6 +29,8 @@ const cssVariants = cva(
 );
 
 export function FrameNav({ custom, menu, ...props }: Props) {
+  const pathname = usePathname();
+
   return (
     <nav
       className={cn(
@@ -37,44 +40,31 @@ export function FrameNav({ custom, menu, ...props }: Props) {
       {...props}
     >
       <ul className={cn([
-        'flex flex-col md:flex-row gap-1 md:gap-2 text-md',
+        'flex flex-col md:flex-row text-md',
         custom?.ul,
       ])}
       >
         {menu?.map((item) => (
-          <li
-            className={cn([
-              '',
-              custom?.li,
-            ])}
-            key={item.name}
-          >
-            {item.url
-              ? (
-                <Button.Link
-                  icon={item.icon}
-                  label={item.name}
-                  href={item.url}
-                  className={cn([
-                    '',
-                    custom?.button,
-                  ])}
-                />
-              )
-              : item.action
-                ? (
-                  <Button.Action
-                    icon={item.icon}
-                    label={item.name}
-                    onClick={item.action}
-                    className={cn([
-                      '',
-                      custom?.button,
-                    ])}
-                  />
-                )
-                : null}
-          </li>
+          item.url && (
+            <li
+              className={cn([
+                '',
+                custom?.li,
+              ])}
+              key={item.name}
+            >
+              <Button.Menu
+                icon={item.icon}
+                label={item.name}
+                href={item.url}
+                data-selected={pathname === item.url}
+                className={cn([
+                  item.classNames,
+                  custom?.button,
+                ])}
+              />
+            </li>
+          )
         ))}
       </ul>
     </nav>

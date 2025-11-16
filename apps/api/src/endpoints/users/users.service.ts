@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcrypt';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateUserDto } from '@/dto';
 import type { UpdateSubscribeDto } from '@/dto/subscribe.dto';
 import { UpdateUserDto } from '@/dto/user.dto';

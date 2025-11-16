@@ -5,7 +5,7 @@ import {
   Query
 } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto } from '@/dto';
 import { SearchTagDto } from '@/dto/tag.dto';

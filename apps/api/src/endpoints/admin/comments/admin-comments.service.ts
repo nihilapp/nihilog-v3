@@ -14,7 +14,7 @@ import type {
 } from '@nihilog/schemas';
 import type { MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { DeleteCommentDto, UpdateCommentDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { CommentRepository } from '@/endpoints/repositories/comment.repository';

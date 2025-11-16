@@ -3,7 +3,6 @@ import { z } from 'zod';
 
 import { commonSchema, dateTimeMessage, dateTimeRegex } from './common.schema';
 import { userRoleSchema as baseUserRoleSchema } from './enums.schema';
-
 import { baseSearchSchema } from './search.schema';
 
 // Zod에 OpenAPI 확장 적용
@@ -55,7 +54,8 @@ export const passwordSchema = z.string()
  * @description 사용자 정보 스키마
  */
 export const userInfoSchema = commonSchema.extend({
-  userNo: z.coerce.number()
+  userNo: z
+    .number()
     .int('사용자 번호는 정수여야 합니다.')
     .positive('사용자 번호는 양수여야 합니다.')
     .optional()
@@ -169,7 +169,7 @@ export const userInfoSchema = commonSchema.extend({
       description: '총 행 수',
       example: 100,
     }),
-  userNoList: z.array(z.coerce.number())
+  userNoList: z.array(z.number())
     .nullable()
     .optional()
     .openapi({

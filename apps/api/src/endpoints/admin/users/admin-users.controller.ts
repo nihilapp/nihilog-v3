@@ -23,7 +23,7 @@ import type {
   UserRetentionRateItemType
 } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, UpdateUserDto } from '@/dto';
 import { CreateUserDto } from '@/dto/auth.dto';

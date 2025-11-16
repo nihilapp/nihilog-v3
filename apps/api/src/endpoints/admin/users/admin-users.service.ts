@@ -17,7 +17,7 @@ import type {
 } from '@nihilog/schemas';
 import bcrypt from 'bcrypt';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { CreateUserDto } from '@/dto/auth.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { UpdateUserDto, SearchUserDto } from '@/dto/user.dto';

@@ -1,9 +1,6 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { useState } from 'react';
-import type React from 'react';
 
 import { Button } from '@/_components/ui/button';
 import { cn } from '@/_libs';
@@ -23,7 +20,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-side-menu flex flex-col gap-1 text-md', ],
+  [ 'flex flex-col gap-1 text-md', ],
   {
     variants: {},
     defaultVariants: {},
@@ -34,19 +31,7 @@ const cssVariants = cva(
 function MenuItem({ item, custom, level = 0, }: { item: Menu;
   custom?: Props['custom'];
   level?: number; }) {
-  const [
-    isOpen,
-    setIsOpen,
-  ] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
-
-  const onToggleSubMenu = (e?: React.MouseEvent) => {
-    if (hasChildren) {
-      e?.preventDefault();
-      e?.stopPropagation();
-      setIsOpen((prev) => !prev);
-    }
-  };
 
   return (
     <li
@@ -55,75 +40,64 @@ function MenuItem({ item, custom, level = 0, }: { item: Menu;
         custom?.li,
       ])}
     >
-      {hasChildren
-        ? (
-          <Button.Action
-            icon={(
-              <Icon
-                icon={isOpen
-                  ? 'mdi:folder-open'
-                  : 'mdi:folder'}
-              />
-            )}
-            label={item.name}
-            onClick={onToggleSubMenu}
-            size='block'
-            mode='ghost'
-            color='black'
-            className={cn([
-              'justify-start',
-              custom?.button,
-            ])}
-          />
-        )
-        : item.url
-          ? (
-            <Button.Link
-              icon={item.icon}
-              label={item.name}
-              href={item.url}
-              size='block'
-              mode='ghost'
-              color='black'
-              className={cn([
-                'justify-start',
-                custom?.button,
-              ])}
-            />
-          )
-          : item.action
-            ? (
-              <Button.Action
-                icon={item.icon}
-                label={item.name}
-                onClick={item.action}
-                size='block'
-                mode='ghost'
-                color='black'
-                className={cn([
-                  'justify-start',
-                  custom?.button,
-                ])}
-              />
-            )
-            : null}
-
-      {hasChildren && isOpen && (
-        <ul
+      {item.render && item.render()}
+      {item.url && (
+        <Button.Link
+          icon={item.icon}
+          label={item.name}
+          href={item.url}
+          display='block'
           className={cn([
-            'flex flex-col gap-1 mt-1 ml-4',
-            custom?.subMenu,
+            'button-ghost-black-700',
+            'justify-start',
+            'hover:bg-black-100!',
+            item.classNames,
+            custom?.button,
+          ])}
+        />
+      )}
+      {item.action && (
+        <Button.Action
+          icon={item.icon}
+          label={item.name}
+          onClick={item.action}
+          display='block'
+          className={cn([
+            'button-ghost-black-700',
+            'justify-start',
+            'hover:bg-black-100!',
+            item.classNames,
+            custom?.button,
+          ])}
+        />
+      )}
+      {hasChildren && (
+        <Button.Category
+          label={item.name}
+          icon={item.icon}
+          display='block'
+          className={cn([
+            'button-ghost-black-700',
+            'hover:bg-black-100!',
+            item.classNames,
           ])}
         >
-          {item.children?.map((childItem) => (
-            <MenuItem
-              key={childItem.name}
-              item={childItem}
-              custom={custom}
-              level={level + 1}
-            />
-          ))}
-        </ul>
+          <ul
+            className={cn([
+              'flex flex-col gap-1',
+              custom?.subMenu,
+            ])}
+          >
+            {item.children?.map((childItem) => (
+              <MenuItem
+                key={childItem.name}
+                item={childItem}
+                custom={custom}
+                level={level + 1}
+              />
+            ))}
+          </ul>
+        </Button.Category>
       )}
     </li>
   );

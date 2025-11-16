@@ -26,9 +26,8 @@ export function ButtonLink(props: Props) {
     label,
     icon,
     href,
-    mode,
-    color,
-    size,
+    display,
+    textSize,
     className,
     custom,
     ...linkProps
@@ -38,9 +37,8 @@ export function ButtonLink(props: Props) {
     <Link
       className={cn(
         buttonCva({
-          mode: mode ?? 'ghost',
-          color: color as 'red' | 'blue' | 'orange' | 'black' | 'white' | 'grey' | null | undefined,
-          size,
+          display,
+          textSize,
         }),
         className
       )}
@@ -48,10 +46,13 @@ export function ButtonLink(props: Props) {
       {...linkProps}
     >
       {icon && (
-        <span className={cn(
-          iconCva,
-          custom?.icon
-        )}
+        <span
+          className={cn(
+            iconCva({
+              textSize,
+            }),
+            custom?.icon
+          )}
         >
           {icon}
         </span>

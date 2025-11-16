@@ -3,7 +3,7 @@ import { searchCategorySubscribeSchema } from '@nihilog/schemas';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateCategorySubscribeDto, DeleteCategorySubscribeDto, SearchCategorySubscribeDto, UpdateCategorySubscribeDto } from '@/dto';
 import { CategorySubscribeRepository } from '@/endpoints/repositories/category-subscribe.repository';
 import { prismaResponse } from '@/utils/prismaResponse';

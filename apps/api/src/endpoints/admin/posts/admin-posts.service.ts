@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-
-import { MESSAGE } from '@/code/messages';
-import { AnalyzeStatDto } from '@/dto/common.dto';
-import { type CreatePostDto, type DeletePostDto, type UpdatePostDto } from '@/dto/post.dto';
+import { MESSAGE } from '@nihilog/code';
 import type { MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type { AnalyzePostItemType, SelectPostType, SharePlatformStatItemType, AverageViewStatItemType, AverageBookmarkStatItemType, TopPopularPostItemType, TopCommentPostItemType, PostStatusRatioItemType } from '@nihilog/schemas';
+
+import { AnalyzeStatDto } from '@/dto/common.dto';
+import { type CreatePostDto, type DeletePostDto, type UpdatePostDto } from '@/dto/post.dto';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
 import { PostRepository } from '@/endpoints/repositories/post.repository';
 import { prismaResponse } from '@/utils/prismaResponse';
@@ -148,6 +148,16 @@ export class AdminPostsService {
       );
     }
 
+    // 작성자 확인
+    if (existingPost.data.userNo !== userNo) {
+      return prismaResponse(
+        false,
+        null,
+        'FORBIDDEN',
+        MESSAGE.POST.ADMIN.UNAUTHORIZED_AUTHOR
+      );
+    }
+
     // 슬러그 중복 확인 (자신 제외)
     if (updateData.pstCd && updateData.pstCd !== existingPost.data.pstCd) {
       const postWithSameSlug = await this.postRepository.getPostByPstCd(updateData.pstCd);
@@ -207,6 +217,16 @@ export class AdminPostsService {
         null,
         'NOT_FOUND',
         MESSAGE.POST.ADMIN.NOT_FOUND
+      );
+    }
+
+    // 작성자 확인
+    if (existingPost.data.userNo !== userNo) {
+      return prismaResponse(
+        false,
+        null,
+        'FORBIDDEN',
+        MESSAGE.POST.ADMIN.UNAUTHORIZED_AUTHOR
       );
     }
 

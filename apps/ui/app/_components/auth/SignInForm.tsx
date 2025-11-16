@@ -2,13 +2,15 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInSchema, type SignInType } from '@nihilog/schemas';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
-import { useGetSession, useSignIn } from '@/_entities/auth/hooks';
+import { useSignIn } from '@/_entities/auth/hooks';
+import { useSession } from '@/_stores/auth.store';
 
 export function SignInForm() {
   const form = useForm<SignInType>({
@@ -20,31 +22,42 @@ export function SignInForm() {
     },
   });
 
-  const { response, loading, done, error, } = useGetSession();
+  const session = useSession();
   const signIn = useSignIn();
+  const router = useRouter();
+
+  // 이미 로그인되어 있으면 리다이렉트
+  useEffect(
+    () => {
+      if (session) {
+        if (session.userRole === 'ADMIN') {
+          router.push('/admin/dashboard');
+        }
+        else {
+          router.push('/');
+        }
+      }
+    },
+    [
+      session,
+      router,
+    ]
+  );
 
   const onSubmitForm: SubmitHandler<SignInType> = (data) => {
-    signIn.mutate(data);
+    signIn.mutate(
+      data,
+      {
+        onSuccess() {
+          form.reset();
+        },
+      }
+    );
   };
 
   const onResetForm = () => {
     form.reset();
   };
-
-  useEffect(
-    () => {
-      console.log(response);
-      console.log(loading);
-      console.log(done);
-      console.log(error);
-    },
-    [
-      response,
-      loading,
-      done,
-      error,
-    ]
-  );
 
   return (
     <Box.Panel full className='p-2 md:p-4' panel={false}>

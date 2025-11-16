@@ -1,4 +1,4 @@
-import { MESSAGE } from '@/code';
+import { MESSAGE } from '@nihilog/code';
 import { createError } from '@/utils';
 
 /**

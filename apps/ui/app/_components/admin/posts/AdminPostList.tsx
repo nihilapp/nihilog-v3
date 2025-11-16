@@ -1,41 +1,34 @@
 'use client';
 
 import type { SelectCategoryType, SelectPostListItemType } from '@nihilog/schemas';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { DateTime } from 'luxon';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
+import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
-import { cn } from '@/_libs';
+import { useGetPostList } from '@/_entities/posts/hooks';
 import { defineColumns } from '@/_libs/defineColumns';
-import type { ReactElementProps } from '@/_types/common.types';
+import { useEditMode, usePostActions } from '@/_stores/posts.store';
 
-interface Props
-  extends ReactElementProps<'div'>,
-  VariantProps<typeof cssVariants> {
-  className?: string | string[];
-}
+interface Props {}
 
-const cssVariants = cva(
-  [ '', ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
-
-export function AdminPostList({ className, ...props }: Props) {
+export function AdminPostList({ }: Props) {
   const [
     selectedItems,
     setSelectedItems,
   ] = useState<Set<string>>(new Set());
 
-  const onListSelectionChange = (selectedItems: Set<string> | string[]) => {
-    setSelectedItems(selectedItems as Set<string>);
-  };
+  const router = useRouter();
+  const editMode = useEditMode();
+  const { setEditMode, } = usePostActions();
+
+  const { response, loading, done, } = useGetPostList({
+    endRow: 10,
+    orderBy: 'LATEST',
+  });
 
   const column = defineColumns<SelectPostListItemType>();
 
@@ -57,12 +50,17 @@ export function AdminPostList({ className, ...props }: Props) {
         const title = value as string;
 
         return (
-          <Button.Link
-            mode='ghost'
-            color='blue'
-            href={`/posts/${row.pstCd}`}
-            size='block'
+          <Button.Action
+            display='block'
+            className='button-ghost-blue-600'
             label={title}
+            onClick={() => {
+              if (editMode === 'create') {
+                setEditMode('update');
+              }
+
+              router.push(`/admin/posts/editor?pstNo=${row.pstNo}`);
+            }}
           />
         );
       },
@@ -77,9 +75,8 @@ export function AdminPostList({ className, ...props }: Props) {
 
         return (
           <Button.Action
-            mode='outline'
-            color='black'
-            size='block'
+            display='block'
+            className='button-outline-stone-600'
             label={categoryNm || '미분류'}
           />
         );
@@ -98,6 +95,10 @@ export function AdminPostList({ className, ...props }: Props) {
     }),
   ];
 
+  const onListSelectionChange = (items: Set<string> | string[]) => {
+    setSelectedItems(items as Set<string>);
+  };
+
   return (
     <Box.Panel panel={false}>
       <Box.Top title='포스트 목록'>
@@ -105,16 +106,23 @@ export function AdminPostList({ className, ...props }: Props) {
       </Box.Top>
 
       <Box.Content>
-        <List.Template
-          columns={columns}
-          data={[]}
-          rowKey='pstNo'
-          selectLabel='선택'
-          selectionMode='multiple'
-          emptyMessage='게시글이 없습니다.'
-          selectedItems={selectedItems}
-          onSelectionChange={onListSelectionChange}
-        />
+        {loading && (
+          <Loading
+            message='게시글 목록을 불러오는 중입니다...'
+          />
+        )}
+        {done && (
+          <List.Template
+            columns={columns}
+            data={response?.data.list || []}
+            rowKey='pstNo'
+            selectLabel='선택'
+            selectionMode='multiple'
+            emptyMessage='게시글이 없습니다.'
+            selectedItems={selectedItems}
+            onSelectionChange={onListSelectionChange}
+          />
+        )}
       </Box.Content>
     </Box.Panel>
   );

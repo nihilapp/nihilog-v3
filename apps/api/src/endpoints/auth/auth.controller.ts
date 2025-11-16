@@ -101,10 +101,6 @@ export class AuthController {
     endpoint: '/refresh',
     method: 'POST',
     options: {
-      throttle: [
-        5,
-        60000,
-      ],
       serialize: true,
     },
   })

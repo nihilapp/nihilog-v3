@@ -8,7 +8,12 @@
 
 # DB 스키마
 
-- `apps/api/prisma/schema.prisma`
+- `packages/db/prisma/schema.prisma`
+
+# 공유 스키마 및 타입 (packages)
+
+- `packages/schemas/src/schema/*.schema.ts` - Zod 스키마
+- `packages/schemas/src/types/*.types.ts` - TypeScript 타입
 
 # API 관련 파일 목록
 
@@ -18,8 +23,8 @@
 - `apps/api/src/openapi/endpoints/auth.endpoints.ts`
 - `apps/api/src/endpoints/auth/auth.service.ts`
 - `apps/api/src/endpoints/repositories/user.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/user.schema.ts`
-- `apps/api/src/endpoints/prisma/types/user.types.ts`
+- `packages/schemas/src/schema/user.schema.ts`
+- `packages/schemas/src/types/user.types.ts`
 
 2. **users**
 
@@ -28,8 +33,8 @@
 - `apps/api/src/endpoints/users/users.service.ts`
 - `apps/api/src/endpoints/repositories/user.repository.ts`
 - `apps/api/src/endpoints/repositories/subscribe.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/user.schema.ts`
-- `apps/api/src/endpoints/prisma/types/user.types.ts`
+- `packages/schemas/src/schema/user.schema.ts`
+- `packages/schemas/src/types/user.types.ts`
 
 3. **categories**
 
@@ -37,8 +42,8 @@
 - `apps/api/src/openapi/endpoints/categories.endpoints.ts`
 - `apps/api/src/endpoints/categories/categories.service.ts`
 - `apps/api/src/endpoints/repositories/category.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/category.schema.ts`
-- `apps/api/src/endpoints/prisma/types/category.types.ts`
+- `packages/schemas/src/schema/category.schema.ts`
+- `packages/schemas/src/types/category.types.ts`
 
 4. **tags**
 
@@ -46,8 +51,8 @@
 - `apps/api/src/openapi/endpoints/tags.endpoints.ts`
 - `apps/api/src/endpoints/tags/tags.service.ts`
 - `apps/api/src/endpoints/repositories/tag.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/tag.schema.ts`
-- `apps/api/src/endpoints/prisma/types/tag.types.ts`
+- `packages/schemas/src/schema/tag.schema.ts`
+- `packages/schemas/src/types/tag.types.ts`
 
 5.  **posts**
 
@@ -55,8 +60,8 @@
 - `apps/api/src/openapi/endpoints/posts.endpoints.ts`
 - `apps/api/src/endpoints/posts/posts.service.ts`
 - `apps/api/src/endpoints/repositories/post.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/post.schema.ts`
-- `apps/api/src/endpoints/prisma/types/post.types.ts`
+- `packages/schemas/src/schema/post.schema.ts`
+- `packages/schemas/src/types/post.types.ts`
 
 6.  **comments**
 
@@ -64,8 +69,8 @@
 - `apps/api/src/openapi/endpoints/comments.endpoints.ts`
 - `apps/api/src/endpoints/comments/comments.service.ts`
 - `apps/api/src/endpoints/repositories/comment.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/comment.schema.ts`
-- `apps/api/src/endpoints/prisma/types/comment.types.ts`
+- `packages/schemas/src/schema/comment.schema.ts`
+- `packages/schemas/src/types/comment.types.ts`
 
 7.  **category-subscribe**
 
@@ -73,8 +78,8 @@
 - `apps/api/src/openapi/endpoints/category-subscribe.endpoints.ts`
 - `apps/api/src/endpoints/subscribe/category-subscribe/category-subscribe.service.ts`
 - `apps/api/src/endpoints/repositories/category-subscribe.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/category-subscribe.schema.ts`
-- `apps/api/src/endpoints/prisma/types/category-subscribe.types.ts`
+- `packages/schemas/src/schema/category-subscribe.schema.ts`
+- `packages/schemas/src/types/category-subscribe.types.ts`
 
 8.  **tag-subscribe**
 
@@ -82,8 +87,8 @@
 - `apps/api/src/openapi/endpoints/tag-subscribe.endpoints.ts`
 - `apps/api/src/endpoints/subscribe/tag-subscribe/tag-subscribe.service.ts`
 - `apps/api/src/endpoints/repositories/tag-subscribe.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/tag-subscribe.schema.ts`
-- `apps/api/src/endpoints/prisma/types/tag-subscribe.types.ts`
+- `packages/schemas/src/schema/tag-subscribe.schema.ts`
+- `packages/schemas/src/types/tag-subscribe.types.ts`
 
 9.  **admin**
 
@@ -91,8 +96,8 @@
 - `apps/api/src/openapi/endpoints/admin.endpoints.ts`
 - `apps/api/src/endpoints/admin/admin.service.ts`
 - `apps/api/src/endpoints/repositories/user.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/user.schema.ts`
-- `apps/api/src/endpoints/prisma/types/user.types.ts`
+- `packages/schemas/src/schema/user.schema.ts`
+- `packages/schemas/src/types/user.types.ts`
 
 10. **admin-users**
 
@@ -100,8 +105,8 @@
 - `apps/api/src/openapi/endpoints/admin-users.endpoints.ts`
 - `apps/api/src/endpoints/admin/users/admin-users.service.ts`
 - `apps/api/src/endpoints/repositories/user.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/user.schema.ts`
-- `apps/api/src/endpoints/prisma/types/user.types.ts`
+- `packages/schemas/src/schema/user.schema.ts`
+- `packages/schemas/src/types/user.types.ts`
 
 11. **admin-categories**
 
@@ -109,8 +114,8 @@
 - `apps/api/src/openapi/endpoints/admin-categories.endpoints.ts`
 - `apps/api/src/endpoints/admin/categories/admin-categories.service.ts`
 - `apps/api/src/endpoints/repositories/category.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/category.schema.ts`
-- `apps/api/src/endpoints/prisma/types/category.types.ts`
+- `packages/schemas/src/schema/category.schema.ts`
+- `packages/schemas/src/types/category.types.ts`
 
 12. **admin-tags**
 
@@ -118,8 +123,8 @@
 - `apps/api/src/openapi/endpoints/admin-tags.endpoints.ts`
 - `apps/api/src/endpoints/admin/tags/admin-tags.service.ts`
 - `apps/api/src/endpoints/repositories/tag.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/tag.schema.ts`
-- `apps/api/src/endpoints/prisma/types/tag.types.ts`
+- `packages/schemas/src/schema/tag.schema.ts`
+- `packages/schemas/src/types/tag.types.ts`
 
 13. **admin-posts**
 
@@ -127,8 +132,8 @@
 - `apps/api/src/openapi/endpoints/admin-posts.endpoints.ts`
 - `apps/api/src/endpoints/admin/posts/admin-posts.service.ts`
 - `apps/api/src/endpoints/repositories/post.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/post.schema.ts`
-- `apps/api/src/endpoints/prisma/types/post.types.ts`
+- `packages/schemas/src/schema/post.schema.ts`
+- `packages/schemas/src/types/post.types.ts`
 
 14. **admin-comments**
 
@@ -136,8 +141,8 @@
 - `apps/api/src/openapi/endpoints/admin-comments.endpoints.ts`
 - `apps/api/src/endpoints/admin/comments/admin-comments.service.ts`
 - `apps/api/src/endpoints/repositories/comment.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/comment.schema.ts`
-- `apps/api/src/endpoints/prisma/types/comment.types.ts`
+- `packages/schemas/src/schema/comment.schema.ts`
+- `packages/schemas/src/types/comment.types.ts`
 
 15. **admin-category-subscribe**
 
@@ -145,8 +150,8 @@
 - `apps/api/src/openapi/endpoints/admin-category-subscribe.endpoints.ts`
 - `apps/api/src/endpoints/subscribe/category-subscribe/category-subscribe.service.ts`
 - `apps/api/src/endpoints/repositories/category-subscribe.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/category-subscribe.schema.ts`
-- `apps/api/src/endpoints/prisma/types/category-subscribe.types.ts`
+- `packages/schemas/src/schema/category-subscribe.schema.ts`
+- `packages/schemas/src/types/category-subscribe.types.ts`
 
 16. **admin-tag-subscribe**
 
@@ -154,8 +159,8 @@
 - `apps/api/src/openapi/endpoints/admin-tag-subscribe.endpoints.ts`
 - `apps/api/src/endpoints/subscribe/tag-subscribe/tag-subscribe.service.ts`
 - `apps/api/src/endpoints/repositories/tag-subscribe.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/tag-subscribe.schema.ts`
-- `apps/api/src/endpoints/prisma/types/tag-subscribe.types.ts`
+- `packages/schemas/src/schema/tag-subscribe.schema.ts`
+- `packages/schemas/src/types/tag-subscribe.types.ts`
 
 17. **admin-user-subscribe**
 
@@ -163,5 +168,5 @@
 - `apps/api/src/openapi/endpoints/admin-subscribe.endpoints.ts`
 - `apps/api/src/endpoints/admin/subscribe/admin-user-subscribe.service.ts`
 - `apps/api/src/endpoints/repositories/subscribe.repository.ts`
-- `apps/api/src/endpoints/prisma/schemas/subscribe.schema.ts`
-- `apps/api/src/endpoints/prisma/types/subscribe.types.ts`
+- `packages/schemas/src/schema/subscribe.schema.ts`
+- `packages/schemas/src/types/subscribe.types.ts`

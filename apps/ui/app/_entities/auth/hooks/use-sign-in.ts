@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { useInvalidateAuthCache } from '@/_entities/auth/auth.keys';
 import { usePost } from '@/_entities/common/hooks';
+import { useAuthActions } from '@/_stores/auth.store';
 
 /**
  * @description 사용자 로그인을 처리하는 커스텀 훅
@@ -11,6 +12,7 @@ import { usePost } from '@/_entities/common/hooks';
 export function useSignIn() {
   const invalidateCache = useInvalidateAuthCache();
   const router = useRouter();
+  const { setSession, } = useAuthActions();
 
   const mutation = usePost<SelectUserInfoType, SignInType>({
     url: [
@@ -18,6 +20,11 @@ export function useSignIn() {
       'signin',
     ],
     callback(res) {
+      // 세션 정보를 store에 저장
+      if (res.data) {
+        setSession(res.data);
+      }
+
       // 인증 관련 캐시 무효화
       invalidateCache();
 

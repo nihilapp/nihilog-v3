@@ -49,10 +49,9 @@ export function Home({ }: Props) {
 
         return (
           <Button.Link
-            mode='ghost'
-            color='blue'
             href={`/posts/${row.pstCd}`}
-            size='block'
+            display='block'
+            className='button-ghost-blue-600'
             label={title}
           />
         );
@@ -68,9 +67,8 @@ export function Home({ }: Props) {
 
         return (
           <Button.Action
-            mode='outline'
-            color='black'
-            size='block'
+            display='block'
+            className='button-outline-stone-600'
             label={categoryNm || '미분류'}
           />
         );
@@ -92,8 +90,6 @@ export function Home({ }: Props) {
   const onListSelectionChange = (selectedItems: Set<string> | string[]) => {
     setListSelectedItems(selectedItems as Set<string>);
   };
-
-  console.log(listSelectedItems);
 
   return (
     <AsyncBoundary

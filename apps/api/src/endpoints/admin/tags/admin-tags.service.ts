@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import type { CreateTagDto, UpdateTagDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto } from '@/dto/tag.dto';

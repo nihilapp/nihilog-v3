@@ -11,7 +11,8 @@ extendZodWithOpenApi(z);
  * @description 카테고리 구독 스키마
  */
 export const categorySubscribeSchema = commonSchema.extend({
-  ctgrySbcrNo: z.coerce.number()
+  ctgrySbcrNo: z
+    .number()
     .int('구독 카테고리 번호는 정수여야 합니다.')
     .positive('구독 카테고리 번호는 양수여야 합니다.')
     .optional()
@@ -19,7 +20,8 @@ export const categorySubscribeSchema = commonSchema.extend({
       description: '카테고리 구독 번호',
       example: 1,
     }),
-  sbcrNo: z.coerce.number()
+  sbcrNo: z
+    .number()
     .int('구독 번호는 정수여야 합니다.')
     .positive('구독 번호는 양수여야 합니다.')
     .optional()
@@ -27,7 +29,8 @@ export const categorySubscribeSchema = commonSchema.extend({
       description: '구독 번호',
       example: 1,
     }),
-  ctgryNo: z.coerce.number()
+  ctgryNo: z
+    .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.')
     .optional()
@@ -61,7 +64,8 @@ export const categorySubscribeSchema = commonSchema.extend({
       description: '총 개수',
       example: 10,
     }),
-  ctgryNoList: z.array(z.coerce.number()
+  ctgryNoList: z.array(z
+    .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.'))
     .optional()
@@ -73,7 +77,8 @@ export const categorySubscribeSchema = commonSchema.extend({
         3,
       ],
     }),
-  ctgrySbcrNoList: z.array(z.coerce.number()
+  ctgrySbcrNoList: z.array(z
+    .number()
     .int('카테고리 구독 번호는 정수여야 합니다.')
     .positive('카테고리 구독 번호는 양수여야 합니다.'))
     .optional()

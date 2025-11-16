@@ -1,6 +1,6 @@
 import { Body, Controller, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { type AuthRequest, CreatePostBookmarkDto, DeletePostBookmarkDto, type ResponseDto, SearchPostDto } from '@/dto';
 import { CreatePostShareLogDto, CreatePostViewLogDto, SearchPostBookmarkDto } from '@/dto/post.dto';

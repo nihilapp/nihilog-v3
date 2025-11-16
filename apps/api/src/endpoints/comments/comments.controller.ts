@@ -1,6 +1,6 @@
 import { Body, Controller, Param, ParseIntPipe, Query, Req } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import type { AuthRequest, CreateCommentDto, SearchCommentDto, UpdateCommentDto, ResponseDto } from '@/dto';
 import { CommentsService } from '@/endpoints/comments/comments.service';

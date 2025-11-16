@@ -7,7 +7,7 @@ import {
   Query
 } from '@nestjs/common';
 
-import { MESSAGE } from '@/code/messages';
+import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { ResponseDto, AuthRequest, type SearchCategorySubscribeDto, CreateCategorySubscribeDto, UpdateCategorySubscribeDto, DeleteCategorySubscribeDto } from '@/dto';
 import type { SelectCtgrySbcrMpngListItemType, SelectCtgrySbcrMpngType } from '@nihilog/schemas';

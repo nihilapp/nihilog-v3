@@ -14,7 +14,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex items-center justify-center gap-2', ],
+  [ 'flex items-center justify-center gap-2 h-30 p-2 border border-black-200 rounded-2', ],
   {
     variants: {},
     defaultVariants: {},

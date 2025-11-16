@@ -11,7 +11,7 @@ extendZodWithOpenApi(z);
  * @description 카테고리 정보 스키마
  */
 export const categoryInfoSchema = commonSchema.extend({
-  ctgryNo: z.coerce
+  ctgryNo: z
     .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.')
@@ -55,7 +55,7 @@ export const categoryInfoSchema = commonSchema.extend({
       description: '카테고리 색상 (#RRGGBB 형식)',
       example: '#FF5733',
     }),
-  ctgryStp: z.coerce
+  ctgryStp: z
     .number()
     .int('카테고리 정렬순은 정수여야 합니다.')
     .positive('카테고리 정렬순은 양수여야 합니다.')
@@ -63,7 +63,7 @@ export const categoryInfoSchema = commonSchema.extend({
       description: '카테고리 정렬순',
       example: 1,
     }),
-  upCtgryNo: z.coerce
+  upCtgryNo: z
     .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
     .positive('상위 카테고리 번호는 양수여야 합니다.')
@@ -89,7 +89,7 @@ export const categoryInfoSchema = commonSchema.extend({
       description: '총 개수',
       example: 10,
     }),
-  ctgryNoList: z.array(z.coerce
+  ctgryNoList: z.array(z
     .number()
     .int('카테고리 번호는 정수여야 합니다.')
     .positive('카테고리 번호는 양수여야 합니다.'))

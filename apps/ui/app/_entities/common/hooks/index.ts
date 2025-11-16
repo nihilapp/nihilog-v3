@@ -8,3 +8,5 @@ export { usePut } from './query/use-put';
 export { usePatch } from './query/use-patch';
 export { useDelete } from './query/use-delete';
 export { useDeletes } from './query/use-deletes';
+
+export { useInput } from './use-input';

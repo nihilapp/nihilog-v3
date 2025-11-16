@@ -19,7 +19,7 @@ const commentSchema = commonSchema.extend({
       description: '댓글 번호',
       example: 1,
     }),
-  pstNo: z.coerce
+  pstNo: z
     .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.')
@@ -52,7 +52,7 @@ const commentSchema = commonSchema.extend({
       description: '댓글 상태',
       example: 'PENDING',
     }),
-  prntCmntNo: z.coerce
+  prntCmntNo: z
     .number()
     .int('부모 댓글 번호는 정수여야 합니다.')
     .positive('부모 댓글 번호는 양수여야 합니다.')
@@ -80,7 +80,7 @@ const commentSchema = commonSchema.extend({
       description: '총 개수',
       example: 100,
     }),
-  cmntNoList: z.array(z.coerce
+  cmntNoList: z.array(z
     .number()
     .int('댓글 번호는 정수여야 합니다.')
     .positive('댓글 번호는 양수여야 합니다.'))

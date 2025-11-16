@@ -1,5 +1,4 @@
 import { applyDecorators, HttpCode, HttpStatus, UseGuards, Get, Post, Put, Patch, Delete, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
 import { UserRoleType } from '@nihilog/schemas';
 
 import { JwtAuthGuard } from '@/endpoints/auth/jwt-auth.guard';
@@ -11,7 +10,6 @@ type EndpointOptions = {
   options?: {
     authGuard?: string;
     roles?: UserRoleType[];
-    throttle?: [number, number]; // [limit, ttl]
     serialize?: boolean; // ClassSerializerInterceptor 사용 여부
   };
 };
@@ -56,20 +54,6 @@ export function Endpoint({
   if (options?.roles && options.roles.length > 0 && process.env.NODE_ENV !== 'development') {
     decorators.push(UseGuards(RoleAuthGuard));
     decorators.push(Roles(...options.roles));
-  }
-
-  // 스로틀링 추가
-  if (options?.throttle) {
-    const [
-      limit,
-      ttl,
-    ] = options.throttle;
-    decorators.push(Throttle({
-      default: {
-        limit,
-        ttl,
-      },
-    }));
   }
 
   // 직렬화 인터셉터 추가
