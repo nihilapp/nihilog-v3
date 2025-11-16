@@ -1,3 +1,5 @@
+import '@blocknote/mantine/style.css';
+
 interface Props {
   children: React.ReactNode;
 }

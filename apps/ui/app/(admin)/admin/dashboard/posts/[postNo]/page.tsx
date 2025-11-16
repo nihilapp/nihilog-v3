@@ -1,7 +1,10 @@
 import type { SelectPostType } from '@nihilog/schemas';
 
 import { AdminPostDetail } from '@/_components/admin/posts/AdminPostDetail';
-import { Api, setMeta } from '@/_libs';
+import { setMeta } from '@/_libs';
+import { ServerApi } from '@/_libs/tools/server-api.tools';
+
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{
@@ -12,10 +15,10 @@ interface Props {
 export async function generateMetadata({ params, }: Props) {
   const { postNo, } = await params;
 
-  const res = await Api.getQuery<SelectPostType>(`/posts/${postNo}`);
+  const res = await ServerApi.getQuery<SelectPostType>(`/posts/${postNo}`);
 
   return setMeta({
-    title: `포스트 관리: [${res.data?.pstTtl}]`,
+    title: `[${res.data?.pstTtl}] 포스트 정보`,
     url: `/admin/dashboard/posts/${postNo}`,
   });
 }

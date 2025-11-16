@@ -57,7 +57,6 @@ const commentSchema = commonSchema.extend({
     .int('부모 댓글 번호는 정수여야 합니다.')
     .positive('부모 댓글 번호는 양수여야 합니다.')
     .optional()
-    .nullable()
     .openapi({
       description: '부모 댓글 번호',
       example: 1,

@@ -4,8 +4,8 @@ import { siteConfig } from './app/_config/config';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  reactStrictMode: false,
   reactCompiler: true,
-  cacheComponents: true,
   images: {
     remotePatterns: [
       {
@@ -37,7 +37,6 @@ const nextConfig: NextConfig = {
     'ts',
   ],
   distDir: 'build',
-  reactStrictMode: false,
   compiler: {
     styledComponents: true,
   },

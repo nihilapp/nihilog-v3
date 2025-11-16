@@ -37,7 +37,6 @@ export const commonSchema = z.object({
     }),
   crtNo: z.coerce.number()
     .int('생성자 번호는 정수여야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '생성자 번호',
@@ -48,7 +47,6 @@ export const commonSchema = z.object({
       dateTimeRegex,
       dateTimeMessage
     )
-    .nullable()
     .optional()
     .openapi({
       description: '생성 날짜 (ISO 8601 UTC 형식)',
@@ -56,7 +54,6 @@ export const commonSchema = z.object({
     }),
   updtNo: z.coerce.number()
     .int('수정자 번호는 정수여야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '수정자 번호',
@@ -67,7 +64,6 @@ export const commonSchema = z.object({
       dateTimeRegex,
       dateTimeMessage
     )
-    .nullable()
     .optional()
     .openapi({
       description: '수정 날짜 (ISO 8601 UTC 형식)',
@@ -75,7 +71,6 @@ export const commonSchema = z.object({
     }),
   delNo: z.coerce.number()
     .int('삭제자 번호는 정수여야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '삭제자 번호',
@@ -86,7 +81,6 @@ export const commonSchema = z.object({
       dateTimeRegex,
       dateTimeMessage
     )
-    .nullable()
     .optional()
     .openapi({
       description: '삭제 날짜 (ISO 8601 UTC 형식)',

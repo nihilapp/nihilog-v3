@@ -17,7 +17,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'text-md', ],
+  [ 'text-sm', ],
   {
     variants: {},
     defaultVariants: {},
@@ -69,7 +69,7 @@ export function FrameAuthButtons({ className, beforeSignInMenu, afterSignInMenu,
       )}
       {...props}
     >
-      <ul className='flex flex-col md:flex-row items-center gap-1 md:gap-2 text-md'>
+      <ul className='flex flex-col md:flex-row items-center gap-1 md:gap-2 text-sm'>
         {!isLoggedIn && beforeSignInMenu.map((menu, index) => {
           if (!isVisible(menu)) {
             return null;

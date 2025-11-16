@@ -30,7 +30,7 @@ export function AdminLayout({ children, }: Props) {
     createPost.mutate({
       userNo: session.userNo,
       pstTtl: '새 포스트',
-      pstMtxt: '새 포스트 내용',
+      pstMtxt: '[]',
     });
   };
 
@@ -77,6 +77,16 @@ export function AdminLayout({ children, }: Props) {
           icon: <Icon icon='pajamas:doc-new' />,
           name: '새 포스트',
           action: newPost,
+        },
+      ],
+    },
+    {
+      name: '카테고리 관리',
+      children: [
+        {
+          icon: <Icon icon='mdi:tag' />,
+          name: '카테고리 목록',
+          url: '/admin/dashboard/categories',
         },
       ],
     },

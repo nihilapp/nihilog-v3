@@ -40,7 +40,6 @@ export const tagInfoSchema = commonSchema.extend({
       200,
       '태그 설명은 200자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '태그 설명 (최대 200자)',
@@ -52,7 +51,6 @@ export const tagInfoSchema = commonSchema.extend({
       /^#[0-9A-Fa-f]{6}$/,
       '색상은 #RRGGBB 형식이어야 합니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '태그 색상 (#RRGGBB 형식)',

@@ -1,4 +1,5 @@
 - 아래의 파일들을 참고해서 사용자의 요청을 해결합니다.
+- **CRITICAL** 목록 업데이트 시에는 `hooks` 폴더는 제외합니다.
 
 # 컴포넌트 폴더 경로
 
@@ -6,6 +7,7 @@
 
 - `apps/ui/app/_components`
 - `apps/ui/app/_components/admin`
+- `apps/ui/app/_components/admin/post-blocks`
 - `apps/ui/app/_components/admin/posts`
 - `apps/ui/app/_components/auth`
 - `apps/ui/app/_components/common`
@@ -20,6 +22,7 @@
 - `apps/ui/app/_components/ui/input`
 - `apps/ui/app/_components/ui/layout`
 - `apps/ui/app/_components/ui/list`
+- `apps/ui/app/_components/ui/tab`
 
 ## `_layouts`
 
@@ -60,6 +63,7 @@
 - `apps/ui/app/_types`
 - `apps/ui/app/_types/common.types.ts`
 - `apps/ui/app/_types/index.ts`
+- `apps/ui/app/_types/posts.types.ts`
 - `apps/ui/app/_types/react-query.d.ts`
 - `apps/ui/app/_types/react.d.ts`
 - `apps/ui/app/_types/component`

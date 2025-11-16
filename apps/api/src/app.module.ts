@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 
 import { AdminModule } from '@/endpoints/admin/admin.module';
+import { AdminCategoriesModule } from '@/endpoints/admin/categories/admin-categories.module';
 import { AdminCategorySubscribeModule } from '@/endpoints/admin/category-subscribe/admin-category-subscribe.module';
 import { AdminCommentsModule } from '@/endpoints/admin/comments/admin-comments.module';
 import { AdminPostsModule } from '@/endpoints/admin/posts/admin-posts.module';
@@ -41,6 +42,7 @@ import sensitiveConfig from './config/sensitive.config';
     TagSubscribeModule,
     AdminModule,
     AdminUserModule,
+    AdminCategoriesModule,
     AdminPostsModule,
     AdminSubscribeModule,
     AdminCategorySubscribeModule,

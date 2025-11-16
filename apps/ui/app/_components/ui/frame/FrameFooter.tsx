@@ -15,7 +15,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-footer text-md', ],
+  [ 'frame-footer text-sm', ],
   {
     variants: {},
     defaultVariants: {},

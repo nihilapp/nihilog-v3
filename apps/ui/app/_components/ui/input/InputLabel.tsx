@@ -18,14 +18,14 @@ interface Props
 
 const cssVariants = cva(
   [
-    'group flex gap-2 items-start bg-black-100 p-2 rounded-2 border border-black-200 transition-colors duration-200 ease-in-out',
+    'group flex gap-2 bg-black-100 p-2 rounded-2 border border-black-200 transition-colors duration-200 ease-in-out',
     '[&:has(input:focus)]:border-blue-300 [&:has(textarea:focus)]:border-blue-300',
     '[&:has(input:focus)]:bg-blue-50 [&:has(textarea:focus)]:bg-blue-50',
   ],
   {
     variants: {
       direction: {
-        horizontal: [ 'flex-row', ],
+        horizontal: [ 'flex-row items-start', ],
         vertical: [ 'flex-col', ],
       },
     },

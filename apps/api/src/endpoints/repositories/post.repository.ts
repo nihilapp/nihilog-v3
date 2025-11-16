@@ -1031,7 +1031,9 @@ export class PostRepository {
         data: {
           userNo,
           pstTtl: pstTtl || '새로운 포스트',
-          pstMtxt: pstMtxt || '',
+          pstMtxt: pstMtxt
+            ? (JSON.parse(pstMtxt) as unknown as Prisma.JsonValue)
+            : [],
           pstStts: 'EMPTY',
           crtNo: userNo,
           crtDt: timeToString(),
@@ -1061,12 +1063,14 @@ export class PostRepository {
    */
   async updatePost(userNo: number, pstNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<SelectPostType> | null> {
     try {
+      const { pstMtxt, ...restData } = updateData;
       const updatePost = await this.prisma.pstInfo.update({
         where: {
           pstNo,
         },
         data: {
-          ...updateData,
+          ...restData,
+          ...(pstMtxt !== undefined && { pstMtxt: JSON.parse(pstMtxt) as unknown as Prisma.JsonValue, }),
           updtNo: userNo,
           updtDt: timeToString(),
         },
@@ -1092,6 +1096,7 @@ export class PostRepository {
    */
   async multipleUpdatePost(userNo: number, updateData: UpdatePostDto): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
+      const { pstMtxt, ...restData } = updateData;
       const updatePost = await this.prisma.pstInfo.updateManyAndReturn({
         where: {
           pstNo: {
@@ -1099,7 +1104,8 @@ export class PostRepository {
           },
         },
         data: {
-          ...updateData,
+          ...restData,
+          ...(pstMtxt !== undefined && { pstMtxt: JSON.parse(pstMtxt) as unknown as Prisma.JsonValue, }),
           updtNo: userNo,
           updtDt: timeToString(),
         },

@@ -91,7 +91,7 @@ export const userInfoSchema = commonSchema.extend({
       1024,
       '프로필 이미지 URL은 1024자 이하여야 합니다.'
     )
-    .nullable().optional()
+    .optional()
     .openapi({
       description: '프로필 이미지 URL (올바른 URL 형식)',
       example: 'https://example.com/profile.jpg',
@@ -101,7 +101,6 @@ export const userInfoSchema = commonSchema.extend({
       500,
       '자기소개는 500자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '사용자 자기소개 (500자 이하)',
@@ -125,7 +124,6 @@ export const userInfoSchema = commonSchema.extend({
       500,
       '리프레시 토큰은 500자 이하여야 합니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '리프레시 토큰',
@@ -136,7 +134,6 @@ export const userInfoSchema = commonSchema.extend({
       dateTimeRegex,
       dateTimeMessage
     )
-    .nullable()
     .optional()
     .openapi({
       description: '마지막 로그인 날짜 (YYYY-MM-DD HH:MM:SS)',
@@ -147,7 +144,6 @@ export const userInfoSchema = commonSchema.extend({
       dateTimeRegex,
       dateTimeMessage
     )
-    .nullable()
     .optional()
     .openapi({
       description: '마지막 비밀번호 변경 날짜 (YYYY-MM-DD HH:MM:SS)',
@@ -155,7 +151,6 @@ export const userInfoSchema = commonSchema.extend({
     }),
   rowNo: z.coerce.number()
     .int('행 번호는 정수여야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '행 번호',
@@ -163,14 +158,12 @@ export const userInfoSchema = commonSchema.extend({
     }),
   totalCnt: z.coerce.number()
     .int('총 행 수는 정수여야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '총 행 수',
       example: 100,
     }),
   userNoList: z.array(z.number())
-    .nullable()
     .optional()
     .openapi({
       description: '사용자 번호 목록',

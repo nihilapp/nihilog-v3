@@ -29,7 +29,7 @@ CREATE TABLE "user_info" (
     "updt_no" INTEGER,
     "updt_dt" TEXT NOT NULL DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     "del_no" INTEGER,
-    "del_dt" TEXT DEFAULT to_char(current_timestamp AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
+    "del_dt" TEXT,
 
     CONSTRAINT "user_info_pkey" PRIMARY KEY ("user_no")
 );
@@ -79,7 +79,7 @@ CREATE TABLE "pst_info" (
     "ctgry_no" INTEGER,
     "pst_ttl" TEXT NOT NULL,
     "pst_smry" TEXT,
-    "pst_mtxt" TEXT NOT NULL,
+    "pst_mtxt" JSONB NOT NULL,
     "pst_cd" TEXT,
     "pst_thmb_link" TEXT,
     "pst_view" INTEGER NOT NULL DEFAULT 0,

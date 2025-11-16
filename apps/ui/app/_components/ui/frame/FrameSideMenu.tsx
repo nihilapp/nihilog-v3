@@ -20,7 +20,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-1 text-md', ],
+  [ 'flex flex-col gap-1 text-sm', ],
   {
     variants: {},
     defaultVariants: {},

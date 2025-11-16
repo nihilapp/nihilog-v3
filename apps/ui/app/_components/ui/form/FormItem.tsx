@@ -54,7 +54,15 @@ export function FormItem<TFieldValues extends FieldValues = FieldValues>({
                 className
               )}
             >
-              {label && <span>{label}</span>}
+              {label && (
+                <span className={cn([
+                  'font-700',
+                  direction === 'horizontal' && 'w-[200px] shrink-0 mt-2',
+                ])}
+                >
+                  {label}
+                </span>
+              )}
               {render({
                 ...field,
                 fieldState: field.fieldState,
@@ -62,7 +70,11 @@ export function FormItem<TFieldValues extends FieldValues = FieldValues>({
               })}
             </label>
             {error && (
-              <span className='text-red-500 text-sm italic'>
+              <span className={cn([
+                'text-red-500 text-sm italic',
+                direction === 'horizontal' && 'ml-auto',
+              ])}
+              >
                 {error.message}
               </span>
             )}

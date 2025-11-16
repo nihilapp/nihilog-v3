@@ -7,7 +7,7 @@ import { forwardRef, useState } from 'react';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
-interface Props
+export interface Props
   extends ReactElementProps<'input', 'type'>,
   VariantProps<typeof cssVariants> {
   className?: string | string[];

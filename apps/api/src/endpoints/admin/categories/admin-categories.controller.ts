@@ -7,6 +7,7 @@ import {
   Req,
   UseGuards
 } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
 import type {
   SelectCategoryListItemType,
   SelectCategoryType,
@@ -26,12 +27,11 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@nihilog/code';
 import { Endpoint } from '@/decorators/endpoint.decorator';
 import { AuthRequest, ResponseDto } from '@/dto';
 import { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import { AnalyzeStatDto } from '@/dto/common.dto';
-import type { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
+import { AdminCategoriesService } from '@/endpoints/admin/categories/admin-categories.service';
 import { AdminAuthGuard } from '@/endpoints/auth/admin-auth.guard';
 import { createError, createResponse } from '@/utils';
 

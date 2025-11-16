@@ -20,7 +20,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'frame-nav flex flex-col md:flex-row text-md', ],
+  [ 'frame-nav flex flex-col md:flex-row text-sm', ],
   {
     variants: {},
     defaultVariants: {},
@@ -40,7 +40,7 @@ export function FrameNav({ custom, menu, ...props }: Props) {
       {...props}
     >
       <ul className={cn([
-        'flex flex-col md:flex-row text-md',
+        'flex flex-col md:flex-row text-sm',
         custom?.ul,
       ])}
       >

@@ -44,3 +44,14 @@ export type Block = {
   alignment?: 'left' | 'center' | 'right' | 'justify';
   className?: string | string[];
 };
+
+// 툴바 버튼 인터페이스
+export interface ToolbarButton {
+  icon: string;
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  visible?: boolean;
+  className?: string | string[];
+  group?: string;
+}

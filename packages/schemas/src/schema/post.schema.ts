@@ -77,7 +77,6 @@ export const postSchema = commonSchema.extend({
       500,
       '포스트 요약은 500자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '포스트 요약 (최대 500자)',
@@ -86,8 +85,8 @@ export const postSchema = commonSchema.extend({
   pstMtxt: z
     .string('포스트 본문은 문자열이어야 합니다.')
     .openapi({
-      description: '포스트 본문 (Markdown 형식)',
-      example: '# 포스트 제목\n\n포스트 본문 내용입니다.',
+      description: '포스트 본문 (JSON 문자열, DB에는 JSONB로 저장)',
+      example: '[{"type":"paragraph","content":"포스트 본문 내용입니다."}]',
     }),
   pstCd: z
     .string()
@@ -95,7 +94,6 @@ export const postSchema = commonSchema.extend({
       255,
       '포스트 코드는 255자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '포스트 코드 (슬러그, 최대 255자)',
@@ -103,7 +101,6 @@ export const postSchema = commonSchema.extend({
     }),
   pstThmbLink: z
     .url('올바른 URL 형식이어야 합니다.')
-    .nullable()
     .optional()
     .openapi({
       description: '썸네일 링크 (URL 형식)',
@@ -128,7 +125,6 @@ export const postSchema = commonSchema.extend({
       50,
       '발행 일시는 50자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '발행 일시',
@@ -138,7 +134,6 @@ export const postSchema = commonSchema.extend({
   rlsYn: ynEnumSchema.optional(),
   archYn: ynEnumSchema.optional(),
   secrYn: ynEnumSchema
-    .nullable()
     .optional()
     .openapi({
       description: '비밀글 여부',
@@ -150,7 +145,6 @@ export const postSchema = commonSchema.extend({
       255,
       '게시물 비밀번호는 255자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '게시물 비밀번호 (최대 255자)',
@@ -190,7 +184,6 @@ export const postSchema = commonSchema.extend({
     }),
   // 카테고리 정보 포함
   category: categoryInfoSchema
-    .nullable()
     .optional()
     .openapi({
       description: '카테고리 정보',
@@ -418,7 +411,6 @@ export const postViewLogSchema = z.object({
       example: 1,
     }),
   viewerIp: z.string()
-    .nullable()
     .optional()
     .openapi({
       description: '조회자 IP',

@@ -38,7 +38,6 @@ export const categoryInfoSchema = commonSchema.extend({
       200,
       '카테고리 설명은 200자를 초과할 수 없습니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '카테고리 설명 (최대 200자)',
@@ -49,7 +48,6 @@ export const categoryInfoSchema = commonSchema.extend({
       /^#[0-9A-Fa-f]{6}$/,
       '색상은 #RRGGBB 형식이어야 합니다.'
     )
-    .nullable()
     .optional()
     .openapi({
       description: '카테고리 색상 (#RRGGBB 형식)',
@@ -67,6 +65,7 @@ export const categoryInfoSchema = commonSchema.extend({
     .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
     .positive('상위 카테고리 번호는 양수여야 합니다.')
+    .optional()
     .openapi({
       description: '상위 카테고리 번호',
       example: 1,
@@ -120,7 +119,6 @@ export const createCategorySchema = categoryInfoSchema.pick({
   .required({
     ctgryNm: true,
     ctgryStp: true,
-    upCtgryNo: true,
   });
 
 /**
