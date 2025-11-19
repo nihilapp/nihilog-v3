@@ -1,9 +1,9 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { type VariantProps } from 'class-variance-authority';
 import { useState } from 'react';
 import type React from 'react';
+import { MdFolder, MdFolderOpen } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -81,11 +81,9 @@ export function ButtonCategory(props: Props) {
               custom?.icon
             )}
           >
-            <Icon
-              icon={isOpen
-                ? 'mdi:folder-open'
-                : 'mdi:folder'}
-            />
+            {isOpen
+              ? <MdFolderOpen />
+              : <MdFolder />}
           </span>
         )}
         <span

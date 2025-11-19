@@ -1,7 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createCategorySchema, type CreateCategoryType, type SelectCategoryListItemType } from '@nihilog/schemas';
+import { updateCategorySchema, type UpdateCategoryType } from '@nihilog/schemas';
+import type { SelectCategoryListItemType } from '@nihilog/schemas';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
 import { CategoryParentSelect } from '@/_components/admin/categories/CategoryParentSelect';
@@ -9,37 +10,39 @@ import { Button } from '@/_components/ui/button';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { Modal } from '@/_components/ui/modal';
-import { useAdminCreateCategory } from '@/_entities/admin/categories/hooks';
+import { useAdminUpdateCategory } from '@/_entities/admin/categories/hooks';
 import { cn } from '@/_libs';
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  category: SelectCategoryListItemType;
   categoryList: SelectCategoryListItemType[];
 }
 
-export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
-  const form = useForm<CreateCategoryType>({
+export function UpdateCategoryForm({ open, onClose, category, categoryList, }: Props) {
+  const form = useForm<UpdateCategoryType>({
     mode: 'all',
-    resolver: zodResolver(createCategorySchema),
+    resolver: zodResolver(updateCategorySchema),
     defaultValues: {
-      ctgryNm: '',
-      ctgryStp: 0,
-      upCtgryNo: undefined,
-      ctgryExpln: undefined,
-      ctgryColr: undefined,
-      useYn: 'Y',
-      delYn: 'N',
+      ctgryNo: category.ctgryNo,
+      ctgryNm: category.ctgryNm,
+      ctgryStp: category.ctgryStp,
+      upCtgryNo: category.upCtgryNo ?? undefined,
+      ctgryExpln: category.ctgryExpln ?? undefined,
+      ctgryColr: category.ctgryColr ?? undefined,
+      useYn: category.useYn,
+      delYn: category.delYn,
     },
   });
 
-  const createCategory = useAdminCreateCategory();
+  const updateCategory = useAdminUpdateCategory(category.ctgryNo);
 
   const upCtgryNo = form.watch('upCtgryNo');
   const upCtgryNoError = form.formState.errors.upCtgryNo;
 
-  const onSubmitForm: SubmitHandler<CreateCategoryType> = (data) => {
-    createCategory.mutate(
+  const onSubmitForm: SubmitHandler<UpdateCategoryType> = (data) => {
+    updateCategory.mutate(
       data,
       {
         onSuccess() {
@@ -57,15 +60,15 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
       width={800}
       height={600}
     >
-      <Modal.Top title='카테고리 추가' onClose={onClose} />
+      <Modal.Top title='카테고리 수정' onClose={onClose} />
       <Modal.Content>
         <Form.Container
           form={form}
           onSubmit={onSubmitForm}
-          id='new-category-form'
+          id='update-category-form'
         >
           <Form.Field>
-            <Form.Item<CreateCategoryType>
+            <Form.Item<UpdateCategoryType>
               name='ctgryNm'
               label='카테고리 이름'
               direction='horizontal'
@@ -78,7 +81,7 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateCategoryType>
+            <Form.Item<UpdateCategoryType>
               name='ctgryStp'
               label='정렬순'
               direction='horizontal'
@@ -118,6 +121,7 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
                       { shouldValidate: true, }
                     );
                   }}
+                  excludeCategoryNo={category.ctgryNo}
                 />
                 {upCtgryNoError && (
                   <span className={cn([
@@ -133,7 +137,7 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateCategoryType>
+            <Form.Item<UpdateCategoryType>
               name='ctgryExpln'
               label='카테고리 설명'
               direction='horizontal'
@@ -146,7 +150,7 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
           </Form.Field>
 
           <Form.Field>
-            <Form.Item<CreateCategoryType>
+            <Form.Item<UpdateCategoryType>
               name='ctgryColr'
               label='카테고리 색상'
               direction='horizontal'
@@ -158,14 +162,40 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
               )}
             />
           </Form.Field>
+
+          <Form.Field>
+            <Form.Item<UpdateCategoryType>
+              name='useYn'
+              label='사용 여부'
+              direction='horizontal'
+              render={({ field, }) => (
+                <Input.Text
+                  {...field}
+                />
+              )}
+            />
+          </Form.Field>
+
+          <Form.Field>
+            <Form.Item<UpdateCategoryType>
+              name='delYn'
+              label='삭제 여부'
+              direction='horizontal'
+              render={({ field, }) => (
+                <Input.Text
+                  {...field}
+                />
+              )}
+            />
+          </Form.Field>
         </Form.Container>
       </Modal.Content>
       <Modal.Bottom>
         <Button.Action
-          label='카테고리 추가'
+          label='카테고리 수정'
           className='hover:button-normal-black-900'
           type='submit'
-          form='new-category-form'
+          form='update-category-form'
         />
         <Button.Action
           label='취소'

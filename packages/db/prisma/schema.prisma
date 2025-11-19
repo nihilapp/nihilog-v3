@@ -105,6 +105,7 @@ model CtgryInfo {
   ctgryExpln String?  @map("ctgry_expln")
   ctgryColr  String?  @map("ctgry_colr")
   ctgryStp   Int      @default(0) @map("ctgry_stp")
+  ctgryLvl   Int      @default(0) @map("ctgry_lvl")
   upCtgryNo  Int?     @map("up_ctgry_no")
   useYn      YnStatus @default(Y) @map("use_yn")
   delYn      YnStatus @default(N) @map("del_yn")

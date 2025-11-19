@@ -7,7 +7,7 @@
 
 - `apps/ui/app/_components`
 - `apps/ui/app/_components/admin`
-- `apps/ui/app/_components/admin/post-blocks`
+- `apps/ui/app/_components/admin/categories`
 - `apps/ui/app/_components/admin/posts`
 - `apps/ui/app/_components/auth`
 - `apps/ui/app/_components/common`
@@ -20,8 +20,8 @@
 - `apps/ui/app/_components/ui/form`
 - `apps/ui/app/_components/ui/frame`
 - `apps/ui/app/_components/ui/input`
-- `apps/ui/app/_components/ui/layout`
 - `apps/ui/app/_components/ui/list`
+- `apps/ui/app/_components/ui/modal`
 - `apps/ui/app/_components/ui/tab`
 
 ## `_layouts`
@@ -61,6 +61,7 @@
 ## `_types`
 
 - `apps/ui/app/_types`
+- `apps/ui/app/_types/categories.types.ts`
 - `apps/ui/app/_types/common.types.ts`
 - `apps/ui/app/_types/index.ts`
 - `apps/ui/app/_types/posts.types.ts`

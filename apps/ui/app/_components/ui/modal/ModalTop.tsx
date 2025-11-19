@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { MdClose } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -47,7 +47,7 @@ export function ModalTop({ className, title, onClose, custom, ...props }: Props)
             custom?.button
           )}
         >
-          <Icon icon='iconamoon:close-bold' className='size-6' />
+          <MdClose className='size-6' />
         </button>
       )}
     </div>

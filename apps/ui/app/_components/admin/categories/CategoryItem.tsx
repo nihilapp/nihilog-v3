@@ -1,0 +1,143 @@
+'use client';
+
+import type { SelectCategoryType } from '@nihilog/schemas';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { useState } from 'react';
+import { MdFolder, MdEdit, MdFolderOpen, MdDelete, MdAdd } from 'react-icons/md';
+
+import { Button } from '@/_components/ui/button';
+import { cn } from '@/_libs';
+import type { CategoryItem } from '@/_types';
+import type { ReactElementProps } from '@/_types/common.types';
+
+// 기본값은 HTMLDivElement, 'className'
+interface Props
+  extends ReactElementProps<'div'>, VariantProps<typeof cssVariants> {
+  item: CategoryItem;
+  onEdit?: (category: SelectCategoryType) => void;
+  onDelete?: (category: SelectCategoryType) => void;
+  onAddChild?: (category: SelectCategoryType) => void;
+  isExpanded?: boolean;
+  onToggleExpand?: (ctgryNo: number) => void;
+  isCategoryExpanded?: (ctgryNo: number) => boolean;
+  className?: string | string[];
+  custom?: {
+    div?: string | string[];
+  };
+}
+
+const cssVariants = cva(
+  [ 'border-2 border-black-300 rounded-2', ],
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: [],
+  }
+);
+
+export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: controlledIsExpanded, onToggleExpand: controlledOnToggleExpand, isCategoryExpanded, className, ...props }: Props) {
+  const { category, } = item;
+  // DB의 ctgryLvl을 우선 사용, 없으면 item.level 사용 (하위 호환성)
+  const level = category.ctgryLvl ?? item.level ?? 0;
+  const [
+    localIsExpanded,
+    setLocalIsExpanded,
+  ] = useState(false);
+
+  // controlled 모드 (부모에서 상태 관리) 또는 uncontrolled 모드 (로컬 상태 관리)
+  const isExpanded = controlledIsExpanded !== undefined
+    ? controlledIsExpanded
+    : localIsExpanded;
+
+  const onToggleExpand = controlledOnToggleExpand
+    ? () => controlledOnToggleExpand(category.ctgryNo)
+    : () => {
+      setLocalIsExpanded((prev) => !prev);
+    };
+
+  return (
+    <div
+      className={cn(
+        cssVariants({}),
+        className
+      )}
+      {...props}
+    >
+      <div className='p-2 flex flex-row items-center justify-between gap-2 select-none'>
+        <div className='flex flex-row items-center gap-2'>
+          {category.childCategories && category.childCategories.length > 0
+            ? (
+              <span
+                className='button-base p-1 rounded-2 button-ghost-black-900 bg-black-200! hover:bg-black-300! cursor-pointer'
+                onClick={onToggleExpand}
+                title={isExpanded
+                  ? '접기'
+                  : '펼치기'}
+              >
+                {isExpanded
+                  ? <MdFolderOpen />
+                  : <MdFolder />}
+              </span>
+            )
+            : (
+              <span className='p-1'>
+                <MdFolder />
+              </span>
+            )}
+          <span>{category.ctgryNm} ({category.childCategories?.length ?? 0})</span>
+        </div>
+        <div className='text-black-500 text-xs text-left flex-1'>
+          {category.ctgryExpln}
+        </div>
+        <div className='flex flex-row items-center gap-1'>
+          {onAddChild && (
+            <Button.Action
+              icon={<MdAdd />}
+              label='하위 카테고리 추가'
+              onClick={() => onAddChild(category)}
+              className='hover:button-normal-black-900'
+            />
+          )}
+          {onEdit && (
+            <Button.Action
+              icon={<MdEdit />}
+              label='수정'
+              onClick={() => onEdit(category)}
+              className='hover:button-normal-black-900'
+            />
+          )}
+          {onDelete && (
+            <Button.Action
+              icon={<MdDelete />}
+              label='삭제'
+              onClick={() => onDelete(category)}
+              className='button-normal-red-500 hover:button-normal-red-600'
+            />
+          )}
+        </div>
+      </div>
+      {isExpanded && category.childCategories && category.childCategories.length > 0 && (
+        <div className='ml-4'>
+          {category.childCategories.map((childCategory) => (
+            <CategoryItem
+              key={childCategory.ctgryNo}
+              item={{
+                level: (childCategory as SelectCategoryType).ctgryLvl ?? level + 1,
+                category: childCategory as SelectCategoryType,
+              }}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onAddChild={onAddChild}
+              isExpanded={isCategoryExpanded
+                ? isCategoryExpanded(childCategory.ctgryNo)
+                : undefined}
+              onToggleExpand={controlledOnToggleExpand}
+              isCategoryExpanded={isCategoryExpanded}
+              className='border-none'
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

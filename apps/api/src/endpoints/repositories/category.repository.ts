@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
 import { Prisma, type PrismaClient } from '@nihilog/db';
 import type {
   SelectCategoryListItemType,
@@ -19,7 +20,6 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@nihilog/code';
 import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -825,7 +825,10 @@ export class CategoryRepository {
             contains: ctgryColr,
           },
         }),
-        ...(upCtgryNo && { upCtgryNo, }),
+        // upCtgryNo가 undefined이거나 null이면 최상위 카테고리만 조회
+        ...(upCtgryNo === undefined || upCtgryNo === null
+          ? { upCtgryNo: null, }
+          : { upCtgryNo, }),
         ...(crtDtFrom && crtDtTo && {
           crtDt: {
             gte: crtDtFrom,
@@ -845,6 +848,64 @@ export class CategoryRepository {
         endRow
       ).limit;
 
+      // 정렬 기준 설정
+      // 기본 정렬: 레벨(오름차순) -> 정렬순(오름차순) -> 생성일(오름차순)
+      // orderBy가 명시된 경우 해당 정렬을 우선 적용하고, 기본 정렬을 보조 정렬로 사용
+      let orderByArray: Prisma.CtgryInfoOrderByWithRelationInput[] = [];
+
+      if (orderBy === 'LATEST') {
+        orderByArray = [
+          { crtDt: 'desc', },
+          { ctgryLvl: 'asc', },
+          { ctgryStp: 'asc', },
+        ];
+      }
+      else if (orderBy === 'OLDEST') {
+        orderByArray = [
+          { crtDt: 'asc', },
+          { ctgryLvl: 'asc', },
+          { ctgryStp: 'asc', },
+        ];
+      }
+      else if (orderBy === 'NAME_ASC') {
+        orderByArray = [
+          { ctgryNm: 'asc', },
+          { ctgryLvl: 'asc', },
+          { ctgryStp: 'asc', },
+          { crtDt: 'asc', },
+        ];
+      }
+      else if (orderBy === 'NAME_DESC') {
+        orderByArray = [
+          { ctgryNm: 'desc', },
+          { ctgryLvl: 'asc', },
+          { ctgryStp: 'asc', },
+          { crtDt: 'asc', },
+        ];
+      }
+      else if (orderBy === 'STP_ASC') {
+        orderByArray = [
+          { ctgryStp: 'asc', },
+          { ctgryLvl: 'asc', },
+          { crtDt: 'asc', },
+        ];
+      }
+      else if (orderBy === 'STP_DESC') {
+        orderByArray = [
+          { ctgryStp: 'desc', },
+          { ctgryLvl: 'asc', },
+          { crtDt: 'asc', },
+        ];
+      }
+      else {
+        // 기본 정렬: 레벨 -> 정렬순 -> 생성일
+        orderByArray = [
+          { ctgryLvl: 'asc', },
+          { ctgryStp: 'asc', },
+          { crtDt: 'asc', },
+        ];
+      }
+
       const [
         list,
         totalCnt,
@@ -853,28 +914,45 @@ export class CategoryRepository {
           where,
           include: {
             parentCategory: true,
-            childCategories: true,
+            childCategories: {
+              where: {
+                useYn: 'Y',
+                delYn: 'N',
+              },
+              orderBy: [
+                { ctgryLvl: 'asc', },
+                { ctgryStp: 'asc', },
+                { crtDt: 'asc', },
+              ],
+              include: {
+                childCategories: {
+                  where: {
+                    useYn: 'Y',
+                    delYn: 'N',
+                  },
+                  orderBy: [
+                    { ctgryLvl: 'asc', },
+                    { ctgryStp: 'asc', },
+                    { crtDt: 'asc', },
+                  ],
+                  include: {
+                    childCategories: {
+                      where: {
+                        useYn: 'Y',
+                        delYn: 'N',
+                      },
+                      orderBy: [
+                        { ctgryLvl: 'asc', },
+                        { ctgryStp: 'asc', },
+                        { crtDt: 'asc', },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
           },
-          orderBy: {
-            ...(orderBy === 'LATEST') && {
-              crtDt: 'desc',
-            },
-            ...(orderBy === 'OLDEST') && {
-              crtDt: 'asc',
-            },
-            ...(orderBy === 'NAME_ASC') && {
-              ctgryNm: 'asc',
-            },
-            ...(orderBy === 'NAME_DESC') && {
-              ctgryNm: 'desc',
-            },
-            ...(orderBy === 'STP_ASC') && {
-              ctgryStp: 'asc',
-            },
-            ...(orderBy === 'STP_DESC') && {
-              ctgryStp: 'desc',
-            },
-          },
+          orderBy: orderByArray,
           skip,
           take,
         }),
@@ -908,7 +986,43 @@ export class CategoryRepository {
         where: { ctgryNo, },
         include: {
           parentCategory: true,
-          childCategories: true,
+          childCategories: {
+            where: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+            orderBy: [
+              { ctgryLvl: 'asc', },
+              { ctgryStp: 'asc', },
+              { crtDt: 'asc', },
+            ],
+            include: {
+              childCategories: {
+                where: {
+                  useYn: 'Y',
+                  delYn: 'N',
+                },
+                orderBy: [
+                  { ctgryLvl: 'asc', },
+                  { ctgryStp: 'asc', },
+                  { crtDt: 'asc', },
+                ],
+                include: {
+                  childCategories: {
+                    where: {
+                      useYn: 'Y',
+                      delYn: 'N',
+                    },
+                    orderBy: [
+                      { ctgryLvl: 'asc', },
+                      { ctgryStp: 'asc', },
+                      { crtDt: 'asc', },
+                    ],
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -941,7 +1055,43 @@ export class CategoryRepository {
         where: { ctgryNm, },
         include: {
           parentCategory: true,
-          childCategories: true,
+          childCategories: {
+            where: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+            orderBy: [
+              { ctgryLvl: 'asc', },
+              { ctgryStp: 'asc', },
+              { crtDt: 'asc', },
+            ],
+            include: {
+              childCategories: {
+                where: {
+                  useYn: 'Y',
+                  delYn: 'N',
+                },
+                orderBy: [
+                  { ctgryLvl: 'asc', },
+                  { ctgryStp: 'asc', },
+                  { crtDt: 'asc', },
+                ],
+                include: {
+                  childCategories: {
+                    where: {
+                      useYn: 'Y',
+                      delYn: 'N',
+                    },
+                    orderBy: [
+                      { ctgryLvl: 'asc', },
+                      { ctgryStp: 'asc', },
+                      { crtDt: 'asc', },
+                    ],
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -971,12 +1121,29 @@ export class CategoryRepository {
    */
   async createCategory(userNo: number, createData: CreateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
     try {
+      // level 계산: upCtgryNo가 있으면 부모의 level + 1, 없으면 0
+      let ctgryLvl = 0;
+      if (createData.upCtgryNo) {
+        const parentCategory = await this.prisma.ctgryInfo.findUnique({
+          where: { ctgryNo: createData.upCtgryNo, },
+          select: { ctgryLvl: true, },
+        });
+        if (parentCategory) {
+          ctgryLvl = parentCategory.ctgryLvl + 1;
+        }
+      }
+      // 명시적으로 ctgryLvl이 제공되면 그것을 사용
+      if (createData.ctgryLvl !== undefined) {
+        ctgryLvl = createData.ctgryLvl;
+      }
+
       const newCategory = await this.prisma.ctgryInfo.create({
         data: {
           ctgryNm: createData.ctgryNm,
           ctgryExpln: createData.ctgryExpln,
           ctgryColr: createData.ctgryColr,
           ctgryStp: createData.ctgryStp,
+          ctgryLvl,
           upCtgryNo: createData.upCtgryNo,
           useYn: 'Y',
           delYn: 'N',
@@ -987,7 +1154,28 @@ export class CategoryRepository {
         },
         include: {
           parentCategory: true,
-          childCategories: true,
+          childCategories: {
+            where: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+            include: {
+              childCategories: {
+                where: {
+                  useYn: 'Y',
+                  delYn: 'N',
+                },
+                include: {
+                  childCategories: {
+                    where: {
+                      useYn: 'Y',
+                      delYn: 'N',
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -1008,12 +1196,29 @@ export class CategoryRepository {
    */
   async multipleCreateCategory(userNo: number, createData: CreateCategoryDto[]): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
-      const newCategories = await this.prisma.ctgryInfo.createMany({
-        data: createData.map((item) => ({
+      // 각 카테고리의 level 계산
+      const dataWithLevel = await Promise.all(createData.map(async (item) => {
+        let ctgryLvl = 0;
+        if (item.upCtgryNo) {
+          const parentCategory = await this.prisma.ctgryInfo.findUnique({
+            where: { ctgryNo: item.upCtgryNo, },
+            select: { ctgryLvl: true, },
+          });
+          if (parentCategory) {
+            ctgryLvl = parentCategory.ctgryLvl + 1;
+          }
+        }
+        // 명시적으로 ctgryLvl이 제공되면 그것을 사용
+        if (item.ctgryLvl !== undefined) {
+          ctgryLvl = item.ctgryLvl;
+        }
+
+        return {
           ctgryNm: item.ctgryNm,
           ctgryExpln: item.ctgryExpln,
           ctgryColr: item.ctgryColr,
           ctgryStp: item.ctgryStp,
+          ctgryLvl,
           upCtgryNo: item.upCtgryNo,
           useYn: item.useYn || 'Y',
           delYn: item.delYn || 'N',
@@ -1021,7 +1226,11 @@ export class CategoryRepository {
           crtDt: timeToString(),
           updtNo: userNo,
           updtDt: timeToString(),
-        })),
+        };
+      }));
+
+      const newCategories = await this.prisma.ctgryInfo.createMany({
+        data: dataWithLevel,
       });
 
       return prismaResponse(
@@ -1045,6 +1254,23 @@ export class CategoryRepository {
    */
   async updateCategory(userNo: number, updateData: UpdateCategoryDto): Promise<RepoResponseType<SelectCategoryType> | null> {
     try {
+      // level 계산: upCtgryNo가 변경되거나 명시적으로 제공되지 않은 경우 자동 계산
+      let ctgryLvl: number | undefined = updateData.ctgryLvl;
+      if (ctgryLvl === undefined && updateData.upCtgryNo !== undefined) {
+        if (updateData.upCtgryNo === null) {
+          ctgryLvl = 0;
+        }
+        else {
+          const parentCategory = await this.prisma.ctgryInfo.findUnique({
+            where: { ctgryNo: updateData.upCtgryNo, },
+            select: { ctgryLvl: true, },
+          });
+          if (parentCategory) {
+            ctgryLvl = parentCategory.ctgryLvl + 1;
+          }
+        }
+      }
+
       const updatedCategory = await this.prisma.ctgryInfo.update({
         where: { ctgryNo: updateData.ctgryNo, },
         data: {
@@ -1052,6 +1278,7 @@ export class CategoryRepository {
           ctgryExpln: updateData.ctgryExpln,
           ctgryColr: updateData.ctgryColr,
           ctgryStp: updateData.ctgryStp,
+          ...(ctgryLvl !== undefined && { ctgryLvl, }),
           upCtgryNo: updateData.upCtgryNo,
           useYn: updateData.useYn,
           delYn: updateData.delYn,
@@ -1060,7 +1287,28 @@ export class CategoryRepository {
         },
         include: {
           parentCategory: true,
-          childCategories: true,
+          childCategories: {
+            where: {
+              useYn: 'Y',
+              delYn: 'N',
+            },
+            include: {
+              childCategories: {
+                where: {
+                  useYn: 'Y',
+                  delYn: 'N',
+                },
+                include: {
+                  childCategories: {
+                    where: {
+                      useYn: 'Y',
+                      delYn: 'N',
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
 
@@ -1081,6 +1329,23 @@ export class CategoryRepository {
    */
   async multipleUpdateCategory(userNo: number, updateData: UpdateCategoryDto & { ctgryNoList: number[] }): Promise<RepoResponseType<MultipleResultType> | null> {
     try {
+      // level 계산: upCtgryNo가 변경되거나 명시적으로 제공되지 않은 경우 자동 계산
+      let ctgryLvl: number | undefined = updateData.ctgryLvl;
+      if (ctgryLvl === undefined && updateData.upCtgryNo !== undefined) {
+        if (updateData.upCtgryNo === null) {
+          ctgryLvl = 0;
+        }
+        else {
+          const parentCategory = await this.prisma.ctgryInfo.findUnique({
+            where: { ctgryNo: updateData.upCtgryNo, },
+            select: { ctgryLvl: true, },
+          });
+          if (parentCategory) {
+            ctgryLvl = parentCategory.ctgryLvl + 1;
+          }
+        }
+      }
+
       const updatedCategories = await this.prisma.ctgryInfo.updateMany({
         where: {
           ctgryNo: {
@@ -1092,6 +1357,7 @@ export class CategoryRepository {
           ctgryExpln: updateData.ctgryExpln,
           ctgryColr: updateData.ctgryColr,
           ctgryStp: updateData.ctgryStp,
+          ...(ctgryLvl !== undefined && { ctgryLvl, }),
           upCtgryNo: updateData.upCtgryNo,
           useYn: updateData.useYn,
           delYn: updateData.delYn,

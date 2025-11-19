@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon } from '@iconify/react';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 
 interface Props {
   isCollapsed: boolean;
@@ -12,12 +12,12 @@ export function FrameSideToggleButton({ isCollapsed, onToggleCollapse, sidePosit
   const getIcon = () => {
     if (sidePosition === 'right') {
       return isCollapsed
-        ? 'ri:expand-left-line'
-        : 'ri:expand-right-line';
+        ? <MdChevronLeft className='size-5 border-2 border-black-900 rounded-1' />
+        : <MdChevronRight className='size-5 border-2 border-black-900 rounded-1' />;
     }
     return isCollapsed
-      ? 'ri:expand-right-line'
-      : 'ri:expand-left-line';
+      ? <MdChevronRight className='size-5 border-2 border-black-900 rounded-1' />
+      : <MdChevronLeft className='size-5 border-2 border-black-900 rounded-1' />;
   };
 
   return (
@@ -29,10 +29,7 @@ export function FrameSideToggleButton({ isCollapsed, onToggleCollapse, sidePosit
         ? '사이드바 펼치기'
         : '사이드바 접기'}
     >
-      <Icon
-        icon={getIcon()}
-        className='size-5 border-2 border-black-900 rounded-1'
-      />
+      {getIcon()}
     </button>
   );
 }

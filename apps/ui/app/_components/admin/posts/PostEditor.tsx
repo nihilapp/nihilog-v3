@@ -2,13 +2,14 @@
 
 import type { Block, PartialBlock } from '@blocknote/core';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Icon } from '@iconify/react';
 import { updatePostSchema } from '@nihilog/schemas';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { MdSave, MdPublish } from 'react-icons/md';
 
+import { PostCategorySelect } from '@/_components/admin/posts/PostCategorySelect';
 import { PostStatusBadges } from '@/_components/admin/posts/PostStatusBadges';
 import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
@@ -46,7 +47,7 @@ function PostEditorContent() {
 
   const menuItems: Menu[] = [
     {
-      icon: <Icon icon='material-symbols:save' />,
+      icon: <MdSave />,
       name: '저장',
       action: () => {
         console.log('저장');
@@ -54,7 +55,7 @@ function PostEditorContent() {
       classNames: 'button-outline-black-900 hover:button-normal-blue-500',
     },
     {
-      icon: <Icon icon='material-symbols:publish' />,
+      icon: <MdPublish />,
       name: '발행',
       action: () => {
         //
@@ -84,6 +85,8 @@ function PostEditorContent() {
       ctgryNo: postData.ctgryNo,
     },
   });
+
+  const selectedCtgryNo = form.watch('ctgryNo');
 
   useEffect(
     () => {
@@ -200,10 +203,15 @@ function PostEditorContent() {
             <Frame.Side sidePosition='right' title='사이드바'>
               <Box.Content className='gap-5'>
                 <Input.Label label='카테고리' direction='vertical'>
-                  <Input.Text
-                    type='text'
-                    placeholder='카테고리를 입력해주세요.'
-                    {...form.register('ctgryNo')}
+                  <PostCategorySelect
+                    value={selectedCtgryNo}
+                    onChange={(value) => {
+                      form.setValue(
+                        'ctgryNo',
+                        value,
+                        { shouldValidate: true, }
+                      );
+                    }}
                   />
                 </Input.Label>
               </Box.Content>

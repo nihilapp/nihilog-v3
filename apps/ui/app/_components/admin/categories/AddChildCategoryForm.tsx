@@ -2,9 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createCategorySchema, type CreateCategoryType, type SelectCategoryListItemType } from '@nihilog/schemas';
+import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 
-import { CategoryParentSelect } from '@/_components/admin/categories/CategoryParentSelect';
 import { Button } from '@/_components/ui/button';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
@@ -15,17 +15,18 @@ import { cn } from '@/_libs';
 interface Props {
   open: boolean;
   onClose: () => void;
+  parentCtgryNo: number;
   categoryList: SelectCategoryListItemType[];
 }
 
-export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
+export function AddChildCategoryForm({ open, onClose, parentCtgryNo, categoryList, }: Props) {
   const form = useForm<CreateCategoryType>({
     mode: 'all',
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
       ctgryNm: '',
       ctgryStp: 0,
-      upCtgryNo: undefined,
+      upCtgryNo: parentCtgryNo,
       ctgryExpln: undefined,
       ctgryColr: undefined,
       useYn: 'Y',
@@ -35,12 +36,42 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
 
   const createCategory = useAdminCreateCategory();
 
-  const upCtgryNo = form.watch('upCtgryNo');
-  const upCtgryNoError = form.formState.errors.upCtgryNo;
+  // 모달이 열릴 때마다 상위 카테고리 번호를 고정값으로 설정
+  useEffect(
+    () => {
+      if (open) {
+        form.reset({
+          ctgryNm: '',
+          ctgryStp: 0,
+          upCtgryNo: parentCtgryNo,
+          ctgryExpln: undefined,
+          ctgryColr: undefined,
+          useYn: 'Y',
+          delYn: 'N',
+        });
+        // 상위 카테고리 번호를 고정값으로 설정하고 변경 불가능하게 만듦
+        form.setValue(
+          'upCtgryNo',
+          parentCtgryNo,
+          { shouldValidate: true, }
+        );
+      }
+    },
+    [
+      open,
+      parentCtgryNo,
+      form,
+    ]
+  );
 
   const onSubmitForm: SubmitHandler<CreateCategoryType> = (data) => {
+    // 상위 카테고리 번호를 항상 고정값으로 설정
+    const submitData = {
+      ...data,
+      upCtgryNo: parentCtgryNo,
+    };
     createCategory.mutate(
-      data,
+      submitData,
       {
         onSuccess() {
           form.reset();
@@ -50,6 +81,9 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
     );
   };
 
+  // 상위 카테고리 이름 찾기
+  const parentCategory = categoryList.find((c) => c.ctgryNo === parentCtgryNo);
+
   return (
     <Modal.Container
       open={open}
@@ -57,13 +91,32 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
       width={800}
       height={600}
     >
-      <Modal.Top title='카테고리 추가' onClose={onClose} />
+      <Modal.Top title='하위 카테고리 추가' onClose={onClose} />
       <Modal.Content>
         <Form.Container
           form={form}
           onSubmit={onSubmitForm}
-          id='new-category-form'
+          id='add-child-category-form'
         >
+          <Form.Field>
+            <div className='flex gap-2 flex-row'>
+              <span className={cn([
+                'font-700',
+                'w-[200px] shrink-0 mt-2',
+              ])}
+              >
+                상위 카테고리
+              </span>
+              <div className='flex-1 mt-2'>
+                <Input.Text
+                  value={parentCategory?.ctgryNm ?? `카테고리 #${parentCtgryNo}`}
+                  disabled
+                  className='bg-black-200 cursor-not-allowed'
+                />
+              </div>
+            </div>
+          </Form.Field>
+
           <Form.Field>
             <Form.Item<CreateCategoryType>
               name='ctgryNm'
@@ -99,40 +152,6 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
           </Form.Field>
 
           <Form.Field>
-            <div className='flex gap-2 flex-row'>
-              <span className={cn([
-                'font-700',
-                'w-[200px] shrink-0 mt-2',
-              ])}
-              >
-                상위 카테고리
-              </span>
-              <div className='flex-1'>
-                <CategoryParentSelect
-                  categoryList={categoryList}
-                  value={upCtgryNo}
-                  onChange={(value) => {
-                    form.setValue(
-                      'upCtgryNo',
-                      value,
-                      { shouldValidate: true, }
-                    );
-                  }}
-                />
-                {upCtgryNoError && (
-                  <span className={cn([
-                    'text-red-500 text-sm italic',
-                    'block mt-1',
-                  ])}
-                  >
-                    {upCtgryNoError.message}
-                  </span>
-                )}
-              </div>
-            </div>
-          </Form.Field>
-
-          <Form.Field>
             <Form.Item<CreateCategoryType>
               name='ctgryExpln'
               label='카테고리 설명'
@@ -162,10 +181,10 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
       </Modal.Content>
       <Modal.Bottom>
         <Button.Action
-          label='카테고리 추가'
+          label='하위 카테고리 추가'
           className='hover:button-normal-black-900'
           type='submit'
-          form='new-category-form'
+          form='add-child-category-form'
         />
         <Button.Action
           label='취소'

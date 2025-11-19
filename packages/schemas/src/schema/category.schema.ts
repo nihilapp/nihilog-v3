@@ -61,6 +61,14 @@ export const categoryInfoSchema = commonSchema.extend({
       description: '카테고리 정렬순',
       example: 1,
     }),
+  ctgryLvl: z
+    .number()
+    .int('카테고리 레벨은 정수여야 합니다.')
+    .nonnegative('카테고리 레벨은 0 이상이어야 합니다.')
+    .openapi({
+      description: '카테고리 레벨 (0: 최상위)',
+      example: 0,
+    }),
   upCtgryNo: z
     .number()
     .int('상위 카테고리 번호는 정수여야 합니다.')
@@ -111,6 +119,7 @@ export const createCategorySchema = categoryInfoSchema.pick({
   ctgryExpln: true,
   ctgryColr: true,
   ctgryStp: true,
+  ctgryLvl: true,
   upCtgryNo: true,
   useYn: true,
   delYn: true,
@@ -124,11 +133,17 @@ export const createCategorySchema = categoryInfoSchema.pick({
 /**
  * @description 카테고리 수정 스키마
  */
-export const updateCategorySchema = categoryInfoSchema.omit({
-  rowNo: true,
-  totalCnt: true,
-  ctgryNoList: true,
-}).partial();
+export const updateCategorySchema = categoryInfoSchema.partial().pick({
+  ctgryNo: true,
+  ctgryNm: true,
+  ctgryExpln: true,
+  ctgryColr: true,
+  ctgryStp: true,
+  ctgryLvl: true,
+  upCtgryNo: true,
+  useYn: true,
+  delYn: true,
+});
 
 /**
  * @description 카테고리 삭제 스키마
@@ -147,8 +162,17 @@ export const searchCategorySchema = baseSearchSchema.partial().extend({
     delYn: true,
     ctgryNm: true,
     ctgryColr: true,
-    upCtgryNo: true,
   }).shape,
+  upCtgryNo: z
+    .union([
+      z.number().int('상위 카테고리 번호는 정수여야 합니다.').positive('상위 카테고리 번호는 양수여야 합니다.'),
+      z.null(),
+    ])
+    .optional()
+    .openapi({
+      description: '상위 카테고리 번호 (null: 최상위 카테고리만 검색)',
+      example: 1,
+    }),
   srchType: z.enum(
     [
       'ctgryNm',

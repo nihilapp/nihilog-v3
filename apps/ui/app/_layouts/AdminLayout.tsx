@@ -1,6 +1,13 @@
 'use client';
 
-import { Icon } from '@iconify/react';
+import {
+  MdHome,
+  MdDashboard,
+  MdArticle,
+  MdAdd,
+  MdTag,
+  MdLogout
+} from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
 import { useAdminCreatePost } from '@/_entities/admin/posts/hooks';
@@ -36,7 +43,7 @@ export function AdminLayout({ children, }: Props) {
 
   const afterSignInMenu: Menu[] = [
     {
-      icon: <Icon icon='pajamas:doc-new' />,
+      icon: <MdAdd />,
       name: '새 포스트',
       action: newPost,
       classNames: [
@@ -45,7 +52,7 @@ export function AdminLayout({ children, }: Props) {
       ],
     },
     {
-      icon: <Icon icon='uiw:logout' />,
+      icon: <MdLogout />,
       name: '로그아웃',
       action: () => {
         signOut.mutate();
@@ -56,12 +63,12 @@ export function AdminLayout({ children, }: Props) {
 
   const sideMenu: Menu[] = [
     {
-      icon: <Icon icon='mdi:home' />,
+      icon: <MdHome />,
       name: '홈',
       url: '/',
     },
     {
-      icon: <Icon icon='mdi:view-dashboard' />,
+      icon: <MdDashboard />,
       name: '대시보드',
       url: '/admin/dashboard',
     },
@@ -69,12 +76,12 @@ export function AdminLayout({ children, }: Props) {
       name: '포스트 관리',
       children: [
         {
-          icon: <Icon icon='mdi:post-outline' />,
+          icon: <MdArticle />,
           name: '포스트 목록',
           url: '/admin/dashboard/posts',
         },
         {
-          icon: <Icon icon='pajamas:doc-new' />,
+          icon: <MdAdd />,
           name: '새 포스트',
           action: newPost,
         },
@@ -84,7 +91,7 @@ export function AdminLayout({ children, }: Props) {
       name: '카테고리 관리',
       children: [
         {
-          icon: <Icon icon='mdi:tag' />,
+          icon: <MdTag />,
           name: '카테고리 목록',
           url: '/admin/dashboard/categories',
         },

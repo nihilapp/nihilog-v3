@@ -11,3 +11,8 @@ export type {
 export type {
   ColumnType
 } from './component/column.types';
+
+// 카테고리 타입 export
+export type {
+  CategoryItem
+} from './categories.types';

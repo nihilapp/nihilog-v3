@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { MdKeyboardArrowUp, MdKeyboardArrowDown } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -61,15 +61,21 @@ export function InputSelection({ className, placeholder = '선택하세요', dis
       <span className='flex-1 text-left'>
         {displayText}
       </span>
-      <Icon
-        icon={isOpen
-          ? 'mdi:chevron-up'
-          : 'mdi:chevron-down'}
-        className={cn(
-          'size-5 shrink-0 transition-transform duration-200',
-          custom?.icon
+      {isOpen
+        ? (
+          <MdKeyboardArrowUp className={cn(
+            'size-5 shrink-0 transition-transform duration-200',
+            custom?.icon
+          )}
+          />
+        )
+        : (
+          <MdKeyboardArrowDown className={cn(
+            'size-5 shrink-0 transition-transform duration-200',
+            custom?.icon
+          )}
+          />
         )}
-      />
     </button>
   );
 }

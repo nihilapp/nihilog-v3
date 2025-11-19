@@ -1,6 +1,16 @@
 'use client';
 
-import { Icon } from '@iconify/react';
+import {
+  MdHome,
+  MdArticle,
+  MdTag,
+  MdArchive,
+  MdPersonAdd,
+  MdAccountCircle,
+  MdSettings,
+  MdLogin,
+  MdLogout
+} from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
 import { useGetSession, useSignOut } from '@/_entities/auth/hooks';
@@ -24,25 +34,25 @@ export function CommonLayout({ children, }: Props) {
 
   const navMenu: Menu[] = [
     {
-      icon: <Icon icon='mdi:home' />,
+      icon: <MdHome />,
       name: '홈',
       url: '/',
       classNames: classNames,
     },
     {
-      icon: <Icon icon='mdi:post-outline' />,
+      icon: <MdArticle />,
       name: '포스트',
       url: '/posts',
       classNames: classNames,
     },
     {
-      icon: <Icon icon='mdi:tag' />,
+      icon: <MdTag />,
       name: '태그 클라우드',
       url: '/tags',
       classNames: classNames,
     },
     {
-      icon: <Icon icon='mdi:archive' />,
+      icon: <MdArchive />,
       name: '아카이브',
       url: '/archive',
       classNames: classNames,
@@ -51,20 +61,20 @@ export function CommonLayout({ children, }: Props) {
 
   const beforeSignInMenu: Menu[] = [
     {
-      icon: <Icon icon='mdi:user-add' />,
+      icon: <MdPersonAdd />,
       name: '구독',
       url: '/auth/subscribe',
       classNames: cn([ 'button-outline-black-900 hover:button-normal-blue-500', ]),
     },
     {
-      icon: <Icon icon='mdi:user-add' />,
+      icon: <MdPersonAdd />,
       name: '관리자 생성',
       url: '/auth/admin/signup',
       visible: process.env.NODE_ENV === 'development',
       classNames: cn([ 'button-outline-black-900 hover:button-normal-blue-500', ]),
     },
     {
-      icon: <Icon icon='uiw:login' />,
+      icon: <MdLogin />,
       name: '로그인',
       url: '/auth/signin',
       classNames: 'hover:button-normal-black-900',
@@ -73,21 +83,21 @@ export function CommonLayout({ children, }: Props) {
 
   const afterSignInMenu: Menu[] = [
     {
-      icon: <Icon icon='mdi:user-circle' />,
+      icon: <MdAccountCircle />,
       name: '프로필',
       url: '/profile',
       role: [ 'USER', ],
       classNames: cn([ 'button-outline-black-900 hover:button-normal-blue-500', ]),
     },
     {
-      icon: <Icon icon='mdi:cog' />,
+      icon: <MdSettings />,
       name: '관리자 페이지',
       url: '/admin/dashboard',
       role: [ 'ADMIN', ],
       classNames: cn([ 'button-outline-black-900 hover:button-normal-blue-500', ]),
     },
     {
-      icon: <Icon icon='uiw:logout' />,
+      icon: <MdLogout />,
       name: '로그아웃',
       action: () => {
         signOut.mutate();

@@ -17,11 +17,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [
-    'group flex gap-2 bg-black-100 p-2 rounded-2 border border-black-200 transition-colors duration-200 ease-in-out',
-    '[&:has(input:focus)]:border-blue-300 [&:has(textarea:focus)]:border-blue-300',
-    '[&:has(input:focus)]:bg-blue-50 [&:has(textarea:focus)]:bg-blue-50',
-  ],
+  [ 'group flex gap-2', ],
   {
     variants: {
       direction: {
@@ -50,10 +46,7 @@ export function InputLabel({ className, children, id, label, custom, direction, 
           {...props}
         >
           <span className={cn([
-            'font-900 border border-black-300 bg-white p-2 text-sm text-justify rounded-2 transition-colors duration-200 ease-in-out',
-            'group-[&:has(input:focus)]:border-blue-300 group-[&:has(textarea:focus)]:border-blue-300',
-            'group-[&:has(input:focus)]:bg-white group-[&:has(textarea:focus)]:bg-white',
-            'group-[&:has(input:focus)]:text-blue-900 group-[&:has(textarea:focus)]:text-blue-900',
+            'font-900 text-sm',
             direction === 'horizontal' && 'w-[200px] shrink-0',
             custom?.span,
           ])}

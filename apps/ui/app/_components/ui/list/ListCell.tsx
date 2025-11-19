@@ -1,8 +1,8 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import React from 'react';
+import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -97,10 +97,10 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
             >
               {checked
                 ? (
-                  <Icon icon='material-symbols:check-box' className='size-6' />
+                  <MdCheckBox className='size-6' />
                 )
                 : (
-                  <Icon icon='material-symbols:check-box-outline' className='size-6' />
+                  <MdCheckBoxOutlineBlank className='size-6' />
                 )}
             </button>
           )

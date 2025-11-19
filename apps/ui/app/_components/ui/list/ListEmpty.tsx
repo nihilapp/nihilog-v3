@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { MdSearch } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -31,7 +31,7 @@ export function ListEmpty({ className, emptyMessage, ...props }: Props) {
       )}
       {...props}
     >
-      <Icon icon='mdi:file-search-outline' className='size-5' />
+      <MdSearch className='size-5' />
       <span className='text-gray-500 text-center'>{emptyMessage}</span>
     </div>
   );

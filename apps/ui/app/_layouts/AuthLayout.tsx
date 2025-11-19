@@ -1,7 +1,11 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { usePathname } from 'next/navigation';
+import {
+  MdLockReset,
+  MdPersonAdd,
+  MdLogin
+} from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
 import type { Menu } from '@/_types';
@@ -12,17 +16,17 @@ interface Props {
 
 const navMenu: Menu[] = [
   {
-    icon: <Icon icon='mdi:lock-reset' />,
+    icon: <MdLockReset />,
     name: '비밀번호를 잊었어요',
     url: '/auth/forgot-password',
   },
   {
-    icon: <Icon icon='mdi:user-add' />,
+    icon: <MdPersonAdd />,
     name: '회원가입',
     url: '/auth/subscribe',
   },
   {
-    icon: <Icon icon='uiw:login' />,
+    icon: <MdLogin />,
     name: '로그인',
     url: '/auth/signin',
   },

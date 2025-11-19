@@ -1,8 +1,8 @@
 'use client';
 
-import { Icon } from '@iconify/react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { forwardRef, useState } from 'react';
+import { MdVisibility, MdVisibilityOff } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -59,12 +59,9 @@ export const InputText = forwardRef<HTMLInputElement, Props>(function InputText(
             ? '비밀번호 숨기기'
             : '비밀번호 보기'}
         >
-          <Icon
-            icon={showPassword
-              ? 'mdi:eye-off'
-              : 'mdi:eye'}
-            className='size-5'
-          />
+          {showPassword
+            ? <MdVisibilityOff className='size-5' />
+            : <MdVisibility className='size-5' />}
         </button>
       )}
     </div>
