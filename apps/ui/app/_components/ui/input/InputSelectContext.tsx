@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface InputSelectContextValue {
   value: string;
@@ -32,20 +32,14 @@ export function InputSelectProvider({ children, value, onValueChange, }: InputSe
     setIsOpen,
   ] = useState(false);
 
-  const onSelect = useCallback(
-    (newValue: string) => {
-      onValueChange?.(newValue);
-      setIsOpen(false);
-    },
-    [ onValueChange, ]
-  );
+  const onSelect = (newValue: string) => {
+    onValueChange?.(newValue);
+    setIsOpen(false);
+  };
 
-  const onToggle = useCallback(
-    () => {
-      setIsOpen((prev) => !prev);
-    },
-    []
-  );
+  const onToggle = () => {
+    setIsOpen((prev) => !prev);
+  };
 
   return (
     <InputSelectContext.Provider

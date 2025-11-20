@@ -58,6 +58,10 @@
 - `apps/ui/app/_schemas/index.ts`
 - `apps/ui/app/_schemas/user.schema.ts`
 
+## 공유 스키마 (packages)
+
+- `packages/schemas/src/schema/*.schema.ts` - Zod 스키마
+
 ## `_types`
 
 - `apps/ui/app/_types`
@@ -69,3 +73,7 @@
 - `apps/ui/app/_types/react.d.ts`
 - `apps/ui/app/_types/component`
 - `apps/ui/app/_types/component/column.types.ts`
+
+## 공유 타입 (packages)
+
+- `packages/schemas/src/types/*.types.ts` - TypeScript 타입

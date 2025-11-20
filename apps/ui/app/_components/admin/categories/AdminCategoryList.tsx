@@ -3,7 +3,7 @@
 import type { SelectCategoryListItemType, SelectCategoryType } from '@nihilog/schemas';
 import { useMutation } from '@tanstack/react-query';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import { AddChildCategoryForm } from '@/_components/admin/categories/AddChildCategoryForm';
 import { CategoryItem } from '@/_components/admin/categories/CategoryItem';
@@ -118,28 +118,22 @@ export function AdminCategoryList({ }: Props) {
     deleteCategoryMutation.mutate(category.ctgryNo);
   };
 
-  const onToggleCategoryExpand = useCallback(
-    (ctgryNo: number) => {
-      setExpandedCategories((prev) => {
-        const newSet = new Set(prev);
-        if (newSet.has(ctgryNo)) {
-          newSet.delete(ctgryNo);
-        }
-        else {
-          newSet.add(ctgryNo);
-        }
-        return newSet;
-      });
-    },
-    []
-  );
+  const onToggleCategoryExpand = (ctgryNo: number) => {
+    setExpandedCategories((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(ctgryNo)) {
+        newSet.delete(ctgryNo);
+      }
+      else {
+        newSet.add(ctgryNo);
+      }
+      return newSet;
+    });
+  };
 
-  const isCategoryExpanded = useCallback(
-    (ctgryNo: number) => {
-      return expandedCategories.has(ctgryNo);
-    },
-    [ expandedCategories, ]
-  );
+  const isCategoryExpanded = (ctgryNo: number) => {
+    return expandedCategories.has(ctgryNo);
+  };
 
   return (
     <Box.Panel panel={false}>

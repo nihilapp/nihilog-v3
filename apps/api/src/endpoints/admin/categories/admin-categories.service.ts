@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
 import type {
   SelectCategoryListItemType,
   SelectCategoryType,
@@ -18,7 +19,6 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@nihilog/code';
 import type { CreateCategoryDto, DeleteCategoryDto, SearchCategoryDto, UpdateCategoryDto } from '@/dto/category.dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { CategoryRepository } from '@/endpoints/repositories/category.repository';
@@ -184,7 +184,7 @@ export class AdminCategoriesService {
       }
     }
 
-    // 상위 카테고리 존재 확인
+    // 상위 카테고리 존재 확인 및 레벨 제한 검증
     if (createData.upCtgryNo) {
       const parentCategory = await this.categoryRepository.getCategoryByCtgryNo(createData.upCtgryNo);
 
@@ -194,6 +194,16 @@ export class AdminCategoriesService {
           null,
           'NOT_FOUND',
           MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
+        );
+      }
+
+      // 상위 카테고리의 레벨이 3이면 자식 카테고리를 생성할 수 없음
+      if (parentCategory.data.ctgryLvl >= 3) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
         );
       }
     }
@@ -249,7 +259,7 @@ export class AdminCategoriesService {
       }
     }
 
-    // 상위 카테고리 존재 확인
+    // 상위 카테고리 존재 확인 및 레벨 제한 검증
     if (updateData.upCtgryNo) {
       const parentCategory = await this.categoryRepository.getCategoryByCtgryNo(updateData.upCtgryNo);
 
@@ -269,6 +279,16 @@ export class AdminCategoriesService {
           null,
           'BAD_REQUEST',
           MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
+        );
+      }
+
+      // 상위 카테고리의 레벨이 3이면 자식 카테고리를 생성할 수 없음
+      if (parentCategory.data.ctgryLvl >= 3) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
         );
       }
     }

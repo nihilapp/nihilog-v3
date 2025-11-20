@@ -42,8 +42,18 @@ export function InputSelectItem({ className, value, children, custom, ...props }
   const { value: selectedValue, onSelect, } = useInputSelectContext();
   const isSelected = selectedValue === value;
 
-  const onClickItem = () => {
+  const onClickItem = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
     onSelect(value);
+  };
+
+  const onKeyDownItem = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      onSelect(value);
+    }
   };
 
   return (
@@ -51,12 +61,7 @@ export function InputSelectItem({ className, value, children, custom, ...props }
       role='option'
       aria-selected={isSelected}
       onClick={onClickItem}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClickItem();
-        }
-      }}
+      onKeyDown={onKeyDownItem}
       tabIndex={0}
       className={cn(
         cssVariants({ selected: isSelected, }),

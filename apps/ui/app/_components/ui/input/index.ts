@@ -4,7 +4,9 @@ import { InputSelect } from '@/_components/ui/input/InputSelect';
 import { InputSelectContainer } from '@/_components/ui/input/InputSelectContainer';
 import { InputSelection } from '@/_components/ui/input/InputSelection';
 import { InputSelectItem } from '@/_components/ui/input/InputSelectItem';
+import { InputSwitch } from '@/_components/ui/input/InputSwitch';
 import { InputText } from '@/_components/ui/input/InputText';
+import { InputTextArray } from '@/_components/ui/input/InputTextArray';
 
 export const Input = {
   Label: InputLabel,
@@ -14,4 +16,6 @@ export const Input = {
   Selection: InputSelection,
   Select: InputSelect,
   SelectItem: InputSelectItem,
+  Switch: InputSwitch,
+  TextArray: InputTextArray,
 };

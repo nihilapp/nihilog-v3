@@ -116,26 +116,33 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
           )}
         </div>
       </div>
-      {isExpanded && category.childCategories && category.childCategories.length > 0 && (
+      {isExpanded && category.childCategories && category.childCategories.length > 0 && level < 3 && (
         <div className='ml-4'>
-          {category.childCategories.map((childCategory) => (
-            <CategoryItem
-              key={childCategory.ctgryNo}
-              item={{
-                level: (childCategory as SelectCategoryType).ctgryLvl ?? level + 1,
-                category: childCategory as SelectCategoryType,
-              }}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onAddChild={onAddChild}
-              isExpanded={isCategoryExpanded
-                ? isCategoryExpanded(childCategory.ctgryNo)
-                : undefined}
-              onToggleExpand={controlledOnToggleExpand}
-              isCategoryExpanded={isCategoryExpanded}
-              className='border-none'
-            />
-          ))}
+          {category.childCategories.map((childCategory) => {
+            const childLevel = (childCategory as SelectCategoryType).ctgryLvl ?? level + 1;
+            // 레벨이 3을 초과하면 렌더링하지 않음
+            if (childLevel > 3) {
+              return null;
+            }
+            return (
+              <CategoryItem
+                key={childCategory.ctgryNo}
+                item={{
+                  level: childLevel,
+                  category: childCategory as SelectCategoryType,
+                }}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onAddChild={onAddChild}
+                isExpanded={isCategoryExpanded
+                  ? isCategoryExpanded(childCategory.ctgryNo)
+                  : undefined}
+                onToggleExpand={controlledOnToggleExpand}
+                isCategoryExpanded={isCategoryExpanded}
+                className='border-none'
+              />
+            );
+          })}
         </div>
       )}
     </div>

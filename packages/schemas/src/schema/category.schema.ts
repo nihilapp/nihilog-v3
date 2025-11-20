@@ -64,9 +64,16 @@ export const categoryInfoSchema = commonSchema.extend({
   ctgryLvl: z
     .number()
     .int('카테고리 레벨은 정수여야 합니다.')
-    .nonnegative('카테고리 레벨은 0 이상이어야 합니다.')
+    .min(
+      0,
+      '카테고리 레벨은 0 이상이어야 합니다.'
+    )
+    .max(
+      3,
+      '카테고리 레벨은 3 이하여야 합니다.'
+    )
     .openapi({
-      description: '카테고리 레벨 (0: 최상위)',
+      description: '카테고리 레벨 (0-3: 최상위는 0)',
       example: 0,
     }),
   upCtgryNo: z

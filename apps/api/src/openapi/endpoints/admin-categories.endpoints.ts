@@ -831,6 +831,13 @@ export const registerAdminCategoriesEndpoints = () => {
                     MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
                   ),
                 },
+                levelExceeded: {
+                  summary: '카테고리 레벨 초과',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
+                  ),
+                },
                 error: {
                   summary: '카테고리 생성 실패',
                   value: createError(
@@ -885,6 +892,13 @@ export const registerAdminCategoriesEndpoints = () => {
                       failCnt: 0,
                       failNoList: [],
                     }
+                  ),
+                },
+                levelExceeded: {
+                  summary: '카테고리 레벨 초과',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
                   ),
                 },
                 error: {
@@ -966,6 +980,13 @@ export const registerAdminCategoriesEndpoints = () => {
                     MESSAGE.CATEGORY.ADMIN.PARENT_NOT_FOUND
                   ),
                 },
+                levelExceeded: {
+                  summary: '카테고리 레벨 초과',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
+                  ),
+                },
                 error: {
                   summary: '카테고리 수정 실패',
                   value: createError(
@@ -1029,6 +1050,13 @@ export const registerAdminCategoriesEndpoints = () => {
                       failCnt: 0,
                       failNoList: [],
                     }
+                  ),
+                },
+                levelExceeded: {
+                  summary: '카테고리 레벨 초과',
+                  value: createError(
+                    'BAD_REQUEST',
+                    MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
                   ),
                 },
                 error: {

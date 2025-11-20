@@ -1137,6 +1137,16 @@ export class CategoryRepository {
         ctgryLvl = createData.ctgryLvl;
       }
 
+      // 레벨 제한 검증 (최대 3)
+      if (ctgryLvl > 3) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
+        );
+      }
+
       const newCategory = await this.prisma.ctgryInfo.create({
         data: {
           ctgryNm: createData.ctgryNm,
@@ -1213,6 +1223,11 @@ export class CategoryRepository {
           ctgryLvl = item.ctgryLvl;
         }
 
+        // 레벨 제한 검증 (최대 3)
+        if (ctgryLvl > 3) {
+          throw new Error(MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED);
+        }
+
         return {
           ctgryNm: item.ctgryNm,
           ctgryExpln: item.ctgryExpln,
@@ -1269,6 +1284,16 @@ export class CategoryRepository {
             ctgryLvl = parentCategory.ctgryLvl + 1;
           }
         }
+      }
+
+      // 레벨 제한 검증 (최대 3)
+      if (ctgryLvl !== undefined && ctgryLvl > 3) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
+        );
       }
 
       const updatedCategory = await this.prisma.ctgryInfo.update({
@@ -1344,6 +1369,16 @@ export class CategoryRepository {
             ctgryLvl = parentCategory.ctgryLvl + 1;
           }
         }
+      }
+
+      // 레벨 제한 검증 (최대 3)
+      if (ctgryLvl !== undefined && ctgryLvl > 3) {
+        return prismaResponse(
+          false,
+          null,
+          'BAD_REQUEST',
+          MESSAGE.CATEGORY.ADMIN.LEVEL_EXCEEDED
+        );
       }
 
       const updatedCategories = await this.prisma.ctgryInfo.updateMany({

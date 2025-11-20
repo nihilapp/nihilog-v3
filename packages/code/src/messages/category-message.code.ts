@@ -47,6 +47,6 @@ export const CATEGORY_MESSAGES = {
     NAME_IN_USE: '이미 사용 중인 카테고리 이름입니다.',
     NAME_REQUIRED: '카테고리 이름은 필수 입력 항목입니다.',
     PARENT_NOT_FOUND: '상위 카테고리를 찾을 수 없습니다.',
+    LEVEL_EXCEEDED: '카테고리 레벨은 최대 3까지 설정할 수 있습니다.',
   },
 } as const;
-
