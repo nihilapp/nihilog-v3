@@ -8,6 +8,7 @@ import { AsyncBoundary } from '@/_components/common/AsyncBoundary';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { useGetPostList } from '@/_entities/posts/hooks';
 import { defineColumns } from '@/_libs/defineColumns';
 
@@ -20,6 +21,8 @@ export function Home({ }: Props) {
     listSelectedItems,
     setListSelectedItems,
   ] = useState<Set<string>>(new Set());
+
+  const { triggerInfo, triggerError, triggerWarn, triggerConfirm, } = useAlert();
 
   const { response, loading, done, } = useGetPostList({
     endRow: 10,
@@ -91,6 +94,27 @@ export function Home({ }: Props) {
     setListSelectedItems(selectedItems as Set<string>);
   };
 
+  const onInfoClick = () => {
+    triggerInfo('정보 메시지입니다.');
+  };
+
+  const onErrorClick = () => {
+    triggerError('오류 메시지입니다.');
+  };
+
+  const onWarnClick = () => {
+    triggerWarn('경고 메시지입니다.');
+  };
+
+  const onConfirmClick = () => {
+    triggerConfirm(
+      '정말 삭제하시겠습니까?',
+      () => {
+        console.log('확인 버튼 클릭됨');
+      }
+    );
+  };
+
   return (
     <AsyncBoundary
       loading={loading}
@@ -100,6 +124,32 @@ export function Home({ }: Props) {
         title='최근 10개 게시글'
       />
       <Box.Content>
+        <div className='flex flex-row gap-2 p-4 mb-4 border-b border-black-300'>
+          <Button.Action
+            label='Info 알림'
+            onClick={onInfoClick}
+            display='inline'
+            className='button-normal-blue-600'
+          />
+          <Button.Action
+            label='Error 알림'
+            onClick={onErrorClick}
+            display='inline'
+            className='button-normal-red-600'
+          />
+          <Button.Action
+            label='Warn 알림'
+            onClick={onWarnClick}
+            display='inline'
+            className='button-normal-orange-600'
+          />
+          <Button.Action
+            label='Confirm 모달'
+            onClick={onConfirmClick}
+            display='inline'
+            className='button-normal-black-600'
+          />
+        </div>
         <List.Template
           columns={columns}
           data={response?.data?.list ?? []}

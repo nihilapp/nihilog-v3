@@ -2,15 +2,36 @@ import { DateTime, type DurationLike, type DurationUnit } from 'luxon';
 
 // --- 타입 정의 ---
 type DateInput = Date | string | number | DateTime;
-type FormatString
-  = | 'yyyy-MM-ddTHH:mm:ss.SSSZ'
-    | 'yyyy-MM-dd'
-    | 'yyyy-MM-dd HH:mm:ss'
-    | 'yyyyMMdd'
-    | 'yyyy.MM.dd'
-    | 'yyyy년 MM월 dd일'
-    | 'HH:mm:ss'
-    | 'HH:mm';
+
+/**
+ * @description 날짜 포맷 문자열 상수 객체
+ * @example
+ * DateTools.format(date, DateFormat.ISO_DATETIME); // '2024-05-01T12:30:45.123+09:00'
+ * DateTools.format(date, DateFormat.DATE); // '2024-05-01'
+ */
+export const DateFormat = {
+  /** ISO 8601 형식 (yyyy-MM-ddTHH:mm:ss.SSSZ) */
+  ISO_DATETIME: 'yyyy-MM-ddTHH:mm:ss.SSSZ',
+  /** 날짜만 (yyyy-MM-dd) */
+  DATE: 'yyyy-MM-dd',
+  /** 날짜와 시간 (yyyy-MM-dd HH:mm:ss) */
+  DATETIME: 'yyyy-MM-dd HH:mm:ss',
+  /** 날짜만 숫자 (yyyyMMdd) */
+  DATE_NUMERIC: 'yyyyMMdd',
+  /** 날짜 점 구분 (yyyy.MM.dd) */
+  DATE_DOT: 'yyyy.MM.dd',
+  /** 날짜 한글 (yyyy년 MM월 dd일) */
+  DATE_KOREAN: 'yyyy년 MM월 dd일',
+  /** 시간만 (HH:mm:ss) */
+  TIME: 'HH:mm:ss',
+  /** 시간만 간단 (HH:mm) */
+  TIME_SHORT: 'HH:mm',
+} as const;
+
+/**
+ * @description 날짜 포맷 문자열 타입
+ */
+export type FormatString = typeof DateFormat[keyof typeof DateFormat];
 
 export class DateTools {
   /**
@@ -19,7 +40,7 @@ export class DateTools {
   private static toDateTime(date: DateInput): DateTime {
     const config = {
       zone: 'Asia/Seoul',
-      locale: 'ko_KR',
+      locale: 'ko',
     };
 
     if (DateTime.isDateTime(date)) {
@@ -63,8 +84,9 @@ export class DateTools {
   /**
    * 주어진 날짜를 지정된 형식의 문자열로 변환합니다.
    * @example
-   * DateTools.format('2024-05-01', 'yyyy년 MM월 dd일'); // '2024년 05월 01일'
-   * DateTools.format(new Date(), 'yyyy-MM-dd'); // '2024-05-01'
+   * DateTools.format('2024-05-01', DateFormat.DATE_KOREAN); // '2024년 05월 01일'
+   * DateTools.format(new Date(), DateFormat.DATE); // '2024-05-01'
+   * DateTools.format(new Date(), DateFormat.DATETIME); // '2024-05-01 12:30:45'
    */
   static format(date: DateInput, formatString: FormatString): string {
     return this.toDateTime(date).toFormat(formatString);

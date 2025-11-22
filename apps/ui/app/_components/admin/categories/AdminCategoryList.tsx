@@ -14,6 +14,7 @@ import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/admin-categories.keys';
 import { useAdminGetCategoryList } from '@/_entities/admin/categories/hooks';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { Api } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
@@ -64,6 +65,7 @@ export function AdminCategoryList({ }: Props) {
   // 전체 카테고리 목록을 가져와서 계층 구조 구성
   const { response, loading, done, refetch, } = useAdminGetCategoryList({});
   const invalidateCache = useInvalidateAdminCategoriesCache();
+  const { triggerConfirm, } = useAlert();
 
   const deleteCategoryMutation = useMutation({
     mutationFn: async (ctgryNo: number) => {
@@ -111,11 +113,12 @@ export function AdminCategoryList({ }: Props) {
   };
 
   const onDeleteCategory = (category: SelectCategoryType) => {
-    if (!confirm(`카테고리 "${category.ctgryNm}"을(를) 삭제하시겠습니까?`)) {
-      return;
-    }
-
-    deleteCategoryMutation.mutate(category.ctgryNo);
+    triggerConfirm(
+      `카테고리 "${category.ctgryNm}"을(를) 삭제하시겠습니까?`,
+      () => {
+        deleteCategoryMutation.mutate(category.ctgryNo);
+      }
+    );
   };
 
   const onToggleCategoryExpand = (ctgryNo: number) => {

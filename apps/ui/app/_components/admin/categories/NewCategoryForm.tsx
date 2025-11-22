@@ -10,6 +10,7 @@ import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { Modal } from '@/_components/ui/modal';
 import { useAdminCreateCategory } from '@/_entities/admin/categories/hooks';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { cn } from '@/_libs';
 
 interface Props {
@@ -34,18 +35,24 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
   });
 
   const createCategory = useAdminCreateCategory();
+  const { triggerConfirm, } = useAlert();
 
   const upCtgryNo = form.watch('upCtgryNo');
   const upCtgryNoError = form.formState.errors.upCtgryNo;
 
   const onSubmitForm: SubmitHandler<CreateCategoryType> = (data) => {
-    createCategory.mutate(
-      data,
-      {
-        onSuccess() {
-          form.reset();
-          onClose();
-        },
+    triggerConfirm(
+      '카테고리를 추가하시겠습니까?',
+      () => {
+        createCategory.mutate(
+          data,
+          {
+            onSuccess() {
+              form.reset();
+              onClose();
+            },
+          }
+        );
       }
     );
   };
@@ -55,7 +62,6 @@ export function NewCategoryForm({ open, onClose, categoryList, }: Props) {
       open={open}
       onClose={onClose}
       width={800}
-      height={600}
     >
       <Modal.Top title='카테고리 추가' onClose={onClose} />
       <Modal.Content>

@@ -11,9 +11,11 @@ interface Props
   extends ReactElementProps<'div', 'title'>, VariantProps<typeof cssVariants> {
   className?: string | string[];
   title: string;
+  icon?: React.ReactNode;
   custom?: {
     div?: string | string[];
     button?: string | string[];
+    icon?: string | string[];
   };
   onClose?: () => void;
 }
@@ -27,7 +29,7 @@ const cssVariants = cva(
   }
 );
 
-export function ModalTop({ className, title, onClose, custom, ...props }: Props) {
+export function ModalTop({ className, title, icon, onClose, custom, ...props }: Props) {
   return (
     <div
       className={cn(
@@ -36,7 +38,19 @@ export function ModalTop({ className, title, onClose, custom, ...props }: Props)
       )}
       {...props}
     >
-      <h2 className='text-h6 font-bold flex-1'>{title}</h2>
+      <div className='flex flex-row items-center gap-2 flex-1'>
+        {icon && (
+          <div
+            className={cn(
+              'flex items-center shrink-0',
+              custom?.icon
+            )}
+          >
+            {icon}
+          </div>
+        )}
+        <h2 className='text-h6 font-bold'>{title}</h2>
+      </div>
       {onClose && (
         <button
           type='button'

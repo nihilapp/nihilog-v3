@@ -9,6 +9,7 @@ import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { useAdminCreateAdmin } from '@/_entities/admin/users/hooks';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 
 // UI 전용 스키마 (passwordConfirm 필드 추가)
 const createUserUISchema = createUserSchema.extend({
@@ -37,17 +38,23 @@ export function AdminSignUpForm() {
   });
 
   const createAdmin = useAdminCreateAdmin();
+  const { triggerConfirm, } = useAlert();
 
   const onSubmitForm: SubmitHandler<CreateUserUISchemaType> = (data) => {
     // passwordConfirm 필드 제거 후 전송
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordConfirm, ...submitData } = data;
-    createAdmin.mutate(
-      submitData,
-      {
-        onSuccess() {
-          form.reset();
-        },
+    triggerConfirm(
+      '관리자를 생성하시겠습니까?',
+      () => {
+        createAdmin.mutate(
+          submitData,
+          {
+            onSuccess() {
+              form.reset();
+            },
+          }
+        );
       }
     );
   };

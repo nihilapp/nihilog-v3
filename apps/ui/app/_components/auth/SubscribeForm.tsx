@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { useCreateUser } from '@/_entities/users/hooks';
 
 // UI 전용 스키마 (passwordConfirm 필드 추가)
@@ -37,17 +38,23 @@ export function SubscribeForm() {
   });
 
   const createUser = useCreateUser();
+  const { triggerConfirm, } = useAlert();
 
   const onSubmitForm: SubmitHandler<CreateUserUISchemaType> = (data) => {
     // passwordConfirm 필드 제거 후 전송
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordConfirm, ...submitData } = data;
-    createUser.mutate(
-      submitData,
-      {
-        onSuccess() {
-          form.reset();
-        },
+    triggerConfirm(
+      '회원가입을 진행하시겠습니까?',
+      () => {
+        createUser.mutate(
+          submitData,
+          {
+            onSuccess() {
+              form.reset();
+            },
+          }
+        );
       }
     );
   };

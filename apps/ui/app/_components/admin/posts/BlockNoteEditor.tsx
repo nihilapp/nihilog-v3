@@ -4,6 +4,7 @@ import type { Block, BlockNoteEditor as BlockNoteEditorType, BlockNoteExtension,
 import { createBlockNoteExtension } from '@blocknote/core';
 import { BlockNoteView } from '@blocknote/mantine';
 import { useCreateBlockNote } from '@blocknote/react';
+import { forwardRef, useImperativeHandle, useMemo } from 'react';
 
 // 입력 시 자동으로 새 블록이 생성되는 것을 막는 Extension
 const preventAutoBlockExtension: BlockNoteExtension = createBlockNoteExtension({
@@ -17,21 +18,40 @@ interface BlockNoteEditorProps {
   onChange?: (blocks: Block[]) => void;
 }
 
-export function BlockNoteEditor({
+export interface BlockNoteEditorRef {
+  focus: () => void;
+}
+
+export const BlockNoteEditor = forwardRef<BlockNoteEditorRef, BlockNoteEditorProps>(function BlockNoteEditor({
   initialContent,
   onChange,
-}: BlockNoteEditorProps) {
-  const editor = useCreateBlockNote({
-    initialContent: initialContent || [
+}, ref) {
+  const defaultContent = useMemo(
+    () => [
       {
-        type: 'paragraph',
+        type: 'paragraph' as const,
         content: '',
       },
     ],
+    []
+  );
+
+  const editor = useCreateBlockNote({
+    initialContent: initialContent || defaultContent,
     extensions: [ preventAutoBlockExtension, ],
   });
 
-  const handleChange = (editorInstance: BlockNoteEditorType) => {
+  useImperativeHandle(
+    ref,
+    () => ({
+      focus: () => {
+        editor.focus();
+      },
+    }),
+    [ editor, ]
+  );
+
+  const onEditorChange = (editorInstance: BlockNoteEditorType) => {
     if (onChange) {
       const blocks = editorInstance.document;
       onChange(blocks);
@@ -41,7 +61,7 @@ export function BlockNoteEditor({
   return (
     <BlockNoteView
       editor={editor}
-      onChange={handleChange}
+      onChange={onEditorChange}
     />
   );
-}
+});

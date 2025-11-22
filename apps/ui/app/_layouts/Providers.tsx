@@ -3,6 +3,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import { GlobalModals } from '@/_components/common/GlobalModals';
+
 interface Props {
   children: React.ReactNode;
 }
@@ -32,6 +34,7 @@ export function Providers({ children, }: Props) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
+      <GlobalModals />
       <ReactQueryDevtools />
     </QueryClientProvider>
   );

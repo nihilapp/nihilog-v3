@@ -10,6 +10,7 @@ import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { Modal } from '@/_components/ui/modal';
 import { useAdminCreateCategory } from '@/_entities/admin/categories/hooks';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { cn } from '@/_libs';
 
 interface Props {
@@ -35,6 +36,7 @@ export function AddChildCategoryForm({ open, onClose, parentCtgryNo, categoryLis
   });
 
   const createCategory = useAdminCreateCategory();
+  const { triggerConfirm, } = useAlert();
 
   // 모달이 열릴 때마다 상위 카테고리 번호를 고정값으로 설정
   useEffect(
@@ -70,13 +72,18 @@ export function AddChildCategoryForm({ open, onClose, parentCtgryNo, categoryLis
       ...data,
       upCtgryNo: parentCtgryNo,
     };
-    createCategory.mutate(
-      submitData,
-      {
-        onSuccess() {
-          form.reset();
-          onClose();
-        },
+    triggerConfirm(
+      '하위 카테고리를 추가하시겠습니까?',
+      () => {
+        createCategory.mutate(
+          submitData,
+          {
+            onSuccess() {
+              form.reset();
+              onClose();
+            },
+          }
+        );
       }
     );
   };
@@ -89,7 +96,6 @@ export function AddChildCategoryForm({ open, onClose, parentCtgryNo, categoryLis
       open={open}
       onClose={onClose}
       width={800}
-      height={600}
     >
       <Modal.Top title='하위 카테고리 추가' onClose={onClose} />
       <Modal.Content>

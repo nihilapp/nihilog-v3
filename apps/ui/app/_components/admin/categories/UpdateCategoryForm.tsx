@@ -11,6 +11,7 @@ import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { Modal } from '@/_components/ui/modal';
 import { useAdminUpdateCategory } from '@/_entities/admin/categories/hooks';
+import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { cn } from '@/_libs';
 
 interface Props {
@@ -37,18 +38,24 @@ export function UpdateCategoryForm({ open, onClose, category, categoryList, }: P
   });
 
   const updateCategory = useAdminUpdateCategory(category.ctgryNo);
+  const { triggerConfirm, } = useAlert();
 
   const upCtgryNo = form.watch('upCtgryNo');
   const upCtgryNoError = form.formState.errors.upCtgryNo;
 
   const onSubmitForm: SubmitHandler<UpdateCategoryType> = (data) => {
-    updateCategory.mutate(
-      data,
-      {
-        onSuccess() {
-          form.reset();
-          onClose();
-        },
+    triggerConfirm(
+      '카테고리를 수정하시겠습니까?',
+      () => {
+        updateCategory.mutate(
+          data,
+          {
+            onSuccess() {
+              form.reset();
+              onClose();
+            },
+          }
+        );
       }
     );
   };
@@ -58,7 +65,6 @@ export function UpdateCategoryForm({ open, onClose, category, categoryList, }: P
       open={open}
       onClose={onClose}
       width={800}
-      height={600}
     >
       <Modal.Top title='카테고리 수정' onClose={onClose} />
       <Modal.Content>

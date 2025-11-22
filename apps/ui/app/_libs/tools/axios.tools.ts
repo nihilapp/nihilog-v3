@@ -101,15 +101,43 @@ export class Api {
         (response) => response,
         (error) => {
           if (process.env.NODE_ENV === 'development') {
+            const errorInfo: Record<string, unknown> = {};
+
+            // 기본 에러 정보
+            if (error.message) {
+              errorInfo.message = error.message;
+            }
+            if (error.code) {
+              errorInfo.code = error.code;
+            }
+
+            // 응답이 있는 경우 (서버 에러)
+            if (error.response) {
+              errorInfo.status = error.response.status;
+              errorInfo.statusText = error.response.statusText;
+              errorInfo.data = error.response.data;
+              errorInfo.headers = error.response.headers;
+            }
+
+            // 요청은 보냈지만 응답을 받지 못한 경우
+            if (error.request) {
+              errorInfo.request = error.request;
+            }
+
+            // 요청 설정 정보
+            if (error.config) {
+              errorInfo.url = error.config.url;
+              errorInfo.method = error.config.method;
+              errorInfo.baseURL = error.config.baseURL;
+            }
+
+            // CORS 에러 확인
+            const errorMessage = error.message || '';
+            errorInfo.isCorsError = errorMessage.includes('CORS') || errorMessage.includes('Network Error');
+
             console.error(
               '[API Response Error]',
-              {
-                message: error.message,
-                code: error.code,
-                status: error.response?.status,
-                url: error.config?.url,
-                isCorsError: error.message?.includes('CORS') || error.message?.includes('Network Error'),
-              }
+              errorInfo
             );
           }
           return Promise.reject(error);

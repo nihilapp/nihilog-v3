@@ -12,6 +12,7 @@ alwaysApply: true
 6. **CRITICAL** 함수나 변수에 **handle** 이라는 단어를 사용하지 않습니다.
 7. **CRITICAL** 모든 컴포넌트는 참고 2와 같이 프롭 타이핑을 해야 합니다. `Omit<React....>` 가 아니라 `ReactElementProps<ElementType, 'ExcludedKeys'>` 형식으로 작성합니다. 또한 인터페이스의 기본 프롭은 className, custom 입니다.
 8. **CRITICAL** JSX 내부에 인라인 함수를 작성하지 않습니다. 모든 이벤트 핸들러와 콜백 함수는 컴포넌트 내부에서 별도 함수로 분리합니다. `useCallback`과 `useMemo`는 필수가 아니며, 리액트 컴파일러를 사용하기 때문에 필요에 따라 사용합니다. 함수 이름은 규칙 5에 따라 `on<Event><Target>` 형식을 따릅니다.
+9. **CRITICAL** 알림 모달이나 확인 모달을 표시해야 할 때는 직접 모달 컴포넌트를 렌더링하지 않고 `use-alert` 훅을 사용해야 합니다. 알림을 표시하려면 `triggerInfo`, `triggerError`, `triggerWarn`을 사용하고, 확인 모달을 표시하려면 `triggerConfirm`을 사용합니다. `AlertModal`과 `ConfirmModal`은 이미 `GlobalModals`를 통해 전역적으로 렌더링되므로 별도로 추가할 필요가 없습니다.
 
 # 참고 1
 

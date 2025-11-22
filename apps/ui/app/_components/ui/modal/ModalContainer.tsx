@@ -69,7 +69,7 @@ const modalVariants = cva(
 export function ModalContainer({
   className,
   width = 500,
-  height = 400,
+  height = 0,
   open,
   onClose,
   custom,
@@ -103,7 +103,9 @@ export function ModalContainer({
         )}
         style={{
           width: `${width}px`,
-          height: `${height}px`,
+          height: height > 0
+            ? `${height}px`
+            : 'auto',
           ...props.style,
         }}
         onClick={(e) => e.stopPropagation()}
