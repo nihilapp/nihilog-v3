@@ -242,7 +242,7 @@ export const pstTagMpngSchema = commonSchema.extend({
       description: '태그 매핑 번호',
       example: 1,
     }),
-  pstNo: z
+  pstNo: z.coerce
     .number()
     .int('포스트 번호는 정수여야 합니다.')
     .positive('포스트 번호는 양수여야 합니다.')

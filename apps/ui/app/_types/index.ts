@@ -16,3 +16,10 @@ export type {
 export type {
   CategoryItem
 } from './categories.types';
+
+// 포스트 타입 export
+export type {
+  Block,
+  ToolbarButton,
+  PostValidationError
+} from './posts.types';

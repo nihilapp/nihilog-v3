@@ -4,8 +4,9 @@ import { useGet } from '@/_entities/common/hooks';
 
 /**
  * @description 태그별 사용 효율성을 조회하는 커스텀 훅
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useAdminGetTagUsageEfficiency() {
+export function useAdminGetTagUsageEfficiency(enabled: boolean = true) {
   const query = useGet<TagUsageEfficiencyItemType[]>({
     url: [
       'admin',
@@ -13,6 +14,7 @@ export function useAdminGetTagUsageEfficiency() {
       'analyze',
       'efficiency',
     ],
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

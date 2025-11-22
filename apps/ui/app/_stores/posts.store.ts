@@ -4,9 +4,13 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
+import type { PostValidationError } from '@/_types';
+
 interface PostsAction {
   setEditMode: (editMode: 'create' | 'update') => void;
   setPostData: (postData: PostData) => void;
+  setErrors: (errors: PostValidationError[]) => void;
+  clearErrors: () => void;
   reset: () => void;
 }
 
@@ -15,7 +19,7 @@ interface PostData {
   pstSmry: string;
   pstMtxt: Block[] | null;
   pstCd: string;
-  pstThmbLink: string;
+  pstThmbLink: string | undefined;
   pstStts: PostStatus;
   publDt: string;
   pinYn: YnStatus;
@@ -31,6 +35,7 @@ interface PostsState {
   // 상태
   editMode: 'create' | 'update';
   postData: PostData;
+  errors: PostValidationError[];
 
   // 액션
   actions: PostsAction;
@@ -45,7 +50,7 @@ const postsStore = create<PostsState>()(devtools(
       pstSmry: '',
       pstMtxt: [],
       pstCd: '',
-      pstThmbLink: '',
+      pstThmbLink: undefined,
       pstStts: 'EMPTY',
       publDt: '',
       pinYn: 'N',
@@ -55,6 +60,7 @@ const postsStore = create<PostsState>()(devtools(
       pstPswd: '',
       ctgryNo: undefined,
     },
+    errors: [],
     actions: {
       setEditMode: (editMode: 'create' | 'update') => set((state) => {
         state.editMode = editMode;
@@ -65,6 +71,12 @@ const postsStore = create<PostsState>()(devtools(
           ...postData,
         };
       }),
+      setErrors: (errors: PostValidationError[]) => set((state) => {
+        state.errors = errors;
+      }),
+      clearErrors: () => set((state) => {
+        state.errors = [];
+      }),
       reset: () => set((state) => {
         state.editMode = 'create';
         state.postData = {
@@ -72,7 +84,7 @@ const postsStore = create<PostsState>()(devtools(
           pstSmry: '',
           pstMtxt: [],
           pstCd: '',
-          pstThmbLink: '',
+          pstThmbLink: undefined,
           pstStts: 'EMPTY',
           publDt: '',
           pinYn: 'N',
@@ -82,6 +94,7 @@ const postsStore = create<PostsState>()(devtools(
           pstPswd: '',
           ctgryNo: undefined,
         };
+        state.errors = [];
       }),
     },
   })),
@@ -92,5 +105,6 @@ const postsStore = create<PostsState>()(devtools(
 
 export const useEditMode = () => postsStore((state) => state.editMode);
 export const usePostData = () => postsStore((state) => state.postData);
+export const usePostErrors = () => postsStore((state) => state.errors);
 
 export const usePostActions = () => postsStore((state) => state.actions);

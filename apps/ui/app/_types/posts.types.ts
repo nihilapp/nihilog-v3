@@ -55,3 +55,9 @@ export interface ToolbarButton {
   className?: string | string[];
   group?: string;
 }
+
+// 포스트 검증 에러 타입
+export interface PostValidationError {
+  field: string;
+  message: string;
+}

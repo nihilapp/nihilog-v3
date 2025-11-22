@@ -3,6 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
+import { InputErrorMessage } from '@/_components/ui/input/InputErrorMessage';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
@@ -11,6 +12,8 @@ interface Props
   extends ReactElementProps<'label'>, VariantProps<typeof cssVariants> {
   className?: string | string[];
   label?: string | ReactNode;
+  showErrorMessage?: boolean;
+  errorMessage?: string;
   icon?: ReactNode;
   custom?: {
     label?: string | string[];
@@ -35,38 +38,41 @@ const cssVariants = cva(
   }
 );
 
-export function InputLabel({ className, children, id, label, icon, custom, direction, ...props }: Props) {
+export function InputLabel({ className, children, id, label, errorMessage, icon, custom, direction, showErrorMessage = true, ...props }: Props) {
   return (
     <>
-      {children && (
-        <label
-          htmlFor={id}
-          className={cn(
-            cssVariants({ direction, }),
-            className,
-            custom?.label
-          )}
-          {...props}
+      <label
+        htmlFor={id}
+        className={cn(
+          cssVariants({ direction, }),
+          className,
+          custom?.label
+        )}
+        {...props}
+      >
+        <span className={cn([
+          'font-900 text-sm flex items-center gap-1',
+          direction === 'horizontal' && 'w-[200px] shrink-0',
+          custom?.span,
+        ])}
         >
-          <span className={cn([
-            'font-900 text-sm flex items-center gap-1',
-            direction === 'horizontal' && 'w-[200px] shrink-0',
-            custom?.span,
-          ])}
-          >
-            {icon && (
-              <span className={cn([
-                'shrink-0',
-                custom?.icon,
-              ])}
-              >
-                {icon}
-              </span>
-            )}
-            {label}
-          </span>
-          {children}
-        </label>
+          {icon && (
+            <span className={cn([
+              'shrink-0',
+              custom?.icon,
+            ])}
+            >
+              {icon}
+            </span>
+          )}
+          {label}
+        </span>
+        {children}
+      </label>
+      {showErrorMessage && (
+        <InputErrorMessage isError={!!errorMessage} className='-mt-3 w-full'>
+          {errorMessage}
+        </InputErrorMessage>
       )}
     </>
   );

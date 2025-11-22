@@ -29,8 +29,18 @@ const postStatusSchema = basePostStatusSchema
  */
 export const postSchema = commonSchema.extend({
   // commonSchema의 기본값 오버라이드 (기본값 제거)
-  delYn: ynEnumSchema.optional(),
-  useYn: ynEnumSchema.optional(),
+  delYn: ynEnumSchema
+    .optional()
+    .openapi({
+      description: '삭제 여부',
+      example: 'N',
+    }),
+  useYn: ynEnumSchema
+    .optional()
+    .openapi({
+      description: '사용 여부',
+      example: 'Y',
+    }),
   pstNo: z.coerce
     .number()
     .int('포스트 번호는 정수여야 합니다.')
@@ -130,9 +140,24 @@ export const postSchema = commonSchema.extend({
       description: '발행 일시',
       example: '2024-01-01 00:00:00',
     }),
-  pinYn: ynEnumSchema.optional(),
-  rlsYn: ynEnumSchema.optional(),
-  archYn: ynEnumSchema.optional(),
+  pinYn: ynEnumSchema
+    .optional()
+    .openapi({
+      description: '고정 여부',
+      example: 'N',
+    }),
+  rlsYn: ynEnumSchema
+    .optional()
+    .openapi({
+      description: '공개 여부',
+      example: 'Y',
+    }),
+  archYn: ynEnumSchema
+    .optional()
+    .openapi({
+      description: '보관 여부',
+      example: 'N',
+    }),
   secrYn: ynEnumSchema
     .optional()
     .openapi({
@@ -250,6 +275,25 @@ export const updatePostSchema = postSchema.partial().pick({
   updtDt: true,
   delNo: true,
   delDt: true,
+}).extend({
+  pstCd: z
+    .string('슬러그는 문자열이어야 합니다.')
+    .min(
+      1,
+      '슬러그는 필수입니다.'
+    )
+    .max(
+      255,
+      '포스트 코드는 255자를 초과할 수 없습니다.'
+    )
+    .openapi({
+      description: '포스트 코드 (슬러그, 최대 255자)',
+      example: 'post-slug',
+    }),
+}).required({
+  pstTtl: true,
+  pstMtxt: true,
+  pstCd: true,
 });
 
 /**

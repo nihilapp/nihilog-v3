@@ -1,3 +1,4 @@
+import { InputErrorMessage } from '@/_components/ui/input/InputErrorMessage';
 import { InputLabel } from '@/_components/ui/input/InputLabel';
 import { InputLongText } from '@/_components/ui/input/InputLongText';
 import { InputSelect } from '@/_components/ui/input/InputSelect';
@@ -18,4 +19,5 @@ export const Input = {
   SelectItem: InputSelectItem,
   Switch: InputSwitch,
   TextArray: InputTextArray,
+  ErrorMessage: InputErrorMessage,
 };

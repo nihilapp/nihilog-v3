@@ -5,8 +5,9 @@ import { useGet } from '@/_entities/common/hooks';
 /**
  * @description 비활성 사용자 목록을 조회하는 커스텀 훅
  * @param {number} [daysThreshold] - 비활성 기준 일수 (선택사항)
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useAdminGetInactiveUsers(daysThreshold?: number) {
+export function useAdminGetInactiveUsers(daysThreshold?: number, enabled: boolean = true) {
   const query = useGet<InactiveUsersListItemType[]>({
     url: [
       'admin',
@@ -17,6 +18,7 @@ export function useAdminGetInactiveUsers(daysThreshold?: number) {
     params: {
       daysThreshold,
     },
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

@@ -4,8 +4,9 @@ import { useGet } from '@/_entities/common/hooks';
 
 /**
  * @description 구독자 없는 태그 목록을 조회하는 커스텀 훅
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useAdminGetTagsWithoutSubscribers() {
+export function useAdminGetTagsWithoutSubscribers(enabled: boolean = true) {
   const query = useGet<TagWithoutSubscribersItemType[]>({
     url: [
       'admin',
@@ -13,6 +14,7 @@ export function useAdminGetTagsWithoutSubscribers() {
       'analyze',
       'no-subscribers',
     ],
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

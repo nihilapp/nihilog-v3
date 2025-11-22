@@ -1,59 +1,117 @@
 'use client';
 
-import type { UseFormReturn } from 'react-hook-form';
 import { BsToggles } from 'react-icons/bs';
 import { MdArchive, MdEdit, MdFolder, MdImage, MdLocalOffer, MdLockOutline, MdOutlineTextFields, MdPushPin, MdVpnKey } from 'react-icons/md';
 
 import { PostCategorySelect } from '@/_components/admin/posts/PostCategorySelect';
 import { Box } from '@/_components/ui/box';
 import { Input } from '@/_components/ui/input';
+import { usePostActions, usePostData, usePostErrors } from '@/_stores/posts.store';
 
 interface Props {
-  form: UseFormReturn<Record<string, unknown>>;
   tags: string[];
-  setTags: (tags: string[]) => void;
-  selectedCtgryNo?: number;
-  pstStts?: string;
-  rlsYn?: 'Y' | 'N';
-  secrYn?: 'Y' | 'N';
-  pinYn?: 'Y' | 'N';
-  archYn?: 'Y' | 'N';
-  onCategoryChange: (value: number | undefined) => void;
-  onStatusChange: (value: string) => void;
-  onReleaseChange: (value: 'Y' | 'N') => void;
-  onSecretChange: (value: 'Y' | 'N') => void;
-  onPinChange: (value: 'Y' | 'N') => void;
-  onArchiveChange: (value: 'Y' | 'N') => void;
-  onStatusDisplayValue: (value: string) => string;
+  onTagsChange: (tags: string[]) => void;
 }
 
-export function PostEditorSidebar({
-  form,
-  tags,
-  setTags,
-  selectedCtgryNo,
-  pstStts,
-  rlsYn,
-  secrYn,
-  pinYn,
-  archYn,
-  onCategoryChange,
-  onStatusChange,
-  onReleaseChange,
-  onSecretChange,
-  onPinChange,
-  onArchiveChange,
-  onStatusDisplayValue,
-}: Props) {
+export function PostEditorSidebar({ tags, onTagsChange, }: Props) {
+  const postData = usePostData();
+  const postErrors = usePostErrors();
+  const { setPostData, } = usePostActions();
+
+  const getErrorMessage = (fieldName: string): string | undefined => {
+    const error = postErrors.find((err) => err.field === fieldName);
+    return error?.message;
+  };
+
+  const onStatusDisplayValue = (value: string) => {
+    switch (value) {
+      case 'EMPTY':
+        return '초안 없음';
+      case 'WRITING':
+        return '작성중';
+      case 'FINISHED':
+        return '작성완료';
+      default:
+        return value;
+    }
+  };
+
+  const onStatusChange = (value: string) => {
+    setPostData({
+      ...postData,
+      pstStts: value as 'EMPTY' | 'WRITING' | 'FINISHED',
+    });
+  };
+
+  const onReleaseChange = (value: 'Y' | 'N') => {
+    setPostData({
+      ...postData,
+      rlsYn: value,
+    });
+  };
+
+  const onPinChange = (value: 'Y' | 'N') => {
+    setPostData({
+      ...postData,
+      pinYn: value,
+    });
+  };
+
+  const onArchiveChange = (value: 'Y' | 'N') => {
+    setPostData({
+      ...postData,
+      archYn: value,
+    });
+  };
+
+  const onSecretChange = (value: 'Y' | 'N') => {
+    setPostData({
+      ...postData,
+      secrYn: value,
+      // 비밀글이 N으로 변경되면 비밀번호 초기화
+      pstPswd: value === 'N'
+        ? ''
+        : postData.pstPswd,
+    });
+  };
+
+  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPostData({
+      ...postData,
+      pstPswd: e.target.value,
+    });
+  };
+
+  const onThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPostData({
+      ...postData,
+      pstThmbLink: e.target.value || undefined,
+    });
+  };
+
+  const onSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPostData({
+      ...postData,
+      pstCd: e.target.value,
+    });
+  };
+
+  const onCategoryChange = (value: number | undefined) => {
+    setPostData({
+      ...postData,
+      ctgryNo: value,
+    });
+  };
   return (
     <Box.Content className='gap-5'>
       <Input.Label
         label='포스트 상태'
         icon={<MdEdit />}
         direction='vertical'
+        errorMessage={getErrorMessage('pstStts')}
       >
         <Input.SelectContainer
-          value={pstStts ?? 'EMPTY'}
+          value={postData.pstStts ?? 'EMPTY'}
           onValueChange={onStatusChange}
         >
           <Input.Selection
@@ -93,7 +151,7 @@ export function PostEditorSidebar({
         direction='horizontal'
       >
         <Input.Switch
-          value={rlsYn ?? 'N'}
+          value={postData.rlsYn ?? 'N'}
           onChange={onReleaseChange}
         />
       </Input.Label>
@@ -104,7 +162,7 @@ export function PostEditorSidebar({
         direction='horizontal'
       >
         <Input.Switch
-          value={pinYn ?? 'N'}
+          value={postData.pinYn ?? 'N'}
           onChange={onPinChange}
         />
       </Input.Label>
@@ -115,7 +173,7 @@ export function PostEditorSidebar({
         direction='horizontal'
       >
         <Input.Switch
-          value={archYn ?? 'N'}
+          value={postData.archYn ?? 'N'}
           onChange={onArchiveChange}
         />
       </Input.Label>
@@ -126,21 +184,23 @@ export function PostEditorSidebar({
         direction='horizontal'
       >
         <Input.Switch
-          value={secrYn ?? 'N'}
+          value={postData.secrYn ?? 'N'}
           onChange={onSecretChange}
         />
       </Input.Label>
 
-      {secrYn === 'Y' && (
+      {postData.secrYn === 'Y' && (
         <Input.Label
           label='비밀번호'
           icon={<MdVpnKey />}
           direction='vertical'
+          errorMessage={getErrorMessage('pstPswd')}
         >
           <Input.Text
             type='password'
             placeholder='비밀번호를 입력해주세요.'
-            {...form.register('pstPswd')}
+            value={postData.pstPswd}
+            onChange={onPasswordChange}
           />
         </Input.Label>
       )}
@@ -149,11 +209,13 @@ export function PostEditorSidebar({
         label='썸네일 링크'
         icon={<MdImage />}
         direction='vertical'
+        errorMessage={getErrorMessage('pstThmbLink')}
       >
         <Input.Text
           type='text'
           placeholder='썸네일 이미지 URL을 입력해주세요.'
-          {...form.register('pstThmbLink')}
+          value={postData.pstThmbLink || ''}
+          onChange={onThumbnailChange}
         />
       </Input.Label>
 
@@ -161,11 +223,13 @@ export function PostEditorSidebar({
         label='슬러그'
         icon={<MdOutlineTextFields />}
         direction='vertical'
+        errorMessage={getErrorMessage('pstCd')}
       >
         <Input.Text
           type='text'
           placeholder='슬러그를 입력해주세요.'
-          {...form.register('pstCd')}
+          value={postData.pstCd}
+          onChange={onSlugChange}
         />
       </Input.Label>
 
@@ -173,9 +237,10 @@ export function PostEditorSidebar({
         label='카테고리'
         icon={<MdFolder />}
         direction='vertical'
+        errorMessage={getErrorMessage('ctgryNo')}
       >
         <PostCategorySelect
-          value={selectedCtgryNo}
+          value={postData.ctgryNo}
           onChange={onCategoryChange}
         />
       </Input.Label>
@@ -184,10 +249,11 @@ export function PostEditorSidebar({
         label='태그'
         icon={<MdLocalOffer />}
         direction='vertical'
+        showErrorMessage={false}
       >
         <Input.TextArray
           value={tags}
-          onChange={setTags}
+          onChange={onTagsChange}
           placeholder='태그를 입력하고 Enter를 누르세요'
           maxItems={20}
           inputPosition='bottom'

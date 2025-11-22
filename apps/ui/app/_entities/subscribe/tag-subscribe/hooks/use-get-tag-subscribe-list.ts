@@ -6,8 +6,9 @@ import { useGet } from '@/_entities/common/hooks';
 /**
  * @description 사용자가 구독한 태그 목록을 조회하는 커스텀 훅
  * @param {SearchTagSubscribeType} [params] - 검색 파라미터 (선택사항)
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useGetTagSubscribeList(params?: SearchTagSubscribeType) {
+export function useGetTagSubscribeList(params?: SearchTagSubscribeType, enabled: boolean = true) {
   const query = useGet<ListType<SelectTagSbcrMpngListItemType>>({
     url: [
       'users',
@@ -16,6 +17,7 @@ export function useGetTagSubscribeList(params?: SearchTagSubscribeType) {
       'search',
     ],
     params,
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

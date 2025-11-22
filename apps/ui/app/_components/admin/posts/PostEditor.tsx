@@ -5,26 +5,32 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { updatePostSchema } from '@nihilog/schemas';
 import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { MdSave, MdPublish } from 'react-icons/md';
 
-import type { BlockNoteEditorRef } from '@/_components/admin/posts/BlockNoteEditor';
 import { PostEditorMain } from '@/_components/admin/posts/PostEditorMain';
 import { PostEditorSidebar } from '@/_components/admin/posts/PostEditorSidebar';
 import { PostStatusBadges } from '@/_components/admin/posts/PostStatusBadges';
 import { Loading } from '@/_components/common/Loading';
 import { Frame } from '@/_components/ui/frame';
 import { useAdminUpdatePost } from '@/_entities/admin/posts/hooks/use-admin-update-post';
+import { useAdminCreateTag } from '@/_entities/admin/tags/hooks/use-admin-create-tag';
+import { useAdminGetTagMapping } from '@/_entities/admin/tags/hooks/use-admin-get-tag-mapping';
+import { useAdminMultipleAddTagMapping } from '@/_entities/admin/tags/hooks/use-admin-multiple-add-tag-mapping';
+import { useAdminMultipleDeleteTagMapping } from '@/_entities/admin/tags/hooks/use-admin-multiple-delete-tag-mapping';
 import { useAlert } from '@/_entities/common/hooks/use-alert';
 import { useGetPostByNo } from '@/_entities/posts/hooks';
+import { getTagByName } from '@/_libs/api/getTagByName';
+import { Api } from '@/_libs/tools/axios.tools';
 import { DateFormat, DateTools } from '@/_libs/tools/date.tools';
 import { useEditMode, usePostActions, usePostData } from '@/_stores/posts.store';
 import type { Menu } from '@/_types/common.types';
 
 // BlockNoteEditorDynamic은 PostEditorMain에서 사용
 export const BlockNoteEditorDynamic = dynamic(
-  () => import('./BlockNoteEditor').then((mod) => ({ default: mod.BlockNoteEditor, })),
+  () => import('./BlockNoteEditor')
+    .then((mod) => ({ default: mod.BlockNoteEditor, })),
   {
     ssr: false,
     loading: () => (
@@ -37,6 +43,68 @@ export const BlockNoteEditorDynamic = dynamic(
 
 interface Props {}
 
+/**
+ * BlockNote 에디터의 본문이 비어있는지 확인하는 함수
+ * @param blocks - BlockNote Block 배열
+ * @returns 본문이 비어있으면 true, 그렇지 않으면 false
+ */
+const isPostContentEmpty = (blocks: Block[] | null | undefined): boolean => {
+  if (!blocks || blocks.length === 0) {
+    return true;
+  }
+
+  try {
+    // JSON 문자열로 변환하여 확인
+    const jsonString = JSON.stringify(blocks);
+    const normalizedJson = jsonString.replace(
+      /\s/g,
+      ''
+    );
+
+    // 빈 배열이거나 기본 paragraph 블록만 있는 경우 (빈 content)
+    // BlockNote의 기본 빈 블록은 보통 [{"type":"paragraph","content":[]}] 또는 [{"type":"paragraph","content":""}] 형태
+    const isEmptyPatterns = [
+      // content가 빈 배열인 경우
+      /^\[\s*\{\s*"type"\s*:\s*"paragraph"\s*,\s*"content"\s*:\s*\[\s*\]\s*\}\s*\]$/,
+      // content가 빈 문자열인 경우
+      /^\[\s*\{\s*"type"\s*:\s*"paragraph"\s*,\s*"content"\s*:\s*""\s*\}\s*\]$/,
+      // content가 없고 children도 없는 경우
+      /^\[\s*\{\s*"type"\s*:\s*"paragraph"\s*\}\s*\]$/,
+    ];
+
+    if (isEmptyPatterns.some((pattern) => pattern.test(normalizedJson))) {
+      return true;
+    }
+
+    // JSON에서 실제 텍스트 콘텐츠가 있는지 확인
+    // content 배열에 실제 텍스트가 있는지, 또는 children에 내용이 있는지 확인
+    const hasNonEmptyContent = blocks.some((block) => {
+      const blockStr = JSON.stringify(block);
+
+      // content가 빈 배열이거나 빈 문자열이 아닌 경우
+      const hasContent = !blockStr.match(/"content"\s*:\s*\[\s*\]/)
+        && !blockStr.match(/"content"\s*:\s*""/)
+        && blockStr.includes('"content"');
+
+      // children이 있고 비어있지 않은 경우
+      const hasChildren = blockStr.includes('"children"')
+        && !blockStr.match(/"children"\s*:\s*\[\s*\]/);
+
+      // content에 실제 텍스트가 있는지 확인 (인라인 콘텐츠 배열에 텍스트가 있는지)
+      const hasTextInContent = blockStr.match(/"content"\s*:\s*\[[^\]]*"text"[^\]]*\]/)
+        || blockStr.match(/"content"\s*:\s*"[^"]+"/);
+
+      return hasContent || hasChildren || hasTextInContent !== null;
+    });
+
+    return !hasNonEmptyContent;
+  }
+  catch {
+    // JSON 변환 실패 시 안전하게 false 반환 (에러가 있으면 비어있다고 간주하지 않음)
+    return false;
+  }
+};
+
 function PostEditorContent() {
   const params = useSearchParams();
   const pstNo = params.get('pstNo');
@@ -44,13 +112,62 @@ function PostEditorContent() {
   const editMode = useEditMode();
   const postData = usePostData();
 
-  const { setPostData, } = usePostActions();
+  const { setPostData, setErrors, clearErrors, } = usePostActions();
   const router = useRouter();
   const { triggerError, triggerConfirm, } = useAlert();
 
   const { response, loading, done, } = useGetPostByNo(Number(pstNo));
   const updatePostMutation = useAdminUpdatePost(Number(pstNo) || 0);
-  const editorRef = useRef<BlockNoteEditorRef>(null);
+  const createTagMutation = useAdminCreateTag();
+
+  // 태그 상태 관리
+  const [
+    tags,
+    setTags,
+  ] = useState<string[]>([]);
+  const [
+    existingTagMappings,
+    setExistingTagMappings,
+  ] = useState<Array<{
+    tagMapNo: number;
+    tagNo: number;
+    tagNm: string;
+  }>>([]);
+
+  // 태그 매핑 관련 훅
+  const addTagMappingMutation = useAdminMultipleAddTagMapping();
+  const deleteTagMappingMutation = useAdminMultipleDeleteTagMapping();
+
+  // 포스트의 태그 매핑 조회 (pstNo가 있을 때만)
+  const { response: tagMappingResponse, } = useAdminGetTagMapping({
+    pstNo: Number(pstNo) || 0,
+    delYn: 'N',
+  });
+
+  const serializePostMtxt = (blocks: Block[] | null | undefined): string => {
+    return blocks
+      ? JSON.stringify(blocks)
+      : '[]';
+  };
+
+  const getFormData = useCallback(
+    () => ({
+      pstTtl: postData.pstTtl,
+      pstSmry: postData.pstSmry,
+      pstMtxt: serializePostMtxt(postData.pstMtxt),
+      pstCd: postData.pstCd,
+      pstThmbLink: postData.pstThmbLink || undefined,
+      pstStts: postData.pstStts,
+      publDt: postData.publDt,
+      pinYn: postData.pinYn,
+      rlsYn: postData.rlsYn,
+      archYn: postData.archYn,
+      secrYn: postData.secrYn,
+      pstPswd: postData.pstPswd,
+      ctgryNo: postData.ctgryNo,
+    }),
+    [ postData, ]
+  );
 
   const form = useForm({
     mode: 'all',
@@ -58,11 +175,9 @@ function PostEditorContent() {
     defaultValues: {
       pstTtl: postData.pstTtl,
       pstSmry: postData.pstSmry,
-      pstMtxt: postData.pstMtxt
-        ? JSON.stringify(postData.pstMtxt)
-        : '[]',
+      pstMtxt: serializePostMtxt(postData.pstMtxt),
       pstCd: postData.pstCd,
-      pstThmbLink: postData.pstThmbLink,
+      pstThmbLink: postData.pstThmbLink || undefined,
       pstStts: postData.pstStts,
       publDt: postData.publDt,
       pinYn: postData.pinYn,
@@ -74,131 +189,237 @@ function PostEditorContent() {
     },
   });
 
-  const selectedCtgryNo = form.watch('ctgryNo');
-  const pstStts = form.watch('pstStts');
-  const rlsYn = form.watch('rlsYn');
-  const secrYn = form.watch('secrYn');
-  const pinYn = form.watch('pinYn');
-  const archYn = form.watch('archYn');
-  const [
-    tags,
-    setTags,
-  ] = useState<string[]>([]);
-
-  const onEditorChange = (blocks: Block[]) => {
-    const blocksJson = JSON.stringify(blocks);
-    form.setValue(
-      'pstMtxt',
-      blocksJson
-    );
-    setPostData({
-      ...postData,
-      pstMtxt: blocks,
-    });
-  };
-
-  const onCategoryChange = (value: number | undefined) => {
-    form.setValue(
-      'ctgryNo',
-      value,
-      { shouldValidate: true, }
-    );
-  };
-
-  const onReleaseChange = (value: 'Y' | 'N') => {
-    form.setValue(
-      'rlsYn',
-      value,
-      { shouldValidate: true, }
-    );
-  };
-
-  const onSecretChange = (value: 'Y' | 'N') => {
-    form.setValue(
-      'secrYn',
-      value,
-      { shouldValidate: true, }
-    );
-    // 비밀글이 N으로 변경되면 비밀번호 초기화
-    if (value === 'N') {
-      form.setValue(
-        'pstPswd',
-        '',
-        { shouldValidate: true, }
-      );
-    }
-  };
-
-  const onPinChange = (value: 'Y' | 'N') => {
-    form.setValue(
-      'pinYn',
-      value,
-      { shouldValidate: true, }
-    );
-  };
-
-  const onArchiveChange = (value: 'Y' | 'N') => {
-    form.setValue(
-      'archYn',
-      value,
-      { shouldValidate: true, }
-    );
-  };
-
-  const onStatusChange = (value: string) => {
-    form.setValue(
-      'pstStts',
-      value as 'EMPTY' | 'WRITING' | 'FINISHED',
-      { shouldValidate: true, }
-    );
-  };
-
-  const onStatusDisplayValue = (value: string) => {
-    switch (value) {
-      case 'EMPTY':
-        return '초안 없음';
-      case 'WRITING':
-        return '작성중';
-      case 'FINISHED':
-        return '작성완료';
-      default:
-        return value;
-    }
-  };
-
-  const onEditorContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // 에디터 내부가 아닌 빈 공간 클릭 시에만 포커스
-    if (e.target === e.currentTarget || (e.target as HTMLElement).closest('.bn-container') === null) {
-      // BlockNote 에디터의 contentEditable 요소 찾기
-      const editorElement = e.currentTarget.querySelector('[contenteditable="true"]') as HTMLElement;
-      if (editorElement) {
-        editorElement.focus();
-      }
-      else {
-        // ref를 통한 포커스 시도
-        editorRef.current?.focus();
-      }
-    }
-  };
-
-  const getFieldName = (fieldName: string): string => {
-    const fieldNameMap: Record<string, string> = {
-      pstTtl: '제목',
-      pstSmry: '요약',
-      pstMtxt: '본문',
-      pstCd: '슬러그',
-      pstThmbLink: '썸네일 링크',
-      pstStts: '상태',
-      publDt: '발행 일시',
-      pinYn: '고정',
-      rlsYn: '공개',
-      archYn: '보관',
-      secrYn: '비밀글',
-      pstPswd: '비밀번호',
-      ctgryNo: '카테고리',
+  const preparePostDataForValidation = () => {
+    // postData를 zod 스키마 형식에 맞게 변환
+    const data = {
+      pstTtl: postData.pstTtl || undefined,
+      pstSmry: postData.pstSmry || undefined,
+      pstMtxt: serializePostMtxt(postData.pstMtxt),
+      pstCd: postData.pstCd || undefined,
+      pstThmbLink: postData.pstThmbLink || undefined,
+      pstStts: postData.pstStts,
+      publDt: postData.publDt || undefined,
+      pinYn: postData.pinYn,
+      rlsYn: postData.rlsYn,
+      archYn: postData.archYn,
+      secrYn: postData.secrYn,
+      pstPswd: postData.pstPswd || undefined,
+      ctgryNo: postData.ctgryNo,
     };
 
-    return fieldNameMap[fieldName] || fieldName;
+    // 빈 문자열을 undefined로 변환 (본문 제외)
+    return Object.fromEntries(Object.entries(data).map(([
+      key,
+      value,
+    ]) => [
+      key,
+      key === 'pstMtxt'
+        ? value
+        : value === ''
+          ? undefined
+          : value,
+    ]));
+  };
+
+  const onValidationError = () => {
+    triggerError('필수값이 누락되었습니다.');
+  };
+
+  const validatePostData = useCallback(
+    async (): Promise<{
+      isValid: boolean;
+      errors: Array<{
+        field: string;
+        message: string;
+      }>;
+    }> => {
+      // form 검증 먼저 실행
+      await form.trigger();
+
+      // formState.errors가 업데이트될 때까지 약간의 지연
+      await new Promise((resolve) => {
+        setTimeout(
+          resolve,
+          0
+        );
+      });
+
+      // 본문이 비어있는지 확인
+      const isContentEmpty = isPostContentEmpty(postData.pstMtxt);
+
+      // form 에러와 본문 에러를 합침
+      const formErrors = Object.entries(form.formState.errors).map(([
+        field,
+        error,
+      ]) => ({
+        field,
+        message: error?.message || '검증 오류가 발생했습니다.',
+      }));
+
+      const contentError = isContentEmpty
+        ? [
+          {
+            field: 'pstMtxt',
+            message: '본문은 필수입니다.',
+          },
+        ]
+        : [];
+
+      const allErrors = [
+        ...formErrors,
+        ...contentError,
+      ];
+
+      // 에러를 스토어에 저장
+      if (allErrors.length > 0) {
+        setErrors(allErrors);
+        return {
+          isValid: false,
+          errors: allErrors,
+        };
+      }
+
+      // 검증 통과 시 에러 초기화
+      clearErrors();
+      return {
+        isValid: true,
+        errors: [],
+      };
+    },
+    [
+      form,
+      postData,
+      setErrors,
+      clearErrors,
+    ]
+  );
+
+  /**
+   * 태그 이름으로 태그를 조회하고, 없으면 생성하는 헬퍼 함수
+   * @param tagName 태그 이름
+   * @returns 태그 번호 (실패 시 null)
+   */
+  const findOrCreateTag = async (tagName: string): Promise<number | null> => {
+    try {
+      // 1. 태그 이름으로 조회
+      const existingTag = await getTagByName(tagName);
+
+      // 2. 이미 존재하는 경우 태그 번호 반환
+      if (existingTag?.tagNo) {
+        return existingTag.tagNo;
+      }
+
+      // 3. 존재하지 않는 경우 생성
+      const createdTagResponse = await createTagMutation.mutateAsync({
+        tagNm: tagName,
+      });
+
+      if (createdTagResponse?.data?.tagNo) {
+        return createdTagResponse.data.tagNo;
+      }
+
+      return null;
+    }
+    catch (error) {
+      console.error(
+        '태그 조회/생성 실패:',
+        error
+      );
+      return null;
+    }
+  };
+
+  // 태그 매핑 처리 함수
+  const syncTagMappings = async (pstNoValue: number) => {
+    if (!pstNoValue) {
+      return;
+    }
+
+    try {
+      // 1. 기존 매핑된 태그 리스트 가져오기 (이미 existingTagMappings에 있음)
+      const existingTagNames = existingTagMappings.map((m) => m.tagNm);
+      const currentTagNames = tags;
+
+      // 2. 입력된 태그 리스트와 비교해서 기존에 있는 태그 식별 (태그 번호 기억)
+      const existingTagNos: number[] = [];
+      for (const tagName of currentTagNames) {
+        const existingMapping = existingTagMappings.find((m) => m.tagNm === tagName);
+        if (existingMapping) {
+          // 기존에 매핑되어 있는 태그의 번호 기억
+          existingTagNos.push(existingMapping.tagNo);
+        }
+      }
+
+      // 3. 신규 태그로 추가할 태그 식별 (입력된 태그 중 기존 매핑에 없는 것)
+      const newTagNames = currentTagNames.filter((tagName) => !existingTagNames.includes(tagName));
+
+      // 4. 신규 태그 추가 (태그 이름으로 조회해서 존재하지 않을 때만 추가)
+      const newTagNos: number[] = [];
+      for (const tagName of newTagNames) {
+        const tagNo = await findOrCreateTag(tagName);
+        if (tagNo) {
+          newTagNos.push(tagNo);
+        }
+      }
+
+      // 5. 기존 태그 번호들과 신규 태그 번호들을 하나의 배열로 묶기
+      const allTagNos = [
+        ...existingTagNos,
+        ...newTagNos,
+      ];
+
+      // 6. 기존 태그 매핑을 전부 삭제
+      if (existingTagMappings.length > 0) {
+        const tagMapNoList = existingTagMappings.map((m) => m.tagMapNo);
+        await deleteTagMappingMutation.mutateAsync({
+          tagMapNoList,
+        });
+      }
+
+      // 7. 신규 매핑 추가
+      if (allTagNos.length > 0) {
+        const tagMappings: Array<{ pstNo: number;
+          tagNo: number; }> = allTagNos.map((tagNo) => ({
+          pstNo: pstNoValue,
+          tagNo,
+        }));
+
+        await addTagMappingMutation.mutateAsync(tagMappings);
+      }
+
+      // 태그 매핑 동기화 후 기존 매핑 정보 업데이트
+      // 태그 매핑을 다시 조회하여 최신 상태로 업데이트
+      try {
+        const updatedMappingResponse = await Api.getQuery<{
+          list: Array<{
+            tagMapNo: number;
+            tagNo: number;
+            tag: {
+              tagNm: string;
+            } | null;
+          }>;
+          totalCnt: number;
+        }>(`admin/tags/mapping/search?pstNo=${pstNoValue}&delYn=N`);
+
+        if (!updatedMappingResponse.error && updatedMappingResponse.data) {
+          setExistingTagMappings(updatedMappingResponse.data.list.map((mapping) => ({
+            tagMapNo: mapping.tagMapNo,
+            tagNo: mapping.tagNo,
+            tagNm: mapping.tag?.tagNm || '',
+          })));
+        }
+      }
+      catch {
+        // 태그 매핑 재조회 실패 시 무시 (이미 동기화는 완료됨)
+      }
+    }
+    catch (error) {
+      console.error(
+        '태그 매핑 동기화 실패:',
+        error
+      );
+      triggerError('태그 매핑 동기화에 실패했습니다.');
+    }
   };
 
   const onSavePost = async () => {
@@ -207,57 +428,24 @@ function PostEditorContent() {
       return;
     }
 
-    const formData = form.getValues();
-    // 빈 문자열을 undefined로 변환 (optional 필드에서 빈 문자열은 validation을 트리거함)
-    const cleanedData = Object.fromEntries(Object.entries(formData).map(([
-      key,
-      value,
-    ]) => [
-      key,
-      value === ''
-        ? undefined
-        : value,
-    ])) as Record<string, unknown>;
-
-    // 변환된 데이터를 form에 설정
-    Object.entries(cleanedData).forEach(([
-      key,
-      value,
-    ]) => {
-      form.setValue(
-        key as keyof typeof formData,
-        value as never
-      );
-    });
-
-    // 변환된 데이터로 다시 검증
-    const isValid = await form.trigger();
-    if (!isValid) {
-      const errors = form.formState.errors;
-      const firstErrorKey = Object.keys(errors)[0];
-      if (!firstErrorKey) {
-        triggerError('입력값을 확인해주세요.');
-        return;
-      }
-      const firstError = errors[firstErrorKey as keyof typeof errors];
-      const fieldName = getFieldName(firstErrorKey);
-      const errorMessage = firstError?.message as string || '입력값을 확인해주세요.';
-      triggerError(`${fieldName}: ${errorMessage}`);
+    const validationResult = await validatePostData();
+    if (!validationResult.isValid) {
+      onValidationError();
       return;
     }
 
+    // 검증 통과 후 postData를 zod로 파싱하여 타입 안전한 데이터 얻기
+    const data = preparePostDataForValidation();
+    const parsedData = updatePostSchema.parse(data);
+
     triggerConfirm(
       '포스트를 저장하시겠습니까?',
-      () => {
-        const {
-          updtNo: _updtNo,
-          updtDt: _updtDt,
-          delNo: _delNo,
-          delDt: _delDt,
-          pstNoList: _pstNoList,
-          ...updateData
-        } = cleanedData;
-        updatePostMutation.mutate(updateData);
+      async () => {
+        await updatePostMutation.mutateAsync(parsedData);
+        // 포스트 저장 후 태그 매핑 동기화
+        if (pstNo) {
+          await syncTagMappings(Number(pstNo));
+        }
       }
     );
   };
@@ -268,68 +456,35 @@ function PostEditorContent() {
       return;
     }
 
-    const formData = form.getValues();
-    // 빈 문자열을 undefined로 변환 (optional 필드에서 빈 문자열은 validation을 트리거함)
-    const cleanedData = Object.fromEntries(Object.entries(formData).map(([
-      key,
-      value,
-    ]) => [
-      key,
-      value === ''
-        ? undefined
-        : value,
-    ])) as Record<string, unknown>;
-
-    // 변환된 데이터를 form에 설정
-    Object.entries(cleanedData).forEach(([
-      key,
-      value,
-    ]) => {
-      form.setValue(
-        key as keyof typeof formData,
-        value as never
-      );
-    });
-
-    // 변환된 데이터로 다시 검증
-    const isValid = await form.trigger();
-    if (!isValid) {
-      const errors = form.formState.errors;
-      const firstErrorKey = Object.keys(errors)[0];
-      if (!firstErrorKey) {
-        triggerError('입력값을 확인해주세요.');
-        return;
-      }
-      const firstError = errors[firstErrorKey as keyof typeof errors];
-      const fieldName = getFieldName(firstErrorKey);
-      const errorMessage = firstError?.message as string || '입력값을 확인해주세요.';
-      triggerError(`${fieldName}: ${errorMessage}`);
+    const validationResult = await validatePostData();
+    if (!validationResult.isValid) {
+      onValidationError();
       return;
     }
 
+    // 검증 통과 후 postData를 zod로 파싱하여 타입 안전한 데이터 얻기
+    const data = preparePostDataForValidation();
+    const parsedData = updatePostSchema.parse(data);
+
     triggerConfirm(
       '포스트를 발행하시겠습니까?',
-      () => {
-        const {
-          updtNo: _updtNo,
-          updtDt: _updtDt,
-          delNo: _delNo,
-          delDt: _delDt,
-          pstNoList: _pstNoList,
-          ...baseData
-        } = cleanedData;
+      async () => {
         const now = DateTools.format(
           DateTools.now(),
           DateFormat.DATETIME
         );
 
-        updatePostMutation.mutate({
-          ...baseData,
+        await updatePostMutation.mutateAsync({
+          ...parsedData,
           rlsYn: 'Y',
           pstStts: 'FINISHED',
-          publDt: (baseData.publDt as string | undefined)
+          publDt: (parsedData.publDt as string | undefined)
             || now,
         });
+        // 포스트 발행 후 태그 매핑 동기화
+        if (pstNo) {
+          await syncTagMappings(Number(pstNo));
+        }
       }
     );
   };
@@ -349,6 +504,74 @@ function PostEditorContent() {
     },
   ];
 
+  // postData 변경 시 form 값 동기화 및 검증 실행
+  useEffect(
+    () => {
+      const formData = getFormData();
+
+      // form 값 업데이트
+      Object.entries(formData).forEach(([
+        key,
+        value,
+      ]) => {
+        form.setValue(
+          key as keyof typeof formData,
+          value,
+          {
+            shouldValidate: false,
+            shouldDirty: false,
+          }
+        );
+      });
+
+      // 검증 실행 (form.trigger와 본문 검증 포함)
+      // 최초 로딩 시에도 검증이 실행되도록 함
+      validatePostData();
+    },
+    [
+      postData,
+      form,
+      setErrors,
+      clearErrors,
+      validatePostData,
+      getFormData,
+    ]
+  );
+
+  // 포스트 로드 시 태그 매핑 조회하여 태그 목록에 반영 (pstNo가 있을 때만)
+  useEffect(
+    () => {
+      if (!pstNo) {
+        // 새 포스트인 경우 빈 배열로 초기화
+        setTags([]);
+        setExistingTagMappings([]);
+        return;
+      }
+
+      if (tagMappingResponse?.data?.list) {
+        const tagNames = tagMappingResponse.data.list
+          .map((mapping) => mapping.tag?.tagNm)
+          .filter((name): name is string => !!name);
+
+        setTags(tagNames);
+        setExistingTagMappings(tagMappingResponse.data.list.map((mapping) => ({
+          tagMapNo: mapping.tagMapNo,
+          tagNo: mapping.tagNo,
+          tagNm: mapping.tag?.tagNm || '',
+        })));
+      }
+      else if (tagMappingResponse?.data && tagMappingResponse.data.list.length === 0) {
+        // 태그 매핑이 없는 경우 빈 배열로 초기화
+        setTags([]);
+        setExistingTagMappings([]);
+      }
+    },
+    [
+      pstNo,
+      tagMappingResponse?.data,
+    ]
+  );
+
   useEffect(
     () => {
       if (!pstNo) {
@@ -362,7 +585,7 @@ function PostEditorContent() {
           pstSmry: response.data.pstSmry ?? '',
           pstMtxt: (response.data.pstMtxt as Block[]) ?? [],
           pstCd: response.data.pstCd ?? '',
-          pstThmbLink: response.data.pstThmbLink ?? '',
+          pstThmbLink: response.data.pstThmbLink || undefined,
           pstStts: response.data.pstStts,
           publDt: response.data.publDt ?? '',
           pinYn: response.data.pinYn,
@@ -374,10 +597,6 @@ function PostEditorContent() {
         };
 
         setPostData(newPostData);
-        form.reset({
-          ...newPostData,
-          pstMtxt: JSON.stringify(newPostData.pstMtxt),
-        });
       }
     },
     [
@@ -386,11 +605,8 @@ function PostEditorContent() {
       response?.data,
       done,
       setPostData,
-      form,
     ]
   );
-
-  console.log(form.getValues());
 
   return (
     <>
@@ -421,31 +637,12 @@ function PostEditorContent() {
           </Frame.Header>
           <Frame.Content>
             <Frame.Main>
-              <PostEditorMain
-                form={form}
-                postData={postData}
-                onEditorChange={onEditorChange}
-                onEditorContainerClick={onEditorContainerClick}
-              />
+              <PostEditorMain />
             </Frame.Main>
             <Frame.Side sidePosition='right' title='사이드바'>
               <PostEditorSidebar
-                form={form}
                 tags={tags}
-                setTags={setTags}
-                selectedCtgryNo={selectedCtgryNo}
-                pstStts={pstStts}
-                rlsYn={rlsYn}
-                secrYn={secrYn}
-                pinYn={pinYn}
-                archYn={archYn}
-                onCategoryChange={onCategoryChange}
-                onStatusChange={onStatusChange}
-                onReleaseChange={onReleaseChange}
-                onSecretChange={onSecretChange}
-                onPinChange={onPinChange}
-                onArchiveChange={onArchiveChange}
-                onStatusDisplayValue={onStatusDisplayValue}
+                onTagsChange={setTags}
               />
             </Frame.Side>
           </Frame.Content>

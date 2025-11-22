@@ -5,13 +5,15 @@ import { useGet } from '@/_entities/common/hooks';
 /**
  * @description 태그 번호로 태그를 조회하는 커스텀 훅
  * @param {number} tagNo - 태그 번호
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useGetTagByNo(tagNo: number) {
+export function useGetTagByNo(tagNo: number, enabled: boolean = true) {
   const query = useGet<SelectTagInfoType>({
     url: [
       'tags',
       tagNo.toString(),
     ],
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

@@ -10,8 +10,9 @@ import { useAuthActions } from '@/_stores/auth.store';
  * - 앱 초기 로드 시: 서버에서 세션 정보를 가져와 store에 저장
  * - 세션 상태 확인: 컴포넌트에서 useSession() hook 사용 권장
  * - 이 hook은 서버와 동기화가 필요한 경우에만 사용
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useGetSession() {
+export function useGetSession(enabled: boolean = true) {
   const { setSession, clearSession, } = useAuthActions();
 
   const query = useGet<SelectUserInfoType>({
@@ -19,6 +20,7 @@ export function useGetSession() {
       'auth',
       'session',
     ],
+    enabled,
     callback(res) {
       // 세션 정보를 store에 저장
       if (res.data) {

@@ -4,8 +4,9 @@ import { useGet } from '@/_entities/common/hooks';
 
 /**
  * @description 카테고리 상태별 분포를 조회하는 커스텀 훅
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useAdminGetCategoryStatusDistribution() {
+export function useAdminGetCategoryStatusDistribution(enabled: boolean = true) {
   const query = useGet<CategoryStatusDistributionItemType[]>({
     url: [
       'admin',
@@ -13,6 +14,7 @@ export function useAdminGetCategoryStatusDistribution() {
       'analyze',
       'status-distribution',
     ],
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

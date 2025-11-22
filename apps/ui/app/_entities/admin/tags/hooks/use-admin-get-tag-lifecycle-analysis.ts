@@ -4,8 +4,9 @@ import { useGet } from '@/_entities/common/hooks';
 
 /**
  * @description 태그 생명주기 분석을 조회하는 커스텀 훅
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useAdminGetTagLifecycleAnalysis() {
+export function useAdminGetTagLifecycleAnalysis(enabled: boolean = true) {
   const query = useGet<TagLifecycleItemType[]>({
     url: [
       'admin',
@@ -13,6 +14,7 @@ export function useAdminGetTagLifecycleAnalysis() {
       'analyze',
       'lifecycle',
     ],
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });

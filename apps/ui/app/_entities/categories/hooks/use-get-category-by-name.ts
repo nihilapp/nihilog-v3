@@ -5,16 +5,16 @@ import { useGet } from '@/_entities/common/hooks';
 /**
  * @description 카테고리명으로 카테고리를 조회하는 커스텀 훅
  * @param {string} name - 카테고리명
- * @param {string} name - 카테고리명
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
-export function useGetCategoryByName(name: string) {
+export function useGetCategoryByName(name: string, enabled: boolean = true) {
   const query = useGet<SelectCategoryType>({
     url: [
       'categories',
       'name',
       name,
     ],
-    enabled: !!name,
+    enabled: enabled && !!name,
     callback(_res) {},
     errorCallback(_error) {},
   });

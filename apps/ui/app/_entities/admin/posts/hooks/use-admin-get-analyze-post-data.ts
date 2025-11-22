@@ -7,10 +7,12 @@ import { useGet } from '@/_entities/common/hooks';
  * @description 포스트 분석 통계 데이터를 조회하는 커스텀 훅
  * @param {AnalyzeStatType} analyzeStatData - 분석 통계 데이터
  * @param {number} [pstNo] - 포스트 번호 (선택사항)
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
  */
 export function useAdminGetAnalyzePostData(
   analyzeStatData: AnalyzeStatType,
-  pstNo?: number
+  pstNo?: number,
+  enabled: boolean = true
 ) {
   const query = useGet<AnalyzePostItemType[]>({
     url: [
@@ -23,6 +25,7 @@ export function useAdminGetAnalyzePostData(
       ...analyzeStatData,
       ...(pstNo !== undefined && { pstNo, }),
     },
+    enabled,
     callback(_res) {},
     errorCallback(_error) {},
   });
