@@ -8,8 +8,8 @@ import { z } from 'zod';
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
-import { useAdminCreateAdmin } from '@/_entities/admin/users/hooks';
-import { useAlert } from '@/_entities/common/hooks/use-alert';
+import { useAdminCreateAdmin } from '@/_hooks/admin/users';
+import { useAlert } from '@/_hooks/common/use-alert';
 
 // UI 전용 스키마 (passwordConfirm 필드 추가)
 const createUserUISchema = createUserSchema.extend({

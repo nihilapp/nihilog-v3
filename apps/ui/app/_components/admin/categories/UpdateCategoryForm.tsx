@@ -10,8 +10,8 @@ import { Button } from '@/_components/ui/button';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
 import { Modal } from '@/_components/ui/modal';
-import { useAdminUpdateCategory } from '@/_entities/admin/categories/hooks';
-import { useAlert } from '@/_entities/common/hooks/use-alert';
+import { useAdminUpdateCategory } from '@/_hooks/admin/categories';
+import { useAlert } from '@/_hooks/common/use-alert';
 import { cn } from '@/_libs';
 
 interface Props {

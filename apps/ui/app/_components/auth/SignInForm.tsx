@@ -9,7 +9,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form';
 import { Box } from '@/_components/ui/box';
 import { Form } from '@/_components/ui/form';
 import { Input } from '@/_components/ui/input';
-import { useSignIn } from '@/_entities/auth/hooks';
+import { useSignIn } from '@/_hooks/auth';
 import { useSession } from '@/_stores/auth.store';
 
 export function SignInForm() {

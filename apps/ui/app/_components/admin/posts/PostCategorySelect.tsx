@@ -3,7 +3,7 @@
 import type { SelectCategoryListItemType } from '@nihilog/schemas';
 
 import { Input } from '@/_components/ui/input';
-import { useAdminGetCategoryList } from '@/_entities/admin/categories/hooks';
+import { useAdminGetCategoryList } from '@/_hooks/admin/categories';
 
 interface Props {
   value?: number;

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
-import { useAdminGetCategoryByNo } from '@/_entities/admin/categories/hooks';
+import { useAdminGetCategoryByNo } from '@/_hooks/admin/categories';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 

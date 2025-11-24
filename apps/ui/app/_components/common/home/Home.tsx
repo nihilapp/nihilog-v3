@@ -8,8 +8,8 @@ import { AsyncBoundary } from '@/_components/common/AsyncBoundary';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
-import { useAlert } from '@/_entities/common/hooks/use-alert';
-import { useGetPostList } from '@/_entities/posts/hooks';
+import { useAlert } from '@/_hooks/common/use-alert';
+import { useGetPostList } from '@/_hooks/posts';
 import { defineColumns } from '@/_libs/defineColumns';
 
 interface Props {

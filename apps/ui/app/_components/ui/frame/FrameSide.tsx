@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Box } from '@/_components/ui/box';
 import { Frame } from '@/_components/ui/frame';
-import { useResponsive } from '@/_entities/common/hooks';
+import { useResponsive } from '@/_hooks/common';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 

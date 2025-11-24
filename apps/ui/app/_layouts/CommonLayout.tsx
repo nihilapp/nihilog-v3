@@ -13,7 +13,7 @@ import {
 } from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
-import { useGetSession, useSignOut } from '@/_entities/auth/hooks';
+import { useGetSession, useSignOut } from '@/_hooks/auth';
 import { cn } from '@/_libs';
 import type { Menu } from '@/_types';
 

@@ -3,7 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { Button } from '@/_components/ui/button';
-import { useGetSession } from '@/_entities/auth/hooks';
+import { useGetSession } from '@/_hooks/auth';
 import { cn } from '@/_libs';
 import { useSession } from '@/_stores/auth.store';
 import type { Menu, ReactElementProps } from '@/_types/common.types';

@@ -3,7 +3,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { AsyncBoundary } from '@/_components/common/AsyncBoundary';
-import { useGetPostByNo } from '@/_entities/posts/hooks';
+import { useGetPostByNo } from '@/_hooks/posts';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 

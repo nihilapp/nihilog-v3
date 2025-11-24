@@ -9,7 +9,7 @@ import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
-import { useGetPostList } from '@/_entities/posts/hooks';
+import { useGetPostList } from '@/_hooks/posts';
 import { defineColumns } from '@/_libs/defineColumns';
 import { useEditMode, usePostActions } from '@/_stores/posts.store';
 

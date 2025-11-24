@@ -12,9 +12,9 @@ import { UpdateCategoryForm } from '@/_components/admin/categories/UpdateCategor
 import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
-import { useInvalidateAdminCategoriesCache } from '@/_entities/admin/categories/admin-categories.keys';
-import { useAdminGetCategoryList } from '@/_entities/admin/categories/hooks';
-import { useAlert } from '@/_entities/common/hooks/use-alert';
+import { useInvalidateAdminCategoriesCache } from '@/_keys/admin/categories/admin-categories.keys';
+import { useAdminGetCategoryList } from '@/_hooks/admin/categories';
+import { useAlert } from '@/_hooks/common/use-alert';
 import { Api } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 

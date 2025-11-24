@@ -10,8 +10,8 @@ import {
 } from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
-import { useAdminCreatePost } from '@/_entities/admin/posts/hooks';
-import { useGetSession, useSignOut } from '@/_entities/auth/hooks';
+import { useAdminCreatePost } from '@/_hooks/admin/posts';
+import { useGetSession, useSignOut } from '@/_hooks/auth';
 import { useSession } from '@/_stores/auth.store';
 import type { Menu } from '@/_types';
 

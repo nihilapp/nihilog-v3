@@ -1,0 +1,34 @@
+import type { AnalyzeStatType } from '@nihilog/schemas';
+import type { AnalyzeCategoryStatItemType } from '@nihilog/schemas';
+
+import { useGet } from '@/_hooks/common';
+
+/**
+ * @description 카테고리 분석 통계를 조회하는 커스텀 훅
+ * @param {AnalyzeStatType} analyzeStatData - 분석 통계 데이터
+ * @param {number} [ctgryNo] - 카테고리 번호 (선택사항)
+ * @param {boolean} [enabled=true] - 쿼리 실행 여부
+ */
+export function useAdminGetAnalyzeCategoryData(
+  analyzeStatData: AnalyzeStatType,
+  ctgryNo?: number,
+  enabled: boolean = true
+) {
+  const query = useGet<AnalyzeCategoryStatItemType[]>({
+    url: [
+      'admin',
+      'categories',
+      'analyze',
+      'overview',
+    ],
+    params: {
+      ...analyzeStatData,
+      ...(ctgryNo !== undefined && { ctgryNo, }),
+    },
+    enabled,
+    callback(_res) {},
+    errorCallback(_error) {},
+  });
+
+  return query;
+}
