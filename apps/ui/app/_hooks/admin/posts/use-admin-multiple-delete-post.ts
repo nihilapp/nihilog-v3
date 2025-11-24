@@ -3,7 +3,7 @@ import type { MultipleResultType } from '@nihilog/schemas';
 
 import { useDeletes } from '@/_hooks/common';
 
-import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
+import { useInvalidateAdminPostsCache } from '@/_keys/admin/posts/admin-posts.keys';
 
 /**
  * @description 다수 포스트를 일괄 삭제하는 커스텀 훅

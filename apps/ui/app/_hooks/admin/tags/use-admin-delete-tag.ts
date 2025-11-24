@@ -1,6 +1,6 @@
 import { useDelete } from '@/_hooks/common';
 
-import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
+import { useInvalidateAdminTagsCache } from '@/_keys/admin/tags/admin-tags.keys';
 
 /**
  * @description 태그를 삭제하는 커스텀 훅

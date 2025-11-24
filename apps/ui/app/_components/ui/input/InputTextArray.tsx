@@ -7,19 +7,16 @@ import { MdClose } from 'react-icons/md';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
-import { InputText } from './InputText';
-
 // 기본값은 HTMLDivElement, 'className'
 interface Props
   extends Omit<ReactElementProps<'div'>, 'onChange'>, VariantProps<typeof cssVariants> {
   className?: string | string[];
-  value?: string[];
+  items?: string[];
   onChange?: (value: string[]) => void;
   placeholder?: string;
   maxItems?: number;
-  inputPosition?: 'top' | 'bottom';
   custom?: {
-    div?: string | string[];
+    container?: string | string[];
     input?: string | string[];
     item?: string | string[];
     itemText?: string | string[];
@@ -28,7 +25,10 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col gap-2', ],
+  [
+    'flex flex-wrap gap-2 p-2 border border-black-300 rounded-2',
+    'bg-white transition-colors duration-200 ease-in-out',
+  ],
   {
     variants: {},
     defaultVariants: {},
@@ -36,126 +36,143 @@ const cssVariants = cva(
   }
 );
 
-export function InputTextArray({ className, value = [], onChange, placeholder = '입력 후 Enter를 누르세요', maxItems = 20, inputPosition = 'top', custom, ...props }: Props) {
+const itemCva = cva(
+  [
+    'inline-flex items-center gap-1 px-2 py-2 rounded-2',
+    'bg-black-100 text-black-900 text-sm',
+    'transition-colors duration-200 ease-in-out',
+  ],
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: [],
+  }
+);
+
+const itemButtonCva = cva(
+  [
+    'flex items-center justify-center p-0.5 rounded-1',
+    'text-black-700 hover:text-black-900 hover:bg-black-200',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black-500',
+    'transition-colors duration-200 ease-in-out',
+    'cursor-pointer',
+  ],
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: [],
+  }
+);
+
+const inputCva = cva(
+  [
+    'flex-1 min-w-[120px] border border-black-300 rounded-2 p-2 bg-white',
+    'text-sm focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-300',
+    'transition-colors duration-200 ease-in-out',
+    'placeholder:text-black-400',
+  ],
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: [],
+  }
+);
+
+export function InputTextArray({
+  items = [], onChange, placeholder, maxItems = 1, custom,
+}: Props) {
   const [
     inputValue,
     setInputValue,
   ] = useState('');
 
-  const onAddItem = () => {
-    const trimmedValue = inputValue.trim();
-    if (!trimmedValue) {
-      return;
-    }
-
-    if (value.length >= maxItems) {
-      return;
-    }
-
-    if (value.includes(trimmedValue)) {
-      setInputValue('');
-      return;
-    }
-
-    onChange?.([
-      ...value,
-      trimmedValue,
-    ]);
-    setInputValue('');
-  };
-
   const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      onAddItem();
-    }
-  };
+      const trimmedValue = inputValue.trim();
 
-  const onRemoveItem = (e: React.MouseEvent<HTMLButtonElement>, index: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    // 버튼 자체가 클릭된 경우에만 삭제
-    if (e.currentTarget === e.target || e.currentTarget.contains(e.target as Node)) {
-      const newValue = value.filter((_, i) => i !== index);
+      if (!trimmedValue) {
+        return;
+      }
+
+      // 중복 체크
+      if (items.includes(trimmedValue)) {
+        setInputValue('');
+        return;
+      }
+
+      // maxItems 체크
+      if (maxItems && items.length >= maxItems) {
+        setInputValue('');
+        return;
+      }
+
+      // 새 태그 추가
+      const newValue = [
+        ...items,
+        trimmedValue,
+      ];
       onChange?.(newValue);
+      setInputValue('');
     }
   };
 
-  const inputElement = (
-    <InputText
-      type='text'
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      onKeyDown={onInputKeyDown}
-      placeholder={placeholder}
-      disabled={value.length >= maxItems}
-      className={custom?.input}
-    />
-  );
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
 
-  const listElement = value.length > 0 && (
-    <div className='flex flex-wrap gap-2'>
-      {value.map((item, index) => (
+  const onRemoveItem = (index: number) => {
+    const newValue = items.filter((_, i) => i !== index);
+    onChange?.(newValue);
+  };
+
+  return (
+    <div className={cn([
+      cssVariants({}),
+      custom?.container,
+    ])}
+    >
+      {items?.map((item, index) => (
         <div
-          key={`item-${index}-${item}`}
+          key={`${item}-${index}`}
           className={cn([
-            'flex items-center gap-1 px-2 py-1 bg-black-100 text-black-900 rounded-2 text-sm',
+            itemCva({}),
             custom?.item,
           ])}
         >
-          <span className={cn([ custom?.itemText, ])}>
+          <span className={cn([
+            'text-sm',
+            custom?.itemText,
+          ])}
+          >
             {item}
           </span>
           <button
             type='button'
-            onClick={(e) => onRemoveItem(
-              e,
-              index
-            )}
+            onClick={() => onRemoveItem(index)}
             className={cn([
-              'flex items-center justify-center text-black-700 hover:text-black-900 hover:bg-black-200 rounded-1 p-0.5 transition-colors',
-              'focus:outline-none focus:ring focus:ring-black-500',
+              itemButtonCva({}),
               custom?.itemButton,
             ])}
-            aria-label={`${item} 삭제`}
+            aria-label={`${item} 태그 제거`}
           >
             <MdClose className='size-4' />
           </button>
         </div>
       ))}
-    </div>
-  );
-
-  const maxItemsMessage = value.length >= maxItems && (
-    <div className='text-xs text-black-500'>
-      최대 {maxItems}개까지 추가할 수 있습니다.
-    </div>
-  );
-
-  const onContainerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    // label 클릭 시 이벤트가 버블링되어 삭제 버튼이 클릭되는 것을 방지
-    // 실제로 버튼이 클릭된 경우가 아니면 이벤트 전파 중단
-    const target = e.target as HTMLElement;
-    const isButtonClick = target.closest('button[type="button"]') !== null;
-    if (!isButtonClick) {
-      e.stopPropagation();
-    }
-  };
-
-  return (
-    <div
-      className={cn(
-        cssVariants({}),
-        className,
-        custom?.div
+      {items.length < maxItems && (
+        <input
+          type='text'
+          placeholder={placeholder}
+          value={inputValue}
+          onChange={onInputChange}
+          onKeyDown={onInputKeyDown}
+          className={cn([
+            inputCva({}),
+            custom?.input,
+          ])}
+        />
       )}
-      onMouseDown={onContainerMouseDown}
-      {...props}
-    >
-      {inputPosition === 'top' && inputElement}
-      {listElement}
-      {inputPosition === 'bottom' && inputElement}
-      {maxItemsMessage}
     </div>
   );
 }

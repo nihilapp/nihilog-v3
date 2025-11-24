@@ -3,7 +3,7 @@ import type { SelectUserSbcrInfoType } from '@nihilog/schemas';
 
 import { usePost } from '@/_hooks/common';
 
-import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
+import { useInvalidateAdminSubscribeCache } from '@/_keys/admin/subscribe/admin-subscribe.keys';
 
 /**
  * @description 관리자가 특정 사용자 구독 설정을 생성하는 커스텀 훅

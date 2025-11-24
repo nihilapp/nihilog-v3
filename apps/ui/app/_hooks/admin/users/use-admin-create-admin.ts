@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 import { usePost } from '@/_hooks/common';
 
-import { useInvalidateAdminUsersCache } from '../admin-users.keys';
+import { useInvalidateAdminUsersCache } from '@/_keys/admin/users/admin-users.keys';
 
 /**
  * @description 최초 어드민을 생성하는 커스텀 훅 (개발 환경에서만)

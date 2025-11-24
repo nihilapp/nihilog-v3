@@ -325,11 +325,25 @@ export const updatePstTagMpngSchema = pstTagMpngSchema.partial().pick({
  * @description 포스트-태그 매핑 검색 스키마 (기본 검색 스키마 확장)
  */
 export const searchPstTagMpngSchema = baseSearchSchema.extend({
-  ...pstTagMpngSchema.pick({
-    pstNo: true,
-    delYn: true,
-  }).shape,
-}).partial();
+  pstNo: z.coerce
+    .number()
+    .int('포스트 번호는 정수여야 합니다.')
+    .positive('포스트 번호는 양수여야 합니다.')
+    .optional()
+    .openapi({
+      description: '포스트 번호',
+      example: 1,
+    }),
+  delYn: z.enum([
+    'Y',
+    'N',
+  ])
+    .optional()
+    .openapi({
+      description: '삭제 여부',
+      example: 'N',
+    }),
+});
 
 /**
  * @description 포스트-태그 매핑 삭제 스키마 (매핑 번호 또는 리스트 선택)

@@ -3,7 +3,7 @@ import type { MultipleResultType } from '@nihilog/schemas';
 
 import { useDeletes } from '@/_hooks/common';
 
-import { useInvalidateAdminCommentsCache } from '../admin-comments.keys';
+import { useInvalidateAdminCommentsCache } from '@/_keys/admin/comments/admin-comments.keys';
 
 /**
  * @description 관리자 댓글 일괄 삭제하는 커스텀 훅

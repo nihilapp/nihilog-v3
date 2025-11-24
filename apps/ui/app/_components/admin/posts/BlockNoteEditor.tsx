@@ -16,6 +16,7 @@ const preventAutoBlockExtension: BlockNoteExtension = createBlockNoteExtension({
 interface BlockNoteEditorProps {
   initialContent?: PartialBlock[];
   onChange?: (blocks: Block[]) => void;
+  className?: string;
 }
 
 export interface BlockNoteEditorRef {
@@ -25,6 +26,7 @@ export interface BlockNoteEditorRef {
 export const BlockNoteEditor = forwardRef<BlockNoteEditorRef, BlockNoteEditorProps>(function BlockNoteEditor({
   initialContent,
   onChange,
+  className,
 }, ref) {
   const defaultContent = useMemo(
     () => [
@@ -59,9 +61,14 @@ export const BlockNoteEditor = forwardRef<BlockNoteEditorRef, BlockNoteEditorPro
   };
 
   return (
-    <BlockNoteView
-      editor={editor}
-      onChange={onEditorChange}
-    />
+    <div className={className
+      ? `h-full overflow-hidden ${className}`
+      : 'h-full overflow-hidden'}
+    >
+      <BlockNoteView
+        editor={editor}
+        onChange={onEditorChange}
+      />
+    </div>
   );
 });

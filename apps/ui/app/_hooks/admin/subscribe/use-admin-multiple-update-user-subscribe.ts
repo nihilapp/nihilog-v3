@@ -3,7 +3,7 @@ import type { MultipleResultType } from '@nihilog/schemas';
 
 import { usePut } from '@/_hooks/common';
 
-import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
+import { useInvalidateAdminSubscribeCache } from '@/_keys/admin/subscribe/admin-subscribe.keys';
 
 /**
  * @description 다수 사용자 구독 설정을 일괄 변경하는 커스텀 훅

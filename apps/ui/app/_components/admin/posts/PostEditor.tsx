@@ -24,7 +24,7 @@ import { useGetPostByNo } from '@/_hooks/posts';
 import { getTagByName } from '@/_libs/api/getTagByName';
 import { Api } from '@/_libs/tools/axios.tools';
 import { DateFormat, DateTools } from '@/_libs/tools/date.tools';
-import { useEditMode, usePostActions, usePostData } from '@/_stores/posts.store';
+import { useEditMode, usePostActions, usePostData, usePostTags } from '@/_stores/posts.store';
 import type { Menu } from '@/_types/common.types';
 
 // BlockNoteEditorDynamic은 PostEditorMain에서 사용
@@ -111,8 +111,9 @@ function PostEditorContent() {
 
   const editMode = useEditMode();
   const postData = usePostData();
+  const postTags = usePostTags();
 
-  const { setPostData, setErrors, clearErrors, } = usePostActions();
+  const { setPostData, setErrors, clearErrors, setTags, } = usePostActions();
   const router = useRouter();
   const { triggerError, triggerConfirm, } = useAlert();
 
@@ -120,11 +121,7 @@ function PostEditorContent() {
   const updatePostMutation = useAdminUpdatePost(Number(pstNo) || 0);
   const createTagMutation = useAdminCreateTag();
 
-  // 태그 상태 관리
-  const [
-    tags,
-    setTags,
-  ] = useState<string[]>([]);
+  // 태그 매핑 상태 관리
   const [
     existingTagMappings,
     setExistingTagMappings,
@@ -338,15 +335,25 @@ function PostEditorContent() {
     try {
       // 1. 기존 매핑된 태그 리스트 가져오기 (이미 existingTagMappings에 있음)
       const existingTagNames = existingTagMappings.map((m) => m.tagNm);
-      const currentTagNames = tags;
+      const currentTagNames = postTags.map((tag) => tag.tagText);
 
       // 2. 입력된 태그 리스트와 비교해서 기존에 있는 태그 식별 (태그 번호 기억)
       const existingTagNos: number[] = [];
-      for (const tagName of currentTagNames) {
-        const existingMapping = existingTagMappings.find((m) => m.tagNm === tagName);
-        if (existingMapping) {
-          // 기존에 매핑되어 있는 태그의 번호 기억
-          existingTagNos.push(existingMapping.tagNo);
+      for (let i = 0; i < postTags.length; i++) {
+        const tag = postTags[i];
+        if (!tag) {
+          continue;
+        }
+        // 이미 tagNo가 있는 경우 사용
+        if (tag.tagNo !== null) {
+          existingTagNos.push(tag.tagNo);
+        }
+        else {
+          // tagNo가 없는 경우 기존 매핑에서 찾기
+          const existingMapping = existingTagMappings.find((m) => m.tagNm === tag.tagText);
+          if (existingMapping) {
+            existingTagNos.push(existingMapping.tagNo);
+          }
         }
       }
 
@@ -402,10 +409,16 @@ function PostEditorContent() {
         }>(`admin/tags/mapping/search?pstNo=${pstNoValue}&delYn=N`);
 
         if (!updatedMappingResponse.error && updatedMappingResponse.data) {
-          setExistingTagMappings(updatedMappingResponse.data.list.map((mapping) => ({
+          const updatedMappings = updatedMappingResponse.data.list.map((mapping) => ({
             tagMapNo: mapping.tagMapNo,
             tagNo: mapping.tagNo,
             tagNm: mapping.tag?.tagNm || '',
+          }));
+          setExistingTagMappings(updatedMappings);
+          // 스토어의 태그 목록도 업데이트 (tagNo 포함)
+          setTags(updatedMappings.map((mapping) => ({
+            tagNo: mapping.tagNo,
+            tagText: mapping.tagNm,
           })));
         }
       }
@@ -549,15 +562,16 @@ function PostEditorContent() {
       }
 
       if (tagMappingResponse?.data?.list) {
-        const tagNames = tagMappingResponse.data.list
-          .map((mapping) => mapping.tag?.tagNm)
-          .filter((name): name is string => !!name);
-
-        setTags(tagNames);
-        setExistingTagMappings(tagMappingResponse.data.list.map((mapping) => ({
+        const tagMappings = tagMappingResponse.data.list.map((mapping) => ({
           tagMapNo: mapping.tagMapNo,
           tagNo: mapping.tagNo,
           tagNm: mapping.tag?.tagNm || '',
+        }));
+
+        setExistingTagMappings(tagMappings);
+        setTags(tagMappings.map((mapping) => ({
+          tagNo: mapping.tagNo,
+          tagText: mapping.tagNm,
         })));
       }
       else if (tagMappingResponse?.data && tagMappingResponse.data.list.length === 0) {
@@ -569,6 +583,7 @@ function PostEditorContent() {
     [
       pstNo,
       tagMappingResponse?.data,
+      setTags,
     ]
   );
 
@@ -640,10 +655,7 @@ function PostEditorContent() {
               <PostEditorMain />
             </Frame.Main>
             <Frame.Side sidePosition='right' title='사이드바'>
-              <PostEditorSidebar
-                tags={tags}
-                onTagsChange={setTags}
-              />
+              <PostEditorSidebar />
             </Frame.Side>
           </Frame.Content>
           <Frame.Footer />

@@ -1,19 +1,16 @@
 'use client';
 
 import { BsToggles } from 'react-icons/bs';
-import { MdArchive, MdEdit, MdFolder, MdImage, MdLocalOffer, MdLockOutline, MdOutlineTextFields, MdPushPin, MdVpnKey } from 'react-icons/md';
+import { MdArchive, MdDescription, MdEdit, MdFolder, MdImage, MdLockOutline, MdOutlineTextFields, MdPushPin, MdTitle, MdVpnKey } from 'react-icons/md';
 
 import { PostCategorySelect } from '@/_components/admin/posts/PostCategorySelect';
 import { Box } from '@/_components/ui/box';
 import { Input } from '@/_components/ui/input';
 import { usePostActions, usePostData, usePostErrors } from '@/_stores/posts.store';
 
-interface Props {
-  tags: string[];
-  onTagsChange: (tags: string[]) => void;
-}
+interface Props {}
 
-export function PostEditorSidebar({ tags, onTagsChange, }: Props) {
+export function PostEditorSidebar({ }: Props) {
   const postData = usePostData();
   const postErrors = usePostErrors();
   const { setPostData, } = usePostActions();
@@ -102,8 +99,50 @@ export function PostEditorSidebar({ tags, onTagsChange, }: Props) {
       ctgryNo: value,
     });
   };
+
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPostData({
+      ...postData,
+      pstTtl: e.target.value,
+    });
+  };
+
+  const onSummaryChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPostData({
+      ...postData,
+      pstSmry: e.target.value,
+    });
+  };
+
   return (
     <Box.Content className='gap-5'>
+      <Input.Label
+        label='제목'
+        icon={<MdTitle />}
+        errorMessage={getErrorMessage('pstTtl')}
+      >
+        <Input.Text
+          type='text'
+          placeholder='제목을 입력해주세요.'
+          value={postData.pstTtl}
+          onChange={onTitleChange}
+        />
+      </Input.Label>
+
+      <Input.Label
+        label='요약'
+        icon={<MdDescription />}
+        errorMessage={getErrorMessage('pstSmry')}
+      >
+        <Input.LongText
+          rows={3}
+          className='resize-none'
+          placeholder='요약을 입력해주세요.'
+          value={postData.pstSmry}
+          onChange={onSummaryChange}
+        />
+      </Input.Label>
+
       <Input.Label
         label='포스트 상태'
         icon={<MdEdit />}
@@ -242,25 +281,6 @@ export function PostEditorSidebar({ tags, onTagsChange, }: Props) {
         <PostCategorySelect
           value={postData.ctgryNo}
           onChange={onCategoryChange}
-        />
-      </Input.Label>
-
-      <Input.Label
-        label='태그'
-        icon={<MdLocalOffer />}
-        direction='vertical'
-        showErrorMessage={false}
-      >
-        <Input.TextArray
-          value={tags}
-          onChange={onTagsChange}
-          placeholder='태그를 입력하고 Enter를 누르세요'
-          maxItems={20}
-          inputPosition='bottom'
-          custom={{
-            item: 'bg-black-100 text-black-900',
-            itemButton: 'text-black-700 hover:text-black-900 hover:bg-black-200 focus:ring-black-500',
-          }}
         />
       </Input.Label>
     </Box.Content>

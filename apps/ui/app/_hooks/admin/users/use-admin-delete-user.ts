@@ -1,6 +1,6 @@
 import { useDelete } from '@/_hooks/common';
 
-import { useInvalidateAdminUsersCache } from '../admin-users.keys';
+import { useInvalidateAdminUsersCache } from '@/_keys/admin/users/admin-users.keys';
 
 /**
  * @description 사용자를 삭제하는 커스텀 훅

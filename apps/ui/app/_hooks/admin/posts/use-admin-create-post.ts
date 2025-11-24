@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { usePost } from '@/_hooks/common';
 import { usePostActions } from '@/_stores/posts.store';
 
-import { useInvalidateAdminPostsCache } from '../admin-posts.keys';
+import { useInvalidateAdminPostsCache } from '@/_keys/admin/posts/admin-posts.keys';
 
 /**
  * @description 새 포스트를 생성하는 커스텀 훅

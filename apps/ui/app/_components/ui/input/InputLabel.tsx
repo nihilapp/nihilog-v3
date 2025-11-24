@@ -39,12 +39,15 @@ const cssVariants = cva(
 );
 
 export function InputLabel({ className, children, id, label, errorMessage, icon, custom, direction, showErrorMessage = true, ...props }: Props) {
+  const hasChildren = !!children;
+
   return (
     <>
       <label
         htmlFor={id}
         className={cn(
           cssVariants({ direction, }),
+          !hasChildren && 'flex-row items-center',
           className,
           custom?.label
         )}
@@ -67,7 +70,7 @@ export function InputLabel({ className, children, id, label, errorMessage, icon,
           )}
           {label}
         </span>
-        {children}
+        {hasChildren && children}
       </label>
       {showErrorMessage && (
         <InputErrorMessage isError={!!errorMessage} className='-mt-3 w-full'>

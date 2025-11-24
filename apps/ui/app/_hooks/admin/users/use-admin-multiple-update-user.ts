@@ -3,7 +3,7 @@ import type { MultipleResultType } from '@nihilog/schemas';
 
 import { usePut } from '@/_hooks/common';
 
-import { useInvalidateAdminUsersCache } from '../admin-users.keys';
+import { useInvalidateAdminUsersCache } from '@/_keys/admin/users/admin-users.keys';
 
 /**
  * @description 다수 사용자를 일괄 수정하는 커스텀 훅

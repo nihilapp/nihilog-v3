@@ -1,6 +1,6 @@
 import { useDelete } from '@/_hooks/common';
 
-import { useInvalidateAdminSubscribeCache } from '../admin-subscribe.keys';
+import { useInvalidateAdminSubscribeCache } from '@/_keys/admin/subscribe/admin-subscribe.keys';
 
 /**
  * @description 특정 사용자 구독 설정을 삭제하는 커스텀 훅

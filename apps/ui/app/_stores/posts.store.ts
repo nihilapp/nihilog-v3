@@ -6,12 +6,20 @@ import { immer } from 'zustand/middleware/immer';
 
 import type { PostValidationError } from '@/_types';
 
+export interface PostTag {
+  tagNo: number | null;
+  tagText: string;
+}
+
 interface PostsAction {
   setEditMode: (editMode: 'create' | 'update') => void;
   setPostData: (postData: PostData) => void;
   setErrors: (errors: PostValidationError[]) => void;
   clearErrors: () => void;
   reset: () => void;
+  setTags: (tags: PostTag[]) => void;
+  addTag: (tagText: string) => void;
+  removeTag: (index: number) => void;
 }
 
 interface PostData {
@@ -36,6 +44,7 @@ interface PostsState {
   editMode: 'create' | 'update';
   postData: PostData;
   errors: PostValidationError[];
+  postTags: PostTag[];
 
   // 액션
   actions: PostsAction;
@@ -61,6 +70,7 @@ const postsStore = create<PostsState>()(devtools(
       ctgryNo: undefined,
     },
     errors: [],
+    postTags: [],
     actions: {
       setEditMode: (editMode: 'create' | 'update') => set((state) => {
         state.editMode = editMode;
@@ -76,6 +86,24 @@ const postsStore = create<PostsState>()(devtools(
       }),
       clearErrors: () => set((state) => {
         state.errors = [];
+      }),
+      setTags: (tags: PostTag[]) => set((state) => {
+        state.postTags = tags;
+      }),
+      addTag: (tagText: string) => set((state) => {
+        const trimmedText = tagText.trim();
+        if (trimmedText && !state.postTags.some((tag) => tag.tagText === trimmedText)) {
+          state.postTags.push({
+            tagNo: null,
+            tagText: trimmedText,
+          });
+        }
+      }),
+      removeTag: (index: number) => set((state) => {
+        state.postTags.splice(
+          index,
+          1
+        );
       }),
       reset: () => set((state) => {
         state.editMode = 'create';
@@ -95,6 +123,7 @@ const postsStore = create<PostsState>()(devtools(
           ctgryNo: undefined,
         };
         state.errors = [];
+        state.postTags = [];
       }),
     },
   })),
@@ -106,5 +135,6 @@ const postsStore = create<PostsState>()(devtools(
 export const useEditMode = () => postsStore((state) => state.editMode);
 export const usePostData = () => postsStore((state) => state.postData);
 export const usePostErrors = () => postsStore((state) => state.errors);
+export const usePostTags = () => postsStore((state) => state.postTags);
 
 export const usePostActions = () => postsStore((state) => state.actions);

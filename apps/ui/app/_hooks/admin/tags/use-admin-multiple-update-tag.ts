@@ -3,7 +3,7 @@ import type { MultipleResultType } from '@nihilog/schemas';
 
 import { usePatch } from '@/_hooks/common';
 
-import { useInvalidateAdminTagsCache } from '../admin-tags.keys';
+import { useInvalidateAdminTagsCache } from '@/_keys/admin/tags/admin-tags.keys';
 
 /**
  * @description 다수 태그를 수정하는 커스텀 훅
