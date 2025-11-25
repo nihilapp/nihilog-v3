@@ -136,10 +136,13 @@ function PostEditorContent() {
   const deleteTagMappingMutation = useAdminMultipleDeleteTagMapping();
 
   // 포스트의 태그 매핑 조회 (pstNo가 있을 때만)
-  const { response: tagMappingResponse, } = useAdminGetTagMapping({
-    pstNo: Number(pstNo) || 0,
-    delYn: 'N',
-  });
+  const { response: tagMappingResponse, } = useAdminGetTagMapping(
+    {
+      pstNo: Number(pstNo) || 0,
+      delYn: 'N',
+    },
+    !!pstNo
+  );
 
   const serializePostMtxt = (blocks: Block[] | null | undefined): string => {
     return blocks
@@ -454,7 +457,10 @@ function PostEditorContent() {
     triggerConfirm(
       '포스트를 저장하시겠습니까?',
       async () => {
-        await updatePostMutation.mutateAsync(parsedData);
+        await updatePostMutation.mutateAsync({
+          ...parsedData,
+          pstStts: 'WRITING',
+        });
         // 포스트 저장 후 태그 매핑 동기화
         if (pstNo) {
           await syncTagMappings(Number(pstNo));

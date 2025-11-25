@@ -25,7 +25,10 @@ export function useGet<TData = unknown, TBody = unknown>({
     : urlString;
 
   const { data: response, isLoading, isFetching, isSuccess, error, ...other } = useQuery({
-    queryKey: [ ...url, ],
+    queryKey: [
+      ...url,
+      params,
+    ],
     async queryFn() {
       if (body !== undefined) {
         return await Api.getWithDataQuery<TData, TBody>(

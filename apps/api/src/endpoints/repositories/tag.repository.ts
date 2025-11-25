@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
 import { Prisma, PrismaClient } from '@nihilog/db';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 import type {
@@ -21,7 +22,6 @@ import type {
   TagCleanupRecommendationItemType
 } from '@nihilog/schemas';
 
-import { MESSAGE } from '@nihilog/code';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import type { CreatePstTagMpngDto, CreateTagDto, DeletePstTagMpngDto, DeleteTagDto, SearchPstTagMpngDto, SearchTagDto, UpdateTagDto } from '@/dto/tag.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -29,6 +29,7 @@ import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
+import { toNumber } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -1117,6 +1118,9 @@ export class TagRepository {
     try {
       const { pstNo, delYn, } = searchData;
 
+      // pstNo를 숫자로 변환 (쿼리 파라미터는 문자열로 전달될 수 있음)
+      const pstNoNumber = toNumber(pstNo);
+
       const [
         list,
         totalCnt,
@@ -1126,7 +1130,7 @@ export class TagRepository {
             delYn: delYn || 'N',
             post: {
               is: {
-                pstNo,
+                pstNo: pstNoNumber,
               },
             },
           },
@@ -1143,7 +1147,7 @@ export class TagRepository {
             delYn: delYn || 'N',
             post: {
               is: {
-                pstNo,
+                pstNo: pstNoNumber,
               },
             },
           },

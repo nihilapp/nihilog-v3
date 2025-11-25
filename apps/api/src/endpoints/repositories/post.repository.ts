@@ -26,6 +26,7 @@ import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
+import { toNumber } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -954,15 +955,18 @@ export class PostRepository {
     try {
       const { page, strtRow, endRow, delYn, pstNo, } = searchData;
 
+      // pstNo를 숫자로 변환 (쿼리 파라미터는 문자열로 전달될 수 있음)
+      const pstNoNumber = toNumber(pstNo);
+
       const where: Prisma.PstBkmrkMpngWhereInput = {
         userNo,
         ...(delYn !== undefined && { delYn, }),
         // 특정 포스트의 번호로 조회를 한다.
-        ...(pstNo !== undefined && {
+        ...(pstNoNumber !== undefined && {
           post: {
             is: {
               pstNo: {
-                equals: pstNo,
+                equals: pstNoNumber,
               },
             },
           },

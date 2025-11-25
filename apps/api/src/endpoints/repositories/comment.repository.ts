@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MESSAGE } from '@nihilog/code';
 import { CommentStatus, Prisma, type PrismaClient } from '@nihilog/db';
 import type {
   SelectCommentListItemType,
@@ -16,7 +17,6 @@ import type {
 } from '@nihilog/schemas';
 import type { ListType, MultipleResultType, RepoResponseType } from '@nihilog/schemas';
 
-import { MESSAGE } from '@nihilog/code';
 import type { CreateCommentDto, DeleteCommentDto, SearchCommentDto, UpdateCommentDto } from '@/dto';
 import type { AnalyzeStatDto } from '@/dto/common.dto';
 import { PRISMA } from '@/endpoints/prisma/prisma.module';
@@ -24,6 +24,7 @@ import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
+import { toNumber } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -580,6 +581,9 @@ export class CommentRepository {
     try {
       const { page, strtRow, endRow, delYn, cmntSts, srchType, srchKywd, crtDtFrom, crtDtTo, orderBy, pstNo, useYn, } = searchData;
 
+      // pstNo를 숫자로 변환 (쿼리 파라미터는 문자열로 전달될 수 있음)
+      const pstNoNumber = toNumber(pstNo);
+
       const where: Prisma.CmntInfoWhereInput = {
         ...(delYn && { delYn, }),
         ...(useYn && { useYn, }),
@@ -602,7 +606,7 @@ export class CommentRepository {
             },
           },
         }),
-        ...(pstNo && { pstNo, }),
+        ...(pstNoNumber !== undefined && { pstNo: pstNoNumber, }),
         ...(crtDtFrom && crtDtTo && {
           crtDt: {
             gte: crtDtFrom,

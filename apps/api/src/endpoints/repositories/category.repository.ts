@@ -27,6 +27,7 @@ import { createDateSeries } from '@/utils/createDateSeries';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
+import { toNumber } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -807,6 +808,9 @@ export class CategoryRepository {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, orderBy, crtDtFrom, crtDtTo, useYn, ctgryColr, upCtgryNo, } = searchData;
 
+      // upCtgryNo를 숫자로 변환 (쿼리 파라미터는 문자열로 전달될 수 있음)
+      const upCtgryNoNumber = toNumber(upCtgryNo);
+
       const where: Prisma.CtgryInfoWhereInput = {
         ...(delYn && { delYn, }),
         ...(srchKywd && srchType === 'ctgryNm' && {
@@ -826,9 +830,9 @@ export class CategoryRepository {
           },
         }),
         // upCtgryNo가 undefined이거나 null이면 최상위 카테고리만 조회
-        ...(upCtgryNo === undefined || upCtgryNo === null
+        ...(upCtgryNoNumber === undefined || upCtgryNoNumber === null
           ? { upCtgryNo: null, }
-          : { upCtgryNo, }),
+          : { upCtgryNo: upCtgryNoNumber, }),
         ...(crtDtFrom && crtDtTo && {
           crtDt: {
             gte: crtDtFrom,

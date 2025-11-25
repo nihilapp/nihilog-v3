@@ -11,6 +11,7 @@ import { PRISMA } from '@/endpoints/prisma/prisma.module';
 import { pageHelper } from '@/utils/pageHelper';
 import { prismaError } from '@/utils/prismaError';
 import { prismaResponse } from '@/utils/prismaResponse';
+import { toNumber } from '@/utils/stringHelper';
 import { timeToString } from '@/utils/timeHelper';
 
 @Injectable()
@@ -26,11 +27,15 @@ export class CategorySubscribeRepository {
     try {
       const { page, strtRow, endRow, srchType, srchKywd, delYn, crtDtFrom, crtDtTo, orderBy, ctgryNo, sbcrNo, useYn, } = searchData;
 
+      // ctgryNo, sbcrNo를 숫자로 변환 (쿼리 파라미터는 문자열로 전달될 수 있음)
+      const ctgryNoNumber = toNumber(ctgryNo);
+      const sbcrNoNumber = toNumber(sbcrNo);
+
       const where = {
         ...(delYn && { delYn, }),
         ...(useYn && { useYn, }),
-        ...(ctgryNo && { ctgryNo, }),
-        ...(sbcrNo && { sbcrNo, }),
+        ...(ctgryNoNumber !== undefined && { ctgryNo: ctgryNoNumber, }),
+        ...(sbcrNoNumber !== undefined && { sbcrNo: sbcrNoNumber, }),
         ...(crtDtFrom && crtDtTo && {
           crtDt: {
             gte: crtDtFrom,
