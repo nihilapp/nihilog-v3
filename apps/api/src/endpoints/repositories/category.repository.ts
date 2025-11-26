@@ -806,10 +806,11 @@ export class CategoryRepository {
    */
   async getCategoryList(searchData: SearchCategoryDto): Promise<RepoResponseType<ListType<SelectCategoryListItemType>> | null> {
     try {
-      const { page, strtRow, endRow, srchType, srchKywd, delYn, orderBy, crtDtFrom, crtDtTo, useYn, ctgryColr, upCtgryNo, } = searchData;
+      const { page, strtRow, endRow, srchType, srchKywd, delYn, orderBy, crtDtFrom, crtDtTo, useYn, ctgryColr, ctgryLvl, upCtgryNo, } = searchData;
 
       // upCtgryNo를 숫자로 변환 (쿼리 파라미터는 문자열로 전달될 수 있음)
       const upCtgryNoNumber = toNumber(upCtgryNo);
+      const ctgryLvlNumber = toNumber(ctgryLvl);
 
       const where: Prisma.CtgryInfoWhereInput = {
         ...(delYn && { delYn, }),
@@ -829,10 +830,11 @@ export class CategoryRepository {
             contains: ctgryColr,
           },
         }),
-        // upCtgryNo가 undefined이거나 null이면 최상위 카테고리만 조회
-        ...(upCtgryNoNumber === undefined || upCtgryNoNumber === null
-          ? { upCtgryNo: null, }
-          : { upCtgryNo: upCtgryNoNumber, }),
+        ...(ctgryLvlNumber !== undefined && { ctgryLvl: ctgryLvlNumber, }),
+        // upCtgryNo가 명시적으로 전달된 경우에만 필터링
+        ...(upCtgryNo !== undefined && {
+          upCtgryNo: upCtgryNoNumber ?? null,
+        }),
         ...(crtDtFrom && crtDtTo && {
           crtDt: {
             gte: crtDtFrom,

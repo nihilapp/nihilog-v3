@@ -56,68 +56,70 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
     };
 
   return (
-    <div
-      className={cn(
-        cssVariants({}),
-        className
-      )}
-      {...props}
-    >
-      <div className='p-2 flex flex-row items-center justify-between gap-2 select-none'>
-        <div className='flex flex-row items-center gap-2'>
-          {category.childCategories && category.childCategories.length > 0
-            ? (
-              <span
-                className='button-base p-1 rounded-2 button-ghost-black-900 bg-black-200! hover:bg-black-300! cursor-pointer'
-                onClick={onToggleExpand}
-                title={isExpanded
-                  ? '접기'
-                  : '펼치기'}
-              >
-                {isExpanded
-                  ? <MdFolderOpen />
-                  : <MdFolder />}
-              </span>
-            )
-            : (
-              <span className='p-1'>
-                <MdFolder />
-              </span>
+    <>
+      <div
+        className={cn(
+          cssVariants({}),
+          className
+        )}
+        {...props}
+      >
+        <div className='p-2 flex flex-row items-center justify-between gap-2 select-none'>
+          <div className='flex flex-row items-center gap-2'>
+            {category.childCategories && category.childCategories.length > 0
+              ? (
+                <span
+                  className='button-base p-1 rounded-2 button-ghost-black-900 bg-black-200! hover:bg-black-300! cursor-pointer'
+                  onClick={onToggleExpand}
+                  title={isExpanded
+                    ? '접기'
+                    : '펼치기'}
+                >
+                  {isExpanded
+                    ? <MdFolderOpen />
+                    : <MdFolder />}
+                </span>
+              )
+              : (
+                <span className='p-1'>
+                  <MdFolder />
+                </span>
+              )}
+            <span>{category.ctgryNm} ({category.childCategories?.length ?? 0})</span>
+          </div>
+          <div className='text-black-500 text-xs text-left flex-1'>
+            {category.ctgryExpln}
+          </div>
+          <div className='flex flex-row items-center gap-1'>
+            {onAddChild && (
+              <Button.Action
+                icon={<MdAdd />}
+                label='하위 카테고리 추가'
+                onClick={() => onAddChild(category)}
+                className='hover:button-normal-black-900'
+              />
             )}
-          <span>{category.ctgryNm} ({category.childCategories?.length ?? 0})</span>
-        </div>
-        <div className='text-black-500 text-xs text-left flex-1'>
-          {category.ctgryExpln}
-        </div>
-        <div className='flex flex-row items-center gap-1'>
-          {onAddChild && (
-            <Button.Action
-              icon={<MdAdd />}
-              label='하위 카테고리 추가'
-              onClick={() => onAddChild(category)}
-              className='hover:button-normal-black-900'
-            />
-          )}
-          {onEdit && (
-            <Button.Action
-              icon={<MdEdit />}
-              label='수정'
-              onClick={() => onEdit(category)}
-              className='hover:button-normal-black-900'
-            />
-          )}
-          {onDelete && (
-            <Button.Action
-              icon={<MdDelete />}
-              label='삭제'
-              onClick={() => onDelete(category)}
-              className='button-normal-red-500 hover:button-normal-red-600'
-            />
-          )}
+            {onEdit && (
+              <Button.Action
+                icon={<MdEdit />}
+                label='수정'
+                onClick={() => onEdit(category)}
+                className='hover:button-normal-black-900'
+              />
+            )}
+            {onDelete && (
+              <Button.Action
+                icon={<MdDelete />}
+                label='삭제'
+                onClick={() => onDelete(category)}
+                className='button-normal-red-500 hover:button-normal-red-600'
+              />
+            )}
+          </div>
         </div>
       </div>
       {isExpanded && category.childCategories && category.childCategories.length > 0 && level < 3 && (
-        <div className='ml-4'>
+        <div className='ml-5 flex flex-col gap-2'>
           {category.childCategories.map((childCategory) => {
             const childLevel = (childCategory as SelectCategoryType).ctgryLvl ?? level + 1;
             // 레벨이 3을 초과하면 렌더링하지 않음
@@ -139,12 +141,11 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
                   : undefined}
                 onToggleExpand={controlledOnToggleExpand}
                 isCategoryExpanded={isCategoryExpanded}
-                className='border-none'
               />
             );
           })}
         </div>
       )}
-    </div>
+    </>
   );
 }

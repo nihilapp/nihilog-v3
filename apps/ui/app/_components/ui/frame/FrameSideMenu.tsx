@@ -1,6 +1,7 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
+import { MdChevronRight } from 'react-icons/md';
 
 import { Button } from '@/_components/ui/button';
 import { cn } from '@/_libs';
@@ -46,6 +47,9 @@ function MenuItem({ item, custom, level = 0, }: { item: Menu;
           icon={item.icon}
           label={item.name}
           href={item.url}
+          rightIcon={hasChildren
+            ? <MdChevronRight />
+            : undefined}
           display='block'
           className={cn([
             'button-ghost-black-700',
@@ -60,6 +64,9 @@ function MenuItem({ item, custom, level = 0, }: { item: Menu;
         <Button.Action
           icon={item.icon}
           label={item.name}
+          rightIcon={hasChildren
+            ? <MdChevronRight />
+            : undefined}
           onClick={item.action}
           display='block'
           className={cn([

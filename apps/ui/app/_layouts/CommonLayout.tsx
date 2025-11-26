@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
+import { useAdminGetCategoryList } from '@/_hooks/admin/categories';
 import { useGetSession, useSignOut } from '@/_hooks/auth';
 import { cn } from '@/_libs';
 import type { Menu } from '@/_types';
@@ -25,6 +26,10 @@ interface Props {
 export function CommonLayout({ children, }: Props) {
   // 세션 동기화 (서버에서 세션 정보 가져오기)
   useGetSession();
+
+  const { } = useAdminGetCategoryList({
+    upCtgryNo: null,
+  });
 
   const signOut = useSignOut();
   const classNames = cn([
@@ -105,6 +110,7 @@ export function CommonLayout({ children, }: Props) {
       classNames: 'hover:button-normal-black-900',
     },
   ];
+
   return (
     <>
       <Frame.Header text='NIHILOG' href='/'>

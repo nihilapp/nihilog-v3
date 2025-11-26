@@ -2,8 +2,8 @@
 
 import { cva, type VariantProps } from 'class-variance-authority';
 import { useState } from 'react';
-import { MdClose } from 'react-icons/md';
 
+import { TextItem } from '@/_components/ui/input/TextItem';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
@@ -28,34 +28,6 @@ const cssVariants = cva(
   [
     'flex flex-wrap gap-2 p-2 border border-black-300 rounded-2',
     'bg-white transition-colors duration-200 ease-in-out',
-  ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
-
-const itemCva = cva(
-  [
-    'inline-flex items-center gap-1 px-2 py-2 rounded-2',
-    'bg-black-100 text-black-900 text-sm',
-    'transition-colors duration-200 ease-in-out',
-  ],
-  {
-    variants: {},
-    defaultVariants: {},
-    compoundVariants: [],
-  }
-);
-
-const itemButtonCva = cva(
-  [
-    'flex items-center justify-center p-0.5 rounded-1',
-    'text-black-700 hover:text-black-900 hover:bg-black-200',
-    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black-500',
-    'transition-colors duration-200 ease-in-out',
-    'cursor-pointer',
   ],
   {
     variants: {},
@@ -133,32 +105,18 @@ export function InputTextArray({
     ])}
     >
       {items?.map((item, index) => (
-        <div
+        <TextItem
           key={`${item}-${index}`}
-          className={cn([
-            itemCva({}),
-            custom?.item,
-          ])}
-        >
-          <span className={cn([
-            'text-sm',
-            custom?.itemText,
-          ])}
-          >
-            {item}
-          </span>
-          <button
-            type='button'
-            onClick={() => onRemoveItem(index)}
-            className={cn([
-              itemButtonCva({}),
-              custom?.itemButton,
-            ])}
-            aria-label={`${item} 태그 제거`}
-          >
-            <MdClose className='size-4' />
-          </button>
-        </div>
+          text={item}
+          onDelete={() => {
+            onRemoveItem(index);
+          }}
+          custom={{
+            item: custom?.item,
+            text: custom?.itemText,
+            deleteButton: custom?.itemButton,
+          }}
+        />
       ))}
       {items.length < maxItems && (
         <input

@@ -12,9 +12,9 @@ import { UpdateCategoryForm } from '@/_components/admin/categories/UpdateCategor
 import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
-import { useInvalidateAdminCategoriesCache } from '@/_keys/admin/categories/admin-categories.keys';
 import { useAdminGetCategoryList } from '@/_hooks/admin/categories';
 import { useAlert } from '@/_hooks/common/use-alert';
+import { useInvalidateAdminCategoriesCache } from '@/_keys/admin/categories/admin-categories.keys';
 import { Api } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
@@ -62,8 +62,10 @@ export function AdminCategoryList({ }: Props) {
     setExpandedCategories,
   ] = useState<Set<number>>(new Set());
 
-  // 전체 카테고리 목록을 가져와서 계층 구조 구성
-  const { response, loading, done, refetch, } = useAdminGetCategoryList({});
+  // 최상위 카테고리(레벨 0)만 가져와서 계층 구조 구성 (include로 자식들이 포함됨)
+  const { response, loading, done, refetch, } = useAdminGetCategoryList({
+    ctgryLvl: 0,
+  });
   const invalidateCache = useInvalidateAdminCategoriesCache();
   const { triggerConfirm, } = useAlert();
 

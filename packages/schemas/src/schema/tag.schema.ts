@@ -47,14 +47,43 @@ export const tagInfoSchema = commonSchema.extend({
     }),
   tagColr: z
     .string()
-    .regex(
-      /^#[0-9A-Fa-f]{6}$/,
-      '색상은 #RRGGBB 형식이어야 합니다.'
+    .refine(
+      (val) => {
+        if (!val) {
+          return true;
+        }
+        const validNames = [
+          '연한 빨강',
+          '연한 주황',
+          '연한 노랑',
+          '연한 초록',
+          '연한 청록',
+          '연한 파랑',
+          '연한 남색',
+          '연한 보라',
+          '연한 분홍',
+          '연한 갈색',
+          '진한 빨강',
+          '진한 주황',
+          '진한 노랑',
+          '진한 초록',
+          '진한 청록',
+          '진한 파랑',
+          '진한 남색',
+          '진한 보라',
+          '진한 분홍',
+          '진한 갈색',
+        ];
+        return validNames.includes(val);
+      },
+      {
+        message: '색상은 색상 팔레트에서 선택해야 합니다.',
+      }
     )
     .optional()
     .openapi({
-      description: '태그 색상 (#RRGGBB 형식)',
-      example: '#FF5733',
+      description: '태그 색상 (색상 팔레트 이름)',
+      example: '연한 빨강',
     }),
   rowNo: z.coerce
     .number()

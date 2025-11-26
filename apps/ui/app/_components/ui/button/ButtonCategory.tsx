@@ -3,7 +3,7 @@
 import { type VariantProps } from 'class-variance-authority';
 import { useState } from 'react';
 import type React from 'react';
-import { MdFolder, MdFolderOpen } from 'react-icons/md';
+import { MdFolder, MdFolderOpen, MdChevronRight, MdKeyboardArrowDown } from 'react-icons/md';
 
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -22,6 +22,7 @@ interface Props
     button?: string | string[];
     label?: string | string[];
     icon?: string | string[];
+    rightIcon?: string | string[];
     children?: string | string[];
   };
 }
@@ -93,6 +94,19 @@ export function ButtonCategory(props: Props) {
           )}
         >
           {label}
+        </span>
+        <span
+          className={cn(
+            iconCva({
+              textSize,
+            }),
+            'ml-auto',
+            custom?.rightIcon
+          )}
+        >
+          {isOpen
+            ? <MdKeyboardArrowDown />
+            : <MdChevronRight />}
         </span>
       </button>
       {isOpen && children && (

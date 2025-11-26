@@ -6,6 +6,7 @@ import {
   MdArticle,
   MdAdd,
   MdTag,
+  MdLocalOffer,
   MdLogout
 } from 'react-icons/md';
 
@@ -94,6 +95,16 @@ export function AdminLayout({ children, }: Props) {
           icon: <MdTag />,
           name: '카테고리 목록',
           url: '/admin/dashboard/categories',
+        },
+      ],
+    },
+    {
+      name: '태그 관리',
+      children: [
+        {
+          icon: <MdLocalOffer />,
+          name: '태그 목록',
+          url: '/admin/dashboard/tags',
         },
       ],
     },

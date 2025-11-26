@@ -12,10 +12,12 @@ interface Props
   VariantProps<typeof buttonCva> {
   label: string;
   icon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   className?: string | string[];
   custom?: {
     label?: string | string[];
     icon?: string | string[];
+    rightIcon?: string | string[];
   };
 }
 
@@ -23,6 +25,7 @@ export function ButtonAction(props: Props) {
   const {
     label,
     icon,
+    rightIcon,
     display,
     textSize,
     className,
@@ -61,6 +64,19 @@ export function ButtonAction(props: Props) {
       >
         {label}
       </span>
+      {rightIcon && (
+        <span
+          className={cn(
+            iconCva({
+              textSize,
+            }),
+            'ml-auto',
+            custom?.rightIcon
+          )}
+        >
+          {rightIcon}
+        </span>
+      )}
     </button>
   );
 }

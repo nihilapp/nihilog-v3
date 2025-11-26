@@ -1,3 +1,4 @@
+import { ColorPaletteSelect } from '@/_components/ui/input/ColorPaletteSelect';
 import { InputErrorMessage } from '@/_components/ui/input/InputErrorMessage';
 import { InputLabel } from '@/_components/ui/input/InputLabel';
 import { InputLongText } from '@/_components/ui/input/InputLongText';
@@ -8,6 +9,7 @@ import { InputSelectItem } from '@/_components/ui/input/InputSelectItem';
 import { InputSwitch } from '@/_components/ui/input/InputSwitch';
 import { InputText } from '@/_components/ui/input/InputText';
 import { InputTextArray } from '@/_components/ui/input/InputTextArray';
+import { TextItem } from '@/_components/ui/input/TextItem';
 
 export const Input = {
   Label: InputLabel,
@@ -20,4 +22,6 @@ export const Input = {
   Switch: InputSwitch,
   TextArray: InputTextArray,
   ErrorMessage: InputErrorMessage,
+  TextItem,
+  ColorPaletteSelect,
 };

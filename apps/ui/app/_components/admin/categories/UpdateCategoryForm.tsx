@@ -161,9 +161,13 @@ export function UpdateCategoryForm({ open, onClose, category, categoryList, }: P
               label='카테고리 색상'
               direction='horizontal'
               render={({ field, }) => (
-                <Input.Text
-                  {...field}
-                  placeholder='#RRGGBB'
+                <Input.ColorPaletteSelect
+                  value={typeof field.value === 'string'
+                    ? field.value
+                    : undefined}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
                 />
               )}
             />

@@ -44,14 +44,43 @@ export const categoryInfoSchema = commonSchema.extend({
       example: 'JavaScript 프로그래밍 언어',
     }),
   ctgryColr: z.string()
-    .regex(
-      /^#[0-9A-Fa-f]{6}$/,
-      '색상은 #RRGGBB 형식이어야 합니다.'
+    .refine(
+      (val) => {
+        if (!val) {
+          return true;
+        }
+        const validNames = [
+          '연한 빨강',
+          '연한 주황',
+          '연한 노랑',
+          '연한 초록',
+          '연한 청록',
+          '연한 파랑',
+          '연한 남색',
+          '연한 보라',
+          '연한 분홍',
+          '연한 갈색',
+          '진한 빨강',
+          '진한 주황',
+          '진한 노랑',
+          '진한 초록',
+          '진한 청록',
+          '진한 파랑',
+          '진한 남색',
+          '진한 보라',
+          '진한 분홍',
+          '진한 갈색',
+        ];
+        return validNames.includes(val);
+      },
+      {
+        message: '색상은 색상 팔레트에서 선택해야 합니다.',
+      }
     )
     .optional()
     .openapi({
-      description: '카테고리 색상 (#RRGGBB 형식)',
-      example: '#FF5733',
+      description: '카테고리 색상 (색상 팔레트 이름)',
+      example: '연한 빨강',
     }),
   ctgryStp: z
     .number()
@@ -170,6 +199,22 @@ export const searchCategorySchema = baseSearchSchema.partial().extend({
     ctgryNm: true,
     ctgryColr: true,
   }).shape,
+  ctgryLvl: z.coerce
+    .number()
+    .int('카테고리 레벨은 정수여야 합니다.')
+    .min(
+      0,
+      '카테고리 레벨은 0 이상이어야 합니다.'
+    )
+    .max(
+      3,
+      '카테고리 레벨은 3 이하여야 합니다.'
+    )
+    .optional()
+    .openapi({
+      description: '카테고리 레벨 (0-3: 최상위는 0)',
+      example: 0,
+    }),
   upCtgryNo: z
     .union([
       z.number().int('상위 카테고리 번호는 정수여야 합니다.').positive('상위 카테고리 번호는 양수여야 합니다.'),
@@ -177,7 +222,7 @@ export const searchCategorySchema = baseSearchSchema.partial().extend({
     ])
     .optional()
     .openapi({
-      description: '상위 카테고리 번호 (null: 최상위 카테고리만 검색)',
+      description: '상위 카테고리 번호',
       example: 1,
     }),
   srchType: z.enum(
