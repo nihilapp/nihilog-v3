@@ -108,24 +108,30 @@ export function AdminTagList({ }: Props) {
         )}
         {done && response && (
           <div className='flex flex-wrap gap-2'>
-            {response.data.list.map((tag) => (
-              <Input.TextItem
-                key={tag.tagNo}
-                text={tag.tagNm}
-                icon={<MdLocalOffer />}
-                color={tag.tagColr ?? undefined}
-                onClick={() => {
-                  onOpenUpdateModal(tag);
-                }}
-                onDelete={(e) => {
-                  onDeleteTag(
-                    tag,
-                    e
-                  );
-                }}
-                clickable
-              />
-            ))}
+            {response.data.list.map((tag) => {
+              const onTagClick = () => {
+                onOpenUpdateModal(tag);
+              };
+
+              const onTagDelete = (e: React.MouseEvent) => {
+                onDeleteTag(
+                  tag,
+                  e
+                );
+              };
+
+              return (
+                <Input.TextItem
+                  key={tag.tagNo}
+                  text={tag.tagNm}
+                  icon={<MdLocalOffer />}
+                  color={tag.tagColr ?? undefined}
+                  onClick={onTagClick}
+                  onDelete={onTagDelete}
+                  clickable
+                />
+              );
+            })}
           </div>
         )}
       </Box.Content>
@@ -133,9 +139,7 @@ export function AdminTagList({ }: Props) {
       <NewTagForm
         open={newModalOpen}
         onClose={onCloseNewModal}
-        onSuccess={() => {
-          refetch();
-        }}
+        onSuccess={refetch}
       />
 
       {selectedTag && (

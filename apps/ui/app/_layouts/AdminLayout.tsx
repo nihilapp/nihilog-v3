@@ -7,6 +7,9 @@ import {
   MdAdd,
   MdTag,
   MdLocalOffer,
+  MdPeople,
+  MdComment,
+  MdNotifications,
   MdLogout
 } from 'react-icons/md';
 
@@ -19,8 +22,6 @@ import type { Menu } from '@/_types';
 interface Props {
   children?: React.ReactNode;
 }
-
-// TODO: 어드민 메뉴 조정 필요.
 
 export function AdminLayout({ children, }: Props) {
   // 세션 동기화 (서버에서 세션 정보 가져오기)
@@ -74,7 +75,7 @@ export function AdminLayout({ children, }: Props) {
       url: '/admin/dashboard',
     },
     {
-      name: '포스트 관리',
+      name: '콘텐츠 관리',
       children: [
         {
           icon: <MdArticle />,
@@ -82,29 +83,49 @@ export function AdminLayout({ children, }: Props) {
           url: '/admin/dashboard/posts',
         },
         {
-          icon: <MdAdd />,
-          name: '새 포스트',
-          action: newPost,
+          icon: <MdComment />,
+          name: '댓글 목록',
+          url: '/admin/dashboard/comments',
         },
-      ],
-    },
-    {
-      name: '카테고리 관리',
-      children: [
         {
           icon: <MdTag />,
           name: '카테고리 목록',
           url: '/admin/dashboard/categories',
         },
-      ],
-    },
-    {
-      name: '태그 관리',
-      children: [
         {
           icon: <MdLocalOffer />,
           name: '태그 목록',
           url: '/admin/dashboard/tags',
+        },
+      ],
+    },
+    {
+      name: '사용자 관리',
+      children: [
+        {
+          icon: <MdPeople />,
+          name: '사용자 목록',
+          url: '/admin/dashboard/users',
+        },
+      ],
+    },
+    {
+      name: '구독 관리',
+      children: [
+        {
+          icon: <MdNotifications />,
+          name: '카테고리 구독',
+          url: '/admin/dashboard/subscribes/categories',
+        },
+        {
+          icon: <MdNotifications />,
+          name: '태그 구독',
+          url: '/admin/dashboard/subscribes/tags',
+        },
+        {
+          icon: <MdNotifications />,
+          name: '사용자 구독',
+          url: '/admin/dashboard/subscribes/users',
         },
       ],
     },

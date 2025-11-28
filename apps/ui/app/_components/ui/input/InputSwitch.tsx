@@ -6,9 +6,8 @@ import { FaToggleOn, FaToggleOff } from 'react-icons/fa';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
-// 기본값은 HTMLButtonElement, 'className'
 interface Props
-  extends Omit<ReactElementProps<'button'>, 'onClick' | 'onChange'>, VariantProps<typeof cssVariants> {
+  extends ReactElementProps<'button', 'onClick' | 'onChange'>, VariantProps<typeof cssVariants> {
   className?: string | string[];
   value: 'Y' | 'N';
   onChange: (value: 'Y' | 'N') => void;

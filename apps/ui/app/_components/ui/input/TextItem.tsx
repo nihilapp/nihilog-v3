@@ -25,19 +25,7 @@ interface Props
 }
 
 const itemCva = cva(
-  [
-    'inline-flex',
-    'items-center',
-    'gap-1',
-    'px-2 py-2',
-    'rounded-2',
-    'bg-black-100',
-    'text-black-900',
-    'text-sm',
-    'transition-colors',
-    'duration-200',
-    'ease-in-out',
-  ],
+  [ 'button-base inline-flex gap-1 rounded-2 bg-black-100 text-black-900 text-sm cursor-pointer', ],
   {
     variants: {
       clickable: {
@@ -53,10 +41,7 @@ const itemCva = cva(
 );
 
 const iconCva = cva(
-  [
-    'shrink-0',
-    'text-black-700',
-  ],
+  [ 'shrink-0 text-black-700', ],
   {
     variants: {},
     defaultVariants: {},
@@ -66,21 +51,10 @@ const iconCva = cva(
 
 const deleteButtonCva = cva(
   [
-    'flex',
-    'items-center',
-    'justify-center',
-    'p-0.5',
-    'rounded-1',
-    'text-black-700',
-    'hover:text-black-900',
-    'hover:bg-black-200',
-    'focus-visible:outline-none',
-    'focus-visible:ring-2',
-    'focus-visible:ring-black-500',
-    'transition-colors',
-    'duration-200',
-    'ease-in-out',
-    'cursor-pointer',
+    'flex items-center justify-center p-0.5 rounded-1 text-black-700 cursor-pointer',
+    'hover:text-black-900 hover:bg-black-200',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black-500',
+    'transition-colors duration-200 ease-in-out',
   ],
   {
     variants: {},
@@ -143,7 +117,7 @@ export function TextItem({
       )}
       <span
         className={cn(
-          'text-sm',
+          'text-sm flex-1',
           custom?.text
         )}
       >

@@ -1,10 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const menuCva = cva(
-  [
-    'menu-base',
-    'font-medium',
-  ],
+  [ 'menu-base font-medium', ],
   {
     variants: {
       display: {

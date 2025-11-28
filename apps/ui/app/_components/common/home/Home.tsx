@@ -31,10 +31,10 @@ export function Home({ }: Props) {
     rlsYn: 'Y',
   });
 
-  const column = defineColumns<SelectPostListItemType>();
+  const { tableColumn, } = defineColumns<SelectPostListItemType>();
 
   const columns = [
-    column({
+    tableColumn({
       key: 'rowNo',
       label: 'No.',
       align: 'center',
@@ -43,7 +43,7 @@ export function Home({ }: Props) {
         return value as number;
       },
     }),
-    column({
+    tableColumn({
       key: 'pstTtl',
       label: '제목',
       align: 'justify',
@@ -60,7 +60,7 @@ export function Home({ }: Props) {
         );
       },
     }),
-    column({
+    tableColumn({
       key: 'category',
       label: '카테고리',
       align: 'center',
@@ -77,7 +77,7 @@ export function Home({ }: Props) {
         );
       },
     }),
-    column({
+    tableColumn({
       key: 'publDt',
       label: '발행일',
       align: 'center',

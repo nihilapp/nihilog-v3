@@ -12,19 +12,26 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ '', ],
+  [ 'flex gap-2', ],
   {
-    variants: {},
-    defaultVariants: {},
+    variants: {
+      direction: {
+        horizontal: [ 'flex-row', ],
+        vertical: [ 'flex-col', ],
+      },
+    },
+    defaultVariants: {
+      direction: 'horizontal',
+    },
     compoundVariants: [],
   }
 );
 
-export function BoxAction({ className, children, ...props }: Props) {
+export function BoxAction({ className, direction, children, ...props }: Props) {
   return (
     <div
       className={cn(
-        cssVariants({}),
+        cssVariants({ direction, }),
         className
       )}
       {...props}

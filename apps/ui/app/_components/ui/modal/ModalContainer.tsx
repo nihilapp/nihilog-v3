@@ -75,6 +75,22 @@ export function ModalContainer({
   custom,
   ...props
 }: Props) {
+  const onBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  const onBackdropKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  const onModalClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
   if (!open) return null;
 
   return (
@@ -84,16 +100,8 @@ export function ModalContainer({
         backdropVariants({ open, }),
         custom?.backdrop
       )}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          onClose();
-        }
-      }}
+      onClick={onBackdropClick}
+      onKeyDown={onBackdropKeyDown}
     >
       <div
         className={cn(
@@ -108,7 +116,7 @@ export function ModalContainer({
             : 'auto',
           ...props.style,
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={onModalClick}
         {...props}
       >
         {props.children}

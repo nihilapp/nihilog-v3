@@ -91,30 +91,48 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
             {category.ctgryExpln}
           </div>
           <div className='flex flex-row items-center gap-1'>
-            {onAddChild && (
-              <Button.Action
-                icon={<MdAdd />}
-                label='하위 카테고리 추가'
-                onClick={() => onAddChild(category)}
-                className='hover:button-normal-black-900'
-              />
-            )}
-            {onEdit && (
-              <Button.Action
-                icon={<MdEdit />}
-                label='수정'
-                onClick={() => onEdit(category)}
-                className='hover:button-normal-black-900'
-              />
-            )}
-            {onDelete && (
-              <Button.Action
-                icon={<MdDelete />}
-                label='삭제'
-                onClick={() => onDelete(category)}
-                className='button-normal-red-500 hover:button-normal-red-600'
-              />
-            )}
+            {onAddChild && (() => {
+              const onAddChildClick = () => {
+                onAddChild(category);
+              };
+
+              return (
+                <Button.Action
+                  icon={<MdAdd />}
+                  label='하위 카테고리 추가'
+                  onClick={onAddChildClick}
+                  className='hover:button-normal-black-900'
+                />
+              );
+            })()}
+            {onEdit && (() => {
+              const onEditClick = () => {
+                onEdit(category);
+              };
+
+              return (
+                <Button.Action
+                  icon={<MdEdit />}
+                  label='수정'
+                  onClick={onEditClick}
+                  className='hover:button-normal-black-900'
+                />
+              );
+            })()}
+            {onDelete && (() => {
+              const onDeleteClick = () => {
+                onDelete(category);
+              };
+
+              return (
+                <Button.Action
+                  icon={<MdDelete />}
+                  label='삭제'
+                  onClick={onDeleteClick}
+                  className='button-normal-red-500 hover:button-normal-red-600'
+                />
+              );
+            })()}
           </div>
         </div>
       </div>

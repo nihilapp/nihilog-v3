@@ -1,11 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 export const buttonCva = cva(
-  [
-    'button-base',
-    'rounded-2',
-    'font-medium',
-  ],
+  [ 'button-base rounded-2 font-medium', ],
   {
     variants: {
       display: {

@@ -17,6 +17,7 @@ interface Props
   itemName?: string;
   itemValue?: React.ReactNode;
   selectLabel?: string;
+  icon?: React.ReactNode;
 }
 
 const cssVariants = cva(
@@ -53,7 +54,25 @@ const cssVariants = cva(
 );
 
 const itemNameCva = cva(
-  [ 'text-xs text-gray-500 bg-black-50 p-1 rounded-2 border border-black-200', ],
+  [ 'text-xs text-gray-500 bg-black-50 p-1 rounded-2 border border-black-200 flex items-center gap-1', ],
+  {
+    variants: {
+      align: {
+        left: [ 'justify-start', ],
+        center: [ 'justify-center', ],
+        right: [ 'justify-end', ],
+        justify: [ 'justify-between', ],
+      },
+    },
+    defaultVariants: {
+      align: 'left',
+    },
+    compoundVariants: [],
+  }
+);
+
+const itemValueCva = cva(
+  [ 'text-black-900 flex items-center h-full px-2', ],
   {
     variants: {
       align: {
@@ -66,16 +85,16 @@ const itemNameCva = cva(
     defaultVariants: {
       align: 'left',
     },
-    compoundVariants: [],
   }
 );
 
-export function ListCell({ className, checkbox, checked, columnSize, align, onChange, itemName, itemValue, selectLabel, ...props }: Props) {
+export function ListCell({ className, checkbox, checked, columnSize, align, onChange, itemName, itemValue, selectLabel, icon, ...props }: Props) {
   return (
     <div
       className={cn(
         cssVariants({
           columnSize,
+          align,
         }),
         className
       )}
@@ -86,6 +105,11 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
           align,
         }))}
         >
+          {icon && (
+            <span className='shrink-0 flex items-center'>
+              {icon}
+            </span>
+          )}
           {itemName || selectLabel}
         </span>
         {checkbox
@@ -93,7 +117,7 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
             <button
               type='button'
               onClick={onChange}
-              className='cursor-pointer mx-auto'
+              className='cursor-pointer mx-auto h-full'
             >
               {checked
                 ? (
@@ -105,9 +129,10 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
             </button>
           )
           : (
-            <span className='text-black-900'>{itemValue}</span>
+            <span className={cn(itemValueCva({ align, }))}>
+              {itemValue}
+            </span>
           )}
-
       </React.Fragment>
     </div>
   );

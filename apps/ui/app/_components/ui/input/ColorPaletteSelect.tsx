@@ -12,7 +12,7 @@ import { InputSelection } from './InputSelection';
 import { InputSelectItem } from './InputSelectItem';
 
 interface Props
-  extends Omit<ReactElementProps<'div'>, 'onChange'>, VariantProps<typeof cssVariants> {
+  extends ReactElementProps<'div', 'onChange'>, VariantProps<typeof cssVariants> {
   value?: string;
   onChange?: (value: string | undefined) => void;
   className?: string | string[];

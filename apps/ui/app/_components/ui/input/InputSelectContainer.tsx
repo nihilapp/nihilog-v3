@@ -27,7 +27,16 @@ const cssVariants = cva(
   }
 );
 
-function InputSelectContainerInner({ className, children, custom, ...props }: Omit<InputSelectContainerProps, 'value' | 'onValueChange'>) {
+interface InputSelectContainerInnerProps
+  extends ReactElementProps<'div'>, VariantProps<typeof cssVariants> {
+  className?: string | string[];
+  children?: React.ReactNode;
+  custom?: {
+    div?: string | string[];
+  };
+}
+
+function InputSelectContainerInner({ className, children, custom, ...props }: InputSelectContainerInnerProps) {
   const { isOpen, setIsOpen, } = useInputSelectContext();
   const containerRef = useRef<HTMLDivElement>(null);
 

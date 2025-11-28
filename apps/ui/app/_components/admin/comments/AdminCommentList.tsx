@@ -1,82 +1,100 @@
 'use client';
 
-import type { SelectCategoryType, SelectPostListItemType } from '@nihilog/schemas';
+import type { SelectCommentListItemType } from '@nihilog/schemas';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { MdTitle, MdFolder, MdSchedule, MdEdit, MdDelete } from 'react-icons/md';
+import { MdEdit, MdDelete } from 'react-icons/md';
 
 import { Loading } from '@/_components/common/Loading';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
-import { Input } from '@/_components/ui/input';
 import { List } from '@/_components/ui/list';
-import { useGetPostList } from '@/_hooks/posts';
+import { useGetCommentList } from '@/_hooks/comments';
 import { defineColumns } from '@/_libs/defineColumns';
 
 interface Props {}
 
-export function AdminPostList({ }: Props) {
+export function AdminCommentList({ }: Props) {
   const [
     selectedItems,
     setSelectedItems,
   ] = useState<Set<string>>(new Set());
 
-  const { response, loading, done, } = useGetPostList({
+  const { response, loading, done, } = useGetCommentList({
     endRow: 10,
-    orderBy: 'LATEST',
   });
 
-  const { tableColumn, customColumn, } = defineColumns<SelectPostListItemType>();
+  const { tableColumn, customColumn, } = defineColumns<SelectCommentListItemType>();
 
   const columns = [
     tableColumn({
-      key: 'pstTtl',
-      label: '제목',
-      align: 'left',
-      icon: <MdTitle />,
-      render: (row, value, _index) => {
-        const title = value as string;
-
-        return (
-          <Button.Link
-            href={`/admin/dashboard/posts/${row.pstNo}`}
-            display='block'
-            className='button-ghost-blue-600 justify-start hover:bg-blue-50!'
-            label={title}
-          />
-        );
+      key: 'rowNo',
+      label: 'No.',
+      align: 'center',
+      className: '',
+      render: (_row, value, _index) => {
+        return value as number;
       },
     }),
     tableColumn({
-      key: 'category',
-      label: '카테고리',
-      align: 'center',
-      icon: <MdFolder />,
-      className: 'w-[10%]',
+      key: 'cmntCntnt',
+      label: '댓글 내용',
+      align: 'justify',
       render: (_row, value, _index) => {
-        const categoryNm = (value as SelectCategoryType)?.ctgryNm;
+        const content = value as string;
 
         return (
-          <Input.TextItem
-            text={categoryNm || '미분류'}
-            custom={{
-              item: 'w-full',
-              text: 'text-center',
+          <Button.Action
+            display='block'
+            className='button-ghost-blue-600'
+            label={content || '(내용 없음)'}
+            onClick={() => {
+              // TODO: 댓글 상세 페이지로 이동
             }}
           />
         );
       },
     }),
     tableColumn({
-      key: 'publDt',
-      label: '발행일',
+      key: 'post',
+      label: '포스트',
       align: 'center',
-      icon: <MdSchedule />,
-      className: 'w-[25%]',
-      render: (_row, value, _index) => {
-        const publishedDate = DateTime.fromISO(value as string).toFormat('yyyy-MM-dd HH:mm');
+      className: 'w-[20%]',
+      render: (row, _value, _index) => {
+        const post = row.post as { pstTtl?: string;
+          pstNo?: number; } | null;
+        const postTitle = post?.pstTtl;
 
-        return publishedDate;
+        return (
+          <Button.Action
+            display='block'
+            className='button-outline-stone-600'
+            label={postTitle || '(제목 없음)'}
+          />
+        );
+      },
+    }),
+    tableColumn({
+      key: 'creator',
+      label: '작성자',
+      align: 'center',
+      className: 'w-[15%]',
+      render: (row, _value, _index) => {
+        const creator = row.creator as { userNm?: string } | null;
+        const userName = creator?.userNm;
+
+        return userName || '(이름 없음)';
+      },
+    }),
+    tableColumn({
+      key: 'crtDt',
+      label: '작성일',
+      align: 'center',
+      className: 'w-[20%]',
+      render: (_row, value, _index) => {
+        const createdDate = DateTime.fromISO(value as string).toFormat('yyyy-MM-dd HH:mm');
+
+        return createdDate;
       },
     }),
     customColumn({
@@ -119,25 +137,24 @@ export function AdminPostList({ }: Props) {
 
   return (
     <Box.Panel panel={false}>
-      <Box.Top title='포스트 목록'>
+      <Box.Top title='댓글 목록'>
         <Box.Action></Box.Action>
       </Box.Top>
 
       <Box.Content>
         {loading && (
           <Loading
-            message='게시글 목록을 불러오는 중입니다...'
+            message='댓글 목록을 불러오는 중입니다...'
           />
         )}
         {done && (
           <List.Template
             columns={columns}
             data={response?.data.list || []}
-            rowKey='pstNo'
-            showSelectIcon
+            rowKey='cmntNo'
             selectLabel='선택'
             selectionMode='multiple'
-            emptyMessage='게시글이 없습니다.'
+            emptyMessage='댓글이 없습니다.'
             selectedItems={selectedItems}
             onSelectionChange={onListSelectionChange}
           />

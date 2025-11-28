@@ -37,6 +37,10 @@ export const InputText = forwardRef<HTMLInputElement, Props>(function InputText(
     ? 'text'
     : type;
 
+  const onTogglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <div className='relative w-full'>
       <input
@@ -53,7 +57,7 @@ export const InputText = forwardRef<HTMLInputElement, Props>(function InputText(
       {isPassword && (
         <button
           type='button'
-          onClick={() => setShowPassword((prev) => !prev)}
+          onClick={onTogglePasswordVisibility}
           className='absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-stone-600 hover:text-stone-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-500 rounded-1 p-1'
           aria-label={showPassword
             ? '비밀번호 숨기기'

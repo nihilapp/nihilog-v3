@@ -7,9 +7,8 @@ import { TextItem } from '@/_components/ui/input/TextItem';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
 
-// 기본값은 HTMLDivElement, 'className'
 interface Props
-  extends Omit<ReactElementProps<'div'>, 'onChange'>, VariantProps<typeof cssVariants> {
+  extends ReactElementProps<'div', 'onChange'>, VariantProps<typeof cssVariants> {
   className?: string | string[];
   items?: string[];
   onChange?: (value: string[]) => void;
@@ -104,20 +103,24 @@ export function InputTextArray({
       custom?.container,
     ])}
     >
-      {items?.map((item, index) => (
-        <TextItem
-          key={`${item}-${index}`}
-          text={item}
-          onDelete={() => {
-            onRemoveItem(index);
-          }}
-          custom={{
-            item: custom?.item,
-            text: custom?.itemText,
-            deleteButton: custom?.itemButton,
-          }}
-        />
-      ))}
+      {items?.map((item, index) => {
+        const onDeleteItem = () => {
+          onRemoveItem(index);
+        };
+
+        return (
+          <TextItem
+            key={`${item}-${index}`}
+            text={item}
+            onDelete={onDeleteItem}
+            custom={{
+              item: custom?.item,
+              text: custom?.itemText,
+              deleteButton: custom?.itemButton,
+            }}
+          />
+        );
+      })}
       {items.length < maxItems && (
         <input
           type='text'

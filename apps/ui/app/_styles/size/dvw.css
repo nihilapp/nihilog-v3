@@ -23,7 +23,7 @@
 }
 
 @utility dvw-* {
-  width: --value(--dvw-*);
-  width: --value([integer])dvw;
+  width: --value(--dvw- *);
+  width: --value([integer]) dvw;
   width: calc(--value(integer) * 1dvw);
 }

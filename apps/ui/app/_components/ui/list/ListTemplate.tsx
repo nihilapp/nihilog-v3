@@ -1,11 +1,13 @@
 'use client';
 
+import { MdCheckBox } from 'react-icons/md';
+
 import { List } from '@/_components/ui/list';
 import { cn } from '@/_libs';
 import type { ColumnType } from '@/_types/component/column.types';
 
 interface Props {
-  columns: ColumnType<any, string>[];
+  columns: ColumnType<any, any>[];
   data: any[];
   emptyMessage?: string;
   rowKey: string;
@@ -15,6 +17,7 @@ interface Props {
   selectedItems?: Set<string> | string[];
   onSelectionChange?: ((selectedItem: string) => void) | ((selectedItems: Set<string> | string[]) => void);
   showSelectAll?: boolean;
+  showSelectIcon?: boolean;
   itemDirection?: 'row' | 'col';
   custom?: {
     container?: string;
@@ -35,6 +38,7 @@ export function ListTemplate({
   selectedItems: selectedItems,
   onSelectionChange: onSelectionChange,
   showSelectAll: _showSelectAll,
+  showSelectIcon = false,
   itemDirection,
   custom,
 }: Props) {
@@ -96,46 +100,88 @@ export function ListTemplate({
                     custom?.item,
                   ])}
                 >
-                  {selectionMode === 'single' && onSelectionChange && (
-                    <List.Cell
-                      checkbox
-                      align='center'
-                      selectLabel={selectLabel}
-                      checked={getIsSelected(getRowId(row))}
-                      onChange={() => onSingleSelect(getRowId(row))}
-                      className={cn([
-                        'flex-none shrink-0 w-[40px] min-w-[40px] max-w-[40px]',
-                        custom?.cell,
-                      ])}
-                    />
-                  )}
-                  {selectionMode === 'multiple' && onSelectionChange && (
-                    <List.Cell
-                      checkbox
-                      align='center'
-                      selectLabel={selectLabel}
-                      checked={getIsSelected(getRowId(row))}
-                      onChange={() => onMultipleSelect(getRowId(row))}
-                      className={cn([
-                        'flex-none shrink-0 w-[40px] min-w-[40px] max-w-[40px]',
-                        custom?.cell,
-                      ])}
-                    />
-                  )}
-                  {columns.map((col, colIndex) => (
-                    <List.Cell
-                      key={col.key}
-                      itemName={col.label}
-                      itemValue={col.render
-                        ? col.render(
-                          row,
-                          row[col.key],
-                          colIndex
-                        )
-                        : row[col.key]}
-                      className={cn([ custom?.cell, ])}
-                    />
-                  ))}
+                  {selectionMode === 'single' && onSelectionChange && (() => {
+                    const rowId = getRowId(row);
+                    const onCellChange = () => {
+                      onSingleSelect(rowId);
+                    };
+
+                    return (
+                      <List.Cell
+                        checkbox
+                        align='center'
+                        selectLabel={selectLabel}
+                        icon={showSelectIcon
+                          ? <MdCheckBox />
+                          : undefined}
+                        checked={getIsSelected(rowId)}
+                        onChange={onCellChange}
+                        className={cn([
+                          'flex-none shrink-0 w-[40px] min-w-[40px] max-w-[40px]',
+                          custom?.cell,
+                        ])}
+                      />
+                    );
+                  })()}
+                  {selectionMode === 'multiple' && onSelectionChange && (() => {
+                    const rowId = getRowId(row);
+                    const onCellChange = () => {
+                      onMultipleSelect(rowId);
+                    };
+
+                    return (
+                      <List.Cell
+                        checkbox
+                        align='center'
+                        selectLabel={selectLabel}
+                        icon={showSelectIcon
+                          ? <MdCheckBox />
+                          : undefined}
+                        checked={getIsSelected(rowId)}
+                        onChange={onCellChange}
+                        className={cn([
+                          'flex-none shrink-0',
+                          custom?.cell,
+                        ])}
+                      />
+                    );
+                  })()}
+                  {columns.map((col, colIndex) => {
+                    const colClassName = Array.isArray(col.className)
+                      ? col.className.join(' ')
+                      : col.className || '';
+                    const hasWidthClass = /\bw-\[|w-\d+|w-full|w-auto|w-screen|w-min|w-max|w-fit\b/.test(colClassName);
+                    const shouldAddFlexNone = hasWidthClass && !/\bflex-none\b/.test(colClassName);
+                    const columnValue = col.type === 'table'
+                      ? row[col.key]
+                      : undefined;
+
+                    return (
+                      <List.Cell
+                        key={col.key}
+                        itemName={col.label}
+                        itemValue={col.render
+                          ? col.render(
+                            row,
+                            columnValue,
+                            colIndex
+                          )
+                          : columnValue}
+                        align={col.align}
+                        columnSize={
+                          hasWidthClass
+                            ? undefined
+                            : col.columnSize
+                        }
+                        icon={col.icon}
+                        className={cn([
+                          col.className,
+                          shouldAddFlexNone && 'flex-none',
+                          custom?.cell,
+                        ])}
+                      />
+                    );
+                  })}
                 </List.Item>
               ))}
             </>
