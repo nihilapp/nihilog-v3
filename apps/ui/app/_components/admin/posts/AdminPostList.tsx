@@ -1,7 +1,9 @@
 'use client';
 
 import type { SelectCategoryType, SelectPostListItemType } from '@nihilog/schemas';
+import { useMutation } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { MdTitle, MdFolder, MdSchedule, MdEdit, MdDelete } from 'react-icons/md';
 
@@ -10,20 +12,38 @@ import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { Input } from '@/_components/ui/input';
 import { List } from '@/_components/ui/list';
+import { useAlert } from '@/_hooks/common/use-alert';
 import { useGetPostList } from '@/_hooks/posts';
+import { useInvalidateAdminPostsCache } from '@/_keys/admin/posts/admin-posts.keys';
+import { Api } from '@/_libs';
 import { defineColumns } from '@/_libs/defineColumns';
+import { usePostActions } from '@/_stores/posts.store';
 
 interface Props {}
 
 export function AdminPostList({ }: Props) {
+  const router = useRouter();
   const [
     selectedItems,
     setSelectedItems,
   ] = useState<Set<string>>(new Set());
 
-  const { response, loading, done, } = useGetPostList({
+  const { response, loading, done, refetch, } = useGetPostList({
     endRow: 10,
     orderBy: 'LATEST',
+  });
+  const { triggerConfirm, } = useAlert();
+  const { setEditMode, } = usePostActions();
+  const invalidateCache = useInvalidateAdminPostsCache();
+
+  const deletePostMutation = useMutation({
+    mutationFn: async (pstNo: number) => {
+      return await Api.deleteQuery<boolean>(`admin/posts/${pstNo}`);
+    },
+    onSuccess() {
+      invalidateCache();
+      refetch();
+    },
   });
 
   const { tableColumn, customColumn, } = defineColumns<SelectPostListItemType>();
@@ -84,13 +104,21 @@ export function AdminPostList({ }: Props) {
       label: '관리',
       align: 'center',
       className: 'w-[15%]',
-      render: (_row, _value, _index) => {
+      render: (row, _value, _index) => {
+        const post = row as SelectPostListItemType;
+
         const onEditClick = () => {
-          // TODO: 수정 페이지로 이동
+          setEditMode('update');
+          router.push(`/admin/posts/editor?pstNo=${post.pstNo}`);
         };
 
         const onDeleteClick = () => {
-          // TODO: 삭제 처리
+          triggerConfirm(
+            `포스트 "${post.pstTtl}"을(를) 삭제하시겠습니까?`,
+            () => {
+              deletePostMutation.mutate(post.pstNo);
+            }
+          );
         };
 
         return (

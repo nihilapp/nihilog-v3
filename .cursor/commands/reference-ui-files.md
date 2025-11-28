@@ -13,7 +13,9 @@
 - `apps/ui/app/_components`
 - `apps/ui/app/_components/admin`
 - `apps/ui/app/_components/admin/categories`
+- `apps/ui/app/_components/admin/comments`
 - `apps/ui/app/_components/admin/posts`
+- `apps/ui/app/_components/admin/tags`
 - `apps/ui/app/_components/auth`
 - `apps/ui/app/_components/common`
 - `apps/ui/app/_components/common/home`
@@ -32,30 +34,11 @@
 ## `_layouts`
 
 - `apps/ui/app/_layouts`
-
-## `_entities`
-
-- `apps/ui/app/_entities`
-- `apps/ui/app/_entities/admin`
-- `apps/ui/app/_entities/admin/categories`
-- `apps/ui/app/_entities/admin/comments`
-- `apps/ui/app/_entities/admin/posts`
-- `apps/ui/app/_entities/admin/subscribe`
-- `apps/ui/app/_entities/admin/subscribes`
-- `apps/ui/app/_entities/admin/subscribes/categories`
-- `apps/ui/app/_entities/admin/subscribes/tags`
-- `apps/ui/app/_entities/admin/tags`
-- `apps/ui/app/_entities/admin/users`
-- `apps/ui/app/_entities/auth`
-- `apps/ui/app/_entities/categories`
-- `apps/ui/app/_entities/comments`
-- `apps/ui/app/_entities/common`
-- `apps/ui/app/_entities/posts`
-- `apps/ui/app/_entities/subscribe`
-- `apps/ui/app/_entities/subscribe/category-subscribe`
-- `apps/ui/app/_entities/subscribe/tag-subscribe`
-- `apps/ui/app/_entities/tags`
-- `apps/ui/app/_entities/users`
+- `apps/ui/app/_layouts/AdminLayout.tsx`
+- `apps/ui/app/_layouts/AuthLayout.tsx`
+- `apps/ui/app/_layouts/CommonLayout.tsx`
+- `apps/ui/app/_layouts/Providers.tsx`
+- `apps/ui/app/_layouts/index.ts`
 
 ## `_schemas`
 

@@ -10,7 +10,8 @@ import {
   MdPeople,
   MdComment,
   MdNotifications,
-  MdLogout
+  MdLogout,
+  MdBarChart
 } from 'react-icons/md';
 
 import { Frame } from '@/_components/ui/frame';
@@ -78,24 +79,64 @@ export function AdminLayout({ children, }: Props) {
       name: '콘텐츠 관리',
       children: [
         {
-          icon: <MdArticle />,
-          name: '포스트 목록',
-          url: '/admin/dashboard/posts',
+          name: '포스트 관리',
+          children: [
+            {
+              icon: <MdArticle />,
+              name: '포스트 목록',
+              url: '/admin/dashboard/posts',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '포스트 통계',
+              url: '/admin/dashboard/posts/statistics',
+            },
+          ],
         },
         {
-          icon: <MdComment />,
-          name: '댓글 목록',
-          url: '/admin/dashboard/comments',
+          name: '댓글 관리',
+          children: [
+            {
+              icon: <MdComment />,
+              name: '댓글 목록',
+              url: '/admin/dashboard/comments',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '댓글 통계',
+              url: '/admin/dashboard/comments/statistics',
+            },
+          ],
         },
         {
-          icon: <MdTag />,
-          name: '카테고리 목록',
-          url: '/admin/dashboard/categories',
+          name: '카테고리 관리',
+          children: [
+            {
+              icon: <MdTag />,
+              name: '카테고리 목록',
+              url: '/admin/dashboard/categories',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '카테고리 통계',
+              url: '/admin/dashboard/categories/statistics',
+            },
+          ],
         },
         {
-          icon: <MdLocalOffer />,
-          name: '태그 목록',
-          url: '/admin/dashboard/tags',
+          name: '태그 관리',
+          children: [
+            {
+              icon: <MdLocalOffer />,
+              name: '태그 목록',
+              url: '/admin/dashboard/tags',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '태그 통계',
+              url: '/admin/dashboard/tags/statistics',
+            },
+          ],
         },
       ],
     },
@@ -103,9 +144,19 @@ export function AdminLayout({ children, }: Props) {
       name: '사용자 관리',
       children: [
         {
-          icon: <MdPeople />,
-          name: '사용자 목록',
-          url: '/admin/dashboard/users',
+          name: '사용자 관리',
+          children: [
+            {
+              icon: <MdPeople />,
+              name: '사용자 목록',
+              url: '/admin/dashboard/users',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '사용자 통계',
+              url: '/admin/dashboard/users/statistics',
+            },
+          ],
         },
       ],
     },
@@ -113,19 +164,49 @@ export function AdminLayout({ children, }: Props) {
       name: '구독 관리',
       children: [
         {
-          icon: <MdNotifications />,
-          name: '카테고리 구독',
-          url: '/admin/dashboard/subscribes/categories',
+          name: '카테고리 구독 관리',
+          children: [
+            {
+              icon: <MdNotifications />,
+              name: '카테고리 구독 목록',
+              url: '/admin/dashboard/category-subscribe',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '카테고리 구독 통계',
+              url: '/admin/dashboard/category-subscribe/statistics',
+            },
+          ],
         },
         {
-          icon: <MdNotifications />,
-          name: '태그 구독',
-          url: '/admin/dashboard/subscribes/tags',
+          name: '태그 구독 관리',
+          children: [
+            {
+              icon: <MdNotifications />,
+              name: '태그 구독 목록',
+              url: '/admin/dashboard/tag-subscribe',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '태그 구독 통계',
+              url: '/admin/dashboard/tag-subscribe/statistics',
+            },
+          ],
         },
         {
-          icon: <MdNotifications />,
-          name: '사용자 구독',
-          url: '/admin/dashboard/subscribes/users',
+          name: '사용자 구독 관리',
+          children: [
+            {
+              icon: <MdNotifications />,
+              name: '사용자 구독 목록',
+              url: '/admin/dashboard/user-subscribe',
+            },
+            {
+              icon: <MdBarChart />,
+              name: '사용자 구독 통계',
+              url: '/admin/dashboard/user-subscribe/statistics',
+            },
+          ],
         },
       ],
     },

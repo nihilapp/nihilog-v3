@@ -1,16 +1,23 @@
 'use client';
 
 import type { SelectCommentListItemType } from '@nihilog/schemas';
+import { useMutation } from '@tanstack/react-query';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { MdEdit, MdDelete } from 'react-icons/md';
 
 import { Loading } from '@/_components/common/Loading';
+import { Badge } from '@/_components/ui/badge';
 import { Box } from '@/_components/ui/box';
 import { Button } from '@/_components/ui/button';
 import { List } from '@/_components/ui/list';
 import { useGetCommentList } from '@/_hooks/comments';
+import { useAlert } from '@/_hooks/common/use-alert';
+import { useInvalidateCommentsCache } from '@/_keys/comments/comments.keys';
+import { Api } from '@/_libs';
 import { defineColumns } from '@/_libs/defineColumns';
+
+import { UpdateCommentForm } from './UpdateCommentForm';
 
 interface Props {}
 
@@ -19,21 +26,93 @@ export function AdminCommentList({ }: Props) {
     selectedItems,
     setSelectedItems,
   ] = useState<Set<string>>(new Set());
+  const [
+    updateModalOpen,
+    setUpdateModalOpen,
+  ] = useState(false);
+  const [
+    selectedComment,
+    setSelectedComment,
+  ] = useState<SelectCommentListItemType | null>(null);
 
-  const { response, loading, done, } = useGetCommentList({
+  const { response, loading, done, refetch, } = useGetCommentList({
     endRow: 10,
+  });
+  const { triggerConfirm, } = useAlert();
+  const invalidateCache = useInvalidateCommentsCache();
+
+  const deleteCommentMutation = useMutation({
+    mutationFn: async (cmntNo: number) => {
+      return await Api.deleteQuery<boolean>(`comments/${cmntNo}`);
+    },
+    onSuccess() {
+      invalidateCache();
+      refetch();
+    },
   });
 
   const { tableColumn, customColumn, } = defineColumns<SelectCommentListItemType>();
 
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case 'PENDING':
+        return {
+          label: '대기',
+          color: 'orange' as const,
+        };
+      case 'APPROVED':
+        return {
+          label: '승인',
+          color: 'green' as const,
+        };
+      case 'REJECTED':
+        return {
+          label: '거부',
+          color: 'red' as const,
+        };
+      case 'SPAM':
+        return {
+          label: '스팸',
+          color: 'red' as const,
+        };
+      default:
+        return {
+          label: status,
+          color: 'gray' as const,
+        };
+    }
+  };
+
   const columns = [
     tableColumn({
-      key: 'rowNo',
-      label: 'No.',
+      key: 'cmntSts',
+      label: '상태',
       align: 'center',
-      className: '',
+      className: 'w-[10%]',
       render: (_row, value, _index) => {
-        return value as number;
+        const status = value as string;
+        const statusInfo = getStatusInfo(status);
+
+        return (
+          <Badge
+            label={statusInfo.label}
+            color={statusInfo.color}
+            textSize='sm'
+            display='inline'
+          />
+        );
+      },
+    }),
+    tableColumn({
+      key: 'creator',
+      label: '작성자',
+      align: 'center',
+      className: 'w-[15%]',
+      render: (row, _value, _index) => {
+        const creator = row.creator as { userNm?: string } | null;
+        const userName = creator?.userNm;
+
+        return userName || '(이름 없음)';
       },
     }),
     tableColumn({
@@ -57,7 +136,7 @@ export function AdminCommentList({ }: Props) {
     }),
     tableColumn({
       key: 'post',
-      label: '포스트',
+      label: '덧글이 달린 포스트',
       align: 'center',
       className: 'w-[20%]',
       render: (row, _value, _index) => {
@@ -75,20 +154,8 @@ export function AdminCommentList({ }: Props) {
       },
     }),
     tableColumn({
-      key: 'creator',
-      label: '작성자',
-      align: 'center',
-      className: 'w-[15%]',
-      render: (row, _value, _index) => {
-        const creator = row.creator as { userNm?: string } | null;
-        const userName = creator?.userNm;
-
-        return userName || '(이름 없음)';
-      },
-    }),
-    tableColumn({
       key: 'crtDt',
-      label: '작성일',
+      label: '게시 날짜',
       align: 'center',
       className: 'w-[20%]',
       render: (_row, value, _index) => {
@@ -102,13 +169,21 @@ export function AdminCommentList({ }: Props) {
       label: '관리',
       align: 'center',
       className: 'w-[15%]',
-      render: (_row, _value, _index) => {
+      render: (row, _value, _index) => {
+        const comment = row as SelectCommentListItemType;
+
         const onEditClick = () => {
-          // TODO: 수정 페이지로 이동
+          setSelectedComment(comment);
+          setUpdateModalOpen(true);
         };
 
         const onDeleteClick = () => {
-          // TODO: 삭제 처리
+          triggerConfirm(
+            '댓글을 삭제하시겠습니까?',
+            () => {
+              deleteCommentMutation.mutate(comment.cmntNo);
+            }
+          );
         };
 
         return (
@@ -135,31 +210,49 @@ export function AdminCommentList({ }: Props) {
     setSelectedItems(items as Set<string>);
   };
 
-  return (
-    <Box.Panel panel={false}>
-      <Box.Top title='댓글 목록'>
-        <Box.Action></Box.Action>
-      </Box.Top>
+  const onCloseUpdateModal = () => {
+    setUpdateModalOpen(false);
+    setSelectedComment(null);
+  };
 
-      <Box.Content>
-        {loading && (
-          <Loading
-            message='댓글 목록을 불러오는 중입니다...'
-          />
-        )}
-        {done && (
-          <List.Template
-            columns={columns}
-            data={response?.data.list || []}
-            rowKey='cmntNo'
-            selectLabel='선택'
-            selectionMode='multiple'
-            emptyMessage='댓글이 없습니다.'
-            selectedItems={selectedItems}
-            onSelectionChange={onListSelectionChange}
-          />
-        )}
-      </Box.Content>
-    </Box.Panel>
+  return (
+    <>
+      <Box.Panel panel={false}>
+        <Box.Top title='댓글 목록'>
+          <Box.Action></Box.Action>
+        </Box.Top>
+
+        <Box.Content>
+          {loading && (
+            <Loading
+              message='댓글 목록을 불러오는 중입니다...'
+            />
+          )}
+          {done && (
+            <List.Template
+              columns={columns}
+              data={response?.data.list || []}
+              rowKey='cmntNo'
+              selectLabel='선택'
+              selectionMode='multiple'
+              emptyMessage='댓글이 없습니다.'
+              selectedItems={selectedItems}
+              onSelectionChange={onListSelectionChange}
+            />
+          )}
+        </Box.Content>
+      </Box.Panel>
+
+      {selectedComment && (
+        <UpdateCommentForm
+          open={updateModalOpen}
+          onClose={onCloseUpdateModal}
+          comment={selectedComment}
+          onSuccess={() => {
+            refetch();
+          }}
+        />
+      )}
+    </>
   );
 }
