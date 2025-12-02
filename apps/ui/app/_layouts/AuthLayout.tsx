@@ -16,17 +16,17 @@ interface Props {
 
 const navMenu: Menu[] = [
   {
-    icon: <MdLockReset />,
+    icon: <MdLockReset className='size-5' />,
     name: '비밀번호를 잊었어요',
     url: '/auth/forgot-password',
   },
   {
-    icon: <MdPersonAdd />,
+    icon: <MdPersonAdd className='size-5' />,
     name: '회원가입',
     url: '/auth/subscribe',
   },
   {
-    icon: <MdLogin />,
+    icon: <MdLogin className='size-5' />,
     name: '로그인',
     url: '/auth/signin',
   },

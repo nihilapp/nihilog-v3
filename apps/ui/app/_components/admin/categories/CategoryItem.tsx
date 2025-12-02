@@ -76,13 +76,13 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
                     : '펼치기'}
                 >
                   {isExpanded
-                    ? <MdFolderOpen />
-                    : <MdFolder />}
+                    ? <MdFolderOpen className='size-5' />
+                    : <MdFolder className='size-5' />}
                 </span>
               )
               : (
                 <span className='p-1'>
-                  <MdFolder />
+                  <MdFolder className='size-5' />
                 </span>
               )}
             <span>{category.ctgryNm} ({category.childCategories?.length ?? 0})</span>
@@ -98,7 +98,7 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
 
               return (
                 <Button.Action
-                  icon={<MdAdd />}
+                  icon={<MdAdd className='size-5' />}
                   label='하위 카테고리 추가'
                   onClick={onAddChildClick}
                   className='hover:button-normal-black-900'
@@ -112,7 +112,7 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
 
               return (
                 <Button.Action
-                  icon={<MdEdit />}
+                  icon={<MdEdit className='size-5' />}
                   label='수정'
                   onClick={onEditClick}
                   className='hover:button-normal-black-900'
@@ -126,7 +126,7 @@ export function CategoryItem({ item, onEdit, onDelete, onAddChild, isExpanded: c
 
               return (
                 <Button.Action
-                  icon={<MdDelete />}
+                  icon={<MdDelete className='size-5' />}
                   label='삭제'
                   onClick={onDeleteClick}
                   className='button-normal-red-500 hover:button-normal-red-600'

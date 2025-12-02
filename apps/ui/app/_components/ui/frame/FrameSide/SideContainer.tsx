@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 
 import { Box } from '@/_components/ui/box';
-import { Frame } from '@/_components/ui/frame';
 import { useResponsive } from '@/_hooks/common';
 import { cn } from '@/_libs';
 import type { ReactElementProps } from '@/_types/common.types';
@@ -13,31 +12,35 @@ interface Props
   className?: string | string[];
   title?: string;
   sidePosition?: 'left' | 'right';
+  isCollapsed?: boolean;
 }
 
-export function FrameSide({ className, title = '메뉴', sidePosition = 'left', children, ...props }: Props) {
+export function SideContainer({ className, title = '메뉴', sidePosition = 'left', isCollapsed: externalIsCollapsed, children, ...props }: Props) {
   const { isMoSm, } = useResponsive();
 
   const [
-    isCollapsed,
-    setIsCollapsed,
+    internalIsCollapsed,
+    setInternalIsCollapsed,
   ] = useState(false);
 
   useEffect(
     () => {
-      if (isMoSm) {
-        setIsCollapsed(true);
+      if (externalIsCollapsed === undefined && isMoSm) {
+        setInternalIsCollapsed(true);
       }
-      else {
-        setIsCollapsed(false);
+      else if (externalIsCollapsed === undefined) {
+        setInternalIsCollapsed(false);
       }
     },
-    [ isMoSm, ]
+    [
+      isMoSm,
+      externalIsCollapsed,
+    ]
   );
 
-  const onToggleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
-  };
+  const isCollapsed = externalIsCollapsed !== undefined
+    ? externalIsCollapsed
+    : internalIsCollapsed;
 
   return (
     <Box.Panel
@@ -55,15 +58,7 @@ export function FrameSide({ className, title = '메뉴', sidePosition = 'left', 
         showTitle={!isCollapsed}
         title={title}
         className={cn(sidePosition === 'right' && 'flex-row-reverse')}
-      >
-        <Box.Action>
-          <Frame.SideToggle
-            isCollapsed={isCollapsed}
-            onToggleCollapse={onToggleCollapse}
-            sidePosition={sidePosition}
-          />
-        </Box.Action>
-      </Box.Top>
+      />
 
       <Box.Content className={cn(
         'transition-opacity duration-300',

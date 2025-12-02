@@ -53,7 +53,7 @@ export function AdminPostList({ }: Props) {
       key: 'pstTtl',
       label: '제목',
       align: 'left',
-      icon: <MdTitle />,
+      icon: <MdTitle className='size-5' />,
       render: (row, value, _index) => {
         const title = value as string;
 
@@ -71,7 +71,7 @@ export function AdminPostList({ }: Props) {
       key: 'category',
       label: '카테고리',
       align: 'center',
-      icon: <MdFolder />,
+      icon: <MdFolder className='size-5' />,
       className: 'w-[10%]',
       render: (_row, value, _index) => {
         const categoryNm = (value as SelectCategoryType)?.ctgryNm;
@@ -91,8 +91,8 @@ export function AdminPostList({ }: Props) {
       key: 'publDt',
       label: '발행일',
       align: 'center',
-      icon: <MdSchedule />,
-      className: 'w-[25%]',
+      icon: <MdSchedule className='size-5' />,
+      className: 'w-[12%]',
       render: (_row, value, _index) => {
         const publishedDate = DateTime.fromISO(value as string).toFormat('yyyy-MM-dd HH:mm');
 
@@ -103,7 +103,7 @@ export function AdminPostList({ }: Props) {
       key: 'manage',
       label: '관리',
       align: 'center',
-      className: 'w-[15%]',
+      className: 'w-[12%]',
       render: (row, _value, _index) => {
         const post = row as SelectPostListItemType;
 
@@ -122,18 +122,18 @@ export function AdminPostList({ }: Props) {
         };
 
         return (
-          <div className='flex items-center justify-center gap-2'>
+          <div className='flex items-center justify-center gap-2 flex-1'>
             <Button.Action
-              icon={<MdEdit />}
+              icon={<MdEdit className='size-5' />}
               label='수정'
               onClick={onEditClick}
-              className='hover:button-normal-black-900'
+              className='hover:button-normal-black-900 flex-1'
             />
             <Button.Action
-              icon={<MdDelete />}
+              icon={<MdDelete className='size-5' />}
               label='삭제'
               onClick={onDeleteClick}
-              className='button-normal-red-500 hover:button-normal-red-600'
+              className='button-normal-red-500 hover:button-normal-red-600 flex-1'
             />
           </div>
         );

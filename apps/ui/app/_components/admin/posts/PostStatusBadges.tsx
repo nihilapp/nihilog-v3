@@ -52,22 +52,22 @@ function getStatusInfo(status: string): StatusInfo {
     case 'EMPTY':
       return {
         label: '초안 없음',
-        icon: <MdDrafts />,
+        icon: <MdDrafts className='size-5' />,
       };
     case 'WRITING':
       return {
         label: '작성중',
-        icon: <MdEdit />,
+        icon: <MdEdit className='size-5' />,
       };
     case 'FINISHED':
       return {
         label: '작성완료',
-        icon: <MdCheckCircle />,
+        icon: <MdCheckCircle className='size-5' />,
       };
     default:
       return {
         label: status,
-        icon: <MdInfo />,
+        icon: <MdInfo className='size-5' />,
       };
   }
 }
@@ -114,8 +114,8 @@ export function PostStatusBadges(props: Props) {
           ? '공개'
           : '비공개'}
         icon={rlsYn === 'Y'
-          ? <MdPublic />
-          : <MdLockOutline />}
+          ? <MdPublic className='size-5' />
+          : <MdLockOutline className='size-5' />}
         color={rlsYn === 'Y'
           ? 'green'
           : 'red'}
@@ -127,8 +127,8 @@ export function PostStatusBadges(props: Props) {
           ? '비밀글'
           : '일반글'}
         icon={secrYn === 'Y'
-          ? <MdVisibilityOff />
-          : <MdVisibility />}
+          ? <MdVisibilityOff className='size-5' />
+          : <MdVisibility className='size-5' />}
         color={secrYn === 'Y'
           ? 'orange'
           : 'gray'}
@@ -140,8 +140,8 @@ export function PostStatusBadges(props: Props) {
           ? '아카이브'
           : '활성'}
         icon={archYn === 'Y'
-          ? <MdArchive />
-          : <MdFolder />}
+          ? <MdArchive className='size-5' />
+          : <MdFolder className='size-5' />}
         color={archYn === 'Y'
           ? 'gray'
           : 'green'}
@@ -153,8 +153,8 @@ export function PostStatusBadges(props: Props) {
           ? '상단 고정'
           : '일반'}
         icon={pinYn === 'Y'
-          ? <MdPushPin />
-          : <MdBookmarkBorder />}
+          ? <MdPushPin className='size-5' />
+          : <MdBookmarkBorder className='size-5' />}
         color={pinYn === 'Y'
           ? 'blue'
           : 'gray'}

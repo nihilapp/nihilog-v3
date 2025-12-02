@@ -133,7 +133,7 @@ export function TextItem({
           onClick={onDeleteClick}
           aria-label={`${text} 제거`}
         >
-          <MdClose className='size-4' />
+          <MdClose className='size-5' />
         </button>
       )}
     </div>

@@ -189,13 +189,13 @@ export function AdminCommentList({ }: Props) {
         return (
           <div className='flex items-center justify-center gap-2'>
             <Button.Action
-              icon={<MdEdit />}
+              icon={<MdEdit className='size-5' />}
               label='수정'
               onClick={onEditClick}
               className='hover:button-normal-black-900'
             />
             <Button.Action
-              icon={<MdDelete />}
+              icon={<MdDelete className='size-5' />}
               label='삭제'
               onClick={onDeleteClick}
               className='button-normal-red-500 hover:button-normal-red-600'

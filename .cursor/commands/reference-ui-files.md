@@ -49,6 +49,17 @@
 ## 공유 스키마 (packages)
 
 - `packages/schemas/src/schema/*.schema.ts` - Zod 스키마
+- `packages/schemas/src/schema/category.schema.ts`
+- `packages/schemas/src/schema/category-subscribe.schema.ts`
+- `packages/schemas/src/schema/comment.schema.ts`
+- `packages/schemas/src/schema/common.schema.ts`
+- `packages/schemas/src/schema/enums.schema.ts`
+- `packages/schemas/src/schema/post.schema.ts`
+- `packages/schemas/src/schema/search.schema.ts`
+- `packages/schemas/src/schema/subscribe.schema.ts`
+- `packages/schemas/src/schema/tag.schema.ts`
+- `packages/schemas/src/schema/tag-subscribe.schema.ts`
+- `packages/schemas/src/schema/user.schema.ts`
 
 ## `_types`
 
@@ -65,3 +76,13 @@
 ## 공유 타입 (packages)
 
 - `packages/schemas/src/types/*.types.ts` - TypeScript 타입
+- `packages/schemas/src/types/category-subscribe.types.ts`
+- `packages/schemas/src/types/category.types.ts`
+- `packages/schemas/src/types/comment.types.ts`
+- `packages/schemas/src/types/common.types.ts`
+- `packages/schemas/src/types/post.types.ts`
+- `packages/schemas/src/types/response.types.ts`
+- `packages/schemas/src/types/subscribe.types.ts`
+- `packages/schemas/src/types/tag-subscribe.types.ts`
+- `packages/schemas/src/types/tag.types.ts`
+- `packages/schemas/src/types/user.types.ts`

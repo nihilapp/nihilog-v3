@@ -61,7 +61,7 @@ export function ModalTop({ className, title, icon, onClose, custom, ...props }: 
             custom?.button
           )}
         >
-          <MdClose className='size-6' />
+          <MdClose className='size-5' />
         </button>
       )}
     </div>

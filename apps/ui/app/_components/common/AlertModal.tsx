@@ -30,13 +30,13 @@ export function AlertModal() {
   const getIcon = () => {
     switch (alert.type) {
       case 'info':
-        return <MdInfo className='size-6 text-blue-600' />;
+        return <MdInfo className='size-5 text-blue-600' />;
       case 'error':
-        return <MdError className='size-6 text-red-600' />;
+        return <MdError className='size-5 text-red-600' />;
       case 'warn':
-        return <MdWarning className='size-6 text-orange-600' />;
+        return <MdWarning className='size-5 text-orange-600' />;
       default:
-        return <MdInfo className='size-6 text-blue-600' />;
+        return <MdInfo className='size-5 text-blue-600' />;
     }
   };
 

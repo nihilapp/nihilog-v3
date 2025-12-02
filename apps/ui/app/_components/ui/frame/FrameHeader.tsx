@@ -14,6 +14,7 @@ interface Props
   };
   text?: string;
   href?: string;
+  toggleButton?: React.ReactNode;
 }
 
 const cssVariants = cva(
@@ -25,7 +26,7 @@ const cssVariants = cva(
   }
 );
 
-export function FrameHeader({ className, text, href, children, ...props }: Props) {
+export function FrameHeader({ className, text, href, toggleButton, children, ...props }: Props) {
   return (
     <header
       className={cn(
@@ -34,7 +35,10 @@ export function FrameHeader({ className, text, href, children, ...props }: Props
       )}
       {...props}
     >
-      <Logo text={text} href={href} />
+      <div className='flex flex-row gap-2 items-center'>
+        {toggleButton}
+        <Logo text={text} href={href} />
+      </div>
 
       <div className='flex flex-row gap-2 items-stretch justify-end'>
         {children}

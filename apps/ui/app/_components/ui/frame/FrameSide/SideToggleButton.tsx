@@ -8,7 +8,7 @@ interface Props {
   sidePosition?: 'left' | 'right';
 }
 
-export function FrameSideToggleButton({ isCollapsed, onToggleCollapse, sidePosition = 'left', }: Props) {
+export function SideToggleButton({ isCollapsed, onToggleCollapse, sidePosition = 'left', }: Props) {
   const getIcon = () => {
     if (sidePosition === 'right') {
       return isCollapsed

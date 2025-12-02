@@ -91,12 +91,77 @@ export function ListTemplate({
         data.length > 0
           ? (
             <>
+              <List.Item
+                direction={itemDirection}
+                className={cn([
+                  'bg-gray-50 border-gray-300',
+                  custom?.item,
+                ])}
+              >
+                {selectionMode === 'single' && onSelectionChange && (
+                  <List.Cell
+                    checkbox
+                    align='center'
+                    selectLabel={selectLabel}
+                    icon={showSelectIcon
+                      ? <MdCheckBox className='size-5' />
+                      : undefined}
+                    isHeader
+                    className={cn([
+                      'flex-none shrink-0 w-[80px] min-w-[80px] max-w-[80px]',
+                      custom?.cell,
+                    ])}
+                  />
+                )}
+                {selectionMode === 'multiple' && onSelectionChange && (
+                  <List.Cell
+                    checkbox
+                    align='center'
+                    selectLabel={selectLabel}
+                    icon={showSelectIcon
+                      ? <MdCheckBox className='size-5' />
+                      : undefined}
+                    isHeader
+                    className={cn([
+                      'flex-none shrink-0 w-[80px] min-w-[80px] max-w-[80px]',
+                      custom?.cell,
+                    ])}
+                  />
+                )}
+                {columns.map((col) => {
+                  const colClassName = Array.isArray(col.className)
+                    ? col.className.join(' ')
+                    : col.className || '';
+                  const hasWidthClass = /\bw-\[|w-\d+|w-full|w-auto|w-screen|w-min|w-max|w-fit\b/.test(colClassName);
+                  const shouldAddFlexNone = hasWidthClass && !/\bflex-none\b/.test(colClassName);
+
+                  return (
+                    <List.Cell
+                      key={col.key}
+                      itemName={col.label}
+                      align={col.align}
+                      columnSize={
+                        hasWidthClass
+                          ? undefined
+                          : col.columnSize
+                      }
+                      icon={col.icon}
+                      isHeader
+                      className={cn([
+                        col.className,
+                        shouldAddFlexNone && 'flex-none',
+                        custom?.cell,
+                      ])}
+                    />
+                  );
+                })}
+              </List.Item>
               {data.map((row) => (
                 <List.Item
                   key={getRowId(row)}
                   direction={itemDirection}
                   className={cn([
-                    getIsSelected(getRowId(row)) && 'border-black-900',
+                    getIsSelected(getRowId(row)) && 'border-blue-500 bg-blue-50 shadow-md',
                     custom?.item,
                   ])}
                 >
@@ -117,7 +182,7 @@ export function ListTemplate({
                         checked={getIsSelected(rowId)}
                         onChange={onCellChange}
                         className={cn([
-                          'flex-none shrink-0 w-[40px] min-w-[40px] max-w-[40px]',
+                          'flex-none shrink-0 w-[80px] min-w-[80px] max-w-[80px]',
                           custom?.cell,
                         ])}
                       />
@@ -140,7 +205,7 @@ export function ListTemplate({
                         checked={getIsSelected(rowId)}
                         onChange={onCellChange}
                         className={cn([
-                          'flex-none shrink-0',
+                          'flex-none shrink-0 w-[80px] min-w-[80px] max-w-[80px]',
                           custom?.cell,
                         ])}
                       />
@@ -159,7 +224,6 @@ export function ListTemplate({
                     return (
                       <List.Cell
                         key={col.key}
-                        itemName={col.label}
                         itemValue={col.render
                           ? col.render(
                             row,
@@ -173,7 +237,6 @@ export function ListTemplate({
                             ? undefined
                             : col.columnSize
                         }
-                        icon={col.icon}
                         className={cn([
                           col.className,
                           shouldAddFlexNone && 'flex-none',

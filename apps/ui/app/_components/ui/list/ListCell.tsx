@@ -1,7 +1,6 @@
 'use client';
 
 import { cva, type VariantProps } from 'class-variance-authority';
-import React from 'react';
 import { MdCheckBox, MdCheckBoxOutlineBlank } from 'react-icons/md';
 
 import { cn } from '@/_libs';
@@ -18,10 +17,11 @@ interface Props
   itemValue?: React.ReactNode;
   selectLabel?: string;
   icon?: React.ReactNode;
+  isHeader?: boolean;
 }
 
 const cssVariants = cva(
-  [ 'flex flex-col rounded-2 gap-2', ],
+  [ 'flex items-center rounded-2', ],
   {
     variants: {
       columnSize: {
@@ -39,10 +39,10 @@ const cssVariants = cva(
         12: [ 'flex-12', ],
       },
       align: {
-        left: [ 'text-left', ],
-        center: [ 'text-center', ],
-        right: [ 'text-right', ],
-        justify: [ 'text-justify', ],
+        left: [ 'text-left justify-start', ],
+        center: [ 'text-center justify-center', ],
+        right: [ 'text-right justify-end', ],
+        justify: [ 'text-justify justify-between', ],
       },
     },
     defaultVariants: {
@@ -53,8 +53,8 @@ const cssVariants = cva(
   }
 );
 
-const itemNameCva = cva(
-  [ 'text-xs text-gray-500 bg-black-50 p-1 rounded-2 border border-black-200 flex items-center gap-1', ],
+const headerCva = cva(
+  [ 'text-sm font-medium text-gray-600 flex items-center gap-1 px-3 py-2 w-full', ],
   {
     variants: {
       align: {
@@ -72,7 +72,7 @@ const itemNameCva = cva(
 );
 
 const itemValueCva = cva(
-  [ 'text-black-900 flex items-center h-full px-2', ],
+  [ 'text-black-900 flex items-center h-full px-3 py-2 w-full', ],
   {
     variants: {
       align: {
@@ -88,7 +88,31 @@ const itemValueCva = cva(
   }
 );
 
-export function ListCell({ className, checkbox, checked, columnSize, align, onChange, itemName, itemValue, selectLabel, icon, ...props }: Props) {
+export function ListCell({ className, checkbox, checked, columnSize, align, onChange, itemName, itemValue, selectLabel, icon, isHeader = false, ...props }: Props) {
+  if (isHeader) {
+    return (
+      <div
+        className={cn(
+          cssVariants({
+            columnSize,
+            align,
+          }),
+          className
+        )}
+        {...props}
+      >
+        <span className={cn(headerCva({ align, }))}>
+          {icon && (
+            <span className='shrink-0 flex items-center'>
+              {icon}
+            </span>
+          )}
+          {itemName || selectLabel}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -100,40 +124,27 @@ export function ListCell({ className, checkbox, checked, columnSize, align, onCh
       )}
       {...props}
     >
-      <React.Fragment>
-        <span className={cn(itemNameCva({
-          align,
-        }))}
-        >
-          {icon && (
-            <span className='shrink-0 flex items-center'>
-              {icon}
-            </span>
-          )}
-          {itemName || selectLabel}
-        </span>
-        {checkbox
-          ? (
-            <button
-              type='button'
-              onClick={onChange}
-              className='cursor-pointer mx-auto h-full'
-            >
-              {checked
-                ? (
-                  <MdCheckBox className='size-6' />
-                )
-                : (
-                  <MdCheckBoxOutlineBlank className='size-6' />
-                )}
-            </button>
-          )
-          : (
-            <span className={cn(itemValueCva({ align, }))}>
-              {itemValue}
-            </span>
-          )}
-      </React.Fragment>
+      {checkbox
+        ? (
+          <button
+            type='button'
+            onClick={onChange}
+            className='cursor-pointer mx-auto h-full flex items-center justify-center'
+          >
+            {checked
+              ? (
+                <MdCheckBox className='size-5' />
+              )
+              : (
+                <MdCheckBoxOutlineBlank className='size-5' />
+              )}
+          </button>
+        )
+        : (
+          <span className={cn(itemValueCva({ align, }))}>
+            {itemValue}
+          </span>
+        )}
     </div>
   );
 }

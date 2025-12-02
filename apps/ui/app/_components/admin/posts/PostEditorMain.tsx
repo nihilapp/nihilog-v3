@@ -51,7 +51,7 @@ export function PostEditorMain({ }: Props) {
     <Box.Content className='gap-5 flex flex-col h-full'>
       <Input.Label
         label='본문'
-        icon={<MdArticle />}
+        icon={<MdArticle className='size-5' />}
         direction='vertical'
         className='flex-1 flex flex-col min-h-0'
         errorMessage={getErrorMessage('pstMtxt')}
@@ -75,7 +75,7 @@ export function PostEditorMain({ }: Props) {
       </Input.Label>
 
       <div>
-        <Input.Label label='태그' id='tags' icon={<MdLocalOffer />} direction='vertical' showErrorMessage={false} />
+        <Input.Label label='태그' id='tags' icon={<MdLocalOffer className='size-5' />} direction='vertical' showErrorMessage={false} />
         <Input.TextArray
           items={postTags.map((tag) => tag.tagText)}
           onChange={(newTags) => {

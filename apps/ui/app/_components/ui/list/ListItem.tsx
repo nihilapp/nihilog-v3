@@ -12,7 +12,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex-row-2 border border-black-300 rounded-4 p-2 shadow-sm transition-colors duration-200 ease-in-out', ],
+  [ 'flex-row-2 border border-gray-200 rounded-2 transition-all duration-200 ease-in-out', ],
   {
     variants: {
       direction: {
@@ -23,7 +23,12 @@ const cssVariants = cva(
     defaultVariants: {
       direction: 'row',
     },
-    compoundVariants: [],
+    compoundVariants: [
+      {
+        direction: 'row',
+        class: [ 'hover:border-gray-300 hover:shadow-sm bg-white', ],
+      },
+    ],
   }
 );
 

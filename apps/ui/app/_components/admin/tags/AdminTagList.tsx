@@ -124,7 +124,7 @@ export function AdminTagList({ }: Props) {
                 <Input.TextItem
                   key={tag.tagNo}
                   text={tag.tagNm}
-                  icon={<MdLocalOffer />}
+                  icon={<MdLocalOffer className='size-5' />}
                   color={tag.tagColr ?? undefined}
                   onClick={onTagClick}
                   onDelete={onTagDelete}

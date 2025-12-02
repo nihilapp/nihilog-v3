@@ -510,13 +510,13 @@ function PostEditorContent() {
 
   const menuItems: Menu[] = [
     {
-      icon: <MdSave />,
+      icon: <MdSave className='size-5' />,
       name: '저장',
       action: onSavePost,
       classNames: 'button-outline-black-900 hover:button-normal-blue-500',
     },
     {
-      icon: <MdPublish />,
+      icon: <MdPublish className='size-5' />,
       name: '발행',
       action: onPublishPost,
       classNames: 'button-outline-black-900 hover:button-normal-blue-500',
@@ -660,9 +660,9 @@ function PostEditorContent() {
             <Frame.Main>
               <PostEditorMain />
             </Frame.Main>
-            <Frame.Side sidePosition='right' title='사이드바'>
+            <Frame.Side.Container sidePosition='right' title='사이드바'>
               <PostEditorSidebar />
-            </Frame.Side>
+            </Frame.Side.Container>
           </Frame.Content>
           <Frame.Footer />
         </>

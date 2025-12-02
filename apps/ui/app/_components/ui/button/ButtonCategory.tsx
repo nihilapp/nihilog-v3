@@ -83,8 +83,8 @@ export function ButtonCategory(props: Props) {
             )}
           >
             {isOpen
-              ? <MdFolderOpen />
-              : <MdFolder />}
+              ? <MdFolderOpen className='size-5' />
+              : <MdFolder className='size-5' />}
           </span>
         )}
         <span
@@ -105,8 +105,8 @@ export function ButtonCategory(props: Props) {
           )}
         >
           {isOpen
-            ? <MdKeyboardArrowDown />
-            : <MdChevronRight />}
+            ? <MdKeyboardArrowDown className='size-5' />
+            : <MdChevronRight className='size-5' />}
         </span>
       </button>
       {isOpen && children && (

@@ -40,7 +40,7 @@ export function InputErrorMessage({ className, children, custom, isError, ...pro
     >
       {isError && (
         <span className='flex items-center gap-1 text-red-500 text-sm italic w-full min-w-0'>
-          <FaTimes className='w-4 h-4 shrink-0' />
+          <FaTimes className='size-5 shrink-0' />
           <span className='wrap-break-word min-w-0 flex-1 overflow-hidden'>
             {children}
           </span>
@@ -48,7 +48,7 @@ export function InputErrorMessage({ className, children, custom, isError, ...pro
       )}
       {!isError && (
         <span className='text-green-500 text-sm italic'>
-          <FaCheck className='w-4 h-4 ml-auto' />
+          <FaCheck className='size-5 ml-auto' />
         </span>
       )}
     </div>

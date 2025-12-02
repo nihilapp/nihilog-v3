@@ -51,7 +51,7 @@ export function FrameFooter({ className, ...props }: Props) {
     >
       <small className='flex flex-row gap-1 items-center justify-center text-xs md:text-sm'>
         <span>
-          <FaRegCopyright />
+          <FaRegCopyright className='size-5' />
           <span className='sr-only'>Copyright</span>
         </span>
         <span>{year} NIHILncunia. All rights reserved.</span>

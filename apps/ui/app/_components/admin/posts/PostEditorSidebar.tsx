@@ -118,7 +118,7 @@ export function PostEditorSidebar({ }: Props) {
     <Box.Content className='gap-5'>
       <Input.Label
         label='제목'
-        icon={<MdTitle />}
+        icon={<MdTitle className='size-5' />}
         errorMessage={getErrorMessage('pstTtl')}
       >
         <Input.Text
@@ -131,7 +131,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='요약'
-        icon={<MdDescription />}
+        icon={<MdDescription className='size-5' />}
         errorMessage={getErrorMessage('pstSmry')}
       >
         <Input.LongText
@@ -145,7 +145,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='포스트 상태'
-        icon={<MdEdit />}
+        icon={<MdEdit className='size-5' />}
         direction='vertical'
         errorMessage={getErrorMessage('pstStts')}
       >
@@ -186,7 +186,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='발행'
-        icon={<BsToggles />}
+        icon={<BsToggles className='size-5' />}
         direction='horizontal'
       >
         <Input.Switch
@@ -197,7 +197,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='고정'
-        icon={<MdPushPin />}
+        icon={<MdPushPin className='size-5' />}
         direction='horizontal'
       >
         <Input.Switch
@@ -208,7 +208,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='아카이브'
-        icon={<MdArchive />}
+        icon={<MdArchive className='size-5' />}
         direction='horizontal'
       >
         <Input.Switch
@@ -219,7 +219,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='비밀글'
-        icon={<MdLockOutline />}
+        icon={<MdLockOutline className='size-5' />}
         direction='horizontal'
       >
         <Input.Switch
@@ -231,7 +231,7 @@ export function PostEditorSidebar({ }: Props) {
       {postData.secrYn === 'Y' && (
         <Input.Label
           label='비밀번호'
-          icon={<MdVpnKey />}
+          icon={<MdVpnKey className='size-5' />}
           direction='vertical'
           errorMessage={getErrorMessage('pstPswd')}
         >
@@ -246,7 +246,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='썸네일 링크'
-        icon={<MdImage />}
+        icon={<MdImage className='size-5' />}
         direction='vertical'
         errorMessage={getErrorMessage('pstThmbLink')}
       >
@@ -260,7 +260,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='슬러그'
-        icon={<MdOutlineTextFields />}
+        icon={<MdOutlineTextFields className='size-5' />}
         direction='vertical'
         errorMessage={getErrorMessage('pstCd')}
       >
@@ -274,7 +274,7 @@ export function PostEditorSidebar({ }: Props) {
 
       <Input.Label
         label='카테고리'
-        icon={<MdFolder />}
+        icon={<MdFolder className='size-5' />}
         direction='vertical'
         errorMessage={getErrorMessage('ctgryNo')}
       >
