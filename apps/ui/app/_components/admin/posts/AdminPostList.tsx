@@ -51,7 +51,6 @@ export function AdminPostList({ }: Props) {
   const columns = [
     tableColumn({
       key: 'pstTtl',
-      label: '제목',
       align: 'left',
       icon: <MdTitle className='size-5' />,
       render: (row, value, _index) => {
@@ -69,7 +68,6 @@ export function AdminPostList({ }: Props) {
     }),
     tableColumn({
       key: 'category',
-      label: '카테고리',
       align: 'center',
       icon: <MdFolder className='size-5' />,
       className: 'w-[10%]',
@@ -96,12 +94,15 @@ export function AdminPostList({ }: Props) {
       render: (_row, value, _index) => {
         const publishedDate = DateTime.fromISO(value as string).toFormat('yyyy-MM-dd HH:mm');
 
-        return publishedDate;
+        return (
+          <span>
+            {publishedDate}
+          </span>
+        );
       },
     }),
     customColumn({
       key: 'manage',
-      label: '관리',
       align: 'center',
       className: 'w-[12%]',
       render: (row, _value, _index) => {
@@ -122,7 +123,7 @@ export function AdminPostList({ }: Props) {
         };
 
         return (
-          <div className='flex items-center justify-center gap-2 flex-1'>
+          <div className='flex flex-col items-center justify-center gap-2 flex-1'>
             <Button.Action
               icon={<MdEdit className='size-5' />}
               label='수정'
@@ -162,9 +163,6 @@ export function AdminPostList({ }: Props) {
             columns={columns}
             data={response?.data.list || []}
             rowKey='pstNo'
-            showSelectIcon
-            selectLabel='선택'
-            selectionMode='multiple'
             emptyMessage='게시글이 없습니다.'
             selectedItems={selectedItems}
             onSelectionChange={onListSelectionChange}

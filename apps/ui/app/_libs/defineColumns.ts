@@ -6,7 +6,7 @@ export function defineColumns<TData>() {
   const tableColumn = <K extends Extract<keyof TData, string>>(
     column: {
       key: K;
-      label: string;
+      label?: string;
       render: (
         rowData: TData,
         value: TData[K],
@@ -27,7 +27,7 @@ export function defineColumns<TData>() {
 
   const customColumn = (column: {
     key: string;
-    label: string;
+    label?: string;
     render: (
       rowData: TData,
       value: undefined,

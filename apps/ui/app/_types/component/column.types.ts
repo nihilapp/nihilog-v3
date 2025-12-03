@@ -7,7 +7,7 @@ export type ColumnType<
   = | {
     type: 'table';
     key: K;
-    label: string;
+    label?: string;
     render: (
       rowData: TData,
       value: TData[K],
@@ -22,7 +22,7 @@ export type ColumnType<
   | {
     type: 'custom';
     key: string;
-    label: string;
+    label?: string;
     render: (
       rowData: TData,
       value: undefined,
