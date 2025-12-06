@@ -18,7 +18,7 @@ interface Props
 }
 
 const cssVariants = cva(
-  [ 'flex flex-row items-center gap-1', ],
+  [ 'flex flex-row items-center gap-1 hover:bg-blue-50 px-2 py-1 rounded-2', ],
   {
     variants: {},
     defaultVariants: {},

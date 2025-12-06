@@ -35,10 +35,7 @@ export function FrameHeader({ className, text, href, toggleButton, children, ...
       )}
       {...props}
     >
-      <div className='flex flex-row gap-2 items-center'>
-        {toggleButton}
-        <Logo text={text} href={href} />
-      </div>
+      <Logo text={text} href={href} />
 
       <div className='flex flex-row gap-2 items-stretch justify-end'>
         {children}

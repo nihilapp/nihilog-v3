@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./shadcn.css";
 @import "./colors.css";
 @import "./size/dvh.css";
 @import "./size/dvw.css";

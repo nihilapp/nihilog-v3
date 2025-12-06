@@ -13,6 +13,7 @@ import { openApiRegistry } from '../registry';
 import { addGlobalResponses } from '../utils/global-responses';
 
 export const registerCommentsEndpoints = () => {
+
   // GET /comments - 댓글 목록 조회
   openApiRegistry.registerPath({
     method: 'get',
@@ -68,7 +69,10 @@ export const registerCommentsEndpoints = () => {
     tags: [ 'comments', ],
     request: {
       params: z.object({
-        cmntNo: z.coerce.number().int().positive().openapi({
+        cmntNo: z.preprocess(
+          (val) => (typeof val === 'string' ? parseInt(val, 10) : val),
+          z.number().int().positive()
+        ).openapi({
           description: '댓글 번호',
           example: 1,
         }),
@@ -326,7 +330,10 @@ export const registerCommentsEndpoints = () => {
     security: [ { 'JWT-auth': [], }, ],
     request: {
       params: z.object({
-        cmntNo: z.coerce.number().int().positive().openapi({
+        cmntNo: z.preprocess(
+          (val) => (typeof val === 'string' ? parseInt(val, 10) : val),
+          z.number().int().positive()
+        ).openapi({
           description: '댓글 번호',
           example: 1,
         }),
